@@ -27,10 +27,11 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+      const mail = userInfo.mail.trim();
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password).then(response => {
+        login(mail, userInfo.password).then(response => {
           const data = response.data
+          console.log('出参', data);
           setToken(data.token)
           commit('SET_TOKEN', data.token)
           resolve()

@@ -2,35 +2,40 @@
   <div class="login-container">
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
       class="card-box login-form">
-      <h3 class="title">vue-element-admin</h3>
+      <h3 class="title">登录</h3>
+
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <icon-svg icon-class="yonghuming" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+        <el-input name="username" type="text" v-model="loginForm.mail" autoComplete="on" placeholder="登录邮箱" />
       </el-form-item>
+
       <el-form-item prop="password">
         <span class="svg-container">
           <icon-svg icon-class="mima"></icon-svg>
         </span>
-        <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-          placeholder="password"></el-input>
+        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
+          placeholder="登录密码"/>
+        <span class='show-pwd' @click='showPwd'><icon-svg icon-class="eye" /></span>
       </el-form-item>
+
       <el-form-item>
         <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
-          Sign in
+          登录
         </el-button>
       </el-form-item>
-      <div class='tips'>
-        <span style="margin-right:20px;">username: admin</span>
-        </span> password: admin</span>
-      </div>
+
+      <!--<div class='tips'>-->
+        <!--<span style="margin-right:20px;">username: admin</span>-->
+        <!--</span> password: admin</span>-->
+      <!--</div>-->
     </el-form>
   </div>
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+import { isvalidUsername } from '@/utils/validate';
 
 export default {
   name: 'login',
@@ -51,17 +56,25 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'admin'
+        mail: '47210149@qq.com',
+        password: '12341234'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        mail: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
+      pwdType: 'password',
       loading: false
     }
   },
   methods: {
+    showPwd() {
+      if (this.pwdType === 'password') {
+        this.pwdType = ''
+      } else {
+        this.pwdType = 'password'
+      }
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {

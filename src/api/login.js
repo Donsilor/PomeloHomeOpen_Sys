@@ -1,11 +1,12 @@
-import fetch from '@/utils/fetch'
+import fetch from '@/utils/fetch';
 
-export function login(username, password) {
+export function login(mail, password) {
+  console.log('登录信息', mail, password);
   return fetch({
-    url: '/user/login',
+    url: '/admin/login',
     method: 'post',
     data: {
-      username,
+      mail,
       password
     }
   })
@@ -21,7 +22,7 @@ export function getInfo(token) {
 
 export function logout() {
   return fetch({
-    url: '/user/logout',
+    url: '/admin/logout',
     method: 'post'
   })
 }

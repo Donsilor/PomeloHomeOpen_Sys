@@ -163,19 +163,19 @@
       }
     },
     created() {
-      this.getList()
+      this.getList();
     },
     methods: {
       getList() {
         this.listLoading = true
         let params = {
           token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vZGV2cGhvLmV2ZXJncmFuZGUuY24vaW5kZXgucGhwL2FkbWluL2xvZ2luIiwiaWF0IjoxNTEwNzExMDkxLCJleHAiOjE1MTE5MjA2OTEsIm5iZiI6MTUxMDcxMTA5MSwianRpIjoiMjFwelkzeld1ZUhtS0haaiIsInN1YiI6M30.cx2jVQcZ_Z-a2jlbu9eJ3lVDBOCnfr_l6TDK908MR-I',
-          type: 1,
-          status: 1
-//          limit: 10,
-//          business_name: 'test',
-//          model: 'modle'
+          type: 1, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
+          status: 0, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
+          limit: 10,
+          page: this.listQuery.page
         };
+        Object.assign(params, this.queryCondition);
         getReviewList(params).then(response => {
           console.log('审核列表', response.data);
           this.list = response.data.result.data
@@ -186,15 +186,15 @@
 
       // 跳转到待审核详情页
       goCheckPengdingDetail() {
-        this.$router.push({path: '/enterpriseCheck/enterpriseCheckedDetail', query: {}});
+        this.$router.push({path: '/enterpriseCheck/enterpriseCheckDetail', query: {}});
       },
 
       handleSizeChange(val) {
-        this.listQuery.limit = val
+        this.listQuery.limit = val;
         this.getList()
       },
       handleCurrentChange(val) {
-        this.listQuery.page = val
+        this.listQuery.page = val;
         this.getList()
       },
 

@@ -179,9 +179,7 @@
           type: 3, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
           status: 0, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
           limit: 10,
-          page: this.listQuery.page,
-//          business_name: 'test',
-//          model: 'modle'
+          page: this.listQuery.page
         };
         Object.assign(params, this.queryCondition);
         getReviewList(params).then(response => {
@@ -189,7 +187,7 @@
           this.list = response.data.result.data;
           this.total = response.data.result.total;
           this.listLoading = false
-        })
+        });
       },
 
       // 获取产品品类

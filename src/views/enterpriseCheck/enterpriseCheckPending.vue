@@ -162,7 +162,7 @@
         return calendarTypeKeyValue[type]
       }
     },
-    created() {
+    mounted() {
       this.getList();
     },
     methods: {

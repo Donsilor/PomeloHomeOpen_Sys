@@ -166,7 +166,7 @@
         return calendarTypeKeyValue[type]
       }
     },
-    created() {
+    mounted() {
 //      console.log('配置文件', productTechonologyType);
       this.getList();
       this.getProductType();

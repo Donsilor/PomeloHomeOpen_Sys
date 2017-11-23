@@ -9,12 +9,12 @@ import Layout from '../views/layout/Layout'
 Vue.use(Router)
 
 /**
-* icon : the icon show in the sidebar
-* hidden : if `hidden:true` will not show in the sidebar
-* redirect : if `redirect:noredirect` will not redirct in the levelbar
-* noDropdown : if `noDropdown:true` will not has submenu in the sidebar
-* meta : `{ role: ['admin'] }`  will control the page role
-**/
+ * icon : the icon show in the sidebar
+ * hidden : if `hidden:true` will not show in the sidebar
+ * redirect : if `redirect:noredirect` will not redirct in the levelbar
+ * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
+ * meta : `{ role: ['admin'] }`  will control the page role
+ **/
 export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
@@ -24,52 +24,53 @@ export const constantRouterMap = [
     redirect: '/enterpriseCheck',
     name: 'Dashboard',
     hidden: true,
-    children: [{ path: 'dashboard', component: _import('dashboard/index') }]
+    children: [
+      { path: 'dashboard', component: _import('dashboard/index') },
+      ]
   },
-
+  
   // 企业审核
   {
-    path: '/enterpriseCheck',
+    path: '/',
     component: Layout,
-    redirect: '/enterpriseCheck/index',
     // name: '企业审核',
+    // redirect: '/enterpriseCheck',
     noDropdown: true,
     children: [
-      // { path: 'enterprise_check_pending', name: '待审核列表', component: _import('enterpriseCheck/enterprise_check_pending') }
-      { path: 'index', name: '企业审核', component: _import('enterpriseCheck/index') },
-      { path: 'enterpriseCheckedDetail', name: '已审核业详情', component: _import('enterpriseCheck/enterpriseCheckedDetail') },
-      { path: 'enterpriseCheckDetail', name: '待审核业详情', component: _import('enterpriseCheck/enterpriseCheckDetail') }
+      { path: 'enterpriseCheck', name: '企业审核', component: _import('enterpriseCheck/index') },
+      { path: 'enterpriseCheck/enterpriseCheckedDetail', name: '已审核业详情', component: _import('enterpriseCheck/enterpriseCheckedDetail') ,meta:{breadNumber:1}},
+      { path: 'enterpriseCheck/enterpriseCheckDetail', name: '待审核业详情', component: _import('enterpriseCheck/enterpriseCheckDetail') ,meta:{breadNumber:1}}
     ]
   },
   
   // 产品审核
   {
-    path: '/productCheck',
+    path: '/',
     component: Layout,
-    redirect: '/productCheck/index',
+    // redirect: '/productCheck/index',
     // name: '企业审核',
     noDropdown: true,
     children: [
       // { path: 'enterprise_check_pending', name: '待审核列表', component: _import('enterpriseCheck/enterprise_check_pending') }
-      { path: 'index', name: '产品审核', component: _import('productCheck/index') },
-      { path: 'productCheckDetail', name: '待审产品详情', component: _import('productCheck/productCheckDetail') },
-      { path: 'productCheckedDetail', name: '已审核产品详情', component: _import('productCheck/productCheckedDetail') }
-
+      { path: 'productCheck', name: '产品审核', component: _import('productCheck/index') },
+      { path: 'productCheck/productCheckDetail', name: '待审产品详情', component: _import('productCheck/productCheckDetail'), meta:{breadNumber:1}},
+      { path: 'productCheck/productCheckedDetail', name: '已审核产品详情', component: _import('productCheck/productCheckedDetail'), meta:{breadNumber:1}}
+    
     ]
   },
   
   // 上线审核
   {
-    path: '/goLiveCheck',
+    path: '/',
     component: Layout,
-    redirect: '/goLiveCheck/index',
+    // redirect: '/goLiveCheck/index',
     // name: '企业审核',
     noDropdown: true,
     children: [
       // { path: 'enterprise_check_pending', name: '待审核列表', component: _import('enterpriseCheck/enterprise_check_pending') }
-      { path: 'index', name: '上线审核', component: _import('goLiveCheck/index') },
-      { path: 'goLiveCheckDetail', name: '上线待审详情', component: _import('goLiveCheck/goLiveCheckDetail') },
-      { path: 'goLiveCheckedDetail', name: '上线已审核详情', component: _import('goLiveCheck/goLiveCheckedDetail') }
+      { path: 'goLiveCheck', name: '上线审核', component: _import('goLiveCheck/index') },
+      { path: 'goLiveCheck/goLiveCheckDetail', name: '上线待审详情', component: _import('goLiveCheck/goLiveCheckDetail'), meta:{breadNumber:1} },
+      { path: 'goLiveCheck/goLiveCheckedDetail', name: '上线已审核详情', component: _import('goLiveCheck/goLiveCheckedDetail'), meta:{breadNumber:1} }
     
     ]
   },
@@ -99,7 +100,7 @@ export const constantRouterMap = [
       { path: 'index', name: 'Form', icon: 'zonghe', component: _import('page/form') }
     ]
   },
-
+  
   {
     path: '/table',
     component: Layout,
@@ -108,7 +109,7 @@ export const constantRouterMap = [
     noDropdown: true,
     children: [{ path: 'index', name: 'Table', component: _import('table/index'), meta: { role: ['admin'] }}]
   },
-
+  
   { path: '*', redirect: '/404', hidden: true }
 ]
 

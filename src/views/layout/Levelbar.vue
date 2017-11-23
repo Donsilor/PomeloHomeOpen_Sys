@@ -1,7 +1,7 @@
 <template>
   <el-breadcrumb class="app-levelbar" separator="/">
-    <el-breadcrumb-item v-for="(item,index)  in levelList" :key="item.path">
-      <router-link v-if='item.redirect==="noredirect"||index==levelList.length-1' to="" class="no-redirect">{{item.name}}</router-link>
+    <el-breadcrumb-item v-for="(item,index)  in breadList" :key="item.path">
+      <router-link v-if='item.redirect==="noredirect"||index==breadList.length-1' to="" class="no-redirect">{{item.name}}</router-link>
       <router-link v-else :to="item.redirect||item.path">{{item.name}}</router-link>
     </el-breadcrumb-item>
   </el-breadcrumb>
@@ -14,17 +14,21 @@ export default {
   },
   data() {
     return {
-      levelList: null
+      breadList: null
     }
   },
   methods: {
     getBreadcrumb() {
-      let matched = this.$route.matched.filter(item => item.name)
-      const first = matched[0]
-      if (first && (first.name !== 'Home' || first.path !== '')) {
-        matched = [{ name: 'Home', path: '/' }].concat(matched)
-      }
-      this.levelList = matched
+      var breadNumber= typeof(this.$route.meta.breadNumber)!="undefined"?this.$route.meta.breadNumber:0;//默认为0
+      var newBread={name:this.$route.name,path:this.$route.fullPath};//当前页面的
+      console.log('newBread', newBread);
+      var breadList=this.$store.getters.breadListState;//获取breadList数组
+      console.log('breadList', breadList);
+      breadList.splice(breadNumber,breadList.length-breadNumber,newBread);
+      console.log('breadList', breadList);
+      var breadList=JSON.stringify(breadList);
+      this.$store.commit('breadListMutations',breadList);
+      this.breadList=this.$store.getters.breadListState;
     }
   },
   watch: {

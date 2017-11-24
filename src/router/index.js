@@ -90,25 +90,25 @@ export const constantRouterMap = [
     ]
   },
   
-  {
-    path: '/example',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'Example',
-    icon: 'zujian',
-    children: [
-      { path: 'index', name: 'Form', icon: 'zonghe', component: _import('page/form') }
-    ]
-  },
-  
-  {
-    path: '/table',
-    component: Layout,
-    redirect: '/table/index',
-    icon: 'tubiao',
-    noDropdown: true,
-    children: [{ path: 'index', name: 'Table', component: _import('table/index'), meta: { role: ['admin'] }}]
-  },
+  // {
+  //   path: '/example',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   name: 'Example',
+  //   icon: 'zujian',
+  //   children: [
+  //     { path: 'index', name: 'Form', icon: 'zonghe', component: _import('page/form') }
+  //   ]
+  // },
+  //
+  // {
+  //   path: '/table',
+  //   component: Layout,
+  //   redirect: '/table/index',
+  //   icon: 'tubiao',
+  //   noDropdown: true,
+  //   children: [{ path: 'index', name: 'Table', component: _import('table/index'), meta: { role: ['admin'] }}]
+  // },
   
   { path: '*', redirect: '/404', hidden: true }
 ]

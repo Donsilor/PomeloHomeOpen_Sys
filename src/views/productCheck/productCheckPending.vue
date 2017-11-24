@@ -119,14 +119,10 @@
 
 <script>
   import { getReviewList, getProductType } from '@/api/check'
-  import waves from '@/directive/waves/index.js' // 水波纹指令
   import { productTechonologyType } from '@/utils/config';
 
   export default {
     name: 'productCheckpending',
-    directives: {
-      waves
-    },
     data() {
       return {
         // ====table===
@@ -151,19 +147,6 @@
         productTypeList: [], // 产品品类
         productTechonologyType: productTechonologyType, // 接入方式
 
-      }
-    },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        }
-        return statusMap[status]
-      },
-      typeFilter(type) {
-        return calendarTypeKeyValue[type]
       }
     },
     mounted() {

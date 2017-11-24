@@ -21,11 +21,10 @@ export default {
     getBreadcrumb() {
       var breadNumber= typeof(this.$route.meta.breadNumber)!="undefined"?this.$route.meta.breadNumber:0;//默认为0
       var newBread={name:this.$route.name,path:this.$route.fullPath};//当前页面的
-      console.log('newBread', newBread);
+//      console.log('newBread', newBread);
       var breadList=this.$store.getters.breadListState;//获取breadList数组
-      console.log('breadList', breadList);
       breadList.splice(breadNumber,breadList.length-breadNumber,newBread);
-      console.log('breadList', breadList);
+//      console.log('breadList', breadList);
       var breadList=JSON.stringify(breadList);
       this.$store.commit('breadListMutations',breadList);
       this.breadList=this.$store.getters.breadListState;

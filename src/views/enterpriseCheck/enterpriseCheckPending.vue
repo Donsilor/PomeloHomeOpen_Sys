@@ -2,33 +2,34 @@
   <div class="app-container calendar-list-container">
     <div class="filter-container">
 
-      <el-form :inline="true" class="demo-form-inline">
-        <el-form-item label="公司名称">
-          <el-input  placeholder="公司名称"></el-input>
+      <el-form :inline="true" :model="queryCondition" ref="queryCondition" class="demo-form-inline">
+        <el-form-item label="公司名称" prop="business_name">
+          <el-input v-model="queryCondition.business_name" placeholder="公司名称"></el-input>
         </el-form-item>
 
-        <el-form-item label="联系人">
-          <el-input  placeholder="联系人"></el-input>
+        <el-form-item label="联系人" prop="contacts">
+          <el-input v-model="queryCondition.contacts" placeholder="联系人"></el-input>
         </el-form-item>
 
-        <el-form-item label="联系手机">
-          <el-input  placeholder="联系手机"></el-input>
+        <el-form-item label="联系手机" prop="contacts_mobile">
+          <el-input v-model="queryCondition.contacts_mobile" placeholder="联系手机"></el-input>
         </el-form-item>
 
-        <el-form-item label="提交时间">
-          <el-date-picker
+        <el-form-item label="提交时间" prop="created_date">
+          <el-date-picker v-model="queryCondition.created_date"
                   type="datetimerange"
                   placeholder="选择时间范围"
                   align="right">
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="">查询</el-button>
+          <el-button type="primary" @click="getList">查询</el-button>
+          <el-button @click="resetForm('queryCondition')">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row style="width: 100%">
+    <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row style="width: 100%">
 
 
       <el-table-column min-width="110px" label="公司">
@@ -37,9 +38,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="110px" v-if='showAuditor' align="center" label="审核人">
+      <el-table-column width="110px" align="center" label="审核人">
         <template scope="scope">
-          <span style='color:red;'>{{scope.row.approved_user}}</span>
+          <span>{{scope.row.approved_user}}</span>
         </template>
       </el-table-column>
 
@@ -90,76 +91,32 @@
 
 <script>
   import { getReviewList } from '@/api/check'
-  import waves from '@/directive/waves/index.js' // 水波纹指令
   import { parseTime } from '@/utils'
 
-  const calendarTypeOptions = [
-    { key: 'CN', display_name: '中国' },
-    { key: 'US', display_name: '美国' },
-    { key: 'JP', display_name: '日本' },
-    { key: 'EU', display_name: '欧元区' }
-  ]
-
-  // arr to obj
-  const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-    acc[cur.key] = cur.display_name
-    return acc
-  }, {})
-
   export default {
-    name: 'table_demo',
-    directives: {
-      waves
-    },
+    name: 'enterPriseCheckPengding',
+
     data() {
       return {
+        // ====table===
         list: null,
         total: null,
         listLoading: false,
         listQuery: {
           page: 1,
-          limit: 20,
-          importance: undefined,
-          title: undefined,
-          type: undefined,
-          sort: '+id'
+          limit: 10,
         },
-        temp: {
-          id: undefined,
-          importance: 0,
-          remark: '',
-          timestamp: 0,
-          title: '',
-          type: '',
-          status: 'published'
+        // =====查询条件=====
+        queryCondition: {
+          business_name: '',
+          brand_name: '',
+          type_id: '',
+          model: '',
+          created_date: '',
+          created_start: '',
+          created_end: '',
+          technology_type: ''
         },
-        importanceOptions: [1, 2, 3],
-        calendarTypeOptions,
-        sortOptions: [{ label: '按ID升序列', key: '+id' }, { label: '按ID降序', key: '-id' }],
-        statusOptions: ['published', 'draft', 'deleted'],
-        dialogFormVisible: false,
-        dialogStatus: '',
-        textMap: {
-          update: '编辑',
-          create: '创建'
-        },
-        dialogPvVisible: false,
-        pvData: [],
-        showAuditor: false,
-        tableKey: 0
-      }
-    },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        }
-        return statusMap[status]
-      },
-      typeFilter(type) {
-        return calendarTypeKeyValue[type]
       }
     },
     mounted() {
@@ -177,11 +134,16 @@
         };
         Object.assign(params, this.queryCondition);
         getReviewList(params).then(response => {
-          console.log('审核列表', response.data);
-          this.list = response.data.result.data
-//          this.total = response.data.total
+          console.log('企业审核列表', response.data);
+          this.list = response.data.result.data;
+          this.total = response.data.result.total;
           this.listLoading = false
         })
+      },
+
+      // 查询条件重置
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
       },
 
       // 跳转到待审核详情页

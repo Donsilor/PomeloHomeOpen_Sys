@@ -76,11 +76,14 @@ export default {
       }
     },
     handleLogin() {
+      console.log('登录');
+
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
+            console.log('登录');
             this.$router.push({ path: '/enterpriseCheck' })
           }).catch(() => {
             this.loading = false

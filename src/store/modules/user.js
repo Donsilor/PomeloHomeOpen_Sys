@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/login'
+import { login, logout } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -30,7 +30,7 @@ const user = {
       const mail = userInfo.mail.trim();
       return new Promise((resolve, reject) => {
         login(mail, userInfo.password).then(response => {
-          const data = response.data
+          const data = response;
           console.log('出参', data);
           setToken(data.token)
           commit('SET_TOKEN', data.token)

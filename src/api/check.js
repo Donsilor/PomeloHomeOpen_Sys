@@ -16,7 +16,7 @@ export function getProductType () {
   return fetch({
     url: '/product/type_lists',
     method: 'post',
-    // data: params
+    data: {}
     
   })
 }

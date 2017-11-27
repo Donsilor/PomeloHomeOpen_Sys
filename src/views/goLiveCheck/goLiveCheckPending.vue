@@ -110,7 +110,7 @@
 
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                     :page-sizes="[10,20,30, 50]" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
 
@@ -121,6 +121,7 @@
   import { getReviewList, getProductType } from '@/api/check'
   import waves from '@/directive/waves/index.js' // 水波纹指令
   import { productTechonologyType } from '@/utils/config';
+  import { parseTime } from '@/utils'
 
   export default {
     name: 'productCheckpending',
@@ -173,19 +174,22 @@
     },
     methods: {
       getList() {
+        // 时间格式化
+        if (this.queryCondition.created_date[0]) {
+          this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
+          this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
+        }
         this.listLoading = true
         let params = {
-          type: 3, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
+          type: 4, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
           status: 0, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
-          limit: 10,
-          page: this.listQuery.page,
-//          business_name: 'test',
-//          model: 'modle'
+          limit: this.listQuery.limit,
+          page: this.listQuery.page
         };
         getReviewList(params).then(response => {
           console.log('审核产品列表', response.data);
-          this.list = response.data.result.data;
-          this.total = response.data.result.total;
+          this.list = response.data;
+          this.total = response.total;
           this.listLoading = false
         })
       },
@@ -194,7 +198,7 @@
       getProductType() {
         getProductType().then(response => {
 //          console.log('产品品类', response.data);
-          this.productTypeList = response.data.result.list;
+          this.productTypeList = response.list;
         });
       },
 

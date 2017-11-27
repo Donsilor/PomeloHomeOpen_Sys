@@ -123,11 +123,15 @@
     },
     methods: {
       getList() {
+        if (this.queryCondition.created_date[0]) {
+          this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
+          this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
+        }
         this.listLoading = true
         let params = {
           type: 1, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
-          status: 1, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
-          limit: 10,
+          status: 3, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
+          limit: this.listQuery.limit,
           page: this.listQuery.page
         };
         Object.assign(params, this.queryCondition);

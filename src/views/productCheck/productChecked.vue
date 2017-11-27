@@ -110,7 +110,7 @@
 
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                     :page-sizes="[10,20,30, 50]" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
 
@@ -120,6 +120,7 @@
 <script>
   import { getReviewList, getProductType } from '@/api/check'
   import { productTechonologyType } from '@/utils/config';
+  import { parseTime } from '@/utils'
 
   export default {
     name: 'productCheckpending',
@@ -156,11 +157,16 @@
     },
     methods: {
       getList() {
+        // 时间格式化
+        if (this.queryCondition.created_date[0]) {
+          this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
+          this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
+        }
         this.listLoading = true
         let params = {
           type: 3, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
-          status: 1, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
-          limit: 10,
+          status: 3, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
+          limit: this.listQuery.limit,
           page: this.listQuery.page
         };
         Object.assign(params, this.queryCondition);

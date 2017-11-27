@@ -142,9 +142,9 @@
         };
         Object.assign(params, this.queryCondition);
         getSdkList(params).then(response => {
-          console.log('sdk列表', response.data);
-          this.list = response.data.result.data;
-          this.total = response.data.result.total;
+          console.log('sdk列表', response);
+          this.list = response.data;
+          this.total = response.total;
           this.listLoading = false
         })
       },
@@ -152,8 +152,8 @@
       // 获取wifi列表
       getWifiModuleList() {
         getWifiModuleList().then(response => {
-          console.log('WIFI模组/芯片列表', response.data);
-          this.wifiModuleList = response.data.result.list;
+          console.log('WIFI模组/芯片列表', response);
+          this.wifiModuleList = response.list;
         });
       },
 

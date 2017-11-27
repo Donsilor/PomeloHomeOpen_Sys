@@ -19,7 +19,9 @@
           <el-date-picker v-model="queryCondition.created_date"
                   type="datetimerange"
                   placeholder="选择时间范围"
-                  align="right">
+                  align="right"
+                          format="yyyy-MM-dd HH:mm:ss"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item>
@@ -112,22 +114,29 @@
           contacts: '',
           contacts_mobile: '',
           created_date: '',
-          created_date: '',
-          created_start: '',
+          created_start: this.created_start,
           created_end: '',
         },
       }
+    },
+    computed: {
     },
     mounted() {
       this.getList();
     },
     methods: {
       getList() {
-        this.listLoading = true
+//        console.log(this.queryCondition.created_date);
+        if (this.queryCondition.created_date[0]) {
+          this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
+          this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
+        }
+//        console.log(this.queryCondition.created_start);
+        this.listLoading = true;
         let params = {
           type: 1, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
           status: 0, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
-          limit: 10,
+          limit: this.listQuery.limit,
           page: this.listQuery.page
         };
         Object.assign(params, this.queryCondition);
@@ -145,8 +154,9 @@
       },
 
       // 跳转到待审核详情页
-      goCheckPengdingDetail() {
-        this.$router.push({path: '/enterpriseCheck/enterpriseCheckDetail', query: {}});
+      goCheckPengdingDetail(row) {
+//        console.log('row', row);
+        this.$router.push({path: '/enterpriseCheck/enterpriseCheckDetail', query: row});
       },
 
       handleSizeChange(val) {

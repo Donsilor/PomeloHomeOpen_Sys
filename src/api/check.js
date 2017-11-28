@@ -31,3 +31,14 @@ export function getReviewInfo (params) {
     
   })
 }
+
+// 提交审核
+export function commitCheck (params) {
+  // console.log('查询入参', params);
+  return fetch({
+    url: '/admin/review_approve',
+    method: 'post',
+    data: params
+    
+  })
+}

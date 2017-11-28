@@ -73,7 +73,7 @@
       <el-table-column align="center" label="操作" width="150">
         <template scope="scope">
           <el-button v-if="scope.row.status!='published'" size="small" type="success"
-                     @click="goCheckPengdingDetail(scope.row)">
+                     @click="goCheckDetail(scope.row)">
             查看详情
           </el-button>
         </template>
@@ -130,6 +130,9 @@
         if (this.queryCondition.created_date[0]) {
           this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
           this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
+        } else {
+          this.queryCondition.created_start = '';
+          this.queryCondition.created_end = '';
         }
 //        console.log(this.queryCondition.created_start);
         this.listLoading = true;
@@ -154,7 +157,7 @@
       },
 
       // 跳转到待审核详情页
-      goCheckPengdingDetail(row) {
+      goCheckDetail(row) {
 //        console.log('row', row);
         this.$router.push({path: '/enterpriseCheck/enterpriseCheckDetail', query: row});
       },

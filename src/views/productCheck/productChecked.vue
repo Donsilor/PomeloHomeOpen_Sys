@@ -99,7 +99,7 @@
       <el-table-column align="center" label="操作" width="150">
         <template scope="scope">
           <el-button v-if="scope.row.status!='published'" size="small" type="success"
-                     @click="goCheckPengdingDetail(scope.row)">
+                     @click="goCheckDetail(scope.row)">
             查看详情
           </el-button>
         </template>
@@ -161,6 +161,9 @@
         if (this.queryCondition.created_date[0]) {
           this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
           this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
+        } else {
+          this.queryCondition.created_start = '';
+          this.queryCondition.created_end = '';
         }
         this.listLoading = true
         let params = {
@@ -201,9 +204,13 @@
       },
 
       // 跳转到待审核详情页
-      goCheckPengdingDetail() {
-        this.$router.push({path: '/productCheck/productCheckedDetail', query: {}});
-      },
+      goCheckgDetail(row) {
+        if (row.status === 1) { // 1 = 审批通过
+          this.$router.push({path: '/productCheck/productCheckedDetail', query: row});
+        } else if (row.status === 2) { // 2 = 审批不通过 需要重新审批
+          this.$router.push({path: '/productCheck/productCheckDetail', query: row});
+        }
+      }
 
     }
   }

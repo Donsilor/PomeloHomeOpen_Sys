@@ -38,8 +38,8 @@ export const constantRouterMap = [
     noDropdown: true,
     children: [
       { path: 'enterpriseCheck', name: '企业审核', component: _import('enterpriseCheck/index') },
-      { path: 'enterpriseCheck/enterpriseCheckedDetail', name: '已审核业详情', component: _import('enterpriseCheck/enterpriseCheckedDetail') ,meta:{breadNumber:1}},
-      { path: 'enterpriseCheck/enterpriseCheckDetail', name: '待审核业详情', component: _import('enterpriseCheck/enterpriseCheckDetail') ,meta:{breadNumber:1}}
+      { path: 'enterpriseCheck/enterpriseCheckedDetail', name: '已审核详情', component: _import('enterpriseCheck/enterpriseCheckedDetail') ,meta:{breadNumber:1}},
+      { path: 'enterpriseCheck/enterpriseCheckDetail', name: '待审核详情', component: _import('enterpriseCheck/enterpriseCheckDetail') ,meta:{breadNumber:1}}
     ]
   },
   

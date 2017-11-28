@@ -33,7 +33,7 @@ service.interceptors.response.use(
       Message({
         message: res.msg,
         type: 'error',
-        duration: 5 * 1000
+        duration: 2 * 1000
       })
 
       // 401:未授权

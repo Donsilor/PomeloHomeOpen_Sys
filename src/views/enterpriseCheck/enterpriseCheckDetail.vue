@@ -19,22 +19,22 @@
     </el-row>
     <div>
       <el-form :inline="true" class="demo-form-inline">
-        <el-col :span="4">
-          <el-button type="primary">审核通过</el-button>
-        </el-col>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item>
+              <el-radio-group @change="generateReason('联系人信息未审核通过', contactsCheck.action_type, contactsCheck.unapproved_reason)" v-model="contactsCheck.action_type">
+                <el-radio :label="1">审核通过</el-radio>
+                <el-radio :label="2">审核不通过</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
 
-        <el-col :span="4">
-          <el-button type="primary">审核不通过</el-button>
-        </el-col>
-
-        <el-col :span="16">
-          <el-form-item style="width: 100%" label="审核结果：">
-            <div >
-            <el-input></el-input>
-            </div>
-          </el-form-item>
-        </el-col>
-
+          <el-col :span="10" v-if="contactsCheck.action_type == 2">
+            <el-form-item label="审核结果：">
+              <el-input @blur="modifyReason('联系人信息未审核通过', contactsCheck.unapproved_reason)" v-model="contactsCheck.unapproved_reason"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
   </el-card>
@@ -70,22 +70,23 @@
     </el-row>
     <div>
       <el-form :inline="true" class="demo-form-inline">
-        <el-col :span="4">
-          <el-button type="primary">审核通过</el-button>
-        </el-col>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item>
+              <el-radio-group v-model="companyInfoCheck.action_type"
+                              @change="generateReason('公司/团队信息未审核通过', companyInfoCheck.action_type, companyInfoCheck.unapproved_reason)">
+                <el-radio :label="1">审核通过</el-radio>
+                <el-radio :label="2">审核不通过</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
 
-        <el-col :span="4">
-          <el-button type="primary">审核不通过</el-button>
-        </el-col>
-
-        <el-col :span="16">
-          <el-form-item style="width: 100%" label="审核结果：">
-            <div >
-              <el-input></el-input>
-            </div>
-          </el-form-item>
-        </el-col>
-
+          <el-col :span="10" v-if="companyInfoCheck.action_type == 2">
+            <el-form-item label="审核结果：">
+              <el-input @blur="modifyReason('公司/团队信息未审核通过', companyInfoCheck.unapproved_reason)" v-model="companyInfoCheck.unapproved_reason"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
   </el-card>
@@ -99,12 +100,25 @@
         <img style="width: 100%;height: 100%" :src="item.file_url" class="image">
       </div>
       <div style="padding: 30px 0">
-        <el-col :span="4">
-          <el-button  type="primary">审核通过</el-button>
-        </el-col>
-        <el-col :span="4">
-          <el-button  type="primary">审核不通过</el-button>
-        </el-col>
+        <el-form :inline="true" class="demo-form-inline">
+          <el-row>
+            <el-col :span="6">
+              <el-form-item>
+                <el-radio-group v-model="item.action_type"
+                                @change="generateReason(item.filename+'未审核通过', item.action_type, item.unapproved_reason)">
+                  <el-radio :label="1">审核通过</el-radio>
+                  <el-radio :label="2">审核不通过</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="10" v-if="item.action_type == 2">
+              <el-form-item label="审核结果：">
+                <el-input @blur="modifyReason(item.filename+'未审核通过', item.unapproved_reason)" v-model="item.unapproved_reason"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
       </div>
     </div>
   </el-card>
@@ -112,52 +126,40 @@
   <!--===========复核原件==============-->
   <h3>复核原件</h3>
   <el-card class="box-card">
-    <div>
-      <p>1、营业执照/组织结构代码证/税务登记证复印件，加盖公章</p>
+    <div v-for="item in originalCheckType">
+      <p>{{item.id}}、{{item.description}}</p>
       <div style="padding: 30px 0">
-        <el-col :span="4">
-          <el-button  type="primary">审核通过</el-button>
-        </el-col>
-        <el-col :span="4">
-          <el-button  type="primary">审核不通过</el-button>
-        </el-col>
+        <el-form :inline="true" class="demo-form-inline">
+          <el-row>
+            <el-col :span="6">
+              <el-form-item>
+                <el-radio-group v-model="item.action_type"
+                                @change="generateReason(item.description+'未审核通过', item.action_type, item.unapproved_reason)">
+                  <el-radio :label="1">审核通过</el-radio>
+                  <el-radio :label="2">审核不通过</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="10" v-if="item.action_type == 2">
+              <el-form-item label="审核结果：">
+                <el-input @blur="modifyReason(item.description+'未审核通过', item.unapproved_reason)" v-model="item.unapproved_reason"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
       </div>
     </div>
 
-    <div>
-      <p>1、营业执照/组织结构代码证/税务登记证复印件，加盖公章</p>
-      <div style="padding: 30px 0">
-        <el-col :span="4">
-          <el-button  type="primary">审核通过</el-button>
-        </el-col>
-        <el-col :span="4">
-          <el-button  type="primary">审核不通过</el-button>
-        </el-col>
-      </div>
-    </div>
-
-    <div>
-      <p>1、营业执照/组织结构代码证/税务登记证复印件，加盖公章</p>
-      <div style="padding: 30px 0">
-        <el-col :span="4">
-          <el-button  type="primary">审核通过</el-button>
-        </el-col>
-        <el-col :span="4">
-          <el-button  type="primary">审核不通过</el-button>
-        </el-col>
-      </div>
-    </div>
   </el-card>
 
   <!--===========审核==============-->
   <el-card class="box-card" style="margin: 30px 0">
-      <p>审核不通过：</p>
-      <p>1. 联系人信息未审核通过-电话未拨通；</p>
-      <p>2. 上传公司资质说明，营业执照复印件，加盖公章未审核通过-上传图片不清晰；</p>
-      <p>3. 复核原件，营业执照复印件，加盖公章未审核通过-原件公章模糊；</p>
+      <p v-if="">审核不通过：</p>
+      <p v-for="item, index in unapproved_reason_list">{{index + 1}}. {{item.reason}}；</p>
     <div style="padding: 30px 0">
       <el-col :span="4">
-        <el-button  type="primary">提交</el-button>
+        <el-button  type="primary" @click="commitCheck" >提交</el-button>
       </el-col>
       <el-col :span="4">
         <el-button  >取消</el-button>
@@ -169,15 +171,28 @@
 </template>
 
 <script>
-  import { getReviewInfo } from '@/api/check'
+  import { getReviewInfo, commitCheck } from '@/api/check';
+  import { originalCheckType } from '@/utils/config'; // 复核原件类型
 
   export default {
     name: 'enterpriseCheckDetail',
 
     data() {
       return {
+        contactsCheck: {
+          action_type: 1,
+          unapproved_reason: '联系人信息未审核通过'
+        },
+        companyInfoCheck: {
+          action_type: 1,
+          unapproved_reason: '公司/团队信息未审核通过'
+        },
+        unapproved_reason_list: [],
         record_id: '', // 审核id
-        checkDetail: ''
+        checkDetail: '',
+        originalCheckType: originalCheckType,
+        action_type: null, // 提交审核操作类型 ，1 = 通过，2 = 驳回
+        approved_reason: '' // 审核原因
       }
     },
     created() {
@@ -188,7 +203,7 @@
       this.getReviewInfo();
     },
     methods: {
-
+      // 获取审核详情
       getReviewInfo() {
         let _this = this;
         let params = {
@@ -197,8 +212,76 @@
         getReviewInfo(params).then(response => {
           console.log('企业审核详情', response);
           this.checkDetail = response;
+          if (_this.checkDetail.licenses.length > 0){
+            _this.checkDetail.licenses.forEach(function (item) {
+              _this.$set(item, 'action_type', 1);
+              _this.$set(item, 'unapproved_reason', item.filename + '未审核通过');
+              }
+            )
+          }
+
         })
       },
+
+      // 生成审核不通过列表
+      generateReason(checkProp, type, reason) {
+        let _this = this;
+        if (type === 2) {
+//          if (reason.trim() === '') {
+//            reason = checkProp;
+//          }
+          this.unapproved_reason_list.push({checkProp, reason});
+        } else if (type === 1) {
+          for (let i = 0; i < _this.unapproved_reason_list.length; i++) {
+//            console.log(_this.unapproved_reason_list[i].checkProp);
+            if (_this.unapproved_reason_list[i].checkProp === checkProp) {
+              _this.unapproved_reason_list.splice(i, 1)
+            }
+          }
+
+        }
+//        console.log('this.unapproved_reason_list', this.unapproved_reason_list);
+      },
+
+      // 修改审核原因
+      modifyReason(checkProp, reason) {
+        let _this = this;
+        for (let i = 0; i < _this.unapproved_reason_list.length; i++) {
+          console.log(_this.unapproved_reason_list[i].checkProp);
+          if (_this.unapproved_reason_list[i].checkProp === checkProp) {
+            if (reason.trim() != '') {
+              _this.unapproved_reason_list[i].reason = reason;
+
+            } else if (reason.trim() === '')
+            _this.unapproved_reason_list[i].reason = checkProp;
+          }
+        }
+      },
+
+      // 提交审核
+      commitCheck() {
+        let _this = this;
+        if (this.unapproved_reason_list.length > 0) {
+          this.action_type = 2; // 驳回
+          _this.approved_reason = '';
+          for (let i = 0; i < _this.unapproved_reason_list.length; i++) {
+            _this.approved_reason =_this.approved_reason + (i + 1) + '.'+ _this.unapproved_reason_list[i] + ' '
+          }
+          console.log(_this.approved_reason);
+        } else {
+          this.action_type = 1; // 通过
+        }
+        let params = {
+          record_id: this.record_id,
+          action_type: this.action_type,
+          approved_reason: _this.approved_reason
+        };
+        commitCheck(params).then(response => {
+          if (response.res) {
+            console.log('提交成功');
+          }
+        })
+      }
     }
   }
 </script>

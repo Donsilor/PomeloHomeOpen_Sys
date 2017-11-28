@@ -4,29 +4,29 @@
 
       <!--=========查询条件==========-->
       <el-form :inline="true" :model="queryCondition" ref="queryCondition" class="demo-form-inline" >
-        <el-form-item label="公司名称">
+        <el-form-item label="公司名称" prop="business_name">
           <el-input v-model="queryCondition.business_name" placeholder="公司名称"></el-input>
         </el-form-item>
 
-        <el-form-item label="品牌">
+        <el-form-item label="品牌" prop="business_name">
           <el-input v-model="queryCondition.brand_name" placeholder="品牌"></el-input>
         </el-form-item>
 
-        <el-form-item label="品类">
+        <el-form-item label="品类" prop="type_id">
           <el-select placeholder="请选择" v-model="queryCondition.type_id">
             <el-option v-for="item in productTypeList"
                        :key="item.id"
                        :label="item.name"
-                       :value="item.value">
+                       :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="型号">
+        <el-form-item label="型号" prop="model">
           <el-input v-model="queryCondition.model" placeholder="型号"></el-input>
         </el-form-item>
 
-        <el-form-item label="创建时间">
+        <el-form-item label="创建时间" prop="created_date">
           <el-date-picker v-model="queryCondition.created_date"
                   type="datetimerange"
                   placeholder="选择时间范围"
@@ -45,7 +45,7 @@
         <!--</el-form-item>-->
 
         <el-form-item>
-          <el-button type="primary" @click="">查询</el-button>
+          <el-button type="primary" @click="getList">查询</el-button>
           <el-button @click="resetForm('queryCondition')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -99,7 +99,7 @@
       <el-table-column align="center" label="操作" width="150">
         <template scope="scope">
           <el-button v-if="scope.row.status!='published'" size="small" type="success"
-                     @click="goCheckPengdingDetail(scope.row)">
+                     @click="goCheckDetail(scope.row)">
             查看详情
           </el-button>
         </template>
@@ -119,15 +119,12 @@
 
 <script>
   import { getReviewList, getProductType } from '@/api/check'
-  import waves from '@/directive/waves/index.js' // 水波纹指令
   import { productTechonologyType } from '@/utils/config';
   import { parseTime } from '@/utils'
 
   export default {
-    name: 'productCheckpending',
-    directives: {
-      waves
-    },
+    name: 'goLiveCheckpending',
+
     data() {
       return {
         // ====table===
@@ -154,20 +151,7 @@
 
       }
     },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        }
-        return statusMap[status]
-      },
-      typeFilter(type) {
-        return calendarTypeKeyValue[type]
-      }
-    },
-    created() {
+    mounted() {
 //      console.log('配置文件', productTechonologyType);
       this.getList();
       this.getProductType();
@@ -178,6 +162,9 @@
         if (this.queryCondition.created_date[0]) {
           this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
           this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
+        } else {
+          this.queryCondition.created_start = '';
+          this.queryCondition.created_end = '';
         }
         this.listLoading = true
         let params = {
@@ -186,6 +173,7 @@
           limit: this.listQuery.limit,
           page: this.listQuery.page
         };
+        Object.assign(params, this.queryCondition);
         getReviewList(params).then(response => {
           console.log('审核产品列表', response.data);
           this.list = response.data;
@@ -217,8 +205,8 @@
       },
 
       // 跳转到待审核详情页
-      goCheckPengdingDetail() {
-        this.$router.push({path: '/goLiveCheck/goLiveCheckDetail', query: {}});
+      goCheckDetail(row) {
+        this.$router.push({path: '/goLiveCheck/goLiveCheckDetail', query: row});
       },
 
     }

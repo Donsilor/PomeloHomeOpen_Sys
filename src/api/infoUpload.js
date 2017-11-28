@@ -21,3 +21,14 @@ export function getWifiModuleList () {
     
   })
 }
+
+// 获取产品文档列表
+export function getProductdoc (params) {
+  // console.log('查询入参', params);
+  return fetch({
+    url: '/admin/productdoc_lists?page='+params.page,
+    method: 'post',
+    data: params
+    
+  })
+}

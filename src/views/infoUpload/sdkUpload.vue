@@ -139,6 +139,7 @@
         this.listLoading = true
         let params = {
           page: this.listQuery.page,
+          limit: this.listQuery.limit,
         };
         Object.assign(params, this.queryCondition);
         getSdkList(params).then(response => {

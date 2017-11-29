@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+<div class="app-container">
     <!--=========查询条件==========-->
     <el-form :inline="true" :model="queryCondition" ref="queryCondition" class="demo-form-inline" >
 

@@ -129,6 +129,7 @@
 
 <script>
   import { getReviewInfo, commitCheck } from '@/api/check';
+  import { Message } from 'element-ui'
 
   export default {
     name: 'goLiveCheckDetail',
@@ -239,6 +240,12 @@
         commitCheck(params).then(response => {
           if (response.res) {
             console.log('提交成功');
+            Message({
+              message: '审核成功',
+              type: 'success',
+              duration: 2 * 1000
+            })
+            this.$router.go(-1);
           }
         })
       }

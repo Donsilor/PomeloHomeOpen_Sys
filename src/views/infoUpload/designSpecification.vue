@@ -3,7 +3,7 @@
     <!--=========查询条件==========-->
     <el-form :inline="true" class="demo-form-inline" >
       <el-form-item>
-        <el-button @click="dialogVisible = true">新建</el-button>
+        <el-button type="primary" @click="dialogVisible = true">新建</el-button>
       </el-form-item>
     </el-form>
 

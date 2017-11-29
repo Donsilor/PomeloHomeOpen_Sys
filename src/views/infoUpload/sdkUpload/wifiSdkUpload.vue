@@ -1,23 +1,7 @@
 <template>
-  <div class="app-container">
-    <!--=========查询条件==========-->
-    <el-form :inline="true" :model="queryCondition" ref="queryCondition" class="demo-form-inline" >
+<div class="app-container">
 
-      <el-form-item label="接入方式" prop="technology_type">
-        <el-select placeholder="请选择" v-model="queryCondition.technology_type" clearable>
-          <el-option v-for="item in productTechonologyType"
-                     :key="item.id"
-                     :label="item.name"
-                     :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item>
-
-      <el-form-item>
-        <el-button type="primary" @click="getList">查询</el-button>
-        <el-button @click="dialogVisible = true">新建</el-button>
-      </el-form-item>
-    </el-form>
+    <el-button style="margin-bottom: 10px" type="primary" @click="dialogVisible = true">新建</el-button>
 
     <!--=====table=======-->
     <el-table v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
@@ -25,15 +9,18 @@
             style="width: 100%">
       <el-table-column prop="type_name"
                        label="品类"
-                       width="180">
+                       width="80">
       </el-table-column>
       <el-table-column prop="technology_module_vendor"
-              label="模组/芯片厂家"
-              width="180">
+              label="模组/芯片厂家">
       </el-table-column>
       <el-table-column prop="technology_module_model"
               label="型号"
               width="180">
+      </el-table-column>
+      <el-table-column prop="filename"
+                       label="文件名"
+                       width="200">
       </el-table-column>
       <el-table-column prop="size"
               label="SDK大小">
@@ -41,10 +28,10 @@
       <el-table-column prop="created_at_txt"
                        label="上传时间">
       </el-table-column>
-      <el-table-column align="center" label="操作" width="150">
+      <el-table-column align="center" label="操作" width="80">
         <template scope="scope">
           <el-button size="small" type="success"
-                     @click="goCheckDetail(scope.row)">
+                     @click="modifySDK(scope.row)">
             修改
           </el-button>
         </template>
@@ -67,8 +54,18 @@
 
       <el-form :model="form" label-position="right">
 
+        <el-form-item label="品类" prop="type_id" :label-width="formLabelWidth">
+          <el-select placeholder="请选择" v-model="uploadParams.type_id">
+            <el-option v-for="item in productTypeList"
+                       :key="item.id"
+                       :label="item.name"
+                       :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="模组/芯片厂家" :label-width="formLabelWidth">
-          <el-select v-model="technology_type_key" placeholder="请选择">
+          <el-select v-model="uploadParams.technology_type_key" placeholder="请选择">
             <el-option-group
                     v-for="group in wifiModuleList"
                     :key="group.vendor"
@@ -83,9 +80,9 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="型号" :label-width="formLabelWidth">
-          <el-input v-model="technology_type_key" placeholder="型号"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="型号" :label-width="formLabelWidth">-->
+          <!--<el-input v-model="technology_type_key" placeholder="型号"></el-input>-->
+        <!--</el-form-item>-->
 
         <el-form-item label="SDK文件" :label-width="formLabelWidth">
           <el-upload
@@ -93,13 +90,16 @@
                   ref="upload"
                   action="/api/index.php/admin/sdk_upload"
                   :multiple="false"
+                  accept=".zip"
                   :data="uploadParams"
                   :file-list="fileList"
                   :auto-upload="false"
                   :on-error="uploadError"
                   :on-success="uploadSuccess"
+                  :limit="1"
                   >
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传zip文件，且不超过5M</div>
           </el-upload>
         </el-form-item>
 
@@ -116,6 +116,8 @@
 
 <script>
   import { getSdkList, getWifiModuleList } from '@/api/infoUpload';
+  import { getProductType } from '@/api/check'
+
   import { productTechonologyType } from '@/utils/config';
   import FileUpload from 'vue-upload-component';
   import { getToken } from '@/utils/auth'
@@ -146,32 +148,46 @@
         },
         formLabelWidth: '120px',
         wifiModuleList: [],
+        productTypeList: [], // 产品品类
         technology_type_key: '',
         fileList:[],
+        technology_type: '',
         uploadParams: {
+          technology_type: 1, // 技术方案
           token: getToken(),
+          type_id: '', // 品类id
+          technology_type_key: '', // 型号（技术方案关键字）
         }
       }
     },
-    created() {
+    mounted() {
 //      console.log('配置文件', productTechonologyType);
       this.getList();
       this.getWifiModuleList();
+      this.getProductType();
     },
     methods: {
       getList() {
         this.listLoading = true
         let params = {
+          technology_type: 1, // 技术方案，1=wifi, 2=zigbee, 3=蓝牙
           page: this.listQuery.page,
           limit: this.listQuery.limit,
         };
-        Object.assign(params, this.queryCondition);
         getSdkList(params).then(response => {
           console.log('sdk列表', response);
           this.list = response.data;
           this.total = response.total;
           this.listLoading = false
         })
+      },
+
+      // 获取产品品类
+      getProductType() {
+        getProductType().then(response => {
+          console.log('产品品类', response);
+          this.productTypeList = response.list;
+        });
       },
 
       // 获取wifi列表

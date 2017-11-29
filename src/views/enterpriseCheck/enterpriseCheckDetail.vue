@@ -173,6 +173,7 @@
 <script>
   import { getReviewInfo, commitCheck } from '@/api/check';
   import { originalCheckType } from '@/utils/config'; // 复核原件类型
+  import { Message } from 'element-ui'
 
   export default {
     name: 'enterpriseCheckDetail',
@@ -279,6 +280,12 @@
         commitCheck(params).then(response => {
           if (response.res) {
             console.log('提交成功');
+            Message({
+              message: '审核成功',
+              type: 'success',
+              duration: 2 * 1000
+            });
+            this.$router.go(-1);
           }
         })
       }

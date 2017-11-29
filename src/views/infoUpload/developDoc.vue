@@ -3,7 +3,7 @@
     <!--=========查询条件==========-->
     <el-form :inline="true" class="demo-form-inline" >
       <el-form-item>
-        <el-button @click="dialogVisible = true">新建</el-button>
+        <el-button type="primary" @click="dialogVisible = true">新建</el-button>
       </el-form-item>
     </el-form>
 
@@ -22,6 +22,14 @@
       <el-table-column prop="created_at_txt"
                        label="上传时间">
       </el-table-column>
+      <el-table-column align="center" label="操作" width="150">
+        <template scope="scope">
+          <el-button size="small" type="success"
+                     @click="goCheckDetail(scope.row)">
+            修改
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!--=====pagination======-->
@@ -33,31 +41,21 @@
 
     <!--=====dialog======-->
     <el-dialog
-            title="上传SDK文件"
+            title="上传开发文档"
             :visible.sync="dialogVisible"
             size="small"
             :before-close="handleClose">
 
       <el-form :model="form" label-position="right">
 
-        <el-form-item label="模组/芯片厂家">
-          <el-select v-model="technology_type_key" placeholder="请选择">
-            <el-option-group
-                    v-for="group in wifiModuleList"
-                    :key="group.vendor"
-                    :label="group.vendor">
-              <el-option
-                      v-for="item in group.modellist"
-                      :key="item.module_id"
-                      :label="item.model"
-                      :value="item.module_id">
-              </el-option>
-            </el-option-group>
+        <el-form-item label="品类" prop="type_id">
+          <el-select placeholder="请选择" v-model="type_id">
+            <el-option v-for="item in productTypeList"
+                       :key="item.id"
+                       :label="item.name"
+                       :value="item.id">
+            </el-option>
           </el-select>
-        </el-form-item>
-
-        <el-form-item label="型号">
-          <el-input v-model="technology_type_key" placeholder="型号"></el-input>
         </el-form-item>
 
         <el-form-item label="SDK文件">
@@ -83,7 +81,7 @@
 
 <script>
   import { getProductdoc } from '@/api/infoUpload';
-  import { productTechonologyType } from '@/utils/config';
+  import { getProductType } from '@/api/check'
 
   export default {
     data() {
@@ -96,19 +94,19 @@
           page: 1,
           limit: 10,
         },
-        productTechonologyType: productTechonologyType, // 接入方式
         // =====文件上传=====
         dialogVisible: false, // 文件上传对话框
         form: {
 
         },
         formLabelWidth: '120px',
-        wifiModuleList: [],
-        technology_type_key: ''
+        productTypeList: [], // 产品品类
+        type_id: '',
       }
     },
     mounted() {
       this.getList();
+      this.getProductType(); // 获取产品品类
     },
     methods: {
       getList() {
@@ -126,6 +124,14 @@
         })
       },
 
+      // 获取产品品类
+      getProductType() {
+        getProductType().then(response => {
+          console.log('产品品类', response);
+          this.productTypeList = response.list;
+        });
+      },
+
       handleSizeChange(val) {
         this.listQuery.limit = val
         this.getList()
@@ -136,11 +142,7 @@
       },
 
       handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
+        done();
       }
 
     }

@@ -83,7 +83,7 @@ export const constantRouterMap = [
     name: '资料上传',
     children: [
       // { path: 'enterprise_check_pending', name: '待审核列表', component: _import('enterpriseCheck/enterprise_check_pending') }
-      { path: 'sdkUpload', name: 'SDK上传', component: _import('infoUpload/sdkUpload') },
+      { path: 'sdkUpload', name: 'SDK上传', component: _import('infoUpload/sdkUpload/index') },
       { path: 'developDoc', name: '产品开发文档', component: _import('infoUpload/developDoc') },
       { path: 'designSpecification', name: 'UI设计规则', component: _import('infoUpload/designSpecification') }
     

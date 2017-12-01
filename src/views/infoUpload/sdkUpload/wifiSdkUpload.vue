@@ -21,6 +21,11 @@
       <el-table-column prop="filename"
                        label="文件名"
                        width="200">
+        <template slot-scope="scope">
+          <a :href="scope.row.url">
+            {{scope.row.filename}}
+          </a>
+        </template>
       </el-table-column>
       <el-table-column prop="size"
               label="SDK大小">
@@ -29,7 +34,7 @@
                        label="上传时间">
       </el-table-column>
       <el-table-column align="center" label="操作" width="80">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button size="small" type="success"
                      @click="modifySDK(scope.row)">
             修改
@@ -52,10 +57,10 @@
             size="small"
             :before-close="handleClose">
 
-      <el-form :model="form" label-position="right">
+      <el-form :model="uploadParams" :rules="rules" ref="uploadForm" label-position="right">
 
         <el-form-item label="品类" prop="type_id" :label-width="formLabelWidth">
-          <el-select placeholder="请选择" v-model="uploadParams.type_id">
+          <el-select :disabled="isToModify" placeholder="请选择" v-model="uploadParams.type_id">
             <el-option v-for="item in productTypeList"
                        :key="item.id"
                        :label="item.name"
@@ -64,8 +69,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="模组/芯片厂家" :label-width="formLabelWidth">
-          <el-select v-model="uploadParams.technology_type_key" placeholder="请选择">
+        <el-form-item label="模组/芯片厂家" prop="technology_type_key" :label-width="formLabelWidth">
+          <el-select :disabled="isToModify" v-model="uploadParams.technology_type_key" placeholder="请选择">
             <el-option-group
                     v-for="group in wifiModuleList"
                     :key="group.vendor"
@@ -94,6 +99,7 @@
                   :data="uploadParams"
                   :file-list="fileList"
                   :auto-upload="false"
+                  :before-upload="beforeUpload"
                   :on-error="uploadError"
                   :on-success="uploadSuccess"
                   :limit="1"
@@ -106,7 +112,7 @@
       </el-form>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="closeDialog">取 消</el-button>
         <el-button type="primary" @click="uploadSDK">确 定</el-button>
       </span>
     </el-dialog>
@@ -119,13 +125,9 @@
   import { getProductType } from '@/api/check'
 
   import { productTechonologyType } from '@/utils/config';
-  import FileUpload from 'vue-upload-component';
   import { getToken } from '@/utils/auth'
 
   export default {
-    components: {
-      FileUpload
-    },
     data() {
       return {
         // ====table===
@@ -136,22 +138,22 @@
           page: 1,
           limit: 10,
         },
-        // =====查询条件=====
-        queryCondition: {
-          technology_type: ''
-        },
         productTechonologyType: productTechonologyType, // 接入方式
         // =====文件上传=====
-        dialogVisible: true, // 文件上传对话框
-        form: {
-
+        dialogVisible: false, // 文件上传对话框
+        isToModify: false,
+        rules: {
+          type_id: [
+            { required: true, message: '请选择品类', trigger: 'blur' },
+          ],
+          technology_type_key: [
+            { required: true, message: '请选择芯片型号', trigger: 'blur' },
+          ]
         },
         formLabelWidth: '120px',
         wifiModuleList: [],
         productTypeList: [], // 产品品类
-        technology_type_key: '',
         fileList:[],
-        technology_type: '',
         uploadParams: {
           technology_type: 1, // 技术方案
           token: getToken(),
@@ -175,7 +177,7 @@
           limit: this.listQuery.limit,
         };
         getSdkList(params).then(response => {
-          console.log('sdk列表', response);
+          console.log('wifisdk列表', response);
           this.list = response.data;
           this.total = response.total;
           this.listLoading = false
@@ -207,24 +209,71 @@
         this.getList();
       },
 
+      // 叉叉按钮
       handleClose(done) {
         done();
+        this.isToModify = false;
+        this.$refs['uploadForm'].resetFields();
+        this.$refs.upload.clearFiles();
       },
-      
+      // 取消按钮
+      closeDialog() {
+        this.dialogVisible = false;
+        this.$refs['uploadForm'].resetFields();
+        this.$refs.upload.clearFiles();
+        this.isToModify = false;
+      },
+
+      // 判断文件大小
+      beforeUpload(file) {
+        const isLt5M = file.size / 1024 / 1024 < 5;
+        if (!isLt5M) {
+          this.$message.error('SDK文件大小不能超过 5MB!');
+        }
+        return isLt5M;
+      },
       // 上传SDK
       uploadSDK() {
-        console.log('文件', this.fileList);
-        this.$refs.upload.submit();
+        console.log('文件', this.$refs.upload.uploadFiles);
+        if (this.$refs.upload.uploadFiles.length === 0) {
+          this.$message.warning('请选择文件！');
+          return false;
+        }
+        this.$refs['uploadForm'].validate((valid) => {
+          if (valid) {
+            this.$refs.upload.submit();
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
 
       // 上传成功的回调
       uploadSuccess(response, file, fileList) {
         console.log('成功回调', response, file, fileList);
+        if (response.code === 200) {
+          this.$message.success('上传成功！');
+          this.dialogVisible = false;
+          this.$refs['uploadForm'].resetFields();
+          this.$refs.upload.clearFiles();
+          this.getList();
+        }
+
       },
 
       // 上传失败的回调
       uploadError(err, file, fileList) {
         console.log('失败回调', err, file, fileList);
+      },
+      
+      // 修改SDK
+      modifySDK(row) {
+        this.dialogVisible = true;
+        console.log('行数据', row);
+        this.uploadParams.type_id = row.type_id;
+        this.uploadParams.technology_type_key = row.technology_module_id;
+        this.isToModify = true;
       }
 
     }

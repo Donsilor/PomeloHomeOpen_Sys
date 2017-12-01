@@ -98,7 +98,7 @@
         <el-table-column
                 prop="value_list"
                 label="value">
-          <template scope="scope">
+          <template slot-scope="scope">
             <span>{{scope.row.value_list.join("/")}}</span>
           </template>
         </el-table-column>

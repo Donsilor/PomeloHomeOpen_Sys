@@ -42,7 +42,7 @@
                        label="上传时间">
       </el-table-column>
       <el-table-column align="center" label="操作" width="150">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button size="small" type="success"
                      @click="goCheckDetail(scope.row)">
             修改
@@ -117,13 +117,9 @@
 <script>
   import { getSdkList, getWifiModuleList } from '@/api/infoUpload';
   import { productTechonologyType } from '@/utils/config';
-  import FileUpload from 'vue-upload-component';
   import { getToken } from '@/utils/auth'
 
   export default {
-    components: {
-      FileUpload
-    },
     data() {
       return {
         // ====table===

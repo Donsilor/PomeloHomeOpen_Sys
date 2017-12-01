@@ -1,5 +1,5 @@
 <template>
-  <el-menu mode="vertical" theme="dark" :default-active="routeIndex">
+  <el-menu mode="vertical" unique-opened :default-active="$route.path" background-color="#304156" text-color="#fff" active-text-color="#409EFF">
     <sidebar-item :routes="routes"></sidebar-item>
   </el-menu>
 </template>

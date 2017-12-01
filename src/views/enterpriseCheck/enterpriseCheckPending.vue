@@ -34,44 +34,38 @@
     <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row style="width: 100%">
 
 
-      <el-table-column min-width="110px" label="公司">
-        <template scope="scope">
+      <el-table-column label="公司">
+        <template slot-scope="scope">
           <span>{{scope.row.business_name}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="110px" align="center" label="审核人">
-        <template scope="scope">
-          <span>{{scope.row.approved_user}}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column align="center" label="联系人" width="95">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span>{{scope.row.business_name}}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="联系手机" width="95">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span>{{scope.row.business_contacts_mobile}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="180px" align="center" label="提交时间">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span>{{scope.row.created_at_txt}}</span>
         </template>
       </el-table-column>
 
       <el-table-column class-name="status-col" label="状态" width="110">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tag >{{scope.row.status_txt}}</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="150">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button v-if="scope.row.status!='published'" size="small" type="success"
                      @click="goCheckDetail(scope.row)">
             查看详情
@@ -158,7 +152,7 @@
 
       // 跳转到待审核详情页
       goCheckDetail(row) {
-//        console.log('row', row);
+        console.log('row', row);
         this.$router.push({path: '/enterpriseCheck/enterpriseCheckDetail', query: row});
       },
 

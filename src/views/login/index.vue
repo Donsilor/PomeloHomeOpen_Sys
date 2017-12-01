@@ -6,18 +6,18 @@
 
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
-          <icon-svg icon-class="yonghuming" />
+          <svg-icon icon-class="user" />
         </span>
         <el-input name="username" type="text" v-model="loginForm.mail" autoComplete="on" placeholder="登录邮箱" />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
-          <icon-svg icon-class="mima"></icon-svg>
+          <svg-icon icon-class="password"></svg-icon>
         </span>
         <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
           placeholder="登录密码"/>
-        <span class='show-pwd' @click='showPwd'><icon-svg icon-class="eye" /></span>
+        <span class='show-pwd' @click='showPwd'><svg-icon icon-class="eye" /></span>
       </el-form-item>
 
       <el-form-item>
@@ -170,6 +170,7 @@ export default {
       font-size: 16px;
       color: $dark_gray;
       cursor: pointer;
+      user-select:none;
     }
     .thirdparty-button{
       position: absolute;

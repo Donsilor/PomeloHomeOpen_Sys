@@ -34,6 +34,17 @@ export function getWifiModuleList () {
   })
 }
 
+// 获取协议列表
+export function getAgreementList (params) {
+  // console.log('查询入参', params);
+  return fetch({
+    url: '/agreement/lists',
+    method: 'post',
+    data: params
+    
+  })
+}
+
 // 获取产品文档列表
 export function getProductdoc (params) {
   // console.log('查询入参', params);

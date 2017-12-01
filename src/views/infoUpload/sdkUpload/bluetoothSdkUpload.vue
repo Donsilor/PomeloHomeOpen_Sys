@@ -57,7 +57,8 @@
       <el-form :model="uploadParams" :rules="rules" ref="uploadForm" label-position="right">
 
         <el-form-item label="品类" prop="type_id" :label-width="formLabelWidth">
-          <el-select :disabled="isToModify" placeholder="请选择" v-model="uploadParams.type_id">
+          <el-select :disabled="isToModify" placeholder="请选择" v-model="uploadParams.type_id"
+                     @change="getAgreementList">
             <el-option v-for="item in productTypeList"
                        :key="item.id"
                        :label="item.name"
@@ -66,23 +67,7 @@
           </el-select>
         </el-form-item>
 
-        <!--<el-form-item label="模组/芯片厂家" prop="technology_type_key" :label-width="formLabelWidth">-->
-        <!--<el-select :disabled="isToModify" v-model="uploadParams.technology_type_key" placeholder="请选择">-->
-        <!--<el-option-group-->
-        <!--v-for="group in wifiModuleList"-->
-        <!--:key="group.vendor"-->
-        <!--:label="group.vendor">-->
-        <!--<el-option-->
-        <!--v-for="item in group.modellist"-->
-        <!--:key="item.module_id"-->
-        <!--:label="item.model"-->
-        <!--:value="item.module_id">-->
-        <!--</el-option>-->
-        <!--</el-option-group>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
-
-        <el-form-item label="协议" prop="technology_type_key" :label-width="formLabelWidth">
+        <el-form-item v-show="showTypeKey" label="协议" prop="technology_type_key" :label-width="formLabelWidth">
           <el-select :disabled="isToModify" placeholder="请选择" v-model="uploadParams.technology_type_key">
             <el-option v-for="item in agreementList"
                        :key="item.agreement_id"
@@ -92,9 +77,6 @@
           </el-select>
         </el-form-item>
 
-        <!--<el-form-item label="型号" :label-width="formLabelWidth">-->
-        <!--<el-input v-model="technology_type_key" placeholder="型号"></el-input>-->
-        <!--</el-form-item>-->
 
         <el-form-item label="SDK文件" :label-width="formLabelWidth">
           <el-upload
@@ -158,6 +140,7 @@
           ]
         },
         formLabelWidth: '120px',
+        showTypeKey: false, // 默认不显示技术关键字
         agreementList: [],
         productTypeList: [], // 产品品类
         fileList:[],
@@ -172,7 +155,7 @@
     mounted() {
 //      console.log('配置文件', productTechonologyType);
       this.getList();
-      this.getAgreementList();
+//      this.getAgreementList();
       this.getProductType();
     },
     methods: {
@@ -201,7 +184,10 @@
 
       // 获取协议列表
       getAgreementList() {
+        this.showTypeKey = true;
+        this.uploadParams.technology_type_key = '';
         let params = {
+          type_id: this.uploadParams.type_id, // 品类id
           agreement_type: 3, // 协议类型 2=zigbee, 3=蓝牙
         };
         getAgreementList(params).then(response => {
@@ -225,6 +211,8 @@
         this.isToModify = false;
         this.$refs['uploadForm'].resetFields();
         this.$refs.upload.clearFiles();
+
+        this.showTypeKey = false;
       },
       // 取消按钮
       closeDialog() {
@@ -232,6 +220,8 @@
         this.$refs['uploadForm'].resetFields();
         this.$refs.upload.clearFiles();
         this.isToModify = false;
+
+        this.showTypeKey = false;
       },
 
       // 判断文件大小

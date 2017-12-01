@@ -60,7 +60,9 @@
       <el-form :model="uploadParams" :rules="rules" ref="uploadForm" label-position="right">
 
         <el-form-item label="品类" prop="type_id" :label-width="formLabelWidth">
-          <el-select :disabled="isToModify" placeholder="请选择" v-model="uploadParams.type_id">
+          <el-select :disabled="isToModify" placeholder="请选择"
+                     v-model="uploadParams.type_id"
+                     @change="getWifiModuleList" >
             <el-option v-for="item in productTypeList"
                        :key="item.id"
                        :label="item.name"
@@ -69,7 +71,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="模组/芯片厂家" prop="technology_type_key" :label-width="formLabelWidth">
+        <el-form-item v-show="showTypeKey" label="模组/芯片厂家" prop="technology_type_key" :label-width="formLabelWidth">
           <el-select :disabled="isToModify" v-model="uploadParams.technology_type_key" placeholder="请选择">
             <el-option-group
                     v-for="group in wifiModuleList"
@@ -151,6 +153,7 @@
           ]
         },
         formLabelWidth: '120px',
+        showTypeKey: false,
         wifiModuleList: [],
         productTypeList: [], // 产品品类
         fileList:[],
@@ -165,7 +168,7 @@
     mounted() {
 //      console.log('配置文件', productTechonologyType);
       this.getList();
-      this.getWifiModuleList();
+//      this.getWifiModuleList();
       this.getProductType();
     },
     methods: {
@@ -194,7 +197,12 @@
 
       // 获取wifi列表
       getWifiModuleList() {
-        getWifiModuleList().then(response => {
+        this.showTypeKey = true;
+        this.uploadParams.technology_type_key = '';
+        let params = {
+          type_id: this.uploadParams.type_id, // 品类id
+        };
+        getWifiModuleList(params).then(response => {
           console.log('WIFI模组/芯片列表', response);
           this.wifiModuleList = response.list;
         });
@@ -215,6 +223,8 @@
         this.isToModify = false;
         this.$refs['uploadForm'].resetFields();
         this.$refs.upload.clearFiles();
+
+        this.showTypeKey = false;
       },
       // 取消按钮
       closeDialog() {
@@ -222,6 +232,8 @@
         this.$refs['uploadForm'].resetFields();
         this.$refs.upload.clearFiles();
         this.isToModify = false;
+
+        this.showTypeKey = false;
       },
 
       // 判断文件大小

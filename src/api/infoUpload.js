@@ -24,12 +24,12 @@ export function uploadSDK (params) {
 
 
 // 获取WIFI模组/芯片列表
-export function getWifiModuleList () {
+export function getWifiModuleList (params) {
   // console.log('查询入参', params);
   return fetch({
     url: '/wifimodule/lists',
     method: 'post',
-    data: {}
+    data: params
     
   })
 }

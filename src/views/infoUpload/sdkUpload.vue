@@ -5,7 +5,7 @@
 
       <el-form-item label="接入方式" prop="technology_type">
         <el-select placeholder="请选择" v-model="queryCondition.technology_type" clearable>
-          <el-option v-for="item in productTechonologyType"
+          <el-option v-for="item in productTechnologyType"
                      :key="item.id"
                      :label="item.name"
                      :value="item.id">
@@ -116,7 +116,7 @@
 
 <script>
   import { getSdkList, getWifiModuleList } from '@/api/infoUpload';
-  import { productTechonologyType } from '@/utils/config';
+  import { productTechnologyType } from '@/utils/config';
   import { getToken } from '@/utils/auth'
 
   export default {
@@ -134,7 +134,7 @@
         queryCondition: {
           technology_type: ''
         },
-        productTechonologyType: productTechonologyType, // 接入方式
+        productTechnologyType: productTechnologyType, // 接入方式
         // =====文件上传=====
         dialogVisible: true, // 文件上传对话框
         form: {
@@ -150,7 +150,7 @@
       }
     },
     created() {
-//      console.log('配置文件', productTechonologyType);
+//      console.log('配置文件', productTechnologyType);
       this.getList();
       this.getWifiModuleList();
     },

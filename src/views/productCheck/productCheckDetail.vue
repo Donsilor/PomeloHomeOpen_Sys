@@ -129,7 +129,7 @@
   <!--===========必选功能点==============-->
   <h3>必选功能点</h3>
   <el-card class="box-card">
-    <el-table slot="header" :data="checkDetail.attr_list"
+    <el-table slot="header" :data="attr_list"
             stripe
             style="width: 100%">
       <el-table-column
@@ -138,6 +138,7 @@
               width="180">
 
       </el-table-column>
+
       <el-table-column
               prop="name"
               label="参数名称"
@@ -219,6 +220,15 @@
         approved_reason: '' // 审核原因
       }
     },
+    computed: {
+      attr_list: function () {
+        if (this.checkDetail.attr_list) {
+          return this.checkDetail.attr_list.filter(function (item) {
+            return item.is_enable === 1;
+          })
+        }
+      }
+    },
     created() {
       console.log('页面传参', this.$route.query);
       this.record_id = this.$route.query.record_id;
@@ -236,6 +246,7 @@
         getReviewInfo(params).then(response => {
           console.log('产品审核详情', response);
           this.checkDetail = response;
+
         })
       },
 

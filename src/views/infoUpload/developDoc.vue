@@ -97,7 +97,7 @@
   import { getProductdoc } from '@/api/infoUpload';
   import { getProductType } from '@/api/check'
 
-  import { productTechonologyType } from '@/utils/config';
+  import { productTechnologyType } from '@/utils/config';
   import { getToken } from '@/utils/auth'
 
   export default {
@@ -111,7 +111,7 @@
           page: 1,
           limit: 10,
         },
-        productTechonologyType: productTechonologyType, // 接入方式
+        productTechnologyType: productTechnologyType, // 接入方式
         // =====文件上传=====
         dialogVisible: false, // 文件上传对话框
         isToModify: false,
@@ -135,7 +135,7 @@
       }
     },
     mounted() {
-//      console.log('配置文件', productTechonologyType);
+//      console.log('配置文件', productTechnologyType);
       this.getList();
       this.getProductType();
     },

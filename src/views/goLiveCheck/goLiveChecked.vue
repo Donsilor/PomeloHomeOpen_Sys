@@ -36,7 +36,7 @@
 
         <!--<el-form-item label="接入方式">-->
         <!--<el-select placeholder="请选择" v-model="queryCondition.technology_type">-->
-        <!--<el-option v-for="item in productTechonologyType"-->
+        <!--<el-option v-for="item in productTechnologyType"-->
         <!--:key="item.id"-->
         <!--:label="item.name"-->
         <!--:value="item.value">-->
@@ -86,7 +86,7 @@
 
       <el-table-column align="center" label="接入方式" width="95">
         <template slot-scope="scope">
-          <span>{{scope.row.product_techonology_type}}</span>
+          <span>{{scope.row.product_technology_type}}</span>
         </template>
       </el-table-column>
 
@@ -119,7 +119,7 @@
 
 <script>
   import { getReviewList, getProductType } from '@/api/check'
-  import { productTechonologyType } from '@/utils/config';
+  import { productTechnologyType } from '@/utils/config';
   import { parseTime } from '@/utils'
 
   export default {
@@ -147,12 +147,12 @@
           technology_type: ''
         },
         productTypeList: [], // 产品品类
-        productTechonologyType: productTechonologyType, // 产品品类
+        productTechnologyType: productTechnologyType, // 产品品类
 
       }
     },
     mounted() {
-//      console.log('配置文件', productTechonologyType);
+//      console.log('配置文件', productTechnologyType);
       this.getList();
       this.getProductType();
     },

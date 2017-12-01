@@ -1,15 +1,16 @@
 <template>
   <div class="tab-container">
-    <!--<el-tag type="primary">mounted times ：{{createdTimes}}</el-tag>-->
-    <el-tabs style='margin-top:15px;' v-model="activeName">
+    <el-tabs style='margin-top:15px;' v-model="activeName" @tab-click="renderChecked">
       <el-tab-pane label="待审核" name="checkPending">
-        <enterprise-check-pending></enterprise-check-pending>
       </el-tab-pane>
 
-      <el-tab-pane label="已审核" name="checked">
-        <enterprise-checked></enterprise-checked>
+      <el-tab-pane label="已审核" name="checked" >
       </el-tab-pane>
     </el-tabs>
+
+    <enterprise-check-pending v-show="activeName==='checkPending'"></enterprise-check-pending>
+    <enterprise-checked v-if="isCheckedRender" v-show="activeName==='checked'"></enterprise-checked>
+
   </div>
 </template>
 
@@ -18,18 +19,20 @@
   import enterpriseChecked from './enterpriseChecked.vue';
 
   export default {
-    name: 'tabDemo',
+    name: 'enterpriseCheck',
     components: { enterpriseCheckPending, enterpriseChecked },
     data() {
       return {
         activeName: 'checkPending',
-//        createdTimes: 0
+        isCheckedRender: false, // 已审核界面是否渲染
       }
     },
     methods: {
-//      showCreatedTimes() {
-//        this.createdTimes = this.createdTimes + 1
-//      }
+      renderChecked(tab, event) {
+        if (tab.name === 'checked') {
+          this.isCheckedRender = true;
+        }
+      }
     }
   }
 </script>

@@ -1,15 +1,16 @@
 <template>
   <div class="tab-container">
-    <!--<el-tag type="primary">mounted times ：{{createdTimes}}</el-tag>-->
-    <el-tabs style='margin-top:15px;' v-model="activeName">
-      <el-tab-pane label="待审核" name="check_pending">
-        <go-live-check-pending></go-live-check-pending>
+    <el-tabs style='margin-top:15px;' v-model="activeName" @tab-click="renderChecked">
+      <el-tab-pane label="待审核" name="checkPending">
       </el-tab-pane>
 
       <el-tab-pane label="已审核" name="checked">
-        <go-live-checked></go-live-checked>
       </el-tab-pane>
     </el-tabs>
+
+    <go-live-check-pending v-show="activeName==='checkPending'"></go-live-check-pending>
+    <go-live-checked v-if="isCheckedRender" v-show="activeName==='checked'"></go-live-checked>
+
   </div>
 </template>
 
@@ -22,14 +23,16 @@
     components: { goLiveCheckPending, goLiveChecked },
     data() {
       return {
-        activeName: 'check_pending',
-//        createdTimes: 0
+        activeName: 'checkPending',
+        isCheckedRender: false, // 已审核界面是否渲染
       }
     },
     methods: {
-//      showCreatedTimes() {
-//        this.createdTimes = this.createdTimes + 1
-//      }
+      renderChecked(tab, event) {
+        if (tab.name === 'checked') {
+          this.isCheckedRender = true;
+        }
+      }
     }
   }
 </script>

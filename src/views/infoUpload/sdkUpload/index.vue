@@ -1,19 +1,21 @@
 <template>
   <div class="tab-container">
-    <!--<el-tag type="primary">mounted times ：{{createdTimes}}</el-tag>-->
-    <el-tabs style='margin-top:15px;' v-model="activeName">
+    <el-tabs style='margin-top:15px;' v-model="activeName"  @tab-click="renderOtherTab">
       <el-tab-pane label="WIFI" name="wifi">
-        <wifi-sdk-upload></wifi-sdk-upload>
       </el-tab-pane>
 
       <el-tab-pane label="ZigBee" name="zigbee">
-        <zigbee-sdk-upload></zigbee-sdk-upload>
       </el-tab-pane>
 
       <el-tab-pane label="蓝牙" name="bluetooth">
-        <bluetooth-sdk-upload></bluetooth-sdk-upload>
       </el-tab-pane>
     </el-tabs>
+
+    <wifi-sdk-upload v-show="activeName==='wifi'"></wifi-sdk-upload>
+    <zigbee-sdk-upload v-if="isZigbeeRender" v-show="activeName==='zigbee'"></zigbee-sdk-upload>
+    <bluetooth-sdk-upload v-if="isBluetoothRender" v-show="activeName==='bluetooth'"></bluetooth-sdk-upload>
+
+
   </div>
 </template>
 
@@ -28,13 +30,18 @@
     data() {
       return {
         activeName: 'wifi',
-//        createdTimes: 0
+        isZigbeeRender: false, // Zigbee界面是否渲染
+        isBluetoothRender: false, // Bluetooth界面是否渲染
       }
     },
     methods: {
-//      showCreatedTimes() {
-//        this.createdTimes = this.createdTimes + 1
-//      }
+      renderOtherTab(tab, event) {
+        if (tab.name === 'zigbee') {
+          this.isZigbeeRender = true;
+        } else if (tab.name === 'bluetooth') {
+          this.isBluetoothRender = true;
+        }
+      }
     }
   }
 </script>

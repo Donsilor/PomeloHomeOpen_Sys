@@ -148,7 +148,8 @@
               prop="value_list"
               label="value">
         <template slot-scope="scope">
-          <span>{{scope.row.value_list.join("/")}}</span>
+          <span v-if="scope.row.type===1 || scope.row.type===2">{{scope.row.value_list.join("/")}}</span>
+          <span v-else="scope.row.type===3 || scope.row.type===4">{{scope.row.value_string}}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -295,9 +296,13 @@
           this.action_type = 2; // 驳回
           _this.approved_reason = '';
           for (let i = 0; i < _this.unapproved_reason_list.length; i++) {
-            _this.approved_reason =_this.approved_reason + (i + 1) + '.'+ _this.unapproved_reason_list[i] + ' '
+            if (i === 0) {
+              _this.approved_reason = _this.unapproved_reason_list[i].reason;
+            } else {
+              _this.approved_reason =_this.approved_reason  + '|'+ _this.unapproved_reason_list[i].reason;
+            }
           }
-          console.log(_this.approved_reason);
+          console.log(_this.approved_reason.split('|'));
         } else {
           this.action_type = 1; // 通过
         }
@@ -306,18 +311,18 @@
           action_type: this.action_type,
           approved_reason: _this.approved_reason
         };
-        commitCheck(params).then(response => {
-          if (response.res) {
-            console.log('提交成功');
-            Message({
-              message: '审核成功',
-              type: 'success',
-              duration: 2 * 1000
-            })
-            this.$router.go(-1);
-
-          }
-        })
+//        commitCheck(params).then(response => {
+//          if (response.res) {
+//            console.log('提交成功');
+//            Message({
+//              message: '审核成功',
+//              type: 'success',
+//              duration: 2 * 1000
+//            })
+//            this.$router.go(-1);
+//
+//          }
+//        })
       }
     }
   }

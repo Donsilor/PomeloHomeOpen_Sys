@@ -81,7 +81,7 @@
     <!--===========必选功能点==============-->
     <h3>必选功能点</h3>
     <el-card class="box-card">
-      <el-table :data="checkDetail.attr_list"
+      <el-table :data="attr_list"
                 stripe
                 style="width: 100%">
         <el-table-column
@@ -99,7 +99,8 @@
                 prop="value_list"
                 label="value">
           <template slot-scope="scope">
-            <span>{{scope.row.value_list.join("/")}}</span>
+            <span v-if="scope.row.type===1 || scope.row.type===2">{{scope.row.value_list.join("/")}}</span>
+            <span v-else="scope.row.type===3 || scope.row.type===4">{{scope.row.value_string}}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -119,6 +120,15 @@
         record_id: '', // 审核id
         checkDetail: '',
 
+      }
+    },
+    computed: {
+      attr_list: function () {
+        if (this.checkDetail.attr_list) {
+          return this.checkDetail.attr_list.filter(function (item) {
+            return item.is_enable === 1;
+          })
+        }
       }
     },
     created() {

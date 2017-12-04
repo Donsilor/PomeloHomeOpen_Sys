@@ -182,8 +182,8 @@
       },
 
       // 生成审核不通过列表
-      generateReason(checkProp, type, reason, bindVariable) {
-        console.log('入参', checkProp, type, reason, bindVariable);
+      generateReason(checkProp, type, reason) {
+        console.log('入参', checkProp, type, reason);
         let _this = this;
         if (type === 2) {
 //          if (reason.trim() === '') {
@@ -226,9 +226,13 @@
           this.action_type = 2; // 驳回
           _this.approved_reason = '';
           for (let i = 0; i < _this.unapproved_reason_list.length; i++) {
-            _this.approved_reason =_this.approved_reason + (i + 1) + '.'+ _this.unapproved_reason_list[i] + ' '
+            if (i === 0) {
+              _this.approved_reason = _this.unapproved_reason_list[i].reason;
+            } else {
+              _this.approved_reason =_this.approved_reason  + '|'+ _this.unapproved_reason_list[i].reason;
+            }
           }
-          console.log(_this.approved_reason);
+          console.log(_this.approved_reason.split('|'));
         } else {
           this.action_type = 1; // 通过
         }
@@ -237,17 +241,17 @@
           action_type: this.action_type,
           approved_reason: _this.approved_reason
         };
-        commitCheck(params).then(response => {
-          if (response.res) {
-            console.log('提交成功');
-            Message({
-              message: '审核成功',
-              type: 'success',
-              duration: 2 * 1000
-            })
-            this.$router.go(-1);
-          }
-        })
+//        commitCheck(params).then(response => {
+//          if (response.res) {
+//            console.log('提交成功');
+//            Message({
+//              message: '审核成功',
+//              type: 'success',
+//              duration: 2 * 1000
+//            })
+//            this.$router.go(-1);
+//          }
+//        })
       }
     }
   }

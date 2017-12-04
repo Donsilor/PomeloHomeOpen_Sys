@@ -204,7 +204,7 @@
       },
 
       // 跳转到待审核详情页
-      goCheckgDetail(row) {
+      goCheckDetail(row) {
 //        if (row.status === 1) { // 1 = 审批通过
 //          this.$router.push({path: '/productCheck/productCheckedDetail', query: row});
 //        } else if (row.status === 2) { // 2 = 审批不通过 需要重新审批

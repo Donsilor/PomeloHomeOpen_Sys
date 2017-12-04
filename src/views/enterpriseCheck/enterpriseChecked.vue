@@ -32,34 +32,31 @@
     <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row style="width: 100%">
 
 
-      <el-table-column label="公司" prop="business_name">
+      <el-table-column align="center" label="公司" prop="business_name">
       </el-table-column>
 
-      <el-table-column width="110px" align="center" label="审核人" prop="approved_user">
+      <el-table-column align="center" label="审核人" prop="approved_user">
         <template slot-scope="scope">
           <span>{{scope.row.approved_user}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="联系人" width="95" prop="business_name">
+      <el-table-column label="联系人" prop="business_name">
       </el-table-column>
 
-      <el-table-column align="center" label="联系手机" width="95" prop="business_contacts_mobile">
+      <el-table-column align="center" label="联系手机" prop="business_contacts_mobile">
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="提交时间">
-        <template slot-scope="scope">
-          <span>{{scope.row.created_at_txt}}</span>
-        </template>
+      <el-table-column align="center" label="提交时间" prop="created_at_txt">
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="状态" width="110">
+      <el-table-column align="center" class-name="status-col" label="状态" prop="status_txt">
         <template slot-scope="scope">
           <el-tag >{{scope.row.status_txt}}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="150">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button v-if="scope.row.status!='published'" size="small" type="success"
                      @click="goCheckDetail(scope.row)">

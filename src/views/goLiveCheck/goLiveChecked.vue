@@ -156,6 +156,11 @@
       this.getList();
       this.getProductType();
     },
+    activated() {
+//      console.log('配置文件', productTechnologyType);
+      this.getList();
+      this.getProductType();
+    },
     methods: {
       getList() {
         // 时间格式化

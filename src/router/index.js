@@ -38,8 +38,17 @@ export const constantRouterMap = [
     noDropdown: true,
     children: [
       { path: 'enterpriseCheck', name: '企业审核', component: _import('enterpriseCheck/index') },
-      { path: 'enterpriseCheck/enterpriseCheckedDetail', name: '已审核详情', component: _import('enterpriseCheck/enterpriseCheckedDetail') ,meta:{breadNumber:1}},
-      { path: 'enterpriseCheck/enterpriseCheckDetail', name: '待审核详情', component: _import('enterpriseCheck/enterpriseCheckDetail') ,meta:{breadNumber:1}}
+      {
+        path: 'enterpriseCheck/enterpriseCheckedDetail',
+        name: '已审核详情', component: _import('enterpriseCheck/enterpriseCheckedDetail') ,
+        meta: { breadNumber:1, notKeepAlive: true }
+      },
+      {
+        path: 'enterpriseCheck/enterpriseCheckDetail',
+        name: '待审核详情',
+        component: _import('enterpriseCheck/enterpriseCheckDetail') ,
+        meta: { breadNumber:1, notKeepAlive: true }
+      }
     ]
   },
   
@@ -53,8 +62,17 @@ export const constantRouterMap = [
     children: [
       // { path: 'enterprise_check_pending', name: '待审核列表', component: _import('enterpriseCheck/enterprise_check_pending') }
       { path: 'productCheck', name: '产品审核', component: _import('productCheck/index') },
-      { path: 'productCheck/productCheckDetail', name: '待审产品详情', component: _import('productCheck/productCheckDetail'), meta:{breadNumber:1}},
-      { path: 'productCheck/productCheckedDetail', name: '已审核产品详情', component: _import('productCheck/productCheckedDetail'), meta:{breadNumber:1}}
+      {
+        path: 'productCheck/productCheckDetail',
+        name: '待审产品详情',
+        component: _import('productCheck/productCheckDetail'),
+        meta: { breadNumber:1, notKeepAlive: true }
+      },
+      { path: 'productCheck/productCheckedDetail',
+        name: '已审核产品详情',
+        component: _import('productCheck/productCheckedDetail'),
+        meta: { breadNumber:1, notKeepAlive: true }
+      }
     
     ]
   },
@@ -69,8 +87,18 @@ export const constantRouterMap = [
     children: [
       // { path: 'enterprise_check_pending', name: '待审核列表', component: _import('enterpriseCheck/enterprise_check_pending') }
       { path: 'goLiveCheck', name: '上线审核', component: _import('goLiveCheck/index') },
-      { path: 'goLiveCheck/goLiveCheckDetail', name: '上线待审详情', component: _import('goLiveCheck/goLiveCheckDetail'), meta:{breadNumber:1} },
-      { path: 'goLiveCheck/goLiveCheckedDetail', name: '上线已审核详情', component: _import('goLiveCheck/goLiveCheckedDetail'), meta:{breadNumber:1} }
+      {
+        path: 'goLiveCheck/goLiveCheckDetail',
+        name: '上线待审详情',
+        component: _import('goLiveCheck/goLiveCheckDetail'),
+        meta: { breadNumber:1, notKeepAlive: true }
+      },
+      {
+        path: 'goLiveCheck/goLiveCheckedDetail',
+        name: '上线已审核详情',
+        component: _import('goLiveCheck/goLiveCheckedDetail'),
+        meta: { breadNumber:1, notKeepAlive: true }
+      }
     
     ]
   },

@@ -1,8 +1,9 @@
 <template>
   <section class="app-main">
     <transition name="fade" mode="out-in">
+      <!--<router-view v-if="$route.meta.notKeepAlive"></router-view>-->
       <keep-alive>
-      <router-view :key="key"></router-view>
+        <router-view ></router-view>
       </keep-alive>
     </transition>
   </section>

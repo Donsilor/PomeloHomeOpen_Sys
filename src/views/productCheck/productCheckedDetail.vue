@@ -106,6 +106,12 @@
       </el-table>
     </el-card>
 
+    <!--===========审核不通过原因==============-->
+    <el-card v-if="unapproved_reason_list" class="box-card" style="margin: 30px 0">
+      <p v-if="">审核不通过：</p>
+      <p v-for="item, index in unapproved_reason_list">{{index + 1}}. {{item}}；</p>
+    </el-card>
+
   </div>
 </template>
 
@@ -123,11 +129,19 @@
       }
     },
     computed: {
+      // 必选功能点列表
       attr_list: function () {
         if (this.checkDetail.attr_list) {
           return this.checkDetail.attr_list.filter(function (item) {
             return item.is_enable === 1;
           })
+        }
+      },
+
+      //  不通过原因列表
+      unapproved_reason_list: function () {
+        if (this.checkDetail.approved_reason) {
+          return this.checkDetail.approved_reason
         }
       }
     },
@@ -151,6 +165,9 @@
         })
       },
 
+    },
+    deactivated() {
+      this.$destroy();
     }
   }
 

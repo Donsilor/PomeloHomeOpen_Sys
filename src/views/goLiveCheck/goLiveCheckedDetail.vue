@@ -36,7 +36,15 @@
         </el-col>
       </el-row>
 
+      <!--===========审核不通过原因==============-->
+      <el-card v-if="unapproved_reason_list" class="box-card" style="margin: 30px 0">
+        <p v-if="">审核不通过：</p>
+        <p v-for="item, index in unapproved_reason_list">{{index + 1}}. {{item}}；</p>
+      </el-card>
+
     </el-card>
+
+
 
   </div>
 </template>
@@ -51,6 +59,13 @@
       return {
         record_id: '', // 审核id
         checkDetail: '',
+      }
+    },
+    computed: {
+      unapproved_reason_list: function () {
+        if (this.checkDetail.approved_reason) {
+          return this.checkDetail.approved_reason
+        }
       }
     },
     created() {
@@ -87,6 +102,9 @@
         })
       },
 
+    },
+    deactivated() {
+      this.$destroy();
     }
   }
 

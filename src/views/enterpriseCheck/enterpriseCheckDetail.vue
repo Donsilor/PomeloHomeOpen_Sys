@@ -294,6 +294,9 @@
           }
         })
       }
+    },
+    deactivated() {
+      this.$destroy();
     }
   }
 </script>

@@ -18,10 +18,10 @@
       <el-col :span="15" :offset="2" class="card-span-right">{{checkDetail.contacts_duty}}</el-col>
     </el-row>
     <div>
-      <el-form :inline="true" class="demo-form-inline">
+      <el-form :inline="true" class="check-form-inline">
         <el-row>
-          <el-col :span="6">
-            <el-form-item>
+          <el-col :span="4" class="check-radio">
+            <el-form-item >
               <el-radio-group @change="generateReason('联系人信息未审核通过', contactsCheck.action_type, contactsCheck.unapproved_reason)" v-model="contactsCheck.action_type">
                 <el-radio :label="1">审核通过</el-radio>
                 <el-radio :label="2">审核不通过</el-radio>
@@ -29,8 +29,8 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="10" v-if="contactsCheck.action_type == 2">
-            <el-form-item label="审核结果：">
+          <el-col :span="18" :offset="2" class="check-reason" v-if="contactsCheck.action_type == 2">
+            <el-form-item label="审核结果：" >
               <el-input @blur="modifyReason('联系人信息未审核通过', contactsCheck.unapproved_reason)" v-model="contactsCheck.unapproved_reason"></el-input>
             </el-form-item>
           </el-col>
@@ -69,9 +69,9 @@
       </el-col>
     </el-row>
     <div>
-      <el-form :inline="true" class="demo-form-inline">
+      <el-form :inline="true" class="check-form-inline">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="4" class="check-radio">
             <el-form-item>
               <el-radio-group v-model="companyInfoCheck.action_type"
                               @change="generateReason('公司/团队信息未审核通过', companyInfoCheck.action_type, companyInfoCheck.unapproved_reason)">
@@ -81,7 +81,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="10" v-if="companyInfoCheck.action_type == 2">
+          <el-col :span="18" :offset="2" class="check-reason" v-if="companyInfoCheck.action_type == 2">
             <el-form-item label="审核结果：">
               <el-input @blur="modifyReason('公司/团队信息未审核通过', companyInfoCheck.unapproved_reason)" v-model="companyInfoCheck.unapproved_reason"></el-input>
             </el-form-item>
@@ -100,9 +100,9 @@
         <img v-img:name alt="图片加载失败" class="card-img-size" :src="item.file_url">
       </div>
       <div style="padding: 30px 0">
-        <el-form :inline="true" class="demo-form-inline">
+        <el-form :inline="true" class="check-form-inline">
           <el-row>
-            <el-col :span="6">
+            <el-col :span="4">
               <el-form-item>
                 <el-radio-group v-model="item.action_type"
                                 @change="generateReason(item.filename+'未审核通过', item.action_type, item.unapproved_reason)">
@@ -112,7 +112,7 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="10" v-if="item.action_type == 2">
+            <el-col :span="18" :offset="2" class="check-reason" v-if="item.action_type == 2">
               <el-form-item label="审核结果：">
                 <el-input @blur="modifyReason(item.filename+'未审核通过', item.unapproved_reason)" v-model="item.unapproved_reason"></el-input>
               </el-form-item>
@@ -129,9 +129,9 @@
     <div v-for="item in originalCheckType">
       <p>{{item.id}}、{{item.description}}</p>
       <div style="padding: 30px 0">
-        <el-form :inline="true" class="demo-form-inline">
+        <el-form :inline="true" class="check-form-inline">
           <el-row>
-            <el-col :span="6">
+            <el-col :span="4">
               <el-form-item>
                 <el-radio-group v-model="item.action_type"
                                 @change="generateReason(item.description+'未审核通过', item.action_type, item.unapproved_reason)">
@@ -141,7 +141,7 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="10" v-if="item.action_type == 2">
+            <el-col :span="18" :offset="2" class="check-reason" v-if="item.action_type == 2">
               <el-form-item label="审核结果：">
                 <el-input @blur="modifyReason(item.description+'未审核通过', item.unapproved_reason)" v-model="item.unapproved_reason"></el-input>
               </el-form-item>
@@ -155,14 +155,14 @@
 
   <!--===========审核==============-->
   <el-card class="box-card" style="margin: 30px 0">
-      <p v-if="">审核不通过：</p>
+      <p v-if="unapproved_reason_list.length">审核不通过：</p>
       <p v-for="item, index in unapproved_reason_list">{{index + 1}}. {{item.reason}}；</p>
     <div style="padding: 30px 0">
       <el-col :span="4">
         <el-button  type="primary" @click="commitCheck" >提交</el-button>
       </el-col>
       <el-col :span="4">
-        <el-button  >取消</el-button>
+        <el-button  @click="cancelCheck">取消</el-button>
       </el-col>
     </div>
   </el-card>
@@ -313,6 +313,18 @@
             this.$router.go(-1);
           }
         })
+      },
+
+      // 取消审核
+      cancelCheck() {
+        this.$confirm('确认取消？')
+          .then(_ => {
+            console.log('取消');
+            this.$router.go(-1);
+          })
+          .catch(_ => {
+            console.log('留在本页面');
+          });
       }
     },
     deactivated() {
@@ -321,8 +333,9 @@
   }
 </script>
 
-<style scoped>
-  /*.el-form-item__content {*/
-    /*width: 80%;*/
+<style >
+  /*.check-form-inline .el-form-item {*/
+    /*width: 100%;*/
   /*}*/
+
 </style>

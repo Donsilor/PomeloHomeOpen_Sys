@@ -21,7 +21,7 @@
       <!--</el-row>-->
 
       <el-row class="card-row" v-for="item in checkDetail.file_list" :key="item.id">
-        <el-col :span="2" class="card-span-left">手机端控制页</el-col>
+        <el-col :span="2" class="card-span-left">{{item.type_txt}}</el-col>
         <el-col :span="20" :offset="2" class="card-span-right">
           <a :href="item.url">{{item.filename}}</a>
           <div>{{item.size}}</div>
@@ -36,14 +36,13 @@
         </el-col>
       </el-row>
 
-      <!--===========审核不通过原因==============-->
-      <el-card v-if="$route.query.status === 2"class="box-card" style="margin: 30px 0">
-        <p v-if="">审核不通过：</p>
-        <p v-for="item, index in unapproved_reason_list">{{index + 1}}. {{item}}；</p>
-      </el-card>
-
     </el-card>
 
+    <!--===========审核不通过原因==============-->
+    <el-card v-if="$route.query.status === 2"class="box-card" style="margin: 30px 0">
+      <p v-if="">审核不通过：</p>
+      <p v-for="item, index in unapproved_reason_list">{{index + 1}}. {{item}}；</p>
+    </el-card>
 
 
   </div>

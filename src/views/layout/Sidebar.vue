@@ -10,10 +10,11 @@ export default {
   components: { SidebarItem },
   computed: {
     routeIndex() {
+//      console.log($route.path, '/'+this.$route.path.split('/')[0]);
       return '/'+this.$route.path.split('/')[0]
     },
     routes() {
-//      console.log('this.$router.options.routes',this.$route.path, this.$router.options.routes);
+      console.log('this.$router.options.routes.children', this.$router.options.routes);
       return this.$router.options.routes
     }
   }

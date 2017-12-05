@@ -210,6 +210,8 @@
 
       // 跳转到待审核详情页
       goCheckDetail(row) {
+        row.approved_user = ''; // 防止为null时报错
+
         this.$router.push({path: '/productCheck/productCheckDetail', query: row});
       },
 

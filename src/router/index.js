@@ -26,7 +26,7 @@ export const constantRouterMap = [
     hidden: true,
     children: [
       { path: 'dashboard', component: _import('dashboard/index') },
-      ]
+    ]
   },
   
   // 企业审核

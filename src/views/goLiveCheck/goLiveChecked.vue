@@ -216,7 +216,7 @@
 //        } else if (row.status === 2) { // 2 = 审批不通过 需要重新审批
 //          this.$router.push({path: '/goLiveCheck/goLiveCheckDetail', query: row});
 //        }
-        this.$router.push({path: '/goLiveCheck/goLiveCheckDetail', query: row});
+        this.$router.push({path: '/goLiveCheck/goLiveCheckedDetail', query: row});
 
       },
 

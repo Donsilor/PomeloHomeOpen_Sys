@@ -58,7 +58,7 @@ a:hover {
   padding: 20px;
 }
 
-// 详情页公用样式
+// =======详情页公用样式=========
 .card-row {
   padding-top: 20px;
   padding-bottom: 20px;
@@ -78,4 +78,14 @@ a:hover {
   width: 100px;
   height: auto;
   padding-right: 5px;
+}
+.check-form-inline .check-radio {
+  text-align: right;
+}
+
+.check-reason .el-form-item { // 审核结果输入框
+  width: 100%;
+}
+.check-reason .el-form-item__content { // 审核结果输入框
+  width: 85% ;
 }

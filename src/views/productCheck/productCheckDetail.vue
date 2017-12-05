@@ -38,9 +38,9 @@
     </el-row>
 
     <div>
-      <el-form :inline="true" class="demo-form-inline">
+      <el-form :inline="true" class="check-form-inline">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="4" class="check-radio">
             <el-form-item>
               <el-radio-group
                       @change="generateReason('产品基本信息未审核通过', baseInfoCheck.action_type, baseInfoCheck.unapproved_reason, 'baseInfoCheck.unapproved_reason')"
@@ -51,7 +51,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="10" v-if="baseInfoCheck.action_type == 2">
+          <el-col :span="18" :offset="2" class="check-reason" v-if="baseInfoCheck.action_type == 2">
             <el-form-item label="审核结果：">
               <el-input
                       @blur="modifyReason('产品基本信息未审核通过', baseInfoCheck.unapproved_reason)"
@@ -101,9 +101,9 @@
     <!--</el-row>-->
 
     <div>
-      <el-form :inline="true" class="demo-form-inline">
+      <el-form :inline="true" class="check-form-inline">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="4" class="check-radio">
             <el-form-item>
               <el-radio-group
                       @change="generateReason('接入方式未审核通过', tecTypeCheck.action_type, tecTypeCheck.unapproved_reason, 'tecTypeCheck.unapproved_reason')"
@@ -114,7 +114,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="10" v-if="tecTypeCheck.action_type == 2">
+          <el-col :span="18" :offset="2" class="check-reason" v-if="tecTypeCheck.action_type == 2">
             <el-form-item label="审核结果：">
               <el-input
                       @blur="modifyReason('接入方式未审核通过', tecTypeCheck.unapproved_reason)"
@@ -154,9 +154,9 @@
       </el-table-column>
     </el-table>
     <div>
-      <el-form :inline="true" class="demo-form-inline">
+      <el-form :inline="true" class="check-form-inline">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="4" class="check-radio">
             <el-form-item>
               <el-radio-group @change="generateReason('功能点设置未审核通过', funcCheck.action_type, funcCheck.unapproved_reason, 'funcCheck')"
                               v-model="funcCheck.action_type">
@@ -166,7 +166,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="10" v-if="funcCheck.action_type == 2">
+          <el-col :span="18" :offset="2" class="check-reason" v-if="funcCheck.action_type == 2">
             <el-form-item label="审核结果：">
               <el-input @blur="modifyReason('功能点设置未审核通过', funcCheck.unapproved_reason)" v-model="funcCheck.unapproved_reason"></el-input>
             </el-form-item>
@@ -178,14 +178,14 @@
 
   <!--===========审核==============-->
   <el-card class="box-card" style="margin: 30px 0">
-    <p v-if="">审核不通过：</p>
+    <p v-if="unapproved_reason_list.length">审核不通过：</p>
     <p v-for="item, index in unapproved_reason_list">{{index + 1}}. {{item.reason}}；</p>
     <div style="padding: 30px 0">
       <el-col :span="4">
         <el-button  type="primary" @click="commitCheck" >提交</el-button>
       </el-col>
       <el-col :span="4">
-        <el-button  >取消</el-button>
+        <el-button  @click="cancelCheck">取消</el-button>
       </el-col>
     </div>
   </el-card>
@@ -323,6 +323,18 @@
 
           }
         })
+      },
+
+      // 取消审核
+      cancelCheck() {
+        this.$confirm('确认取消？')
+          .then(_ => {
+          console.log('取消');
+          this.$router.go(-1);
+        })
+      .catch(_ => {
+          console.log('留在本页面');
+        });
       }
     },
     deactivated() {
@@ -333,11 +345,11 @@
 </script>
 
 <style scoped>
-  .el-form-item__content {
-    width: 80%;
-  }
-  .card-img-tec {
-    width: 300px;
-    height: 200px
-  }
+  /*.el-form-item__content {*/
+    /*width: 80%;*/
+  /*}*/
+  /*.card-img-tec {*/
+    /*width: 300px;*/
+    /*height: 200px*/
+  /*}*/
 </style>

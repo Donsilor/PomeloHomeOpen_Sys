@@ -96,8 +96,8 @@
   <el-card class="box-card">
     <div v-for="item in checkDetail.licenses" :key="item.file_id">
      <p style="color: darkgray">{{item.filename}}</p>
-      <div class="card-img-size">
-        <img style="width: 100%;height: 100%" :src="item.file_url" class="image">
+      <div style="height: 300px">
+        <img v-img:name alt="图片加载失败" class="card-img-size" :src="item.file_url">
       </div>
       <div style="padding: 30px 0">
         <el-form :inline="true" class="demo-form-inline">
@@ -173,7 +173,7 @@
 <script>
   import { getReviewInfo, commitCheck } from '@/api/check';
   import { originalCheckType } from '@/utils/config'; // 复核原件类型
-  import { Message } from 'element-ui'
+  import { Message } from 'element-ui';
 
   export default {
     name: 'enterpriseCheckDetail',
@@ -193,8 +193,22 @@
         checkDetail: '',
         originalCheckType: originalCheckType,
         action_type: null, // 提交审核操作类型 ，1 = 通过，2 = 驳回
-        approved_reason: '' // 审核原因
+        approved_reason: '', // 审核原因
+        licensesImgs: []
       }
+    },
+    computed: {
+//      licensesImgs: function () {
+//        let arry = [];
+//        console.log('666', this.checkDetail.licenses);
+//        this.checkDetail.licenses.forEach(function (item) {
+//          let obj = {};
+//          obj.url = item.file_url;
+//          arry.push(obj)
+//        });
+//        console.log('777', arry);
+//        return arry;
+//      }
     },
     created() {
       console.log('页面传参', this.$route.query);
@@ -217,11 +231,17 @@
             _this.checkDetail.licenses.forEach(function (item) {
               _this.$set(item, 'action_type', 1);
               _this.$set(item, 'unapproved_reason', item.filename + '未审核通过');
+              _this.$set(item, 'url', item.file_url);
               }
             )
           }
 
         })
+      },
+
+      // 图片预览
+      imgPreview (e) {
+        fancyBox(e.target, this.checkDetail.licenses);
       },
 
       // 生成审核不通过列表

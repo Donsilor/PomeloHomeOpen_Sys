@@ -7,8 +7,11 @@ import router from './router'
 import store from './store'
 import '@/icons' // icon
 import '@/permission' // 权限
+import VueImg from 'v-img'
 
 Vue.use(ElementUI, {})
+
+Vue.use(VueImg)
 
 Vue.config.productionTip = false
 

@@ -55,8 +55,8 @@
     <el-card class="box-card">
       <div v-for="item in checkDetail.licenses" :key="item.file_id">
         <p style="color: darkgray">{{item.filename}}</p>
-        <div class="card-img-size">
-          <img style="width: 100%;height: 100%" :src="item.file_url" class="image">
+        <div style="height: 300px">
+          <img v-img:name alt="图片加载失败" class="card-img-size" :src="item.file_url">
         </div>
       </div>
     </el-card>

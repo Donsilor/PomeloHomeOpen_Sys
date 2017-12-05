@@ -71,10 +71,11 @@ a:hover {
   text-align: left;
 }
 .card-img-size {
-  width: 300px;
-  height: 200px
+  width: auto;
+  height: 300px
 }
 .card-hex-vision { // 六视图
   width: 100px;
-  height: 100px
+  height: auto;
+  padding-right: 5px;
 }

@@ -22,7 +22,7 @@
       <el-col :span="2" class="card-span-left">外观图片（六视图）</el-col>
       <!--<el-col :span="20" :offset="2" class="card-span-right">-->
         <el-col v-for="item,index in checkDetail.images" :offset="index === 0 ? 2:0" :key="item" :span="3" class="card-hex-vision">
-          <img style="width: 100%;height: 100%" :src="item" class="image">
+          <img v-img:name style="width: 100%;height: 100%" :src="item">
         </el-col>
       <!--</el-col>-->
     </el-row>

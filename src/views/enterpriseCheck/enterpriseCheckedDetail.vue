@@ -4,18 +4,18 @@
     <h3>联系人信息</h3>
     <el-card class="box-card">
       <el-row class="card-row">
-        <el-col :span="4" class="card-span-left">联系人姓名</el-col>
-        <el-col :span="15" :offset="2" class="card-span-right">{{checkDetail.contacts}}</el-col>
+        <el-col :span="2" class="card-span-left">联系人姓名</el-col>
+        <el-col :span="15" :offset="1" class="card-span-right">{{checkDetail.contacts}}</el-col>
       </el-row>
 
       <el-row class="card-row">
-        <el-col :span="4" class="card-span-left">联系人手机</el-col>
-        <el-col :span="15" :offset="2" class="card-span-right">{{checkDetail.contacts_mobile}}</el-col>
+        <el-col :span="2" class="card-span-left">联系人手机</el-col>
+        <el-col :span="15" :offset="1" class="card-span-right">{{checkDetail.contacts_mobile}}</el-col>
       </el-row>
 
       <el-row class="card-row">
-        <el-col :span="4" class="card-span-left">职位</el-col>
-        <el-col :span="15" :offset="2" class="card-span-right">{{checkDetail.contacts_duty}}</el-col>
+        <el-col :span="2" class="card-span-left">职位</el-col>
+        <el-col :span="15" :offset="1" class="card-span-right">{{checkDetail.contacts_duty}}</el-col>
       </el-row>
     </el-card>
 
@@ -23,28 +23,28 @@
     <h3>公司/团队信息</h3>
     <el-card class="box-card">
       <el-row class="card-row">
-        <el-col :span="4" class="card-span-left">公司名称</el-col>
-        <el-col :span="15" :offset="2" class="card-span-right">{{checkDetail.name}}
+        <el-col :span="2" class="card-span-left">公司名称</el-col>
+        <el-col :span="15" :offset="1" class="card-span-right">{{checkDetail.name}}
         </el-col>
       </el-row>
 
       <el-row class="card-row">
-        <el-col :span="4" class="card-span-left">公司地址
+        <el-col :span="2" class="card-span-left">公司地址
         </el-col>
-        <el-col :span="15" :offset="2" class="card-span-right">{{checkDetail.address}}
-        </el-col>
-      </el-row>
-
-      <el-row class="card-row">
-        <el-col :span="4" class="card-span-left">公司营业执照注册号/统一社会信用代码</el-col>
-        <el-col :span="15" :offset="2" class="card-span-right">{{checkDetail.registration_No}}
+        <el-col :span="15" :offset="1" class="card-span-right">{{checkDetail.address}}
         </el-col>
       </el-row>
 
       <el-row class="card-row">
-        <el-col :span="4" class="card-span-left">合作产品
+        <el-col :span="2" class="card-span-left">公司营业执照注册号/统一社会信用代码</el-col>
+        <el-col :span="15" :offset="1" class="card-span-right">{{checkDetail.registration_No}}
         </el-col>
-        <el-col :span="15" :offset="2" class="card-span-right" >
+      </el-row>
+
+      <el-row class="card-row">
+        <el-col :span="2" class="card-span-left">合作产品
+        </el-col>
+        <el-col :span="15" :offset="1" class="card-span-right" >
           <el-button v-for="item in checkDetail.type" :key="item.name">{{item.name}}</el-button>
         </el-col>
       </el-row>
@@ -55,8 +55,8 @@
     <el-card class="box-card">
       <div v-for="item in checkDetail.licenses" :key="item.file_id">
         <p style="color: darkgray">{{item.filename}}</p>
-        <div style="height: 300px">
-          <img v-img:name alt="图片加载失败" class="card-img-size" :src="item.file_url">
+        <div >
+          <img style="max-height: 300px" v-img:name alt="图片加载失败" class="card-img-size" :src="item.file_url">
         </div>
       </div>
     </el-card>

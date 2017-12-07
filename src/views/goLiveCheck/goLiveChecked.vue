@@ -45,7 +45,7 @@
         <!--</el-form-item>-->
 
         <el-form-item>
-          <el-button type="primary" @click="getList">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="getList">查询</el-button>
           <el-button @click="resetForm('queryCondition')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -54,43 +54,46 @@
     <!--==========table start=============-->
     <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row style="width: 100%">
 
-      <el-table-column min-width="110px" label="公司">
+      <el-table-column align="center"  label="record_id" prop="record_id" width="100">
+      </el-table-column>
+
+      <el-table-column align="center" label="公司" prop="business_name" min-width="110px">
         <template slot-scope="scope">
           <span>{{scope.row.business_name}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="110px" label="品牌">
+      <el-table-column align="center" label="品牌" prop="product_brand_name" min-width="60px">
         <template slot-scope="scope">
           <span>{{scope.row.product_brand_name}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="110px" label="品类">
+      <el-table-column align="center" label="品类" prop="product_type_name" width="80px">
         <template slot-scope="scope">
           <span>{{scope.row.product_type_name}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="110px" label="型号">
+      <el-table-column align="center" label="型号" prop="product_model" min-width="110px">
         <template slot-scope="scope">
           <span>{{scope.row.product_model}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="创建时间">
+      <el-table-column align="center" label="创建时间" prop="approved_at_txt" width="180px">
         <template slot-scope="scope">
           <span>{{scope.row.approved_at_txt}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="接入方式" width="95">
+      <el-table-column align="center" label="接入方式" prop="product_technology_type" width="95">
         <template slot-scope="scope">
           <span>{{scope.row.product_technology_type}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="状态" width="110">
+      <el-table-column align="center" class-name="status-col" label="状态" width="110">
         <template slot-scope="scope">
           <el-tag >{{scope.row.status_txt}}</el-tag>
         </template>

@@ -72,7 +72,7 @@ a:hover {
 }
 .card-img-size {
   width: auto;
-  height: 300px
+  //height: 300px
 }
 .card-hex-vision { // 六视图
   width: 100px;
@@ -80,7 +80,7 @@ a:hover {
   padding-right: 5px;
 }
 .check-form-inline .check-radio {
-  text-align: right;
+  //text-align: center;
 }
 
 .check-reason .el-form-item { // 审核结果输入框
@@ -89,3 +89,4 @@ a:hover {
 .check-reason .el-form-item__content { // 审核结果输入框
   width: 85% ;
 }
+

@@ -1,41 +1,57 @@
 <template>
 <div class="app-container">
+  <div class="filter-container">
 
-    <el-button style="margin-bottom: 10px" type="primary" @click="dialogVisible = true">新建</el-button>
+    <!--=========查询条件==========-->
+    <el-form :inline="true" :model="queryCondition" ref="queryCondition" class="demo-form-inline" >
+
+      <el-form-item label="品类" prop="type_id">
+        <el-select clearable placeholder="请选择" v-model="queryCondition.type_id">
+          <el-option v-for="item in productTypeList"
+                     :key="item.id"
+                     :label="item.name"
+                     :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" @click="getList">查询</el-button>
+        <el-button  type="primary" icon="el-icon-plus" @click="dialogVisible = true">新建</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
 
     <!--=====table=======-->
-    <el-table v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
+    <el-table v-loading="listLoading" element-loading-text="给我一点时间"  border fit highlight-current-row
               :data="list"
             style="width: 100%">
-      <el-table-column prop="type_name"
-                       label="品类"
-                       width="80">
+      <el-table-column align="center" prop="type_name" label="品类">
       </el-table-column>
-      <el-table-column prop="technology_module_vendor"
-              label="模组/芯片厂家">
+
+      <el-table-column align="center" prop="technology_module_vendor"label="模组/芯片厂家">
       </el-table-column>
-      <el-table-column prop="technology_module_model"
-              label="型号"
-              width="180">
+
+      <el-table-column align="center" prop="technology_module_model" label="型号">
       </el-table-column>
-      <el-table-column prop="filename"
-                       label="文件名"
-                       width="200">
+
+      <el-table-column align="center" prop="filename" label="文件名" min-width="200">
         <template slot-scope="scope">
           <a :href="scope.row.url">
             {{scope.row.filename}}
           </a>
         </template>
       </el-table-column>
-      <el-table-column prop="size"
-              label="SDK大小">
+
+      <el-table-column align="center" prop="size" label="SDK大小">
       </el-table-column>
-      <el-table-column prop="created_at_txt"
-                       label="上传时间">
+
+      <el-table-column align="center" prop="created_at_txt" label="上传时间">
       </el-table-column>
-      <el-table-column align="center" label="操作" width="80">
+
+      <el-table-column align="center" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button size="small" type="success"
+          <el-button size="small" type="success" icon="el-icon-edit"
                      @click="modifySDK(scope.row)">
             修改
           </el-button>
@@ -141,6 +157,10 @@
           limit: 10,
         },
         productTechnologyType: productTechnologyType, // 接入方式
+        // =====查询条件=====
+        queryCondition: {
+          type_id: '',
+        },
         // =====文件上传=====
         dialogVisible: false, // 文件上传对话框
         isToModify: false,
@@ -179,6 +199,7 @@
           page: this.listQuery.page,
           limit: this.listQuery.limit,
         };
+        Object.assign(params, this.queryCondition);
         getSdkList(params).then(response => {
           console.log('wifisdk列表', response);
           this.list = response.data;

@@ -1,34 +1,32 @@
 <template>
   <div class="app-container">
 
-    <el-button style="margin-bottom: 10px" type="primary" @click="dialogVisible = true">新建</el-button>
+    <el-button style="margin-bottom: 10px" type="primary" icon="el-icon-plus" @click="dialogVisible = true">新建</el-button>
 
     <!--=====table=======-->
     <el-table v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
               :data="list"
               style="width: 100%">
-      <el-table-column prop="type_name"
-                       label="品类"
-                       width="80">
+      <el-table-column align="center" prop="type_name" label="品类">
       </el-table-column>
-      <el-table-column prop="filename"
-                       label="文件名"
-                       width="200">
+
+      <el-table-column align="center" prop="filename" label="文件名" min-width="180">
         <template slot-scope="scope">
           <a :href="scope.row.url">
             {{scope.row.filename}}
           </a>
         </template>
       </el-table-column>
-      <el-table-column prop="size"
-                       label="SDK大小">
+
+      <el-table-column align="center" prop="size" label="SDK大小">
       </el-table-column>
-      <el-table-column prop="created_at_txt"
-                       label="上传时间">
+
+      <el-table-column align="center" prop="created_at_txt" label="上传时间">
       </el-table-column>
-      <el-table-column align="center" label="操作" width="80">
+
+      <el-table-column align="center" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button size="small" type="success"
+          <el-button size="small" type="success" icon="el-icon-edit"
                      @click="modifySDK(scope.row)">
             修改
           </el-button>

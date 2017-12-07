@@ -25,7 +25,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="getList">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="getList">查询</el-button>
           <el-button @click="resetForm('queryCondition')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -33,7 +33,7 @@
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row style="width: 100%">
 
-      <el-table-column align="center"  label="record_id" prop="record_id">
+      <el-table-column align="center"  label="record_id" prop="record_id" width="100">
       </el-table-column>
 
       <el-table-column align="center"  label="公司" prop="business_name">

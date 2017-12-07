@@ -14,7 +14,7 @@ export default {
       return '/'+this.$route.path.split('/')[0]
     },
     routes() {
-      console.log('this.$router.options.routes.children', this.$router.options.routes);
+//      console.log('this.$router.options.routes.children', this.$router.options.routes);
       return this.$router.options.routes
     }
   }

@@ -164,14 +164,14 @@
         getReviewInfo(params).then(response => {
           console.log('产品审核详情', response);
           this.checkDetail = response;
-          if (_this.checkDetail.file_list.length > 0){
+          if (_this.checkDetail.file_list){
             _this.checkDetail.file_list.forEach(function (item) {
                 _this.$set(item, 'action_type', 1);
                 _this.$set(item, 'unapproved_reason', item.type_txt + '未审核通过');
               }
             )
           }
-          if (_this.checkDetail.release_file_list.length > 0){
+          if (_this.checkDetail.release_file_list){
             _this.checkDetail.release_file_list.forEach(function (item) {
                 _this.$set(item, 'action_type', 1);
                 _this.$set(item, 'unapproved_reason', item.type_txt + '未审核通过');

@@ -24,7 +24,7 @@ export default {
 //      console.log('newBread', newBread);
       var breadList=this.$store.getters.breadListState;//获取breadList数组
       breadList.splice(breadNumber,breadList.length-breadNumber,newBread);
-//      console.log('breadList', breadList);
+      console.log('breadList', breadList);
       var breadList=JSON.stringify(breadList);
       this.$store.commit('breadListMutations',breadList);
       this.breadList=this.$store.getters.breadListState;

@@ -1,6 +1,4 @@
-/**
- * Created by jiachenpan on 16/11/18.
- */
+import { dict } from '@/utils/config'
 
  export function parseTime(time, cFormat) {
    if (arguments.length === 0) {
@@ -56,3 +54,30 @@
      return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
    }
  }
+
+ export function transDict(str, dictName) {
+   if (!str) return '';
+   let DICT_NAME = ''; // 初始化翻译后参数
+   // 翻译字典
+   for (let i = 0; i < dict[dictName].length; i++) {
+     if (dict[dictName][i].DICT_VALUE === str) {
+       DICT_NAME = dict[dictName][i].DICT_DESC;
+     }
+   }
+   // console.log('翻译出来的数据字典', DICT_NAME);
+   return DICT_NAME;
+ }
+
+  export function transDictValue(str, dictName) {
+    console.log('翻译入参', str, dictName, dict, dict[dictName]);
+    if (!str) return '';
+    let DICT_VALUE; // 初始化翻译后参数
+    // 翻译字典
+    for (let i = 0; i < dict[dictName].length; i++) {
+      if (dict[dictName][i].DICT_DESC === str) {
+        DICT_VALUE = dict[dictName][i].DICT_VALUE;
+      }
+    }
+    // console.log('翻译出来的数据字典DICT_VALUE', DICT_VALUE);
+    return DICT_VALUE;
+  }

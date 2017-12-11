@@ -40,7 +40,8 @@ export const constantRouterMap = [
       { path: 'enterpriseCheck', name: '企业审核', component: _import('enterpriseCheck/index') },
       {
         path: 'enterpriseCheck/enterpriseCheckedDetail',
-        name: '已审核详情', component: _import('enterpriseCheck/enterpriseCheckedDetail') ,
+        name: '已审核详情',
+        component: _import('enterpriseCheck/enterpriseCheckedDetail') ,
         meta: { breadNumber:1, notKeepAlive: true }
       },
       {

@@ -2,20 +2,21 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <levelbar></levelbar>
-    <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
-        <i class="el-icon-caret-bottom"></i>
-      </div>
-      <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link class='inlineBlock' to="/">
-          <el-dropdown-item>
-            Home
-          </el-dropdown-item>
-        </router-link>
-        <el-dropdown-item divided><span @click="logout" style="display:block;">LogOut</span></el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+    <!--<el-dropdown class="avatar-container" trigger="click">-->
+      <!--<div class="avatar-wrapper">-->
+        <!--<img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">-->
+        <!--<i class="el-icon-caret-bottom"></i>-->
+      <!--</div>-->
+      <!--<el-dropdown-menu class="user-dropdown" slot="dropdown">-->
+        <!--<router-link class='inlineBlock' to="/">-->
+          <!--<el-dropdown-item>-->
+            <!--Home-->
+          <!--</el-dropdown-item>-->
+        <!--</router-link>-->
+        <!--<el-dropdown-item divided><span @click="logout" style="display:block;"><svg-icon icon-class="out" />LogOut</span></el-dropdown-item>-->
+      <!--</el-dropdown-menu>-->
+    <!--</el-dropdown>-->
+    <el-button @click="logout" size="small" round style="right: 35px;margin-top: 10px; display:inline-block;position: absolute;"><svg-icon icon-class="out" />退出</el-button>
   </el-menu>
 </template>
 
@@ -40,11 +41,19 @@ export default {
       this.$store.dispatch('ToggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
+      this.$confirm('确认登出？')
+        .then(_ => {
+          console.log('登出');
+          this.$store.dispatch('LogOut').then(() => {
 //        location.reload()  // 为了重新实例化vue-router对象 避免bug
-        console.log('登出');
-        this.$router.push({ path: '/login' })
-      })
+            console.log('登出');
+            this.$router.push({ path: '/login' })
+          })
+        })
+        .catch(_ => {
+          console.log('留在本页面');
+        });
+
     }
   }
 }

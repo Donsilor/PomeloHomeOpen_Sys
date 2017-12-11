@@ -50,7 +50,7 @@
 
       <el-table-column align="center"  class-name="status-col" label="状态" prop="status_txt" width="110">
         <template slot-scope="scope">
-          <el-tag >{{scope.row.status_txt}}</el-tag>
+          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status_txt}}</el-tag>
         </template>
       </el-table-column>
 
@@ -58,7 +58,7 @@
         <template slot-scope="scope">
           <el-button v-if="scope.row.status!='published'" size="small" type="success"
                      @click="goCheckDetail(scope.row)">
-            审批
+            <svg-icon icon-class="check2" />审批
           </el-button>
         </template>
       </el-table-column>
@@ -75,7 +75,8 @@
 
 <script>
   import { getReviewList } from '@/api/check'
-  import { parseTime } from '@/utils'
+  import { parseTime, transDictValue } from '@/utils'
+  import { statusFilter } from '@/utils/filter'
 
   export default {
     name: 'enterPriseCheckPengding',
@@ -102,6 +103,9 @@
       }
     },
     computed: {
+    },
+    created() {
+      console.log(transDictValue('企业审核', 'checkType'));
     },
 //    mounted() {
 //      this.getList();

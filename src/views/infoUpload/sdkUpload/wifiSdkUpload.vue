@@ -37,7 +37,7 @@
 
       <el-table-column align="center" prop="filename" label="文件名" min-width="200">
         <template slot-scope="scope">
-          <a :href="scope.row.url">
+          <a class="special" :href="scope.row.url" target="_blank">
             {{scope.row.filename}}
           </a>
         </template>
@@ -70,7 +70,6 @@
     <el-dialog
             title="上传SDK文件"
             :visible.sync="dialogVisible"
-            size="small"
             :before-close="handleClose">
 
       <el-form :model="uploadParams" :rules="rules" ref="uploadForm" label-position="right">

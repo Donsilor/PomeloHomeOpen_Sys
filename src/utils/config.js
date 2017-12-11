@@ -32,3 +32,19 @@ export const originalCheckType  = [
     description: '其他资质证书'
   },
 ];
+
+// 数据字典
+export const dict = {
+  'checkType': [
+    {'DICT_VALUE': 1,'DICT_DESC': '企业审核', },
+    {'DICT_VALUE': 3,'DICT_DESC': '产品创建审核', },
+    {'DICT_VALUE': 4,'DICT_DESC': '产品上线审核', }
+  ],
+  'checkStatus': [
+    {'DICT_VALUE': 1,'DICT_DESC': '审批中', },
+    {'DICT_VALUE': 2,'DICT_DESC': '审批通过', },
+    {'DICT_VALUE': 3,'DICT_DESC': '审批不通过', },
+    {'DICT_VALUE': 4,'DICT_DESC': '已审批', },
+  ]
+}
+

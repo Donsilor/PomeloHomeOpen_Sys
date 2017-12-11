@@ -95,7 +95,7 @@
 
       <el-table-column align="center" class-name="status-col" label="状态" width="110">
         <template slot-scope="scope">
-          <el-tag >{{scope.row.status_txt}}</el-tag>
+          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status_txt}}</el-tag>
         </template>
       </el-table-column>
 

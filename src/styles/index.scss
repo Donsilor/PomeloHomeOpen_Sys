@@ -90,3 +90,8 @@ a:hover {
   width: 85% ;
 }
 
+// table下的超链接样式
+table a:link{text-decoration: none; color:blue; font-family: 微软雅黑;}
+table a:visited{ color:green;}
+table a:hover{text-decoration: underline; color:#09f}
+table a:active{text-decoration: blink; color: yellow;}

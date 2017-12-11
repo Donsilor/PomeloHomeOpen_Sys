@@ -12,7 +12,9 @@ import VueImg from 'v-img'
 Vue.use(ElementUI, {})
 
 Vue.use(VueImg)
+import * as filters from '@/utils/filter'; // 过滤工具
 
+Object.keys(filters).forEach(k => Vue.filter(k, filters[k])); // 注册过滤器
 Vue.config.productionTip = false
 
 new Vue({

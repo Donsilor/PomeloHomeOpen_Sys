@@ -94,7 +94,7 @@
 
       <el-table-column align="center" class-name="status-col" label="状态" width="110">
         <template slot-scope="scope">
-          <el-tag >{{scope.row.status_txt}}</el-tag>
+          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status_txt}}</el-tag>
         </template>
       </el-table-column>
 
@@ -102,7 +102,7 @@
         <template slot-scope="scope">
           <el-button v-if="scope.row.status!='published'" size="small" type="success"
                      @click="goCheckDetail(scope.row)">
-            查看详情
+            <svg-icon icon-class="check2" />审批
           </el-button>
         </template>
       </el-table-column>

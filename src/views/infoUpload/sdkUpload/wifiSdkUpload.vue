@@ -5,6 +5,10 @@
     <!--=========查询条件==========-->
     <el-form :inline="true" :model="queryCondition" ref="queryCondition" class="demo-form-inline" >
 
+      <el-form-item>
+        <el-button  type="primary" icon="el-icon-plus" @click="dialogVisible = true">新建</el-button>
+      </el-form-item>
+
       <el-form-item label="品类" prop="type_id">
         <el-select clearable placeholder="请选择" v-model="queryCondition.type_id">
           <el-option v-for="item in productTypeList"
@@ -17,7 +21,6 @@
 
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="getList">查询</el-button>
-        <el-button  type="primary" icon="el-icon-plus" @click="dialogVisible = true">新建</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -37,7 +40,7 @@
 
       <el-table-column align="center" prop="filename" label="文件名" min-width="200">
         <template slot-scope="scope">
-          <a class="special" :href="scope.row.url" target="_blank">
+          <a :href="scope.row.url" target="_blank">
             {{scope.row.filename}}
           </a>
         </template>
@@ -258,6 +261,7 @@
 
       // 判断文件大小
       beforeUpload(file) {
+        console.log('文件大小', file);
         const isLt5M = file.size / 1024 / 1024 < 5;
         if (!isLt5M) {
           this.$message.error('SDK文件大小不能超过 5MB!');

@@ -12,7 +12,7 @@
 
       <el-table-column align="center" prop="filename" label="文件名" min-width="180">
         <template slot-scope="scope">
-          <a :href="scope.row.url">
+          <a :href="scope.row.url" target="_blank">
             {{scope.row.filename}}
           </a>
         </template>
@@ -187,6 +187,7 @@
 
       // 判断文件大小
       beforeUpload(file) {
+        console.log('file', file);
         const isLt50M = file.size / 1024 / 1024 < 50;
         if (!isLt50M) {
           this.$message.error('SDK文件大小不能超过 50MB!');

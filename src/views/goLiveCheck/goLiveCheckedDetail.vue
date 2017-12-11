@@ -14,25 +14,21 @@
         </el-col>
       </el-row>
 
-      <!--<el-row>-->
-      <!--<el-col :span="20" :offset="4">-->
-      <!---->
-      <!--</el-col>-->
-      <!--</el-row>-->
+      <hr v-if="checkDetail.file_list.length" style="margin: 0px 20px 20px 20px"/>
 
       <el-row class="card-row" v-for="item in checkDetail.file_list" :key="item.id">
         <el-col :span="2" class="card-span-left">{{item.type_txt}}</el-col>
         <el-col :span="20" :offset="2" class="card-span-right">
-          <a :href="item.url">{{item.filename}}</a>
-          <div>{{item.size}}</div>
+          <a :href="item.file_url" target="_blank">{{item.filename}}</a><span style="color: darkgrey; padding-left: 8px">{{item.size}}</span>
         </el-col>
       </el-row>
+
+      <hr v-if="checkDetail.release_file_list.length" style="margin: 0px 20px 20px 20px"/>
 
       <el-row class="card-row" v-for="item in checkDetail.release_file_list" :key="item.id">
         <el-col :span="2" class="card-span-left">手机端控制页</el-col>
         <el-col :span="20" :offset="2" class="card-span-right">
-          <a :href="item.url">{{item.filename}}</a>
-          <div>{{item.size}}</div>
+          <a :href="item.file_url" target="_blank">{{item.filename}}</a><span style="color: darkgrey; padding-left: 8px">{{item.size}}</span>
         </el-col>
       </el-row>
 
@@ -57,7 +53,10 @@
     data() {
       return {
         record_id: '', // 审核id
-        checkDetail: '',
+        checkDetail: {
+          file_list: [],
+          release_file_list: []
+        }
       }
     },
     computed: {

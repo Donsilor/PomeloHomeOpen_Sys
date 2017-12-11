@@ -61,6 +61,14 @@
     </el-row>
 
     <el-row slot="header" class="card-row">
+      <el-col :span="2" class="card-span-left">合作品牌
+      </el-col>
+      <el-col :span="15" :offset="1" class="card-span-right" >
+        <el-button type="info" style="margin-bottom: 5px" v-for="item in checkDetail.brands" :key="item.name">{{item.brand_name}}</el-button>
+      </el-col>
+    </el-row>
+
+    <el-row slot="header" class="card-row">
       <el-col :span="2" class="card-span-left">合作产品
       </el-col>
       <el-col :span="15" :offset="1" class="card-span-right" >

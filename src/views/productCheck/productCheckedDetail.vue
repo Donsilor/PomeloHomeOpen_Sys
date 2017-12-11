@@ -21,7 +21,7 @@
       <el-row class="card-row">
         <el-col :span="2" class="card-span-left">外观图片（六视图）</el-col>
         <!--<el-col :span="20" :offset="1" class="card-span-right">-->
-        <el-col v-for="item,index in checkDetail.images" :offset="index === 0 ? 2:0" :key="item" :span="3" class="card-hex-vision">
+        <el-col v-for="item,index in checkDetail.images" :offset="index === 0 ? 1:0" :key="item" :span="3" class="card-hex-vision">
           <img v-img:name style="width: 100%;height: 100%" :src="item" class="image">
         </el-col>
         <!--</el-col>-->
@@ -52,18 +52,26 @@
         </el-col>
       </el-row>
 
-      <el-row slot="header" class="card-row">
+      <el-row v-if="checkDetail.type_txt==='wifi'" slot="header" class="card-row">
         <el-col :span="2" class="card-span-left">芯片厂商</el-col>
         <el-col :span="20" :offset="1" class="card-span-right">
           {{checkDetail.type_vendor}}
         </el-col>
       </el-row>
 
-      <el-row slot="header" class="card-row">
+      <el-row v-if="checkDetail.type_txt==='wifi'" slot="header" class="card-row">
         <el-col :span="2" class="card-span-left">芯片型号
         </el-col>
         <el-col :span="20" :offset="1" class="card-span-right">
           {{checkDetail.type_model}}
+        </el-col>
+      </el-row>
+
+      <el-row v-if="checkDetail.type_txt==='zigbee'||checkDetail.type_txt==='bluetooth'" class="card-row">
+        <el-col :span="2" class="card-span-left">协议
+        </el-col>
+        <el-col :span="20" :offset="1" class="card-span-right">
+          {{checkDetail.agreement}}
         </el-col>
       </el-row>
 

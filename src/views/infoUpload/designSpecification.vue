@@ -12,7 +12,7 @@
 
       <el-table-column align="center" prop="filename" label="文件名" min-width="180">
         <template slot-scope="scope">
-          <a :href="scope.row.url">
+          <a :href="scope.row.url" target="_blank">
             {{scope.row.filename}}
           </a>
         </template>

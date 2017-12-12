@@ -4,11 +4,11 @@
       class="card-box login-form">
       <h3 class="title">登录</h3>
 
-      <el-form-item prop="username">
+      <el-form-item prop="mail">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.mail" autoComplete="on" placeholder="登录邮箱" />
+        <el-input name="mail" type="text" v-model="loginForm.mail" autoComplete="on" placeholder="登录邮箱" />
       </el-form-item>
 
       <el-form-item prop="password">
@@ -47,13 +47,13 @@ export default {
         callback()
       }
     }
-    const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于5位'))
-      } else {
-        callback()
-      }
-    }
+//    const validatePass = (rule, value, callback) => {
+//      if (value.length < 1) {
+//        callback(new Error('密码不能小于5位'))
+//      } else {
+//        callback()
+//      }
+//    }
     return {
       loginForm: {
         mail: '47210149@qq.com',
@@ -61,7 +61,7 @@ export default {
       },
       loginRules: {
         mail: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }]
+        password: [{ required: true, trigger: 'blur' }]
       },
       pwdType: 'password',
       loading: false

@@ -1,9 +1,10 @@
 
 
 export function isvalidUsername(str) {
-  console.log('str', str);
-  const valid_map = ['admin', 'editor']
-  return valid_map.indexOf(str.trim()) >= 0
+  // console.log('str', str);
+  var reg = /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/; // 邮箱验证
+  console.log('用户名验证', reg.test(str));
+  return reg.test(str);
 }
 
 /* 合法uri*/

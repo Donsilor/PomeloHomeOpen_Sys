@@ -20,6 +20,8 @@
         <el-col :span="2" class="card-span-left">{{item.type_txt}}</el-col>
         <el-col :span="20" :offset="2" class="card-span-right">
           <a :href="item.file_url" target="_blank">{{item.filename}}</a><span style="color: darkgrey; padding-left: 8px">{{item.size}}</span>
+          <div v-if="item.type===14||item.type===15" style="color: darkgrey;padding-top: 10px">压缩包仅支持zip格式，需按【产品品牌_产品型号】格式命名</div>
+          <div v-else="item.type===16" style="color: darkgrey;padding-top: 10px">上传固件后，用户可进行设备固件更新</div>
         </el-col>
       </el-row>
 

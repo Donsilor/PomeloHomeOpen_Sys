@@ -28,9 +28,9 @@ export const originalCheckType  = [
   { id: 6, action_type: 1, unapproved_reason: '国家高新技术企业复印件未审核通过',
     description: '国家高新技术企业复印件'
   },
-  { id: 7, action_type: 1, unapproved_reason: '其他资质证书未审核通过',
-    description: '其他资质证书'
-  },
+  // { id: 7, action_type: 1, unapproved_reason: '其他资质证书未审核通过',
+  //   description: '其他资质证书'
+  // },
 ];
 
 // 数据字典

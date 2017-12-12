@@ -1,5 +1,5 @@
 <template>
-  <el-menu mode="vertical" unique-opened :default-active="$route.path" background-color="#304156" text-color="#fff" active-text-color="#409EFF">
+  <el-menu mode="vertical" unique-opened :default-active="routeIndex" background-color="#304156" text-color="#fff" active-text-color="#409EFF">
     <sidebar-item :routes="routes"></sidebar-item>
   </el-menu>
 </template>
@@ -8,15 +8,22 @@
 import SidebarItem from './SidebarItem'
 export default {
   components: { SidebarItem },
+  data() {
+    return {
+      routeIndex: this.$route.path
+    }
+  },
   computed: {
-    routeIndex() {
-//      console.log($route.path, '/'+this.$route.path.split('/')[0]);
-      return '/'+this.$route.path.split('/')[0]
-    },
     routes() {
 //      console.log('this.$router.options.routes.children', this.$router.options.routes);
       return this.$router.options.routes
     }
+  },
+  watch: {
+    // 保证详情页也可以让导航栏高亮
+    routeIndex() {
+      return '/'+this.$route.path.split('/')[0]
+    },
   }
 }
 </script>

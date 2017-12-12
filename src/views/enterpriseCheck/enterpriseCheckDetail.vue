@@ -30,7 +30,7 @@
           </el-col>
           <el-col :span="16" class="check-reason" v-if="contactsCheck.action_type == 2">
             <el-form-item label="审核结果：" >
-              <el-input @blur="modifyReason('联系人信息未审核通过', contactsCheck.unapproved_reason)" v-model="contactsCheck.unapproved_reason"></el-input>
+              <el-input type="textarea" autosize :maxlength="500" @blur="modifyReason('联系人信息未审核通过', contactsCheck.unapproved_reason)" v-model="contactsCheck.unapproved_reason"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -90,7 +90,7 @@
 
           <el-col :span="16" class="check-reason" v-if="companyInfoCheck.action_type == 2">
             <el-form-item label="审核结果：">
-              <el-input @blur="modifyReason('公司/团队信息未审核通过', companyInfoCheck.unapproved_reason)" v-model="companyInfoCheck.unapproved_reason"></el-input>
+              <el-input type="textarea" autosize :maxlength="500" @blur="modifyReason('公司/团队信息未审核通过', companyInfoCheck.unapproved_reason)" v-model="companyInfoCheck.unapproved_reason"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -120,7 +120,7 @@
 
             <el-col :span="16" class="check-reason" v-if="item.action_type == 2">
               <el-form-item label="审核结果：">
-                <el-input @blur="modifyReason(item.filename+'未审核通过', item.unapproved_reason)" v-model="item.unapproved_reason"></el-input>
+                <el-input type="textarea" autosize :maxlength="500" @blur="modifyReason(item.filename+'未审核通过', item.unapproved_reason)" v-model="item.unapproved_reason"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -149,7 +149,7 @@
 
             <el-col :span="16" class="check-reason" v-if="item.action_type == 2">
               <el-form-item label="审核结果：">
-                <el-input @blur="modifyReason(item.description+'未审核通过', item.unapproved_reason)" v-model="item.unapproved_reason"></el-input>
+                <el-input type="textarea" autosize :maxlength="500" @blur="modifyReason(item.description+'未审核通过', item.unapproved_reason)" v-model="item.unapproved_reason"></el-input>
               </el-form-item>
             </el-col>
           </el-row>

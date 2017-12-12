@@ -53,7 +53,7 @@
 
           <el-col :span="18" :offset="1" class="check-reason" v-if="baseInfoCheck.action_type == 2">
             <el-form-item label="审核结果：">
-              <el-input
+              <el-input type="textarea" autosize :maxlength="500"
                       @blur="modifyReason('产品基本信息未审核通过', baseInfoCheck.unapproved_reason)"
                       v-model="baseInfoCheck.unapproved_reason"></el-input>
             </el-form-item>
@@ -124,7 +124,7 @@
 
           <el-col :span="18" class="check-reason" v-if="tecTypeCheck.action_type == 2">
             <el-form-item label="审核结果：">
-              <el-input
+              <el-input type="textarea" autosize :maxlength="500"
                       @blur="modifyReason('接入方式未审核通过', tecTypeCheck.unapproved_reason)"
                       v-model="tecTypeCheck.unapproved_reason"></el-input>
             </el-form-item>
@@ -176,7 +176,7 @@
 
           <el-col :span="18" class="check-reason" v-if="funcCheck_default.action_type == 2">
             <el-form-item label="审核结果：">
-              <el-input @blur="modifyReason('功能点设置未审核通过', funcCheck_default.unapproved_reason)" v-model="funcCheck_default.unapproved_reason"></el-input>
+              <el-input type="textarea" autosize :maxlength="500" @blur="modifyReason('功能点设置未审核通过', funcCheck_default.unapproved_reason)" v-model="funcCheck_default.unapproved_reason"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -226,7 +226,7 @@
 
           <el-col :span="18" class="check-reason" v-if="funcCheck_optional.action_type == 2">
             <el-form-item label="审核结果：">
-              <el-input @blur="modifyReason('功能点设置未审核通过', funcCheck_optional.unapproved_reason)" v-model="funcCheck_optional.unapproved_reason"></el-input>
+              <el-input type="textarea" autosize :maxlength="500" @blur="modifyReason('功能点设置未审核通过', funcCheck_optional.unapproved_reason)" v-model="funcCheck_optional.unapproved_reason"></el-input>
             </el-form-item>
           </el-col>
         </el-row>

@@ -27,7 +27,7 @@
 
               <el-col :span="18" class="check-reason" v-if="versionCheck.action_type == 2">
                 <el-form-item label="审核结果：">
-                  <el-input
+                  <el-input type="textarea" autosize :maxlength="500"
                           @blur="modifyReason('版本信息未审核通过', versionCheck.unapproved_reason)"
                           v-model="versionCheck.unapproved_reason"></el-input>
                 </el-form-item>
@@ -62,7 +62,7 @@
 
               <el-col :span="18"  class="check-reason" v-if="item.action_type == 2">
                 <el-form-item label="审核结果：">
-                  <el-input
+                  <el-input type="textarea" autosize :maxlength="500"
                           @blur="modifyReason(item.type_txt+'未审核通过', item.unapproved_reason)"
                           v-model="item.unapproved_reason"></el-input>
                 </el-form-item>
@@ -95,7 +95,7 @@
 
               <el-col :span="18"  class="check-reason" v-if="item.action_type == 2">
                 <el-form-item label="审核结果：">
-                  <el-input
+                  <el-input type="textarea" autosize :maxlength="500"
                           @blur="modifyReason(item.type_txt+'未审核通过', item.unapproved_reason)"
                           v-model="item.unapproved_reason"></el-input>
                 </el-form-item>

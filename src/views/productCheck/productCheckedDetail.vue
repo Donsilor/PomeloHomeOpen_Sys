@@ -52,14 +52,14 @@
         </el-col>
       </el-row>
 
-      <el-row v-if="checkDetail.type_txt==='wifi'" slot="header" class="card-row">
+      <el-row v-if="checkDetail.type_txt==='wifi'" class="card-row">
         <el-col :span="2" class="card-span-left">芯片厂商</el-col>
         <el-col :span="20" :offset="1" class="card-span-right">
           {{checkDetail.type_vendor}}
         </el-col>
       </el-row>
 
-      <el-row v-if="checkDetail.type_txt==='wifi'" slot="header" class="card-row">
+      <el-row v-if="checkDetail.type_txt==='wifi'" class="card-row">
         <el-col :span="2" class="card-span-left">芯片型号
         </el-col>
         <el-col :span="20" :offset="1" class="card-span-right">

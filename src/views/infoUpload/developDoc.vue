@@ -3,7 +3,7 @@
 
     <el-button style="margin-bottom: 10px" type="primary" icon="el-icon-plus" @click="dialogVisible = true">新建</el-button>
 
-    <!--=====table=======-->
+    <!--=====table =======-->
     <el-table v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
               :data="list"
               style="width: 100%">

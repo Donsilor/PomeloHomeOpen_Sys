@@ -36,6 +36,7 @@ export const constantRouterMap = [
     // name: '企业审核',
     // redirect: '/enterpriseCheck',
     noDropdown: true,
+    // icon: 'enterprise',
     children: [
       { path: 'enterpriseCheck', name: '企业审核', component: _import('enterpriseCheck/index') },
       {
@@ -60,9 +61,10 @@ export const constantRouterMap = [
     // redirect: '/productCheck/index',
     // name: '企业审核',
     noDropdown: true,
+    // icon: 'product',
     children: [
       // { path: 'enterprise_check_pending', name: '待审核列表', component: _import('enterpriseCheck/enterprise_check_pending') }
-      { path: 'productCheck', name: '产品审核', component: _import('productCheck/index') },
+      { path: 'productCheck', name: '产品审核', component: _import('productCheck/index')},
       {
         path: 'productCheck/productCheckDetail',
         name: '待审产品详情',
@@ -85,6 +87,7 @@ export const constantRouterMap = [
     // redirect: '/goLiveCheck/index',
     // name: '企业审核',
     noDropdown: true,
+    // icon: 'goLive',
     children: [
       // { path: 'enterprise_check_pending', name: '待审核列表', component: _import('enterpriseCheck/enterprise_check_pending') }
       { path: 'goLiveCheck', name: '上线审核', component: _import('goLiveCheck/index') },
@@ -110,6 +113,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: '资料上传',
+    // icon: 'upload',
     children: [
       // { path: 'enterprise_check_pending', name: '待审核列表', component: _import('enterpriseCheck/enterprise_check_pending') }
       { path: 'sdkUpload', name: 'SDK上传', component: _import('infoUpload/sdkUpload/index') },

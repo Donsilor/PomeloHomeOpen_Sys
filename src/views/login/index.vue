@@ -6,7 +6,7 @@
 
       <el-form-item prop="mail">
         <span class="svg-container svg-container_login">
-          <svg-icon icon-class="user" />
+          <svg-icon icon-class="email" />
         </span>
         <el-input name="mail" type="text" v-model="loginForm.mail" autoComplete="on" placeholder="登录邮箱" />
       </el-form-item>
@@ -56,8 +56,8 @@ export default {
 //    }
     return {
       loginForm: {
-        mail: '47210149@qq.com',
-        password: '12341234'
+        mail: '',
+        password: ''
       },
       loginRules: {
         mail: [{ required: true, trigger: 'blur', validator: validateUsername }],

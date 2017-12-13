@@ -18,7 +18,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="size" label="SDK大小">
+      <el-table-column align="center" prop="size" label="文件大小">
       </el-table-column>
 
       <el-table-column align="center" prop="created_at_txt" label="上传时间">
@@ -43,7 +43,7 @@
 
     <!--=====dialog======-->
     <el-dialog
-            title="上传SDK文件"
+            title="上传开发文档"
             :visible.sync="dialogVisible"
             size="small"
             :before-close="handleClose">
@@ -60,7 +60,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="SDK文件" :label-width="formLabelWidth">
+        <el-form-item label="开发文档" :label-width="formLabelWidth">
           <el-upload
                   class="upload-demo"
                   ref="upload"

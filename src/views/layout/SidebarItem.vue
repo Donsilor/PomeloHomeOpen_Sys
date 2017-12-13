@@ -4,13 +4,13 @@
       <!--不隐藏，没下拉菜单，子菜单长度大于0；于是默认显示第一个子菜单-->
       <router-link v-if="!item.hidden&&item.noDropdown&&item.children.length>0" :to="'/'+item.children[0].path">
         <el-menu-item :index="'/'+item.children[0].path">
-          <icon-svg v-if='item.icon' :icon-class="item.icon" /> {{item.children[0].name}}
+          <svg-icon v-if='item.icon' :icon-class="item.icon" /> {{item.children[0].name}}
         </el-menu-item>
       </router-link>
       <!--有下拉菜单-->
       <el-submenu :index="item.name" v-if="!item.noDropdown&&!item.hidden">
         <template slot="title">
-          <icon-svg v-if='item.icon' :icon-class="item.icon" /> {{item.name}}
+          <svg-icon v-if='item.icon' :icon-class="item.icon" /> {{item.name}}
         </template>
         <template v-for="child in item.children" v-if='!child.hidden'>
           <sidebar-item class='menu-indent' v-if='child.children&&child.children.length>0' :routes='[child]'> </sidebar-item>

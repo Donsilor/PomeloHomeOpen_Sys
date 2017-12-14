@@ -70,6 +70,7 @@
                   :data="uploadParams"
                   :file-list="fileList"
                   :auto-upload="false"
+                  :on-change="handleChange"
                   :before-upload="beforeUpload"
                   :on-error="uploadError"
                   :on-success="uploadSuccess"
@@ -100,6 +101,13 @@
 
   export default {
     data() {
+      const fileNumber = (rule, value, callback) => {
+        if (this.$refs.upload.uploadFiles.length === 0) {
+          callback(new Error('请选择上传文件！'))
+        } else {
+          callback()
+        }
+      };
       return {
         // ====table===
         list: null,
@@ -121,7 +129,7 @@
             { required: true, message: '请选择芯片型号', trigger: 'blur' },
           ],
           upload: [
-            { required: true, message: '请选择上传文件', trigger: 'blur' },
+            { required: true, validator: fileNumber },
           ]
         },
         formLabelWidth: '120px',
@@ -196,13 +204,20 @@
         }
         return isLt50M;
       },
+
+      // 触发是否选择上传文数验证
+      handleChange(file, fileList) {
+//        console.log('上传', file, fileList);
+        this.$refs['uploadForm'].validateField('upload');
+      },
+
       // 上传SDK
       uploadSDK() {
         console.log('文件', this.$refs.upload.uploadFiles);
-        if (this.$refs.upload.uploadFiles.length === 0) {
-          this.$message.warning('请选择文件！');
-          return false;
-        }
+//        if (this.$refs.upload.uploadFiles.length === 0) {
+//          this.$message.warning('请选择文件！');
+//          return false;
+//        }
         this.$refs['uploadForm'].validate((valid) => {
           if (valid) {
             this.$refs.upload.submit();
@@ -218,9 +233,9 @@
         console.log('成功回调', response, file, fileList);
         if (response.code === 200) {
           this.$message.success('上传成功！');
-          this.dialogVisible = false;
-          this.$refs['uploadForm'].resetFields();
-          this.$refs.upload.clearFiles();
+          setTimeout(() => {
+            this.closeDialog();
+        }, 200);
           this.getList();
         }
 

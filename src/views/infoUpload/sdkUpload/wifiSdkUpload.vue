@@ -109,7 +109,7 @@
           <!--<el-input v-model="technology_type_key" placeholder="型号"></el-input>-->
         <!--</el-form-item>-->
 
-        <el-form-item label="SDK文件" :label-width="formLabelWidth">
+        <el-form-item label="SDK文件" :label-width="formLabelWidth" prop="upload">
           <el-upload
                   class="upload-demo"
                   ref="upload"
@@ -172,6 +172,9 @@
           ],
           technology_type_key: [
             { required: true, message: '请选择芯片型号', trigger: 'blur' },
+          ],
+          upload: [
+            { required: true, message: '请选择上传文件', trigger: 'blur' },
           ]
         },
         formLabelWidth: '120px',

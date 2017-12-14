@@ -3,7 +3,7 @@
 
     <el-button style="margin-bottom: 10px" type="primary" icon="el-icon-plus" @click="dialogVisible = true">新建</el-button>
 
-    <!--=====table =======-->
+    <!--=====table  =======-->
     <el-table v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
               :data="list"
               style="width: 100%">
@@ -60,7 +60,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="开发文档" :label-width="formLabelWidth">
+        <el-form-item label="开发文档" :label-width="formLabelWidth" prop="upload">
           <el-upload
                   class="upload-demo"
                   ref="upload"
@@ -119,6 +119,9 @@
           ],
           technology_type_key: [
             { required: true, message: '请选择芯片型号', trigger: 'blur' },
+          ],
+          upload: [
+            { required: true, message: '请选择上传文件', trigger: 'blur' },
           ]
         },
         formLabelWidth: '120px',

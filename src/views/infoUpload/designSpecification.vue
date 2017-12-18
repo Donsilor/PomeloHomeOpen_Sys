@@ -5,8 +5,8 @@
 
     <!--=====table=======-->
     <el-table v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row
-              :data="list"
-              style="width: 100%">
+                         :data="list"
+                         style="width: 100%">
       <el-table-column align="center" prop="type_name" label="品类">
       </el-table-column>
 
@@ -237,6 +237,8 @@
             this.closeDialog();
         }, 200);
           this.getList();
+        } else {
+          this.$message.error(response.msg);
         }
 
       },

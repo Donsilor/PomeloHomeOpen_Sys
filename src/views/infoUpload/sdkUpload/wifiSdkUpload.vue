@@ -318,6 +318,8 @@
             this.closeDialog();
           }, 200);
           this.getList();
+        } else {
+          this.$message.error(response.msg);
         }
 
       },

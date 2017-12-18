@@ -166,7 +166,7 @@
         <el-row>
           <el-col :span="6" class="check-radio">
             <el-form-item>
-              <el-radio-group @change="generateReason('功能点设置未审核通过', funcCheck_default.action_type, funcCheck_default.unapproved_reason, 'funcCheck_default')"
+              <el-radio-group @change="generateReason('必选功能点设置未审核通过', funcCheck_default.action_type, funcCheck_default.unapproved_reason, 'funcCheck_default')"
                               v-model="funcCheck_default.action_type">
                 <el-radio :label="1">审核通过</el-radio>
                 <el-radio :label="2">审核不通过</el-radio>
@@ -176,7 +176,7 @@
 
           <el-col :span="18" class="check-reason" v-if="funcCheck_default.action_type == 2">
             <el-form-item label="审核结果：">
-              <el-input type="textarea" autosize :maxlength="500" @blur="modifyReason('功能点设置未审核通过', funcCheck_default.unapproved_reason)" v-model="funcCheck_default.unapproved_reason"></el-input>
+              <el-input type="textarea" autosize :maxlength="500" @blur="modifyReason('必选功能点设置未审核通过', funcCheck_default.unapproved_reason)" v-model="funcCheck_default.unapproved_reason"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -216,7 +216,7 @@
         <el-row>
           <el-col :span="6" class="check-radio">
             <el-form-item>
-              <el-radio-group @change="generateReason('功能点设置未审核通过', funcCheck_optional.action_type, funcCheck_optional.unapproved_reason, 'funcCheck_optional')"
+              <el-radio-group @change="generateReason('可选功能点设置未审核通过', funcCheck_optional.action_type, funcCheck_optional.unapproved_reason, 'funcCheck_optional')"
                               v-model="funcCheck_optional.action_type">
                 <el-radio :label="1">审核通过</el-radio>
                 <el-radio :label="2">审核不通过</el-radio>
@@ -226,7 +226,7 @@
 
           <el-col :span="18" class="check-reason" v-if="funcCheck_optional.action_type == 2">
             <el-form-item label="审核结果：">
-              <el-input type="textarea" autosize :maxlength="500" @blur="modifyReason('功能点设置未审核通过', funcCheck_optional.unapproved_reason)" v-model="funcCheck_optional.unapproved_reason"></el-input>
+              <el-input type="textarea" autosize :maxlength="500" @blur="modifyReason('可选功能点设置未审核通过', funcCheck_optional.unapproved_reason)" v-model="funcCheck_optional.unapproved_reason"></el-input>
             </el-form-item>
           </el-col>
         </el-row>

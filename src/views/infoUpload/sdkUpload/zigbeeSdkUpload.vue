@@ -24,7 +24,7 @@
       <el-table-column align="center" prop="size" label="SDK大小">
       </el-table-column>
 
-      <el-table-column align="center" prop="created_at_txt" label="上传时间">
+      <el-table-column align="center" prop="updated_at_txt" label="上传时间">
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="100">

@@ -200,7 +200,7 @@
       beforeUpload(file) {
         const isLt50M = file.size / 1024 / 1024 < 50;
         if (!isLt50M) {
-          this.$message.error('SDK文件大小不能超过 50MB!');
+          this.$message.error('只能上传pdf,doc,docx,ppt文件，且不超过50M！');
         }
         return isLt50M;
       },

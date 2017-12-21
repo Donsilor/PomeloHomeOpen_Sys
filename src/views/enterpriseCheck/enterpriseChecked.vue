@@ -49,7 +49,7 @@
       <el-table-column align="center" label="联系手机" prop="business_contacts_mobile">
       </el-table-column>
 
-      <el-table-column align="center" label="提交时间" prop="updated_at_txt">
+      <el-table-column align="center" label="提交时间" prop="created_at_txt">
       </el-table-column>
 
       <el-table-column align="center" class-name="status-col" label="状态" prop="status_txt">

@@ -1,4 +1,4 @@
-import { dict } from '@/utils/config'
+import { dict, originalCheckType } from '@/utils/config'
 
  export function parseTime(time, cFormat) {
    if (arguments.length === 0) {
@@ -81,3 +81,14 @@ import { dict } from '@/utils/config'
     // console.log('翻译出来的数据字典DICT_VALUE', DICT_VALUE);
     return DICT_VALUE;
   }
+
+
+  // 翻译公司资质名
+  export const licenseTranslate = function (type) {
+    for (let i =0; i < originalCheckType.length; i++) {
+      if (originalCheckType[i].type == type) {
+        return originalCheckType[i].description;
+      }
+    }
+  };
+  

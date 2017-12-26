@@ -179,6 +179,7 @@
 <script>
   import { getReviewInfo, commitCheck } from '@/api/check';
   import { originalCheckType } from '@/utils/config'; // 复核原件类型
+  import { licenseTranslate } from '@/utils';
   import { Message } from 'element-ui';
 
   export default {
@@ -217,7 +218,7 @@
 //      }
     },
     created() {
-      console.log('页面传参', this.$route.query);
+      console.log('页面传参', this.$route.query, this.$route);
       this.record_id = this.$route.query.record_id;
     },
     mounted() {
@@ -236,8 +237,10 @@
           if (_this.checkDetail.licenses.length > 0){
             _this.checkDetail.licenses.forEach(function (item) {
               _this.$set(item, 'action_type', 1);
-              _this.$set(item, 'unapproved_reason', item.filename + '未审核通过');
               _this.$set(item, 'url', item.file_url);
+              item.filename = licenseTranslate(item.type);
+              _this.$set(item, 'unapproved_reason', item.filename + '未审核通过');
+
               }
             )
           }

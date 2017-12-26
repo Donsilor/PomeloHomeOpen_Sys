@@ -109,7 +109,7 @@ export const constantRouterMap = [
   
   // 资料上传
   {
-    path: '/infoUpload',
+    path: '/',
     component: Layout,
     redirect: 'noredirect',
     name: '资料上传',

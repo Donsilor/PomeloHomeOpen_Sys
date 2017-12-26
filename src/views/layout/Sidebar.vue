@@ -9,9 +9,14 @@ import SidebarItem from './SidebarItem'
 export default {
   components: { SidebarItem },
   data() {
+//    const routeIndex = () => {
+//      return '/'+this.$route.path.split('/')[0];
+//    }
+    const routeIndex = '/'+this.$route.path.split('/')[1];
+//    const routeIndex = this.$route.path;
     return {
 //      routeIndex: this.$route.path,
-      routeIndex: this.$route.path
+      routeIndex: routeIndex
     }
   },
   computed: {
@@ -21,6 +26,7 @@ export default {
     }
   },
   created () {
+//    this.routeIndex = '/'+this.$route.path.split('/')[0];
     // 组件创建完后获取数据，
     // 此时 data 已经被 observed 了
 //    this.getRoute()
@@ -30,7 +36,7 @@ export default {
   },
   methods: {
     getRoute () {
-      this.routeIndex = '/'+this.$route.path.split('/')[0];
+      this.routeIndex = '/'+this.$route.path.split('/')[1];
     }
   },
   watch: {

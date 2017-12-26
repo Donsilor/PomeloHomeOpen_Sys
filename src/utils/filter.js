@@ -10,5 +10,3 @@ export const statusFilter = function (status) {
   };
   return statusMap[status]
 };
-
-//

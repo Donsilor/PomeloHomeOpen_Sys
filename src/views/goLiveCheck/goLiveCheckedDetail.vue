@@ -37,7 +37,7 @@
     </el-card>
 
     <!--===========审核不通过原因==============-->
-    <el-card v-if="$route.query.status === 2"class="box-card" style="margin: 30px 0">
+    <el-card v-if="$route.query.status == 2" class="box-card" style="margin: 30px 0">
       <p v-if="">审核不通过：</p>
       <p v-for="item, index in unapproved_reason_list">{{index + 1}}. {{item}}；</p>
     </el-card>

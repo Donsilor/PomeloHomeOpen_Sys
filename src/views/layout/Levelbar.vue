@@ -20,6 +20,7 @@ export default {
   methods: {
     getBreadcrumb() {
       var breadNumber= typeof(this.$route.meta.breadNumber)!="undefined"?this.$route.meta.breadNumber:0;//默认为0
+//      var newBread={name:this.$route.query.product_brand_name||this.$route.query.business_name||this.$route.name,path:this.$route.fullPath};//当前页面的
       var newBread={name:this.$route.name,path:this.$route.fullPath};//当前页面的
 //      console.log('newBread', newBread);
       var breadList=this.$store.getters.breadListState;//获取breadList数组

@@ -8,7 +8,7 @@
         </el-form-item>
 
         <el-form-item label="联系人" prop="contacts">
-          <el-input v-model="queryCondition.business_contacts" placeholder="联系人"></el-input>
+          <el-input v-model="queryCondition.contacts" placeholder="联系人"></el-input>
         </el-form-item>
 
         <el-form-item label="联系手机" prop="contacts_mobile">
@@ -43,7 +43,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="联系人" prop="business_name">
+      <el-table-column align="center" label="联系人" prop="business_contacts">
       </el-table-column>
 
       <el-table-column align="center" label="联系手机" prop="business_contacts_mobile">

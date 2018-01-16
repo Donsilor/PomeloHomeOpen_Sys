@@ -146,12 +146,12 @@
       // 跳转到待审核详情页
       goCheckDetail(row) {
 //        if (row.status === 1) { // 1 = 审批通过
-//          this.$router.push({path: '/enterpriseCheck/enterpriseCheckedDetail', query: row});
+//          this.$router.push({path: '/auditManagement/enterpriseCheckedDetail', query: row});
 //        } else if (row.status === 2) { // 2 = 审批不通过 需要重新审批
-//          this.$router.push({path: '/enterpriseCheck/enterpriseCheckDetail', query: row});
+//          this.$router.push({path: '/auditManagement/enterpriseCheckDetail', query: row});
 //        }
         row.product_brand_name = ''; // 使详情页的面包屑名称显示为企业名称
-        this.$router.push({path: '/enterpriseCheck/enterpriseCheckedDetail', query: row});
+        this.$router.push({path: '/auditManagement/enterpriseCheckedDetail', query: row});
 
       },
 

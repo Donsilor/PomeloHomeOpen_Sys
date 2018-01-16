@@ -1,12 +1,34 @@
 <template>
-  <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
-    <!--<div class="sidebar-wrapper">-->
-      <sidebar class="sidebar-container"></sidebar>
-    <!--</div>-->
-    <div class="main-container">
-      <navbar></navbar>
-      <app-main></app-main>
-    </div>
+  <div class="app-wrapper">
+    <el-container>
+      <el-header height="50px">
+        <el-row>
+          <el-col :span="16" class="header-title">开放平台管理后台</el-col>
+          <el-col :span="8">
+            <div class="user-info">
+              <el-dropdown trigger="click">
+              <span class="el-dropdown-link">
+                gongyuanrong@evergrande.cn
+                <i class="el-icon-caret-bottom"></i>
+              </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+          </el-col>
+        </el-row>
+      </el-header>
+      <el-container>
+        <el-aside width="150px" style="height:100vh;">
+          <sidebar class="sidebar"></sidebar>
+          <!--<navbar></navbar>-->
+        </el-aside>
+        <el-main>
+          <app-main></app-main>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
@@ -34,48 +56,27 @@ export default {
     .app-wrapper {
         @include clearfix;
         position: relative;
-        height: 100%;
-        width: 100%;
-        &.hideSidebar {
-            .sidebar-wrapper {
-                transform: translate(-140px, 0);
-                .sidebar-container {
-                    transform: translate(132px, 0);
-                }
-                &:hover {
-                    transform: translate(0, 0);
-                    .sidebar-container {
-                        transform: translate(0, 0);
-                    }
-                }
+        .el-header{
+          background: rgb(48, 65, 86);
+          color: #ffffff;
+          line-height: 50px;
+          z-index: 100;
+          .header-title{
+            font-size: 18px;
+          }
+          .user-info{
+            text-align: right;
+            position: relative;
+            .el-dropdown{
+              cursor: pointer;
+              color: #ffffff;
             }
-            .main-container {
-                margin-left: 40px;
-            }
+          }
         }
-        .sidebar-wrapper {
-            width: 180px;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1001;
-            overflow: hidden;
-            transition: all .28s ease-out;
-        }
-        .sidebar-container {
-            transition: all .28s ease-out;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: -17px;
-            overflow-y: scroll;
-        }
-        .main-container {
-            min-height: 100%;
-            transition: all .28s ease-out;
-            margin-left: 180px;
+        .el-main{
+          height: 100vh;
+          padding: 0;
+          /*margin-top: -50px;*/
         }
     }
 </style>

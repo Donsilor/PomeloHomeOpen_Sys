@@ -150,7 +150,7 @@
         console.log('row', row);
         row.approved_user = ''; // 防止为null时报错
         row.product_brand_name = ''; // 使详情页的面包屑名称显示为企业名称
-        this.$router.push({path: '/enterpriseCheck/enterpriseCheckDetail', query: row});
+        this.$router.push({path: '/auditManagement/enterpriseCheckDetail', query: row});
       },
 
       handleSizeChange(val) {

@@ -9,6 +9,30 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  overflow-y: hidden;
+}
+::-webkit-scrollbar {
+  height: 12px;
+  width: 4px;
+  background-color:transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #5b5b5b;
+  width: 8px;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-corner {
+  border-radius: 4px;
+}
+body{
+  scrollbar-face-color: #5b5b5b;
+  scrollbar-arrow-color: #5b5b5b;
+  scrollbar-highlight-color: #5b5b5b;
+  scrollbar-track-color: #d0d0d0;
+  scrollbar-arrow-color:  #d0d0d0;
+  scrollbar-3dlight-color: #d0d0d0;
 }
 
 html {

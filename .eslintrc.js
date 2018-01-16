@@ -14,7 +14,7 @@ module.exports = {
     plugins: [
         'html'
     ],
-    // enterpriseCheck if imports actually resolve
+    // auditManagement if imports actually resolve
     'settings': {
         'import/resolver': {
             'webpack': {

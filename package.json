@@ -9,7 +9,7 @@
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src"
   },
-  "dependencies": {
+    "dependencies": {
     "axios": "0.16.2",
     "babel-polyfill": "^6.26.0",
     "element-ui": "^2.0.7",

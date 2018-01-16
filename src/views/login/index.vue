@@ -84,7 +84,7 @@ export default {
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
             console.log('登录');
-            this.$router.push({ path: '/enterpriseCheck' })
+            this.$router.push({ path: '/auditManagement' })
           }).catch(() => {
             this.loading = false
           })

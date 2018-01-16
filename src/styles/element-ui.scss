@@ -27,3 +27,17 @@
     }
   }
 }
+ .el-table {
+   border: 1px solid #dfe6ec;
+   border-bottom: none;
+ }
+ .el-table th{
+   background-color: #eef1f6;
+ }
+ .el-pagination{
+   padding-top: 15px;
+   text-align: right;
+ }
+ .el-menu-item i {
+   color: #fff;
+ }

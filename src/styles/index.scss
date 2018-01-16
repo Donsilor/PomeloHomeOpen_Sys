@@ -119,3 +119,20 @@ a:hover {
 .el-card a:visited, table a:visited{ color:green;}
 .el-card a:hover, table a:hover{text-decoration: underline; color:#09f}
 .el-card a:active, table a:active{text-decoration: blink; color: yellow;}
+
+//二级菜单公共样式
+.sec-menu{
+  height: 100vh;
+  .el-menu-item{
+    height: 40px;
+    line-height: 40px;
+  }
+  .el-menu-item{
+    border-bottom: 1px solid #d4cece;
+  }
+  .el-menu-item.is-active{
+    background: #ffffff !important;
+    position: relative;
+    left: 1px;
+  }
+}

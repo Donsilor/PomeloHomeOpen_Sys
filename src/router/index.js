@@ -39,7 +39,12 @@ export const constantRouterMap = [
                 component: _import('auditManagement/index'),
                 children: [
                     {
-                        path: 'enterpriseCheckPending',
+                        path: '',
+                        name: 'checkPending',
+                        component: _import('auditManagement/enterpriseCheckPending')
+                    },
+                    {
+                        path: 'checkPending',
                         name: 'checkPending',
                         component: _import('auditManagement/enterpriseCheckPending')
                     },
@@ -60,7 +65,6 @@ export const constantRouterMap = [
                         component: _import('auditManagement/enterpriseCheckDetail'),
                         meta: {breadNumber: 1, notKeepAlive: true}
                     },
-                    {}
                 ]
             },
             {

@@ -76,7 +76,7 @@ export default {
         .el-main{
           height: 100vh;
           padding: 0;
-          /*margin-top: -50px;*/
+          margin-left: -1px;
         }
     }
 </style>

@@ -59,7 +59,8 @@ export const constantRouterMap = [
                         name: '待审核详情',
                         component: _import('auditManagement/enterpriseCheckDetail'),
                         meta: {breadNumber: 1, notKeepAlive: true}
-                    }
+                    },
+                    {}
                 ]
             },
             {

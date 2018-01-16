@@ -64,7 +64,7 @@ export const constantRouterMap = [
                         name: '待审核详情',
                         component: _import('auditManagement/enterpriseCheckDetail'),
                         meta: {breadNumber: 1, notKeepAlive: true}
-                    },
+                    }
                 ]
             },
             {
@@ -76,8 +76,21 @@ export const constantRouterMap = [
             {
                 path: 'typeManagement',
                 name: '品类管理',
-                //component: _import(''),
-                children: []
+                component: _import('typeManagement/index'),
+                children: [
+                    {
+                        path: 'typeManagement/existedCategory',
+                        name: 'existedCategory',
+                        component: _import('typeManagement/existedCategory'),
+                        meta: {breadNumber: 1, notKeepAlive: true}
+                    },
+                    {
+                        path: 'typeManagement/deviceManager',
+                        name: 'deviceManager',
+                        component: _import('typeManagement/deviceManager'),
+                        meta: {breadNumber: 1, notKeepAlive: true}
+                    }
+                ]
             },
             {
                 path: 'profileManagement',

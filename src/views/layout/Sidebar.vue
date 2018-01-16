@@ -31,7 +31,7 @@
                     },
                     {
                         name: '品类管理',
-                        url: '',
+                        url: '/typeManagement',
                         icon: 'el-icon-menu',
                     },
                     {

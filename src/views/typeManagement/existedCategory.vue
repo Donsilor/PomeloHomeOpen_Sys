@@ -1,32 +1,49 @@
 <template>
     <div class="app-container calendar-list-container">
-      <div class="tab-container">
-        <el-row>
-          <el-col :span="2">
-            <el-tabs tabPosition="left" v-model="activeName"
-                     @tab-click="renderChecked">
-              <el-tab-pane label="已有品类" name="existedCategory">
-              </el-tab-pane>
-
-              <el-tab-pane label="设备管理" name="deviceManager">
-              </el-tab-pane>
-            </el-tabs>
-          </el-col>
-          <el-col :span="22">
-            <router-view ></router-view>
-            <!--<enterprise-check-pending v-show="activeName==='checkPending'"></enterprise-check-pending>-->
-            <!--<enterprise-checked v-if="isCheckedRender" v-show="activeName==='checked'"></enterprise-checked>-->
-          </el-col>
+        <el-row :gutter="30">
+            <el-col :span="2">
+                <el-button type="primary">新增品类</el-button>
+            </el-col>
+            <el-col :span="18">
+                <span class="tipStyle">
+                    <i class="el-icon-warning"></i>
+                    品类被添加后，厂商在开放平台才能看到并加入合作意向
+                </span>
+            </el-col>
         </el-row>
-      </div>
+        <div class="table-container">
+            <template>
+                <el-table :data="tableData" border stripe style="width: 100%">
+                    <el-table-column prop="sub_category" label="子品类" width="250"></el-table-column>
+                    <el-table-column prop="big_category" label="所属大品类"></el-table-column>
+                    <el-table-column  prop="date" label="创建时间" width="220"></el-table-column>
+                    <el-table-column label="操作"  width="130" align="center">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    type="primary"
+                                    align="center"
+                                    @click="handleEnterPage(scope.row)">进入详情</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </template>
+        </div>
     </div>
 </template>
-
+<style>
+    .tipStyle{
+        color: #999;
+        margin-left: 10px;
+        font-size: 12px;
+        display: inline-block;
+        margin-top: 15px;
+    }
+    .table-container{
+        margin-top: 20px;
+    }
+</style>
 <script>
-    import { getReviewList } from '@/api/check'
-    import { parseTime, transDictValue } from '@/utils'
-    import { statusFilter } from '@/utils/filter'
-
     export default {
         name: 'existedCategory',
         computed: {
@@ -36,18 +53,43 @@
         mounted() {
         },
         data() {
-            console.log(this.$route);
             return {
-                activeName: this.$route.name,
-                isCheckedRender: false, // 已审核界面是否渲染
-                height: window.innerHeight - 50,
+                tableData: [{
+                    date: '2016-05-02 12:33',
+                    sub_category: '挂式空调',
+                    big_category: '空调',
+                    id : 'p0000'
+                }, {
+                    date: '2016-05-02 12:33',
+                    sub_category: '挂式空调',
+                    big_category: '空调',
+                    id : 'p0000'
+                },
+                {
+                    date: '2016-05-02 12:33',
+                    sub_category: '挂式空调',
+                    big_category: '空调',
+                    id : 'p0000'
+                },
+                {
+                    date: '2016-05-02 12:33',
+                    sub_category: '挂式空调',
+                    big_category: '空调',
+                    id : 'p0000'
+                },
+                {
+                    date: '2016-05-02 12:33',
+                    sub_category: '挂式空调',
+                    big_category: '空调',
+                    id : 'p0000'
+                }
+                ]
             }
         },
         methods: {
-            renderChecked(tab, event) {
-                if (tab.name === 'checked') {
-                    this.isCheckedRender = true;
-                }
+            handleEnterPage(row){
+                console.log(row.id);
+                this.$router.push({path: '/typeManagement/categoryDetail', query: {'id' : row.id}});
             }
         }
     }

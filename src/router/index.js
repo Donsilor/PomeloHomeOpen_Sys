@@ -100,15 +100,21 @@ export const constantRouterMap = [
                 component: _import('typeManagement/index'),
                 children: [
                     {
-                        path: 'typeManagement/existedCategory',
+                        path: 'existedCategory',
                         name: 'existedCategory',
                         component: _import('typeManagement/existedCategory'),
                         meta: {breadNumber: 1, notKeepAlive: true}
                     },
                     {
-                        path: 'typeManagement/deviceManager',
+                        path: 'deviceManager',
                         name: 'deviceManager',
                         component: _import('typeManagement/deviceManager'),
+                        meta: {breadNumber: 1, notKeepAlive: true}
+                    },
+                    {
+                        path: 'categoryDetail',
+                        name: 'categoryDetail',
+                        component: _import('typeManagement/categoryDetail'),
                         meta: {breadNumber: 1, notKeepAlive: true}
                     }
                 ]

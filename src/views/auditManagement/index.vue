@@ -1,31 +1,20 @@
 <template>
     <div class="tab-container">
         <el-row>
-            <el-col :span="2">
+            <el-col :span="3">
                 <el-menu class="sec-menu" mode="vertical" :default-active="activeName" background-color="#f2f2f2" text-color="#666"
                          active-text-color="#409EFF">
                     <template v-for="item in navs">
                         <router-link :to="item.url">
                             <el-menu-item :index="item.type">
-                                <i v-if="item.icon" :class="item.icon"></i>
                                 {{item.name}}
+                                <span class="num">{{item.num}}</span>
                             </el-menu-item>
                         </router-link>
                     </template>
                 </el-menu>
             </el-col>
-
-            <!--<el-col :span="2">
-                <el-tabs :style="{height:height+'px'}" tabPosition="left" v-model="activeName"
-                         @tab-click="renderChecked">
-                    <el-tab-pane label="待审核企业" name="checkPending">
-                    </el-tab-pane>
-
-                    <el-tab-pane label="已审核企业" name="checked">
-                    </el-tab-pane>
-                </el-tabs>
-            </el-col>-->
-            <el-col :span="22">
+            <el-col :span="21">
                 <router-view ></router-view>
             </el-col>
         </el-row>
@@ -33,6 +22,7 @@
 </template>
 
 <script>
+    import fetch from '@/utils/fetch';
     export default {
         name: 'auditManagement',
         data() {
@@ -43,22 +33,57 @@
                 navs:[
                     {
                         name: '待审核企业',
-                        url: '/auditManagement/checkPending',
-                        type: 'checkPending'
+                        url: '/auditManagement/enterprisePending',
+                        type: 'enterprisePending',
+                        num:0
                     },
                     {
                         name: '已审核企业',
-                        url: '/auditManagement/enterpriseChecked',
-                        type:'checked'
+                        url: '/auditManagement/enterpriseAudited',
+                        type:'enterpriseAudited',
+                        num:0
                     },
+                    {
+                        name:'待审核产品',
+                        url:'/auditManagement/productPending',
+                        type:'productPending',
+                        num:0
+                    },
+                    {
+                        name:'已审核产品',
+                        url:'/auditManagement/productAudited',
+                        type:'productAudited',
+                        num:0
+                    },
+                    {
+                        name:'待审核上线申请',
+                        url:'/auditManagement/goLivePending',
+                        type:'goLivePending',
+                        num:0
+                    },
+                    {
+                        name:'已审核上线申请',
+                        url:'/auditManagement/goLiveAudited',
+                        type:'goLiveAudited',
+                        num:0
+                    }
                 ]
             }
         },
+        mounted(){
+            this.getMenuNum();
+        },
         methods: {
-            renderChecked(tab, event) {
-                if (tab.name === 'checked') {
-                    this.isCheckedRender = true;
-                }
+            getMenuNum() {
+                fetch({
+                    url: '/admin/apprmenu',
+                    method: 'post',
+                    data: {}
+                }).then(res=>{
+                    this.navs.forEach(function (v,i) {
+                        v.num = res.list[v.name];
+                    });
+                })
             }
         }
     }

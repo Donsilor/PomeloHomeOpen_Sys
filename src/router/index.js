@@ -32,6 +32,7 @@ export const constantRouterMap = [
     {
         path: '/',
         component: Layout,
+        redirect: '/auditManagement',
         children: [
             {
                 path: 'auditManagement',
@@ -40,29 +41,49 @@ export const constantRouterMap = [
                 children: [
                     {
                         path: '',
-                        name: 'checkPending',
-                        component: _import('auditManagement/enterpriseCheckPending')
+                        name: 'enterprisePending',//待审核企业
+                        component: _import('auditManagement/enterprisePending')
                     },
                     {
-                        path: 'checkPending',
-                        name: 'checkPending',
-                        component: _import('auditManagement/enterpriseCheckPending')
+                        path: 'enterprisePending',
+                        name: 'enterprisePending',//待审核企业
+                        component: _import('auditManagement/enterprisePending')
                     },
                     {
-                        path: 'enterpriseChecked',
-                        name: 'checked',
-                        component: _import('auditManagement/enterpriseChecked')
+                        path: 'enterpriseAudited',
+                        name: 'enterpriseAudited',//已审核企业
+                        component: _import('auditManagement/enterpriseAudited')
                     },
                     {
-                        path: 'auditManagement/enterpriseCheckedDetail',
-                        name: '已审核详情',
-                        component: _import('auditManagement/enterpriseCheckedDetail'),
+                        path: 'productPending',
+                        name: 'productPending',//待审核产品
+                        component: _import('auditManagement/productPending')
+                    },
+                    {
+                        path: 'productAudited',
+                        name: 'productAudited',//已审核产品
+                        component: _import('auditManagement/productAudited')
+                    },
+                    {
+                        path: 'goLivePending',
+                        name: 'goLivePending',//待审核上线申请
+                        component: _import('auditManagement/goLivePending')
+                    },
+                    {
+                        path: 'goLiveAudited',
+                        name: 'goLiveAudited',//已审核上线申请
+                        component: _import('auditManagement/goLiveAudited')
+                    },
+                    {
+                        path: 'enterpriseAuditedDetail',
+                        name: '企业已审核详情',
+                        component: _import('auditManagement/enterpriseAuditedDetail'),
                         meta: {breadNumber: 1, notKeepAlive: true}
                     },
                     {
-                        path: 'auditManagement/enterpriseCheckDetail',
-                        name: '待审核详情',
-                        component: _import('auditManagement/enterpriseCheckDetail'),
+                        path: 'enterpriseToAudit',
+                        name: '企业审核页面',
+                        component: _import('auditManagement/enterpriseToAudit'),
                         meta: {breadNumber: 1, notKeepAlive: true}
                     }
                 ]

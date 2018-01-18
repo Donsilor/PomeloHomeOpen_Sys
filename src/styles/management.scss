@@ -1,0 +1,74 @@
+// =======审核管理样式=========
+.card-row {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.card-span-left {
+  text-align: right;
+  color: darkgray
+}
+.card-span-right {
+  text-align: left;
+}
+.card-img-size {
+  width: auto;
+  //height: 300px
+}
+.card-hex-vision { // 六视图
+  width: 100px;
+  height: auto;
+  padding-right: 5px;
+}
+.check-form-inline .check-radio {
+  //text-align: center;
+}
+
+.check-reason .el-form-item { // 审核结果输入框
+  width: 100%;
+}
+.check-reason .el-form-item__content { // 审核结果输入框
+  width: 85% ;
+}
+.box-card{
+  margin-bottom: 20px;
+  .card-header {
+    position: relative;
+    i{
+      background: #409eff;
+      display: inline-block;
+      width: 3px;
+      position: absolute;
+      height: 24px;
+      left: -8px;
+      top: -3px;
+    }
+  }
+  .card-handle{
+    padding-top: 19px;
+    border-top: 1px solid #e6ebf5;
+    .audit-result-label{
+      line-height: 32px;
+    }
+    .audit-result-pass{
+      line-height: 32px;
+      color: #67C23A;
+    }
+  }
+  .card-handle-else{
+    padding-bottom: 19px;
+    border-bottom: 1px solid #e6ebf5;
+    .audit-result-label{
+      line-height: 32px;
+    }
+    .audit-result-pass{
+      line-height: 32px;
+      color: #67C23A;
+    }
+  }
+  .license-box{
+    border: 1px solid #e6ebf5;
+    padding-left: 15px;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+  }
+}

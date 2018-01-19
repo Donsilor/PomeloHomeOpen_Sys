@@ -244,7 +244,7 @@
                 getReviewInfo(params).then(response => {
                     this.checkDetail = response;
                     if (_this.checkDetail.licenses.length > 0) {
-                        _this.checkDetail.licenses.forEach(fu nction (item) {
+                        _this.checkDetail.licenses.forEach(function (item) {
                                 _this.$set(item, 'action_type', 0);
                                 _this.$set(item, 'url', item.file_url);
                                 item.filename = licenseTranslate(item.type);

@@ -84,9 +84,10 @@ a:hover {
 }
 
 // table和详情页下的超链接样式
-.el-card a:link, table a:link{text-decoration: none; color:blue; font-family: 微软雅黑;}
-.el-card a:visited, table a:visited{ color:green;}
-.el-card a:hover, table a:hover{text-decoration: underline; color:#09f}
+.el-card a:link, table a:link{text-decoration: none; color:#409EFF; font-family: 微软雅黑;}
+.el-card a:visited, table a:visited{ color:#409EFF;}
+.el-card a:hover, table a:hover{text-decoration: underline; color: #96c2ff;
+}
 .el-card a:active, table a:active{text-decoration: blink; color: yellow;}
 
 //二级菜单公共样式

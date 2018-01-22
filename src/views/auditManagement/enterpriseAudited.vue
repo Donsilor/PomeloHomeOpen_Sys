@@ -20,7 +20,7 @@
                                     type="datetimerange"
                                     start-placeholder="选择开始日期"
                                     end-placeholder="选择结束日期"
-                                    align="right">
+                                    align="left">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item>

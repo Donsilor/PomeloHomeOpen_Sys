@@ -66,9 +66,63 @@
     }
   }
   .license-box{
-    border: 1px solid #e6ebf5;
-    padding-left: 15px;
-    padding-bottom: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    .license-title{
+      margin-bottom: 15px;
+    }
+    .card-handle-else{
+      padding-top: 15px;
+      border-bottom: 1px solid #e6ebf5;
+    }
+    &:last-child .card-handle-else{
+      border-bottom:none
+    }
+  }
+  .review-license{
+    &:last-child .card-handle-else{
+      border-bottom: none;
+    }
+    &:first-child p{
+      margin-top: 0;
+    }
+  }
+}
+.audit-box{
+  p{
+    margin: 10px 0;
+  }
+}
+.golive-box {
+  .card-handle-else:last-child{
+    border-bottom: none;
+  }
+  .dark-gray{
+    color: darkgrey;
+    font-size: 14px;
+  }
+  p{
+    margin: 0;
+    line-height: 24px;
+  }
+}
+
+
+/*documentManagement*/
+.doc-dialog{
+  .el-dialog{
+    padding: 0 20px;
+    .el-dialog__header{
+      border-bottom: 1px solid #d8dce5;
+    }
+    form{
+      position: relative;
+      .upload-tips{
+        padding-left: 100px;
+        position: absolute;
+        bottom: -30px;
+        color: darkgrey;
+      }
+    }
+
   }
 }

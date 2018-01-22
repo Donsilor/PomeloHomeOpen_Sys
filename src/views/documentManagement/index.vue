@@ -1,7 +1,7 @@
 <template>
     <div class="tab-container">
         <el-row style="padding-left: 160px;padding-bottom: 30px;">
-            <el-menu class="sec-menu" mode="vertical" :default-active="activeName" background-color="#f2f2f2" text-color="#666"
+            <el-menu class="sec-menu doc-menu" mode="vertical" :default-active="activeName" background-color="#f2f2f2" text-color="#666"
                      active-text-color="#409EFF">
                 <template v-for="item in navs">
                     <router-link :to="item.url">
@@ -22,53 +22,52 @@
     export default {
         name: 'auditManagement',
         data() {
-            console.log(this.$route);
             return {
                 activeName: this.$route.name,
                 height: window.innerHeight - 50,
                 width:window.innerWidth-300,
                 navs:[
                     {
-                        name: '待审核企业',
-                        url: '/auditManagement/enterprisePending',
-                        type: 'enterprisePending',
+                        name: '全部',
+                        url: '/documentManagement/allDocuments',
+                        type: 'allDocuments',
                         num:0
                     },
                     {
-                        name: '已审核企业',
-                        url: '/auditManagement/enterpriseAudited',
-                        type:'enterpriseAudited',
+                        name: 'Wi-Fi',
+                        url: '/documentManagement/wifi',
+                        type:'wifi',
                         num:0
                     },
                     {
-                        name:'待审核产品',
-                        url:'/auditManagement/productPending',
-                        type:'productPending',
+                        name:'ZigBee',
+                        url:'/documentManagement/zigbee',
+                        type:'zigbee',
                         num:0
                     },
                     {
-                        name:'已审核产品',
-                        url:'/auditManagement/productAudited',
-                        type:'productAudited',
+                        name:'蓝牙',
+                        url:'/documentManagement/bluetooth',
+                        type:'bluetooth',
                         num:0
                     },
                     {
-                        name:'待审核上线申请',
-                        url:'/auditManagement/goLivePending',
-                        type:'goLivePending',
+                        name:'产品开发文档',
+                        url:'/documentManagement/development',
+                        type:'development',
                         num:0
                     },
                     {
-                        name:'已审核上线申请',
-                        url:'/auditManagement/goLiveAudited',
-                        type:'goLiveAudited',
+                        name:'UI设计规范',
+                        url:'/documentManagement/uiDesign',
+                        type:'uiDesign',
                         num:0
                     }
                 ]
             }
         },
         mounted(){
-            this.getMenuNum();
+            //this.getMenuNum();
         },
         methods: {
             getMenuNum() {
@@ -92,5 +91,8 @@
         position: fixed;
         left: 150px;
         width: 160px;
+    }
+    .doc-menu a:first-child .el-menu-item{
+        padding-left: 10px !important;
     }
 </style>

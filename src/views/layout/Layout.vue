@@ -6,9 +6,9 @@
           <el-col :span="16" class="header-title">开放平台管理后台</el-col>
           <el-col :span="8">
             <div class="user-info">
-              <el-dropdown trigger="click">
+              <el-dropdown trigger="click" @command="logout">
               <span class="el-dropdown-link">
-                gongyuanrong@evergrande.cn
+                {{name}}
                 <i class="el-icon-caret-bottom"></i>
               </span>
                 <el-dropdown-menu slot="dropdown">
@@ -34,6 +34,7 @@
 
 
 <script>
+    import { mapGetters } from 'vuex'
 import { Navbar, Sidebar, AppMain } from '@/views/layout'
 
 export default {
@@ -46,8 +47,18 @@ export default {
   computed: {
     sidebar() {
       return this.$store.state.app.sidebar
+    },
+      ...mapGetters([
+          'name'
+      ])
+  },
+    methods:{
+      logout(){
+          this.$store.dispatch('LogOut').then(()=>{
+              this.$router.push({ path: '/login' });
+          });
+      }
     }
-  }
 }
 </script>
 

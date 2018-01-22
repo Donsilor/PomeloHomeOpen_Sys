@@ -36,7 +36,7 @@
                     },
                     {
                         name: '资料管理',
-                        url: '/sdkUpload',
+                        url: '/documentManagement',
                         icon: 'el-icon-document'
                     }
                 ]

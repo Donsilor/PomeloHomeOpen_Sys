@@ -85,6 +85,18 @@ export const constantRouterMap = [
                         name: '企业审核页面',
                         component: _import('auditManagement/enterpriseToAudit'),
                         meta: {breadNumber: 1, notKeepAlive: true}
+                    },
+                    {
+                        path: 'productToAudit',
+                        name: '产品审核页面',
+                        component: _import('auditManagement/productToAudit'),
+                        meta: {breadNumber: 1, notKeepAlive: true}
+                    },
+                    {
+                        path: 'goLiveToAudit',
+                        name: '上线申请审核页面',
+                        component: _import('auditManagement/goLiveToAudit'),
+                        meta: {breadNumber: 1, notKeepAlive: true}
                     }
                 ]
             },
@@ -126,10 +138,21 @@ export const constantRouterMap = [
                 ]
             },
             {
-                path: 'profileManagement',
+                path: 'documentManagement',
                 name: '资料管理',
-                //component: _import(''),
-                children: []
+                component: _import('documentManagement/index'),
+                children: [
+                    {
+                        path:'',
+                        name:'allDocuments',
+                        component:_import('documentManagement/allDocuments')
+                    },
+                    {
+                        path:'allDocuments',
+                        name:'allDocuments',
+                        component:_import('documentManagement/allDocuments')
+                    }
+                ]
             }
         ]
     },

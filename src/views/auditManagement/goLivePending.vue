@@ -88,10 +88,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column align="center" label="接入方式" prop="product_technology_type" width="95">
-                <template slot-scope="scope">
-                    <span>{{scope.row.product_technology_type}}</span>
-                </template>
+            <el-table-column align="center" label="版本号" prop="version_no" width="95">
             </el-table-column>
 
             <!--<el-table-column align="center" class-name="status-col" label="状态" width="110">
@@ -186,7 +183,6 @@
                 };
                 Object.assign(params, this.queryCondition);
                 getReviewList(params).then(response => {
-                    console.log('审核产品列表', response.data);
                     this.list = response.data;
                     this.total = response.total;
                     this.listLoading = false
@@ -196,7 +192,6 @@
             // 获取产品品类
             getProductType() {
                 getProductType().then(response => {
-//          console.log('产品品类', response.data);
                     this.productTypeList = response.list;
                 });
             },
@@ -217,8 +212,13 @@
 
             // 跳转到待审核详情页
             goCheckDetail(row) {
-                row.approved_user = ''; // 防止为null时报错
-                this.$router.push({path: '/auditManagement/goLiveToAudit', query: row});
+                let query = {
+                    record_id:row.record_id,
+                    type:'audit',
+                    business_name:row.business_name,
+                    status:row.status
+                };
+                this.$router.push({path: '/auditManagement/goLiveToAudit', query: query});
             },
 
         }

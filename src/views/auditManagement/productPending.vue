@@ -162,7 +162,6 @@
             this.getProductType();
         },
         activated() {
-//      console.log('配置文件', productTechnologyType);
             this.getList();
             this.getProductType();
         },
@@ -178,14 +177,13 @@
                 }
                 this.listLoading = true
                 let params = {
-                    type: 2, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
+                    type: 3, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
                     status: 0, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
                     limit: this.listQuery.limit,
                     page: this.listQuery.page
                 };
                 Object.assign(params, this.queryCondition);
                 getReviewList(params).then(response => {
-                    console.log('审核产品列表', response.data);
                     this.list = response.data;
                     this.total = response.total;
                     this.listLoading = false
@@ -195,7 +193,6 @@
             // 获取产品品类
             getProductType() {
                 getProductType().then(response => {
-//          console.log('产品品类', response.data);
                     this.productTypeList = response.list;
                 });
             },
@@ -216,8 +213,13 @@
 
             // 跳转到待审核详情页
             goCheckDetail(row) {
-                row.approved_user = ''; // 防止为null时报错
-                this.$router.push({path: '/auditManagement/productToAudit', query: row});
+                let query = {
+                    record_id:row.record_id,
+                    type:'audit',
+                    business_name:row.business_name,
+                    status:row.status
+                };
+                this.$router.push({path: '/auditManagement/productToAudit', query: query});
             },
 
         }

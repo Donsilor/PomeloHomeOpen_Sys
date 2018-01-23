@@ -75,12 +75,6 @@ export const constantRouterMap = [
                         component: _import('auditManagement/goLiveAudited')
                     },
                     {
-                        path: 'enterpriseAuditedDetail',
-                        name: '企业已审核详情',
-                        component: _import('auditManagement/enterpriseAuditedDetail'),
-                        meta: {breadNumber: 1, notKeepAlive: true}
-                    },
-                    {
                         path: 'enterpriseToAudit',
                         name: '企业审核页面',
                         component: _import('auditManagement/enterpriseToAudit'),
@@ -144,13 +138,13 @@ export const constantRouterMap = [
                 children: [
                     {
                         path:'',
-                        name:'allDocuments',
-                        component:_import('documentManagement/allDocuments')
+                        name:'wifi',
+                        component:_import('documentManagement/wifi')
                     },
                     {
-                        path:'allDocuments',
-                        name:'allDocuments',
-                        component:_import('documentManagement/allDocuments')
+                        path:'wifi',
+                        name:'wifi',
+                        component:_import('documentManagement/wifi')
                     }
                 ]
             }

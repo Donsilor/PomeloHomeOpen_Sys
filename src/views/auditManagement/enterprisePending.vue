@@ -38,7 +38,7 @@
             <!--<el-table-column align="center"  label="record_id" prop="record_id" width="100">-->
             <!--</el-table-column>-->
 
-            <el-table-column align="center" label="公司" prop="business_name">
+            <el-table-column align="center" label="公司名称" prop="business_name">
             </el-table-column>
 
             <el-table-column align="center" label="联系人" prop="business_contacts">
@@ -135,7 +135,6 @@
                 };
                 Object.assign(params, this.queryCondition);
                 getReviewList(params).then(response => {
-                    console.log('企业待审核列表', response);
                     this.list = response.data;
                     this.total = response.total;
                     this.listLoading = false
@@ -149,10 +148,8 @@
 
             // 跳转到待审核详情页
             goCheckDetail(row) {
-                console.log('row', row);
-                row.approved_user = ''; // 防止为null时报错
-                row.product_brand_name = ''; // 使详情页的面包屑名称显示为企业名称
-                this.$router.push({path: '/auditManagement/enterpriseToAudit', query: row});
+                this.$router.push({path: '/auditManagement/enterpriseToAudit',
+                    query: {record_id:row.record_id,type:'audit',business_name:row.business_name}});
             },
 
             handleSizeChange(val) {

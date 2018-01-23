@@ -36,14 +36,14 @@
             <!--<el-table-column align="center"  label="record_id" prop="record_id" width="100">-->
             <!--</el-table-column>-->
 
-            <el-table-column align="center" label="公司" prop="business_name">
+            <el-table-column align="center" label="公司名称" prop="business_name">
             </el-table-column>
 
-            <el-table-column align="center" label="审核人" prop="approved_user">
+            <!--<el-table-column align="center" label="审核人" prop="approved_user">
                 <template slot-scope="scope">
                     <span>{{scope.row.approved_user}}</span>
                 </template>
-            </el-table-column>
+            </el-table-column>-->
 
             <el-table-column align="center" label="联系人" prop="business_contacts">
             </el-table-column>
@@ -134,7 +134,6 @@
                 };
                 Object.assign(params, this.queryCondition);
                 getReviewList(params).then(response => {
-                    console.log('企业审核列表', response);
                     this.list = response.data;
                     this.total = response.total;
                     this.listLoading = false
@@ -148,13 +147,12 @@
 
             // 跳转到待审核详情页
             goCheckDetail(row) {
-//        if (row.status === 1) { // 1 = 审批通过
-//          this.$router.push({path: '/auditManagement/enterpriseCheckedDetail', query: row});
-//        } else if (row.status === 2) { // 2 = 审批不通过 需要重新审批
-//          this.$router.push({path: '/auditManagement/enterpriseCheckDetail', query: row});
-//        }
-                row.product_brand_name = ''; // 使详情页的面包屑名称显示为企业名称
-                this.$router.push({path: '/auditManagement/enterpriseAuditedDetail', query: row});
+                let query = {
+                    record_id:row.record_id,
+                    type:'detail',business_name:row.business_name,
+                    status:row.status
+                };
+                this.$router.push({path: '/auditManagement/enterpriseToAudit', query: query});
 
             },
 

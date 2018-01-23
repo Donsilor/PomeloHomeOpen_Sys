@@ -28,12 +28,6 @@
                 width:window.innerWidth-300,
                 navs:[
                     {
-                        name: '全部',
-                        url: '/documentManagement/allDocuments',
-                        type: 'allDocuments',
-                        num:0
-                    },
-                    {
                         name: 'Wi-Fi',
                         url: '/documentManagement/wifi',
                         type:'wifi',
@@ -67,12 +61,12 @@
             }
         },
         mounted(){
-            //this.getMenuNum();
+            this.getMenuNum();
         },
         methods: {
             getMenuNum() {
                 fetch({
-                    url: '/admin/apprmenu',
+                    url: '/admin/documentMenu',
                     method: 'post',
                     data: {}
                 }).then(res=>{
@@ -91,8 +85,5 @@
         position: fixed;
         left: 150px;
         width: 160px;
-    }
-    .doc-menu a:first-child .el-menu-item{
-        padding-left: 10px !important;
     }
 </style>

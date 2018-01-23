@@ -5,172 +5,103 @@
       <i class="el-icon-arrow-left"></i> 返回
     </el-button>
     <h3>{{business_name}}</h3>
+    <el-card class="box-card" v-if="type=='detail' ">
+      <div v-if="status==1 " style="color: #67C23A;font-size: 24px;">
+        审核通过 <i class="el-icon-circle-check"></i>
+      </div>
+      <div v-if="status==2 ">
+        <p style="color: #F56C6C;font-weight: bold" >审核不通过</p>
+        <p v-for="(item,index) in checkDetail.approved_reason">{{index+1}}、{{item}}</p>
+      </div>
+    </el-card>
     <el-card class="box-card golive-box">
       <el-row class="card-header" slot="header">
-        <i></i>V1.0版本信息
+        <i></i>{{checkDetail.version_no}}版本信息
       </el-row>
       <el-row class="card-body">
         <el-row class="card-row">
           <el-col :span="3" class="card-span-left">版本号</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">V 3.10.1</el-col>
+          <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.version_no}}</el-col>
         </el-row>
         <el-row class="card-row">
           <el-col :span="3" class="card-span-left">版本说明</el-col>
           <el-col :span="16" :offset="1" class="card-span-right">
-            <p>- “大神帮我P个图”、“你问我答”等部分主题开放评论上传图片功能</p>
-            <p>- 同一条动态被赞过多时，可设置这条不再提醒我</p>
+            {{checkDetail.des}}
           </el-col>
         </el-row>
-        <el-row class="card-handle-else">
+        <el-row v-if="type=='audit' " class="card-handle-else">
           <el-col :span="6" :offset="4">
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
+            <el-button @click="version_info.action_type=1" type="primary" size="small">
+              <i v-show="version_info.action_type==1"  class="el-icon-check"></i>
               审核通过
             </el-button>
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
+            <el-button @click="version_info.action_type=2"  type="primary" size="small">
+              <i v-show="version_info.action_type==2" class="el-icon-check"></i>
               审核不通过
             </el-button>
           </el-col>
-          <el-col :span="14" class="check-reason" v-show="0">
+          <el-col :span="14" class="check-reason" v-show="version_info.action_type!=0">
             <el-row>
               <el-col :span="4">
                 <div class="audit-result-label">审核结果：</div>
               </el-col>
               <el-col :span="20">
-                <el-input
+                <el-input v-show="version_info.action_type == 2"
                         type="textarea" autosize :maxlength="500"
                         placeholder="审核未通过理由"
+
                 >
 
                 </el-input>
-                <div
+                <div v-show="version_info.action_type == 1"
                         class="audit-result-pass"><i class="el-icon-circle-check"></i> 审核通过
                 </div>
               </el-col>
             </el-row>
           </el-col>
         </el-row>
-        <el-row class="card-row">
-          <el-col :span="3" class="card-span-left">手机端控制页</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">
-            <a href="" download="">
-              <svg-icon icon-class="zip"/>
-              空气净化器html5包.zip
-            </a>
-            <span class="dark-gray">329kb</span>
-          </el-col>
-        </el-row>
-        <el-row class="card-handle-else">
-          <el-col :span="6" :offset="4">
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核通过
-            </el-button>
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核不通过
-            </el-button>
-          </el-col>
-          <el-col :span="14" class="check-reason" v-show="0">
-            <el-row>
-              <el-col :span="4">
-                <div class="audit-result-label">审核结果：</div>
-              </el-col>
-              <el-col :span="20">
-                <el-input
-                          type="textarea" autosize :maxlength="500"
-                          placeholder="审核未通过理由"
-                          >
+        <template v-for="item in checkDetail.file_list">
+          <el-row class="card-row">
+            <el-col :span="3" class="card-span-left">{{item.type_txt}}</el-col>
+            <el-col :span="16" :offset="1" class="card-span-right">
+              <a :href="item.file_url" download>
+                <svg-icon icon-class="zip"/>
+                {{item.filename}}
+              </a>
+              <span class="dark-gray">{{item.size}}</span>
+            </el-col>
+          </el-row>
+          <el-row v-if="type=='audit' " class="card-handle-else">
+            <el-col :span="6" :offset="4">
+              <el-button @click="item.action_type=1" type="primary" size="small">
+                <i v-show="item.action_type==1" class="el-icon-check"></i>
+                审核通过
+              </el-button>
+              <el-button @click="item.action_type=2" type="primary" size="small">
+                <i v-show="item.action_type==2" class="el-icon-check"></i>
+                审核不通过
+              </el-button>
+            </el-col>
+            <el-col :span="14" class="check-reason" v-show="item.action_type !== 0">
+              <el-row>
+                <el-col :span="4">
+                  <div class="audit-result-label">审核结果：</div>
+                </el-col>
+                <el-col :span="20">
+                  <el-input v-show="item.action_type == 2"
+                            type="textarea" autosize :maxlength="500"
+                            placeholder="审核未通过理由"
+                            v-model="item.unapproved_reason">
 
-                </el-input>
-                <div
-                     class="audit-result-pass"><i class="el-icon-circle-check"></i> 审核通过
-                </div>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-row class="card-row">
-          <el-col :span="3" class="card-span-left">Pad端控制页</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">
-            <a href="" download="">
-              <svg-icon icon-class="zip"/>
-              空气净化器html5包.zip
-            </a>
-            <span class="dark-gray">329kb</span>
-          </el-col>
-        </el-row>
-        <el-row class="card-handle-else">
-          <el-col :span="6" :offset="4">
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核通过
-            </el-button>
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核不通过
-            </el-button>
-          </el-col>
-          <el-col :span="14" class="check-reason" v-show="0">
-            <el-row>
-              <el-col :span="4">
-                <div class="audit-result-label">审核结果：</div>
-              </el-col>
-              <el-col :span="20">
-                <el-input
-                        type="textarea" autosize :maxlength="500"
-                        placeholder="审核未通过理由"
-                >
-
-                </el-input>
-                <div
-                        class="audit-result-pass"><i class="el-icon-circle-check"></i> 审核通过
-                </div>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-row class="card-row">
-          <el-col :span="3" class="card-span-left">固件</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">
-            <a href="" download="">
-              <svg-icon icon-class="zip"/>
-              空气净化器html5包.zip
-            </a>
-            <span class="dark-gray">329kb</span>
-          </el-col>
-        </el-row>
-        <el-row class="card-handle-else">
-          <el-col :span="6" :offset="4">
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核通过
-            </el-button>
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核不通过
-            </el-button>
-          </el-col>
-          <el-col :span="14" class="check-reason" v-show="0">
-            <el-row>
-              <el-col :span="4">
-                <div class="audit-result-label">审核结果：</div>
-              </el-col>
-              <el-col :span="20">
-                <el-input
-                        type="textarea" autosize :maxlength="500"
-                        placeholder="审核未通过理由"
-                >
-
-                </el-input>
-                <div
-                        class="audit-result-pass"><i class="el-icon-circle-check"></i> 审核通过
-                </div>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
+                  </el-input>
+                  <div v-show="item.action_type == 1"
+                       class="audit-result-pass"><i class="el-icon-circle-check"></i> 审核通过
+                  </div>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
+        </template>
       </el-row>
     </el-card>
     <el-card class="box-card golive-box">
@@ -178,151 +109,104 @@
         <i></i>上线资料
       </el-row>
       <el-row class="card-body">
-        <el-row class="card-row">
-          <el-col :span="3" class="card-span-left">测试报告</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">
-            <a href="" download="">
-              <svg-icon icon-class="zip"/>
-              空气净化器html5包.zip
-            </a>
-            <span class="dark-gray">329kb</span>
-          </el-col>
-        </el-row>
-        <el-row class="card-handle-else">
-          <el-col :span="6" :offset="4">
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核通过
-            </el-button>
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核不通过
-            </el-button>
-          </el-col>
-          <el-col :span="14" class="check-reason" v-show="0">
-            <el-row>
-              <el-col :span="4">
-                <div class="audit-result-label">审核结果：</div>
-              </el-col>
-              <el-col :span="20">
-                <el-input
-                        type="textarea" autosize :maxlength="500"
-                        placeholder="审核未通过理由"
-                >
+        <template v-for="item in checkDetail.release_file_list">
+          <el-row class="card-row">
+            <el-col :span="3" class="card-span-left">{{item.type_txt}}</el-col>
+            <el-col :span="16" :offset="1" class="card-span-right">
+              <a :href="item.file_url" download>
+                <svg-icon icon-class="zip"/>
+                {{item.filename}}
+              </a>
+              <span class="dark-gray">{{item.size}}</span>
+            </el-col>
+          </el-row>
+          <el-row v-if="type=='audit' " class="card-handle-else">
+            <el-col :span="6" :offset="4">
+              <el-button @click="item.action_type=1" type="primary" size="small">
+                <i v-show="item.action_type==1" class="el-icon-check"></i>
+                审核通过
+              </el-button>
+              <el-button @click="item.action_type=2" type="primary" size="small">
+                <i v-show="item.action_type==2" class="el-icon-check"></i>
+                审核不通过
+              </el-button>
+            </el-col>
+            <el-col :span="14" class="check-reason" v-show="item.action_type !== 0">
+              <el-row>
+                <el-col :span="4">
+                  <div class="audit-result-label">审核结果：</div>
+                </el-col>
+                <el-col :span="20">
+                  <el-input v-show="item.action_type == 2"
+                            type="textarea" autosize :maxlength="500"
+                            placeholder="审核未通过理由"
+                            v-model="item.unapproved_reason">
 
-                </el-input>
-                <div
-                        class="audit-result-pass"><i class="el-icon-circle-check"></i> 审核通过
-                </div>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-row class="card-row">
-          <el-col :span="3" class="card-span-left">已知问题清单</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">
-            <a href="" download="">
-              <svg-icon icon-class="zip"/>
-              空气净化器html5包.zip
-            </a>
-            <span class="dark-gray">329kb</span>
-          </el-col>
-        </el-row>
-        <el-row class="card-handle-else">
-          <el-col :span="6" :offset="4">
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核通过
-            </el-button>
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核不通过
-            </el-button>
-          </el-col>
-          <el-col :span="14" class="check-reason" v-show="0">
-            <el-row>
-              <el-col :span="4">
-                <div class="audit-result-label">审核结果：</div>
-              </el-col>
-              <el-col :span="20">
-                <el-input
-                        type="textarea" autosize :maxlength="500"
-                        placeholder="审核未通过理由"
-                >
-
-                </el-input>
-                <div
-                        class="audit-result-pass"><i class="el-icon-circle-check"></i> 审核通过
-                </div>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-row class="card-row">
-          <el-col :span="3" class="card-span-left">产品测试样机（含新外包装）</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.registration_No}}</el-col>
-        </el-row>
-        <el-row class="card-handle-else">
-          <el-col :span="6" :offset="4">
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核通过
-            </el-button>
-            <el-button  type="primary" size="small">
-              <i  class="el-icon-check"></i>
-              审核不通过
-            </el-button>
-          </el-col>
-          <el-col :span="14" class="check-reason" v-show="0">
-            <el-row>
-              <el-col :span="4">
-                <div class="audit-result-label">审核结果：</div>
-              </el-col>
-              <el-col :span="20">
-                <el-input
-                        type="textarea" autosize :maxlength="500"
-                        placeholder="审核未通过理由"
-                >
-
-                </el-input>
-                <div
-                        class="audit-result-pass"><i class="el-icon-circle-check"></i> 审核通过
-                </div>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
+                  </el-input>
+                  <div v-show="item.action_type == 1"
+                       class="audit-result-pass"><i class="el-icon-circle-check"></i> 审核通过
+                  </div>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
+        </template>
       </el-row>
     </el-card>
     <!--=========================-->
+    <!--===========审核==============-->
+    <el-card v-if="type=='audit' " class="box-card audit-box" style="margin-top: 30px">
+      <el-row>
+        <el-col :offset="4">
+          <p style="color: #E6A23C;" v-if="unapproved_list.length">未审核：</p>
+        </el-col>
+      </el-row>
+      <el-row v-for="(item, index) in unapproved_list">
+        <el-col :offset="4">
+          <p>{{index + 1}}、{{item.prefix}}{{item.description}}还未审核；</p>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :offset="4">
+          <p style="color: #F56C6C;" v-if="reject_reason_list.length">审核不通过：</p>
+        </el-col>
+      </el-row>
+      <el-row v-for="(item, index) in reject_reason_list">
+        <el-col :offset="4">
+          <p>{{index + 1}}、{{item.prefix}}{{item.description}}未审核通过——{{item.unapproved_reason}}；</p>
+        </el-col>
+      </el-row>
+      <el-row style="padding-top: 15px;">
+        <el-col :span="3" :offset="4">
+          <el-button :disabled="unapproved_list.length>0||reject_reason_list>0"
+                     type="primary" @click="commitCheck">提交
+          </el-button>
+        </el-col>
+        <el-col :span="3">
+          <el-button @click="cancelCheck">取消</el-button>
+        </el-col>
+      </el-row>
+    </el-card>
   </div>
 </template>
 
 <script>
     import {getReviewInfo, commitCheck} from '@/api/check';
-    import {originalCheckType} from '@/utils/config'; // 复核原件类型
-    import {licenseTranslate} from '@/utils';
     import {Message} from 'element-ui';
 
     export default {
-        name: 'enterpriseCheckDetail',
+        name: 'goLiveToAudit',
 
         data() {
             return {
-                contactsCheck: {
+                version_info: {
                     action_type: 0, // 0=未审核,1=审核通过,2=审核未通过
-                    description:'联系人信息',
-                    unapproved_reason: ''
-                },
-                companyInfoCheck: {
-                    action_type: 0,
-                    description:'公司/团队信息',
+                    description:'版本信息',
                     unapproved_reason: ''
                 },
                 record_id: '', // 审核id
                 checkDetail: {},
                 business_name: '',
-                originalCheckType: originalCheckType,
                 action_type: 1, // 提交审核操作类型 ，1 = 通过，2 = 驳回
                 approved_reason: '审核通过', // 审核原因
             }
@@ -330,14 +214,18 @@
         computed: {
             unapproved_list:function () {
                 let arry = [];
-                if(this.contactsCheck.action_type==0){
-                    arry.push(Object.assign({},this.contactsCheck));
+                if(this.version_info.action_type==0){
+                    arry.push(Object.assign({},this.version_info));
                 }
-                if(this.companyInfoCheck.action_type==0){
-                    arry.push(Object.assign({},this.companyInfoCheck));
+                if(this.checkDetail.file_list){
+                    this.checkDetail.file_list.forEach(function (item) {
+                        if(item.action_type==0){
+                            arry.push(Object.assign({},item));
+                        }
+                    });
                 }
-                if(this.checkDetail.licenses){
-                    this.checkDetail.licenses.forEach(function (item) {
+                if(this.checkDetail.release_file_list){
+                    this.checkDetail.release_file_list.forEach(function (item) {
                         if(item.action_type==0){
                             arry.push(Object.assign({},item));
                         }
@@ -347,14 +235,18 @@
             },
             reject_reason_list:function () {
                 let arry = [];
-                if(this.contactsCheck.action_type==2){
-                    arry.push(Object.assign({},this.contactsCheck));
+                if(this.version_info.action_type==2){
+                    arry.push(Object.assign({},this.version_info));
                 }
-                if(this.companyInfoCheck.action_type==2){
-                    arry.push(Object.assign({},this.companyInfoCheck));
+                if(this.checkDetail.file_list){
+                    this.checkDetail.file_list.forEach(function (item) {
+                        if(item.action_type==2){
+                            arry.push(Object.assign({},item));
+                        }
+                    });
                 }
-                if(this.checkDetail.licenses){
-                    this.checkDetail.licenses.forEach(function (item) {
+                if(this.checkDetail.release_file_list){
+                    this.checkDetail.release_file_list.forEach(function (item) {
                         if(item.action_type==2){
                             arry.push(Object.assign({},item));
                         }
@@ -366,9 +258,11 @@
         created() {
             this.record_id = this.$route.query.record_id;
             this.business_name = this.$route.query.business_name;
+            this.type = this.$route.query.type||'detail';
+            this.status = this.$route.query.status||'0';
         },
         mounted() {
-            //this.getReviewInfo();
+            this.getReviewInfo();
         },
         methods: {
             // 获取审核详情
@@ -379,17 +273,22 @@
                 };
                 getReviewInfo(params).then(response => {
                     this.checkDetail = response;
-                    if (_this.checkDetail.licenses.length > 0) {
-                        _this.checkDetail.licenses.forEach(function (item) {
+                    if (_this.checkDetail.file_list.length > 0) {
+                        _this.checkDetail.file_list.forEach(function (item) {
                                 _this.$set(item, 'action_type', 0);
-                                _this.$set(item, 'url', item.file_url);
-                                item.filename = licenseTranslate(item.type);
                                 _this.$set(item, 'unapproved_reason', '');
-
+                                _this.$set(item, 'description', item.type_txt);
                             }
                         )
                     }
-
+                    if (_this.checkDetail.release_file_list.length > 0) {
+                        _this.checkDetail.release_file_list.forEach(function (item) {
+                                _this.$set(item, 'action_type', 0);
+                                _this.$set(item, 'unapproved_reason', '');
+                                _this.$set(item, 'description', item.type_txt);
+                            }
+                        )
+                    }
                 })
             },
 

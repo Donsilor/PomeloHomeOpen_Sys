@@ -89,17 +89,14 @@
                 </template>
             </el-table-column>
 
-            <el-table-column align="center" label="技术方案" prop="product_technology_type" width="95">
-                <template slot-scope="scope">
-                    <span>{{scope.row.product_technology_type}}</span>
-                </template>
+            <el-table-column align="center" label="版本号" prop="version_no" width="95">
             </el-table-column>
 
-            <!--<el-table-column align="center" class-name="status-col" label="状态" width="110">
+            <el-table-column align="center" class-name="status-col" label="状态" width="110">
               <template slot-scope="scope">
                 <el-tag :type="scope.row.status | statusFilter">{{scope.row.status_txt}}</el-tag>
               </template>
-            </el-table-column>-->
+            </el-table-column>
 
             <el-table-column align="center" label="操作" width="150">
                 <template slot-scope="scope">
@@ -181,13 +178,12 @@
                 this.listLoading = true
                 let params = {
                     type: 4, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
-                    status: 1, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
+                    status: 3, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
                     limit: this.listQuery.limit,
                     page: this.listQuery.page
                 };
                 Object.assign(params, this.queryCondition);
                 getReviewList(params).then(response => {
-                    console.log('审核产品列表', response.data);
                     this.list = response.data;
                     this.total = response.total;
                     this.listLoading = false
@@ -197,7 +193,6 @@
             // 获取产品品类
             getProductType() {
                 getProductType().then(response => {
-//          console.log('产品品类', response.data);
                     this.productTypeList = response.list;
                 });
             },
@@ -218,13 +213,13 @@
 
             // 跳转到待审核详情页
             goCheckDetail(row) {
-//        if (row.status === 1) { // 1 = 审批通过
-//          this.$router.push({path: '/goLiveCheck/goLiveCheckDetail', query: row});
-//        } else if (row.status === 2) { // 2 = 审批不通过 需要重新审批
-//          this.$router.push({path: '/goLiveCheck/goLiveCheckDetail', query: row});
-//        }
-                this.$router.push({path: '/goLiveCheck/goLiveCheckedDetail', query: row});
-
+                let query = {
+                    record_id:row.record_id,
+                    type:'detail',
+                    business_name:row.business_name,
+                    status:row.status
+                };
+                this.$router.push({path: '/auditManagement/goLiveToAudit', query: query});
             },
 
         }

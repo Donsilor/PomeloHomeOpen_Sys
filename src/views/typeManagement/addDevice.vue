@@ -383,6 +383,11 @@
                     setTimeout(()=>{
                         this.$router.push({path: '/typeManagement/deviceManager'});
                     },2000);
+                }).catch(error=>{
+                    this.$message({
+                        type: 'error',
+                        message: error.msg
+                    });
                 })
             }
         },

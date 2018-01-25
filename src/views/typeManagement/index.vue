@@ -29,11 +29,12 @@
         created() {
         },
         mounted() {
+            console.log(this.$route.meta.key);
         },
         data() {
             console.log(this.$route);
             return {
-                activeName: this.$route.name,
+                activeName: this.$route.meta.key || this.$route.name,
                 isCheckedRender: false, // 已审核界面是否渲染
                 height: window.innerHeight - 50,
                 navs:[

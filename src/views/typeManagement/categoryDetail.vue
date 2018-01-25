@@ -189,18 +189,19 @@
                             <template>
                                 <!--<el-button v-show="isEdit">添加功能参数</el-button>-->
                                 <addAttribute :typeid="typeid" v-on:get-data="getAttr" :token="token" v-show="isEdit"></addAttribute>
-                                <el-table :data="attr_list"  max-height="450" height="450" border style="width: 100%;margin-top: 15px;" class="attribt_table">
+                                <el-table :data="attr_list"  border style="width: 100%;margin-top: 15px;" class="attribt_table">
                                     <el-table-column label="No." width="80" type="index" align="center"></el-table-column>
                                     <el-table-column prop="nodeid" label="Node_ID" width="150" align="center"></el-table-column>
                                     <el-table-column label="method" align="center" class-name="cell-column-no-padding" width="150">
                                         <template slot-scope="scope">
                                             <span v-for="item in scope.row.list">
-                                                <div v-if="item.key_type === '3'" class="hasMoreList">
-                                                    <div v-for="name in item.list" class="inner-cell-td">
-                                                        {{name.method_string}}
-                                                    </div>
-                                                </div>
-                                                <div v-else class="cell-td hasNoMoreList" :title="item.method_string">
+                                                <!--<div v-if="item.key_type === '3'" class="hasMoreList">-->
+                                                    <!--{{name.method_string}}-->
+                                                    <!--&lt;!&ndash;<div v-for="name in item.list" class="inner-cell-td">&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                                <!--</div>-->
+                                                <div  class="cell-td hasNoMoreList" :title="item.method_string">
                                                     {{item.method_string}}
                                                 </div>
                                             </span>
@@ -210,12 +211,12 @@
                                         <template slot-scope="scope">
                                             <span v-for="item in scope.row.list" :title="item.key">
                                                 <!--{{item.key}}-->
-                                                <div v-if="item.key_type === '3'" class="hasMoreList">
-                                                    <div v-for="name in item.list" class="inner-cell-td">
-                                                        {{name.key}}
-                                                    </div>
-                                                </div>
-                                                <div v-else class="cell-td hasNoMoreList" :title="item.key">
+                                                <!--<div v-if="item.key_type === '3'" class="hasMoreList">-->
+                                                    <!--<div v-for="name in item.list" class="inner-cell-td">-->
+                                                        <!--{{name.key}}-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+                                                <div class="cell-td hasNoMoreList" :title="item.key">
                                                     {{item.key}}
                                                 </div>
                                             </span>
@@ -224,12 +225,7 @@
                                     <el-table-column label="Type" align="center" class-name="cell-column-no-padding" width="100">
                                         <template slot-scope="scope">
                                             <span v-for="item in scope.row.list">
-                                                 <div v-if="item.key_type === '3'" class="hasMoreList">
-                                                    <div v-for="name in item.list" class="inner-cell-td">
-                                                        {{name.type}}
-                                                    </div>
-                                                </div>
-                                                <div v-else class="cell-td hasNoMoreList" :title="item.type">
+                                                <div class="cell-td hasNoMoreList" :title="item.type">
                                                     {{item.type}}
                                                 </div>
                                             </span>
@@ -239,7 +235,9 @@
                                         <template slot-scope="scope">
                                             <span v-for="item in scope.row.list">
                                                  <div v-if="item.key_type === '3'" class="hasMoreList">
-                                                    <div v-for="name in item.list" class="inner-cell-td">
+                                                     <!--<div class="inner-cell-td">1111</div>-->
+
+                                                    <div v-for="name in item.value_list" class="inner-cell-td">
                                                         {{name.value_string}}
                                                     </div>
                                                 </div>
@@ -253,7 +251,7 @@
                                         <template slot-scope="scope">
                                             <span v-for="item in scope.row.list">
                                                 <div v-if="item.key_type === '3'" class="hasMoreList">
-                                                    <div v-for="name in item.list" class="inner-cell-td">
+                                                    <div v-for="name in item.remark" class="inner-cell-td">
                                                         <el-tooltip class="item" effect="dark" :content="name.remark" placement="top">
                                                             <span>{{name.remark}}</span>
                                                         </el-tooltip>
@@ -300,9 +298,18 @@
     .cell-column-no-padding .cell{
         padding: 0px!important;
     }
+    .hasMoreList{
+        /*height: 55px!important;*/
+        /*max-height: 55px;*/
+        border-bottom: 1px #ddd solid;
+    }
     .hasMoreList .inner-cell-td{
         border-bottom: 1px #ddd solid;
-        padding: 15px 20px;
+        text-align: center;
+        /*padding: 15px 20px;*/
+    }
+    .hasMoreList .inner-cell-td:last-child{
+        border-bottom: none;
     }
     .cell span:last-child .hasNoMoreList{
         border-bottom: none;

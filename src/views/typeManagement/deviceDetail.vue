@@ -259,7 +259,7 @@
                         'token' :  this.token
                     }
                 }).then(res=>{
-                    this.deviceAddTypeList = res.result;
+                    this.deviceAddTypeList = res;
                 })
             },
             // 获取品类详情信息

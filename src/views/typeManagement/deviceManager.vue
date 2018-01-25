@@ -96,6 +96,11 @@
                   this.tableData = res.data;
                   this.total = Number(res.total);
                   this.limit = Number(res.per_page);
+              }).catch(res=>{
+                  this.$message({
+                      type: 'error',
+                      message: res.msg
+                  });
               })
           },
           handleEnterPage(row){
@@ -104,6 +109,23 @@
           //添加设备
           addDevice(){
               this.$router.push({path: '/typeManagement/addDevice'});
+          },
+          //获取添加方式设置
+          getAddType(){
+              fetch({
+                  url: '/device/getAddtype',
+                  method: 'post',
+                  data: {
+                  }
+              }).then(res=>{
+                  this.addFucForm = res;
+                  console.log(res);
+              }).catch(res=>{
+                  this.$message({
+                      type: 'error',
+                      message: res.msg
+                  });
+              })
           },
           //添加方式设置
           addFuc(){

@@ -128,6 +128,18 @@ export const constantRouterMap = [
                         name: 'categoryDetail',
                         component: _import('typeManagement/categoryDetail'),
                         meta: {breadNumber: 1, notKeepAlive: true}
+                    },
+                    {
+                        path: 'deviceDetail',
+                        name: 'deviceDetail',
+                        component: _import('typeManagement/deviceDetail'),
+                        meta: {breadNumber: 1, notKeepAlive: true}
+                    },
+                    {
+                        path: 'addDevice',
+                        name: 'addDevice',
+                        component: _import('typeManagement/addDevice'),
+                        meta: {breadNumber: 1, notKeepAlive: true}
                     }
                 ]
             },

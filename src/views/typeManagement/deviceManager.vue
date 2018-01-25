@@ -1,22 +1,114 @@
 <template>
-  <div class="app-container calendar-list-container">
-    222
-  </div>
-</template>
+    <div class="app-container calendar-list-container">
+        <el-row :gutter="30">
+            <el-col :span="24">
+                <el-button type="primary" @click="addDevice">新增设备</el-button>
+                <el-button type="ghost" @click="addFucSetModal=true">添加方式设置</el-button>
+            </el-col>
+        </el-row>
+        <div class="table-container">
+            <template>
+                <el-table :data="tableData" border stripe style="width: 100%">
+                    <el-table-column prop="model" label="设备型号" width="150"></el-table-column>
+                    <el-table-column prop="business_name" label="厂商"></el-table-column>
+                    <el-table-column  prop="type_name" label="子品类" width="220"></el-table-column>
+                    <el-table-column  prop="parent_type_name" label="所属大品类" width="220"></el-table-column>
+                    <el-table-column  prop="device_created_at" label="创建时间" width="220"></el-table-column>
+                    <el-table-column label="操作"  width="130" align="center">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    type="primary"
+                                    align="center"
+                                    @click="handleEnterPage(scope.row)">编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                        layout="prev, pager, next"
+                        :total="total"
+                        :page-size="limit"
+                        @current-change="handleCurrentChange"
+                >
+                </el-pagination>
+            </template>
 
+        </div>
+        <el-dialog
+                title="添加方式设置"
+                :visible.sync="addFucSetModal"
+                width="30%">
+            <span class="danger" style="display: inline-block;margin-bottom: 20px;">该设置影响所有设备的添加方式，请确认后操作</span>
+            <div><el-checkbox v-model="addFucForm.isOpenAddDevice">开启客户端添加设备功能</el-checkbox></div>
+            <div><el-checkbox v-model="addFucForm.isAllowChooseModel">添加设备时允许选择品牌型号</el-checkbox></div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="addFucSetModal = false">取 消</el-button>
+                <el-button type="primary" @click="addFuc">确 定</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</template>
+<style>
+    .table-container{
+        margin-top: 20px;
+        padding-bottom: 60px;
+    }
+</style>
 <script>
+    import fetch from '@/utils/fetch';
+    import helper from '@/utils/helper';
+    import {getToken} from '@/utils/auth';
   export default {
-      name: 'deviceManager',
-      data() {
-        return {}
-      },
+      name: 'existedCategory',
       computed: {
       },
       created() {
-
       },
       mounted() {
+          this.getList(1);
       },
-      methods: {}
+      data() {
+          return {
+              tableData: [],
+              addFucSetModal : false,
+              addFucForm:{
+                  isOpenAddDevice : true,
+                  isAllowChooseModel : false
+              },
+              total : 0,
+              limit : 0
+          }
+      },
+      methods: {
+          handleCurrentChange(val){
+            this.getList(val);
+          },
+          getList(page){
+              fetch({
+                  url: '/device/deviceList',
+                  method: 'post',
+                  data: {
+                      'page' :page,
+                      'token' : getToken(),
+                      'limit' : 15
+                  }
+              }).then(res=>{
+                  this.tableData = res.data;
+                  this.total = Number(res.total);
+                  this.limit = Number(res.per_page);
+              })
+          },
+          handleEnterPage(row){
+              this.$router.push({path: '/typeManagement/deviceDetail', query: {'id' : row.id}});
+          },
+          //添加设备
+          addDevice(){
+              this.$router.push({path: '/typeManagement/addDevice'});
+          },
+          //添加方式设置
+          addFuc(){
+
+          }
+      }
   }
 </script>

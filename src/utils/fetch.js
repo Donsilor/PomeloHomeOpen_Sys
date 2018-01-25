@@ -53,15 +53,15 @@ service.interceptors.response.use(
           window.location.assign(window.location.origin + window.location.pathname + '#/login');
         })
       }
-      return Promise.reject('error')
+      return Promise.reject(res);
     } else {
-      return response.data.result
+      return Promise.resolve(response.data.result);
     }
   },
   error => {
     console.log('err' + error)// for debug
     Message({
-      message: error.message,
+      message: error.msg,
       type: 'error',
       duration: 5 * 1000
     })

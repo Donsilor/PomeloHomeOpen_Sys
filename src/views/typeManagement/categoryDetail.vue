@@ -7,7 +7,7 @@
                 <el-button type="danger" @click="handleDelEvent" v-show="!isEdit">删除该品类</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
-                <el-tabs type="border-card">
+                <el-tabs type="border-card"  @tab-click="handleClick">
                     <el-tab-pane label="基本信息">
                         <el-col :span="24">
                             <el-form ref="form" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
@@ -122,36 +122,157 @@
                     <el-tab-pane label="技术方案">
                         <el-col :span="24">
                             <template>
-                                <!--<addTechnical v-show="isEdit"></addTechnical>-->
-                                <addTechnical></addTechnical>
-                                <!--<el-button v-show="isEdit" @click="addTechnical">添加技术方案</el-button>-->
-                                <el-table :data="technical_protocols" border stripe style="width: 100%;margin-top: 15px;">
-                                    <el-table-column prop="protocal" label="技术方案" width="250"></el-table-column>
-                                    <el-table-column prop="company" label="模组厂商" width="250"></el-table-column>
-                                    <el-table-column  prop="chip" label="模组芯片"></el-table-column>
-                                    <el-table-column label="操作"  width="130" align="center" v-if="isEdit">
+                                <addTechnical :typeid="typeid" v-on:get-data="getTech" :token="token" v-show="isEdit"></addTechnical>
+                                <el-table
+                                        :data="technical_wifi"
+                                        border
+                                        stripe
+                                        style="width: 100%;margin-top: 15px;"
+                                        v-if="technical_wifi"
+                                        :span-method="arrayWifiSpanMethod">
+                                    <el-table-column prop='name' label="技术方案" width="150"></el-table-column>
+                                    <el-table-column prop="vendor" label="模组厂商" width="250" align="center"></el-table-column>
+                                    <el-table-column  prop="model_list" label="模组芯片" class-name="cell-column-no-padding" align="center">
                                         <template slot-scope="scope">
-                                            <i class="el-icon-delete" @click="delTechnical(scope.row.id)"></i>
+                                            <div v-for="item in scope.row.model_list" class="cell-td paddl20">
+                                                {{item.name}}
+                                            </div>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="操作"  width="130" align="center" v-if="isEdit" class-name="cell-column-no-padding">
+                                        <template slot-scope="scope">
+                                            <div v-for="item in scope.row.model_list" class="cell-td option">
+                                                <i class="el-icon-delete" @click="delTechnical(item.id,1)"></i>
+                                            </div>
                                         </template>
                                     </el-table-column>
                                 </el-table>
+
+                                <el-table
+                                        :data="technical_zigbee"
+                                        border
+                                        stripe
+                                        style="width: 100%;margin-top: 15px;"
+                                        v-if="technical_zigbee"
+                                        :span-method="arrayZigbeeSpanMethod">
+                                    <el-table-column prop='name' label="技术方案" width="150"></el-table-column>
+                                    <el-table-column  prop="agreement" label="标准协议" ></el-table-column>
+                                    <el-table-column label="操作"  width="130" align="center" v-if="isEdit">
+                                        <template slot-scope="scope">
+                                            <i class="el-icon-delete" @click="delTechnical(scope.row.id,2)"></i>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+
+                                <el-table
+                                        :data="technical_bluetooth"
+                                        border
+                                        stripe
+                                        style="width: 100%;margin-top: 15px;"
+                                        v-if="technical_bluetooth"
+                                        :span-method="arrayBlueToothSpanMethod">
+                                    <el-table-column prop='name' label="技术方案" width="150"></el-table-column>
+                                    <el-table-column  prop="agreement" label="标准协议" ></el-table-column>
+                                    <el-table-column label="操作"  width="130" align="center" v-if="isEdit">
+                                        <template slot-scope="scope">
+                                            <i class="el-icon-delete" @click="delTechnical(scope.row.id,3)"></i>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+
+
                             </template>
                         </el-col>
                     </el-tab-pane>
                     <el-tab-pane label="功能属性">
                         <el-col :span="24">
                             <template>
-                                <el-button v-show="isEdit">添加功能参数</el-button>
-                                <el-table :data="attr_list" border stripe style="width: 100%;margin-top: 15px;">
-                                    <el-table-column label="No." width="80" type="index" align="center">
+                                <!--<el-button v-show="isEdit">添加功能参数</el-button>-->
+                                <addAttribute :typeid="typeid" v-on:get-data="getAttr" :token="token" v-show="isEdit"></addAttribute>
+                                <el-table :data="attr_list"  max-height="450" height="450" border style="width: 100%;margin-top: 15px;" class="attribt_table">
+                                    <el-table-column label="No." width="80" type="index" align="center"></el-table-column>
+                                    <el-table-column prop="nodeid" label="Node_ID" width="150" align="center"></el-table-column>
+                                    <el-table-column label="method" align="center" class-name="cell-column-no-padding" width="150">
+                                        <template slot-scope="scope">
+                                            <span v-for="item in scope.row.list">
+                                                <div v-if="item.key_type === '3'" class="hasMoreList">
+                                                    <div v-for="name in item.list" class="inner-cell-td">
+                                                        {{name.method_string}}
+                                                    </div>
+                                                </div>
+                                                <div v-else class="cell-td hasNoMoreList" :title="item.method_string">
+                                                    {{item.method_string}}
+                                                </div>
+                                            </span>
+                                        </template>
                                     </el-table-column>
-                                    <el-table-column prop="node_id" label="Node_ID" width="250" align="center"></el-table-column>
-                                    <el-table-column prop="method" label="method" align="center"></el-table-column>
-                                    <el-table-column prop="key" label="key" align="center"></el-table-column>
-                                    <el-table-column prop="type" label="Type" align="center"></el-table-column>
-                                    <el-table-column  prop="value" label="value" align="center"></el-table-column>
-                                    <el-table-column prop="remark" label="Remark" align="center"></el-table-column>
-                                    <el-table-column label="操作"  width="100" align="center" v-if="isEdit">
+                                    <el-table-column label="key" align="center" class-name="cell-column-no-padding" width="150">
+                                        <template slot-scope="scope">
+                                            <span v-for="item in scope.row.list" :title="item.key">
+                                                <!--{{item.key}}-->
+                                                <div v-if="item.key_type === '3'" class="hasMoreList">
+                                                    <div v-for="name in item.list" class="inner-cell-td">
+                                                        {{name.key}}
+                                                    </div>
+                                                </div>
+                                                <div v-else class="cell-td hasNoMoreList" :title="item.key">
+                                                    {{item.key}}
+                                                </div>
+                                            </span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="Type" align="center" class-name="cell-column-no-padding" width="100">
+                                        <template slot-scope="scope">
+                                            <span v-for="item in scope.row.list">
+                                                 <div v-if="item.key_type === '3'" class="hasMoreList">
+                                                    <div v-for="name in item.list" class="inner-cell-td">
+                                                        {{name.type}}
+                                                    </div>
+                                                </div>
+                                                <div v-else class="cell-td hasNoMoreList" :title="item.type">
+                                                    {{item.type}}
+                                                </div>
+                                            </span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column  label="value" align="center" class-name="cell-column-no-padding" width="250">
+                                        <template slot-scope="scope">
+                                            <span v-for="item in scope.row.list">
+                                                 <div v-if="item.key_type === '3'" class="hasMoreList">
+                                                    <div v-for="name in item.list" class="inner-cell-td">
+                                                        {{name.value_string}}
+                                                    </div>
+                                                </div>
+                                                <div v-else class="cell-td hasNoMoreList" :title="item.value_string">
+                                                    {{item.value_string}}
+                                                </div>
+                                            </span>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="Remark" align="center" class-name="cell-column-no-padding">
+                                        <template slot-scope="scope">
+                                            <span v-for="item in scope.row.list">
+                                                <div v-if="item.key_type === '3'" class="hasMoreList">
+                                                    <div v-for="name in item.list" class="inner-cell-td">
+                                                        <el-tooltip class="item" effect="dark" :content="name.remark" placement="top">
+                                                            <span>{{name.remark}}</span>
+                                                        </el-tooltip>
+                                                    </div>
+                                                </div>
+                                                <div v-else class="cell-td hasNoMoreList" :title="item.remark">
+                                                    <el-tooltip class="item" effect="dark" :content="item.remark" placement="top" >
+                                                        <span>{{item.remark}}</span>
+                                                    </el-tooltip>
+                                                </div>
+                                            </span>
+                                            <!--<div v-for="item in scope.row.list" class="cell-td" :title="item.remark">-->
+                                                <!--<el-tooltip class="item" effect="dark" :content="item.remark" placement="top" :title="item.remark">-->
+                                                    <!--<span>{{item.remark}}</span>-->
+                                                <!--</el-tooltip>-->
+                                            <!--</div>-->
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="操作"  width="80" align="center" v-if="isEdit">
                                         <template slot-scope="scope">
                                             <i class="el-icon-delete" @click="delTechnical(scope.row.id)"></i>
                                         </template>
@@ -167,6 +288,57 @@
 
 </template>
 <style>
+    .attribt_table .el-table__body-wrapper{
+        overflow-y: scroll ;
+    }
+    .el-table__body-wrapper{
+        overflow: hidden;
+    }
+    .cell-column-no-padding{
+        padding: 0px!important;
+    }
+    .cell-column-no-padding .cell{
+        padding: 0px!important;
+    }
+    .hasMoreList .inner-cell-td{
+        border-bottom: 1px #ddd solid;
+        padding: 15px 20px;
+    }
+    .cell span:last-child .hasNoMoreList{
+        border-bottom: none;
+    }
+    .cell-td{
+        vertical-align: middle;
+        padding: 15px 20px;
+        margin: 0px;
+        border-bottom: 1px #ddd solid;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        word-break:break-word;
+        white-space:nowrap;
+        -o-text-overflow:ellipsis;
+    }
+    /*.cell-td.no-border-bottom{*/
+        /*border-bottom: none;*/
+    /*}*/
+    .cell-td.paddl20{
+        padding-left: 20px;
+    }
+    .option{
+        text-indent: 0px!important;
+    }
+    /*.cell .cell-td:last-child{*/
+        /*border-bottom: none!important;*/
+    /*}*/
+    .el-table th>.cell {
+        position: relative;
+        word-wrap: normal;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        width: 100%;
+        box-sizing: border-box;
+    }
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
         border-radius: 6px;
@@ -224,6 +396,9 @@
         transform: translateX(-50%);
         width: 110px;
     }
+    .el-tooltip__popper{
+        max-width: 300px;
+    }
 </style>
 
 <script>
@@ -232,6 +407,7 @@
     import helper from '@/utils/helper';
     import {getToken} from '@/utils/auth';
     import addTechnical from './addTechnical.vue';
+    import addAttribute from './addAttribute.vue';
     export default {
         name: 'existedCategory',
         computed: {
@@ -241,11 +417,15 @@
         mounted() {
             this.getTypeInfo();
             this.getParentType();
+            this.getAttributeList();
         },
         data() {
             return {
+                isLoadedTechnical : false,
+                typeid : this.$route.query.id,
+                token : getToken(),
                 isLoadData : false,
-                isEdit : false, //判断是否是编辑
+                isEdit :false, //判断是否是编辑
                 editText : '编辑品类信息',
                 form:{
                     name : '',
@@ -269,52 +449,34 @@
 
                 },
                 attr_list :[
-                    {
-                        node_id: 'switch',
-                        value: 'on/off',
-                        method : 'set/get/report',
-                        key : 'switch',
-                        type : 'string',
-                        remark : '开/关'
-                    },
-                    {
-                        node_id: 'switch',
-                        value: 'cold',
-                        method : 'set/get/report',
-                        key : 'switch',
-                        type : 'string',
-                        remark : '开/关'
-                    },
-                    {
-                        node_id: 'switch',
-                        value: 'auto',
-                        method : 'set/get/report',
-                        key : 'switch',
-                        type : 'string',
-                        remark : '开/关'
-                    }
+//                    {
+//                        node_id: 'switch',
+//                        value: 'on/off',
+//                        method : 'set/get/report',
+//                        key : 'switch',
+//                        type : 'string',
+//                        remark : '开/关'
+//                    },
+//                    {
+//                        node_id: 'switch',
+//                        value: 'cold',
+//                        method : 'set/get/report',
+//                        key : 'switch',
+//                        type : 'string',
+//                        remark : '开/关'
+//                    },
+//                    {
+//                        node_id: 'switch',
+//                        value: 'auto',
+//                        method : 'set/get/report',
+//                        key : 'switch',
+//                        type : 'string',
+//                        remark : '开/关'
+//                    }
                 ],
-                technical_protocols:[
-                    {
-                        protocal : 'wifi技术方案',
-                        company : '高通',
-                        chip : 'QCA4004'
-                    },
-                    {
-                        protocal : 'wifi技术方案',
-                        company : '高通',
-                        chip : 'QCA4004'
-                    },
-                    {
-                        protocal : 'wifi技术方案',
-                        company : '高通',
-                        chip : 'QCA4004'
-                    },{
-                        protocal : 'wifi技术方案',
-                        company : '高通',
-                        chip : 'QCA4004'
-                    }
-                ],
+                technical_wifi:[],
+                technical_bluetooth : [],
+                technical_zigbee : [],
                 parentList : [],
                 high_light_data : {
                     'token' : getToken(),
@@ -339,13 +501,46 @@
             }
         },
         methods: {
+            getMethodReturn(list){
+                console.log(list);
+                let methodHtml = '';
+                list.forEach((val,index)=>{
+                    methodHtml += '<div class="cell-td">'+val.method+'</div>';
+                });
+                return methodHtml;
+            },
+            handleClick(tab,event){
+                if(tab.index == 1 && !this.isLoadedTechnical){
+                    this.getTechList(1);
+                    this.getTechList(2);
+                    this.getTechList(3);
+                    this.isLoadedTechnical = true;
+                }
+            },
+
+            // 获取功能属性列表
+            getAttributeList(){
+                fetch({
+                    url: '/attribute/lists',
+                    method: 'post',
+                    data: {
+                        'type_id' : this.typeid
+                    }
+                }).then(res=>{
+                    this.attr_list = res.list;
+                    console.log(this.attr_list);
+                }).catch(res=>{
+
+                })
+            },
+
             // 获取品类详情信息
             getTypeInfo(){
                 fetch({
                     url: '/product/type_info',
                     method: 'post',
                     data: {
-                        'id' : this.$route.query.id
+                        'id' : this.typeid
                     }
                 }).then(res=>{
                     this.form = res;
@@ -353,6 +548,8 @@
                     this.form.is_relate_switch = this.form.is_relate_switch  == 1 ? true : false;
                     this.handleIconList(this.form.icon_list);
                     this.isLoadData = true;
+                }).catch(res=>{
+
                 })
             },
             handleIconList(icon_list){
@@ -371,13 +568,9 @@
                     }
                 }).then(res=>{
                     this.parentList = res.list;
-                    console.log(this.parentList);
                 })
             },
             handleAvatarSuccess(res, file) {
-                console.log(res);
-                console.log(file);
-                console.log(res.result);
                 let data = res.result;
                 switch (res.result.type){
                     case 'high_light' : this.form.icon_list.high_light = data.high_light; this.high_light_data.file_id = data.high_light.file_id; break;
@@ -401,8 +594,23 @@
             },
 
             //删除技术方案
-            delTechnical(id){
-
+            delTechnical(id,technology_type){
+                console.log(id);
+                fetch({
+                    url: '/producttype/technologydel',
+                    method: 'post',
+                    data: {
+                        'token' : this.token,
+                        'technology_type' : technology_type,
+                        'id' : id
+                    }
+                }).then(res=>{
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功！'
+                    });
+                    this.getTechList(technology_type);
+                })
             },
 
             //删除品类
@@ -445,20 +653,25 @@
             saveGoryInfo(){
                 this.isEdit = false;
                 this.editText = '编辑品类信息';
+                this.form.is_high_frequency = this.form.is_high_frequency  == true ? 1 : 0;
+                this.form.is_relate_switch = this.form.is_relate_switch  == true ? 1 : 0;
                 fetch({
-                    url: '/product/edit',
+                    url: '/producttype/edit',
                     method: 'post',
                     data: this.form,
                 }).then(res=>{
-                    if(res.code == 200){
-                        this.isEdit = false;
-                        setTimeout(()=>{
-                            this.$message({
-                                type: 'success',
-                                message: '保存成功!'
-                            });
-                        },1000);
-                    }
+                    this.isEdit = false;
+                    setTimeout(()=>{
+                        this.$message({
+                            type: 'success',
+                            message: '保存成功!'
+                        });
+                    },1000);
+                }).catch(res=>{
+                    this.$message({
+                        type: 'error',
+                        message: res.msg
+                    });
                 })
             },
 
@@ -496,10 +709,107 @@
             //添加技术方案
             addTechnical(){
 
-            }
+            },
+
+            //获取子组件传回来的功能属性方案数据
+            getAttr(){
+
+            },
+
+            //获取子组件传回来的技术方案数据
+            getTech(val){
+                console.log(val);
+                fetch({
+                    url: 'producttype/technologyadd',
+                    method: 'post',
+                    data: val,
+                }).then(res=>{
+                    this.$message({
+                        type: 'success',
+                        message: '添加方案成功！'
+                    });
+                    this.getTechList(1);
+                    this.getTechList(2);
+                    this.getTechList(3);
+                }).catch(res=>{
+                    this.$message({
+                        type: 'error',
+                        message: res.msg
+                    });
+                })
+            },
+            getTechList(technology_type){
+                fetch({
+                    url: 'producttype/technologylists',
+                    method: 'post',
+                    data: {
+                        'token' : getToken(),
+                        'type_id' : this.typeid,
+                        'technology_type' : technology_type
+                    },
+                }).then(res=>{
+                    switch (technology_type){
+                        case 1 : this.technical_wifi = res.list; break;
+                        case 2 : this.technical_zigbee = res.list; break;
+                        case 3 : this.technical_bluetooth = res.list; break;
+                    }
+                }).catch(res=>{
+                    this.$message({
+                        type: 'error',
+                        message: res.msg
+                    });
+                })
+            },
+            //当前行row、当前列column、当前行号rowIndex、当前列号columnIndex
+            arrayWifiSpanMethod({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex === 0) {
+                    if (rowIndex === 0) {
+                        return {
+                            rowspan: this.technical_wifi.length,
+                            colspan: 1
+                        };
+                    } else {
+                        return {
+                            rowspan: 0,
+                            colspan: 0
+                        };
+                    }
+                }
+            },
+            arrayBlueToothSpanMethod({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex === 0) {
+                    if (rowIndex === 0) {
+                        return {
+                            rowspan: this.technical_bluetooth.length,
+                            colspan: 1
+                        };
+                    } else {
+                        return {
+                            rowspan: 0,
+                            colspan: 0
+                        };
+                    }
+                }
+            },
+            arrayZigbeeSpanMethod({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex === 0) {
+                    if (rowIndex === 0) {
+                        return {
+                            rowspan: this.technical_zigbee.length,
+                            colspan: 1
+                        };
+                    } else {
+                        return {
+                            rowspan: 0,
+                            colspan: 0
+                        };
+                    }
+                }
+            },
         },
         components:{
-            addTechnical
+            addTechnical,
+            addAttribute
         }
     }
 </script>

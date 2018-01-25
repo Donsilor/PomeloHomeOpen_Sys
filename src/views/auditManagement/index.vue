@@ -17,12 +17,13 @@
     </div>
 </template>
 
-<script>import fetch from '@/utils/fetch';
+<script>
+    import { mapGetters } from 'vuex'
+    import fetch from '@/utils/fetch';
 
     export default {
         name: 'auditManagement',
         data() {
-            console.log(this.$route);
             return {
                 activeName: this.$route.name,
                 height: window.innerHeight - 50,
@@ -67,9 +68,25 @@
                 ]
             }
         },
-        mounted(){
-            this.getMenuNum();
+        created(){
+            //this.$store.dispatch('GetAuditMenus');
         },
+        computed: {
+            auditMenus(){
+                return this.$store.state.user.auditMenus;
+            }
+        },
+        watch:{
+            'auditMenus':function (list) {
+                this.navs.forEach(function (v,i) {
+                    v.num = list[v.name];
+                });
+            }
+        },
+        mounted(){
+            //this.getMenuNum();
+        },
+
         methods: {
             getMenuNum() {
                 fetch({

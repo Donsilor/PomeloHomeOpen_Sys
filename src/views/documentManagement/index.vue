@@ -20,8 +20,9 @@
 <script>import fetch from '@/utils/fetch';
 
     export default {
-        name: 'auditManagement',
+        name: 'documentManagement',
         data() {
+            console.log('path:'+this.$route.name)
             return {
                 activeName: this.$route.name,
                 height: window.innerHeight - 50,
@@ -60,8 +61,20 @@
                 ]
             }
         },
+        computed: {
+            documentMenus(){
+                return this.$store.state.user.documentMenus;
+            }
+        },
+        watch:{
+            'documentMenus':function (list) {
+                this.navs.forEach(function (v,i) {
+                    v.num = list[v.name];
+                });
+            }
+        },
         mounted(){
-            this.getMenuNum();
+            //this.getMenuNum();
         },
         methods: {
             getMenuNum() {

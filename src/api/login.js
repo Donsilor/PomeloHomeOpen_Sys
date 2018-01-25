@@ -19,3 +19,19 @@ export function logout() {
     data: {}
   })
 }
+
+export function getAuditMenus() {
+    return fetch({
+        url: '/admin/apprmenu',
+        method: 'post',
+        data: {}
+    })
+}
+
+export function getDocumentMenus() {
+    return fetch({
+        url: '/admin/documentMenu',
+        method: 'post',
+        data: {}
+    })
+}

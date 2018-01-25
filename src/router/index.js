@@ -145,6 +145,26 @@ export const constantRouterMap = [
                         path:'wifi',
                         name:'wifi',
                         component:_import('documentManagement/wifi')
+                    },
+                    {
+                        path:'zigbee',
+                        name:'zigbee',
+                        component:_import('documentManagement/zigbeeAndBluetooth'),
+                    },
+                    {
+                        path:'bluetooth',
+                        name:'bluetooth',
+                        component:_import('documentManagement/zigbeeAndBluetooth'),
+                    },
+                    {
+                        path:'development',
+                        name:'development',
+                        component:_import('documentManagement/developmentAndUidesign')
+                    },
+                    {
+                        path:'uiDesign',
+                        name:'uiDesign',
+                        component:_import('documentManagement/developmentAndUidesign')
                     }
                 ]
             }

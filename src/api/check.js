@@ -42,12 +42,3 @@ export function commitCheck(params) {
 
     })
 }
-
-//获取SDK列表
-export function getSdkList(params) {
-    return fetch({
-        url: '/admin/sdklists',
-        method: 'post',
-        data: params
-    });
-}

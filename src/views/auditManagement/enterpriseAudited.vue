@@ -112,6 +112,7 @@
         },
         mounted() {
             this.getList();
+            this.$store.dispatch('GetAuditMenus');
         },
         activated() {
             this.getList();

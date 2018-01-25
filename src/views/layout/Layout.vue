@@ -44,6 +44,7 @@ export default {
     Sidebar,
     AppMain
   },
+
   computed: {
     sidebar() {
       return this.$store.state.app.sidebar

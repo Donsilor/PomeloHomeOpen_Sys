@@ -156,6 +156,7 @@
             }
         },
         mounted() {
+            this.$store.dispatch('GetAuditMenus');
             this.getList();
             this.getProductType();
         },

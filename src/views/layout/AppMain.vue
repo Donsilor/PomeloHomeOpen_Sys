@@ -2,9 +2,7 @@
   <section class="app-main">
     <transition name="fade" mode="out-in">
       <!--<router-view v-if="$route.meta.notKeepAlive"></router-view>-->
-      <keep-alive>
-        <router-view ></router-view>
-      </keep-alive>
+      <router-view ></router-view>
     </transition>
   </section>
 </template>

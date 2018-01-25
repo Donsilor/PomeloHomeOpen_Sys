@@ -1,4 +1,4 @@
-import {login, logout} from '@/api/login'
+import {login, logout,getAuditMenus,getDocumentMenus} from '@/api/login'
 import {getToken, setToken, removeToken,getUserName,setUserName,removeUserName} from '@/utils/auth'
 
 const user = {
@@ -6,7 +6,9 @@ const user = {
         token: getToken(),
         name: getUserName(),
         avatar: '',
-        roles: []
+        roles: [],
+        auditMenus:[],
+        documentMenus:[]
     },
 
     mutations: {
@@ -21,6 +23,12 @@ const user = {
         },
         SET_ROLES: (state, roles) => {
             state.roles = roles
+        },
+        SET_AUDIT_MENUS: (state, menus)=>{
+            state.auditMenus = menus;
+        },
+        SET_DOCUMENT_MENUS: (state, menus)=>{
+            state.documentMenus = menus;
         }
     },
 
@@ -79,6 +87,31 @@ const user = {
                 commit('SET_TOKEN', '')
                 removeToken()
                 resolve()
+            })
+        },
+
+        //获取审核管理菜单
+        GetAuditMenus({commit}, state) {
+            return new Promise((resolve, reject) => {
+                getAuditMenus().then(response => {
+                    const data = response;
+                    commit('SET_AUDIT_MENUS', data.list)
+                    resolve()
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        //获取资料管理菜单
+        GetDocumentMenus({commit}, state) {
+            return new Promise((resolve, reject) => {
+                getDocumentMenus().then(response => {
+                    const data = response;
+                    commit('SET_DOCUMENT_MENUS', data.list)
+                    resolve()
+                }).catch(error => {
+                    reject(error)
+                })
             })
         }
     }

@@ -25,7 +25,7 @@
         name: 'auditManagement',
         data() {
             return {
-                activeName: this.$route.name,
+                activeName: this.$route.meta.key||this.$route.name,
                 height: window.innerHeight - 50,
                 width:window.innerWidth-300,
                 navs:[

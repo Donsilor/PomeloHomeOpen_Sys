@@ -188,7 +188,6 @@
                 };
                 Object.assign(params, this.queryCondition);
                 getReviewList(params).then(response => {
-                    console.log('审核产品列表', response.data);
                     this.list = response.data;
                     this.total = response.total;
                     this.listLoading = false

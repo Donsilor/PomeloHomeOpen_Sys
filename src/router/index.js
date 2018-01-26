@@ -78,27 +78,44 @@ export const constantRouterMap = [
                         path: 'enterpriseToAudit',
                         name: '企业审核页面',
                         component: _import('auditManagement/enterpriseToAudit'),
-                        meta: {breadNumber: 1, notKeepAlive: true}
+                        meta: {breadNumber: 1, notKeepAlive: true,key:'enterprisePending'}
                     },
                     {
                         path: 'productToAudit',
                         name: '产品审核页面',
                         component: _import('auditManagement/productToAudit'),
-                        meta: {breadNumber: 1, notKeepAlive: true}
+                        meta: {breadNumber: 1, notKeepAlive: true,key:'productPending'}
                     },
                     {
                         path: 'goLiveToAudit',
                         name: '上线申请审核页面',
                         component: _import('auditManagement/goLiveToAudit'),
-                        meta: {breadNumber: 1, notKeepAlive: true}
+                        meta: {breadNumber: 1, notKeepAlive: true,key:'goLivePending'}
                     }
                 ]
             },
             {
                 path: 'productManagement',
                 name: '产品管理',
-                //component: _import(''),
-                children: []
+                component: _import('productManagement/index'),
+                children: [
+                    {
+                        path: '',
+                        name: 'onlineProducts',
+                        component: _import('productManagement/onlineProducts'),
+                    },
+                    {
+                        path: 'onlineProducts',
+                        name: 'onlineProducts',
+                        component: _import('productManagement/onlineProducts'),
+                    },
+                    {
+                        path: 'onlineProductDetail',
+                        name: 'onlineProductDetail',
+                        component: _import('productManagement/onlineProductDetail'),
+                        meta: {key:'onlineProducts'}
+                    }
+                ]
             },
             {
                 path: 'typeManagement',

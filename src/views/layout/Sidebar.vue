@@ -26,7 +26,7 @@
                     },
                     {
                         name: '产品管理',
-                        url: '',
+                        url: '/productManagement',
                         icon: 'el-icon-goods',
                     },
                     {
@@ -44,7 +44,6 @@
         },
         computed: {
             routes() {
-                console.log('this.$router.options.routes.children', this.$router.options.routes);
                 return this.$router.options.routes
             }
         },

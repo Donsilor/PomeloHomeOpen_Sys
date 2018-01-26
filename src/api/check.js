@@ -42,3 +42,30 @@ export function commitCheck(params) {
 
     })
 }
+
+//获取产品列表
+export function getProductList(params) {
+    return fetch({
+        url: '/admin/product_lists',
+        method: 'post',
+        data: params
+    });
+}
+
+//获取已上线产品详情
+export function getProductInfo(params) {
+    return fetch({
+        url: '/admin/product_info',
+        method: 'post',
+        data: params
+    });
+}
+
+//设置已上线产品下架
+export function productUnshelve(params) {
+    return fetch({
+        url: '/admin/product_unshelve',
+        method: 'post',
+        data: params
+    });
+}

@@ -22,7 +22,6 @@
     export default {
         name: 'documentManagement',
         data() {
-            console.log('path:'+this.$route.name)
             return {
                 activeName: this.$route.name,
                 height: window.innerHeight - 50,

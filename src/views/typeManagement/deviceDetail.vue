@@ -365,6 +365,8 @@
                     }).then(() => {
                         this.saveDeviceInfo();
                     }).catch(() => {
+                        this.isEdit = false;
+                        this.editText = '编辑设备信息';
                     });
                 }
             },
@@ -379,12 +381,13 @@
                     data: this.form,
                 }).then(res=>{
                     this.isEdit = false;
+                    this.$message({
+                        type: 'success',
+                        message: '编辑设备信息成功!'
+                    });
                     setTimeout(()=>{
-                        this.$message({
-                            type: 'success',
-                            message: '编辑设备信息成功!'
-                        });
-                    },1000);
+                        this.$router.push({path: '/typeManagement/deviceManager'});
+                    },2000);
                 }).catch(res=>{
                     this.$message({
                         type: 'error',

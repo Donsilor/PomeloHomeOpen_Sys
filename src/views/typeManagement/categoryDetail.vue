@@ -5,6 +5,7 @@
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
                 <el-button type="primary" @click="editGory">{{editText}}</el-button>
                 <el-button type="danger" @click="handleDelEvent" v-show="!isEdit">删除该品类</el-button>
+                <addAttribute :typeid="typeid" v-on:get-data="getAttr" :token="token"></addAttribute>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <el-tabs type="border-card" @tab-click="handleClick">

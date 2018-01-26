@@ -2,7 +2,7 @@
     <div class="app-container calendar-list-container">
         <el-row :gutter="30">
             <el-col :span="2">
-                <el-button type="primary">新增品类</el-button>
+                <el-button type="primary" @click="handelAddCateGory">新增品类</el-button>
             </el-col>
             <el-col :span="18">
                 <span class="tipStyle">
@@ -74,6 +74,9 @@
             handleEnterPage(row){
                 console.log(row);
                 this.$router.push({path: '/typeManagement/categoryDetail', query: {'id' : row.id}});
+            },
+            handelAddCateGory(){
+                this.$router.push({path: '/typeManagement/addCategoryDetail'});
             }
         }
     }

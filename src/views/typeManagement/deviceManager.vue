@@ -9,11 +9,17 @@
         <div class="table-container">
             <template>
                 <el-table :data="tableData" border stripe style="width: 100%">
-                    <el-table-column prop="model" label="设备型号" width="150"></el-table-column>
-                    <el-table-column prop="business_name" label="厂商"></el-table-column>
                     <el-table-column  prop="type_name" label="子品类" width="220"></el-table-column>
                     <el-table-column  prop="parent_type_name" label="所属大品类" width="220"></el-table-column>
-                    <el-table-column  prop="device_created_at" label="创建时间" width="220"></el-table-column>
+                    <el-table-column prop="model" label="设备型号" width="150"></el-table-column>
+                    <el-table-column prop="business_name" label="厂商"></el-table-column>
+                    <el-table-column prop="business_name" label="是否默认设备" align="center">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.is_default">是</span>
+                            <span v-else>否</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="created_at" label="创建时间" width="220"></el-table-column>
                     <el-table-column label="操作"  width="130" align="center">
                         <template slot-scope="scope">
                             <el-button
@@ -39,8 +45,10 @@
                 :visible.sync="addFucSetModal"
                 width="30%">
             <span class="danger" style="display: inline-block;margin-bottom: 20px;">该设置影响所有设备的添加方式，请确认后操作</span>
-            <div><el-checkbox v-model="addFucForm.isOpenAddDevice">开启客户端添加设备功能</el-checkbox></div>
-            <div><el-checkbox v-model="addFucForm.isAllowChooseModel">添加设备时允许选择品牌型号</el-checkbox></div>
+            <div v-for="item in addFucForm">
+                <el-checkbox v-model="item.status">开启客户端添加设备功能</el-checkbox>
+            </div>
+            <!--<div><el-checkbox v-model="addFucForm.isAllowChooseModel">添加设备时允许选择品牌型号</el-checkbox></div>-->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addFucSetModal = false">取 消</el-button>
                 <el-button type="primary" @click="addFuc">确 定</el-button>
@@ -66,17 +74,16 @@
       },
       mounted() {
           this.getList(1);
+          this.getAddType();
       },
       data() {
           return {
               tableData: [],
               addFucSetModal : false,
-              addFucForm:{
-                  isOpenAddDevice : true,
-                  isAllowChooseModel : false
-              },
+              addFucForm:[],
               total : 0,
-              limit : 0
+              limit : 0,
+              token : getToken()
           }
       },
       methods: {
@@ -129,7 +136,24 @@
           },
           //添加方式设置
           addFuc(){
-
+              fetch({
+                  url: '/device/setAddtype',
+                  method: 'post',
+                  data:{
+                      'token' : this.token,
+                      'setting' : this.addFucForm
+                  },
+              }).then(res=>{
+                  this.$message({
+                      type: 'success',
+                      message: '修改设置成功'
+                  });
+              }).catch(res=>{
+                  this.$message({
+                      type: 'error',
+                      message: res.msg
+                  });
+              })
           }
       }
   }

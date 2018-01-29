@@ -388,6 +388,7 @@
                         type: 'error',
                         message: error.msg
                     });
+                    this.form.id = '';
                 })
             }
         },

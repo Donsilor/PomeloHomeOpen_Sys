@@ -368,8 +368,8 @@
                 this.$router.push({path: '/typeManagement/deviceManager'});
             },
             confirmDevice(){
-
                 this.form.id_type = this.form.id ? 2 : 1;
+                this.form.id = this.form.id ? this.form.id : this.form.type;
                 console.log(this.form.id_type);
                 fetch({
                     url: '/device/deviceAdd',

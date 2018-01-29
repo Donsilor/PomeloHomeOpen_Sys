@@ -418,10 +418,9 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        this.getTypeInfo();
-                        this.isEdit = false;
-                        this.editText = '编辑品类信息';
+                        this.$router.push({path: '/typeManagement/deviceManager'});
                     }).catch(() => {
+
                     });
 
                 }

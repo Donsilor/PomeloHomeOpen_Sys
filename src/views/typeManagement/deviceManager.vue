@@ -126,7 +126,9 @@
                   }
               }).then(res=>{
                   this.addFucForm = res;
-                  console.log(res);
+                  this.addFucForm.forEach((val,index)=>{
+                      val.status = val.status ? true : false;
+                  });
               }).catch(res=>{
                   this.$message({
                       type: 'error',
@@ -136,18 +138,22 @@
           },
           //添加方式设置
           addFuc(){
+              this.addFucForm.forEach((val,index)=>{
+                  val.status = val.status ? 1 : 0;
+              });
               fetch({
                   url: '/device/setAddtype',
                   method: 'post',
                   data:{
                       'token' : this.token,
-                      'setting' : this.addFucForm
+                      'settings' : this.addFucForm
                   },
               }).then(res=>{
                   this.$message({
                       type: 'success',
                       message: '修改设置成功'
                   });
+                  this.addFucSetModal = false;
               }).catch(res=>{
                   this.$message({
                       type: 'error',

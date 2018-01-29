@@ -45,11 +45,14 @@
                             <el-form-item label="参数值类型" class="w100p" label-width="120px">
                                 <el-radio-group v-model="paramKey.type" @change="changeTypeValue($event,itemIndex,paramIndex)">
                                     <el-radio label="string">string</el-radio>
+                                    <!--<el-radio label="string" v-else-if="isChooseObject">string</el-radio>-->
                                     <el-radio label="int">int</el-radio>
-                                    <el-radio label="object">object</el-radio>
+                                    <el-radio label="object" v-if="!isChooseObject">object</el-radio>
+                                    <el-radio label="object" v-else-if="isChooseObject && paramIndex==0">object</el-radio>
                                     <el-radio label="float">float</el-radio>
                                     <el-radio label="array">array</el-radio>
-                                    <el-radio label="bool">bool</el-radio>
+                                    <el-radio label="bool" v-if="!isChooseObject">bool</el-radio>
+                                    <el-radio label="bool" v-else-if="isChooseObject && paramIndex==0">bool</el-radio>
                                 </el-radio-group>
                             </el-form-item>
 
@@ -85,12 +88,6 @@
                                     </a>
                                 </template>
                             </el-form-item>
-                            <!--<el-form-item label="枚举参数值" class="w100p" label-width="120px">-->
-                                <!--<el-form-item label="参数名称(key)" label-width="220px"></el-form-item>-->
-                                <!--<el-form-item label="传送数据" prop="nodeid"  label-width="220px"></el-form-item>-->
-                                <!--&lt;!&ndash;<el-form-item label="互联场景" prop="nodeid"  label-width="80px"></el-form-item>&ndash;&gt;-->
-                                <!--<el-form-item label="操作" prop="nodeid" label-width="85px"></el-form-item>-->
-                            <!--</el-form-item>-->
                         </el-col>
                         <a href="javascript:void(0);" @click="addAttribute(itemIndex)" class="addAttr"><i class="el-icon-plus"></i> 新增属性</a>
                     </div>
@@ -165,6 +162,7 @@
             return {
                 dialogFormVisible : false,
                 hulian_value : true,
+                isChooseObject : false,
                 form : {
                     "token":this.token,
                     "type_id":this.type_id,
@@ -177,13 +175,13 @@
                             "key":"",
                             "type":"string",
                             "key_type":1,
-                            "typeCircle" : 1,
                             "list": [{
                                 "method": [
                                 ],
                                 "key":"",
                                 "type":"string",
                                 "key_type":1,
+                                "typeCircle" : 1,
                                 'value_list' : [{
                                     'value' : '',
                                     'value_des' : ''
@@ -224,9 +222,7 @@
             addAttribute(itemIndex){
                 this.form.value_list[itemIndex].list.push(
                     {
-                        "method": [
-
-                        ],
+                        "method": [],
                         "key":"",
                         "type":"string",
                         "key_type":1,
@@ -256,6 +252,7 @@
                 }];
                 this.form.value_list[itemIndex].list = [];
                 if(val === 'int'){
+                    this.isChooseObject = false;
                     this.form.value_list[itemIndex].list = INITIALIZATIONPARAMS;
                     this.form.value_list[itemIndex].list[paramIndex].type = 'int';
                     this.form.value_list[itemIndex].key_type = 2;
@@ -273,32 +270,38 @@
                     this.form.value_list[itemIndex].list[paramIndex].key_type = 2;
                     this.form.value_list[itemIndex].list[paramIndex].value_list = param;
                 }else if(val === 'object'){
-                    this.form.value_list[itemIndex].key_type = 3;
-                    let param = [{
-                        "method": [
-                        ],
-                        "key":"",
-                        "type":"object",
-                        "key_type":3,
-                        "typeCircle" : 2,
-                    },
-                    {
-                        "method": [
-                        ],
-                        "key":"",
-                        "type":"string",
-                        "key_type":1,
-                        "typeCircle" : 1,
-                        'value_list' : [{
-                            'value' : '',
-                            'value_des' : ''
-                        }],
-                        "remark":""
-                    }];
-                    this.form.value_list[itemIndex].list = param;
+                    if(itemIndex ==0){
+                        this.isChooseObject = true;
+                        this.form.value_list[itemIndex].key_type = 3;
+                        let param = [{
+                            "method": [
+                            ],
+                            "key":"",
+                            "type":"object",
+                            "key_type":3,
+                            "typeCircle" : 2,
+                        },
+                        {
+                            "method": [
+                            ],
+                            "key":"",
+                            "type":"string",
+                            "key_type":1,
+                            "typeCircle" : 1,
+                            'value_list' : [{
+                                'value' : '',
+                                'value_des' : ''
+                            }],
+                            "remark":""
+                        }];
+                        this.form.value_list[itemIndex].list = param;
+                    }else{
+
+                    }
                 }else{
                     let param = INITIALIZATIONPARAMS;
                     console.log(param);
+                    this.isChooseObject = false;
                     this.form.value_list[itemIndex].list = [];
                     console.log(this.form.value_list[itemIndex].list);
                     this.form.value_list[itemIndex].list = param;

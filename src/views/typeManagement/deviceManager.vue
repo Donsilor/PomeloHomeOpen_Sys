@@ -154,6 +154,7 @@
                       message: '修改设置成功'
                   });
                   this.addFucSetModal = false;
+                  this.getAddType();
               }).catch(res=>{
                   this.$message({
                       type: 'error',

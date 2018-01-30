@@ -5,7 +5,6 @@
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
                 <el-button type="primary" @click="editGory">{{editText}}</el-button>
                 <el-button type="danger" @click="handleDelEvent" v-show="!isEdit">删除该品类</el-button>
-                <!--<addAttribute :typeid="typeid" v-on:get-data="getAttr" :token="token"></addAttribute>-->
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <el-tabs type="border-card" @tab-click="handleClick">
@@ -199,9 +198,9 @@
                     <el-tab-pane label="功能属性">
                         <el-col :span="24">
                             <template>
-                                <!--<el-button v-show="isEdit">添加功能参数</el-button>-->
-                                <addAttribute :typeid="typeid" v-on:get-data="getAttr" :token="token"
-                                              v-show="isEdit"></addAttribute>
+                                <el-button @click="attDialogVisible = true" v-show="isEdit">添加功能属性</el-button>
+                                <addAttribute :visible="attDialogVisible" :attrid="selectNodeId" :typeid="typeid" v-on:close-dialog="closeAttrDialog" :token="token">
+                                </addAttribute>
                                 <el-table :data="attr_list" border stripe style="width: 100%;margin-top: 15px;"
                                           class="attribt_table" :span-method="spanMethod">
                                     <el-table-column prop="nodeid" label="Node_ID" width="150"
@@ -225,6 +224,7 @@
                                     <el-table-column label="操作" width="80" align="center" v-if="isEdit">
                                         <template slot-scope="scope">
                                             <i class="el-icon-delete" @click="delProperty(scope.row.attr_id)"></i>
+                                            <i class="el-icon-edit-outline" @click="editProperty(scope.row.attr_id)"></i>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -350,7 +350,7 @@
         line-height: 25px;
     }
 
-    .el-icon-delete {
+    .el-icon-delete,.el-icon-edit-outline {
         cursor: pointer;
     }
 
@@ -382,6 +382,29 @@
     .el-tooltip__popper {
         max-width: 300px;
     }
+
+    .attDialog .el-dialog__body{
+        overflow-y: auto;
+        max-height: 550px;
+        padding-top: 10px;
+        padding-bottom: 0;
+    }
+    .attDialog .el-dialog__header{
+        border-bottom: 1px solid #d8dce5;
+    }
+    .attDialog .el-form-item {
+        margin-bottom: 17px;
+    }
+    .pl8 .el-form-item__label{
+        padding-left: 10px;
+    }
+    .attDialog .el-dialog--center .el-dialog__header{padding-top: 15px;}
+    .attDialog .el-input__inner{
+        height: 32px;
+    }
+    .attDialog .el-form-item__content,.attDialog .el-form-item__label{
+        line-height: 32px;
+    }
 </style>
 
 <script>
@@ -404,6 +427,8 @@
         data() {
             return {
                 isLoadedTechnical: false,
+                attDialogVisible:false,
+                selectNodeId:'',
                 typeid: this.$route.query.id,
                 token: getToken(),
                 isLoadData: false,
@@ -675,6 +700,12 @@
                     this.getAttributeList();
                 });
             },
+            //编辑属性
+            editProperty(attr_id){
+              this.selectNodeId = attr_id;
+              this.attDialogVisible = true;
+            },
+
 
             //保存品类信息事件处理
             saveGoryInfo(){
@@ -739,8 +770,12 @@
             },
 
             //获取子组件传回来的功能属性方案数据
-            getAttr(){
-
+            getAttr(params){
+            },
+            //窗口关闭事件
+            closeAttrDialog(){
+                this.attDialogVisible = false;
+                this.selectNodeId = '';
             },
 
             //获取子组件传回来的技术方案数据
@@ -798,7 +833,7 @@
 
                 }
                 let pt = this.spanMap[row.nodeid];
-                if(columnIndex==0){
+                if(columnIndex==0||columnIndex==6){
                     if(pt){
                         if(pt.index==rowIndex){
                             return [pt.len,1]

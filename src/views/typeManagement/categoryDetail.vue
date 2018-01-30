@@ -54,7 +54,7 @@
                                                     :disabled="!isEdit"
                                                     accept="image/png"
                                                     :data="high_light_data">
-                                                <img v-if="high_light_data.file_id!=''"
+                                                <img v-if="form.icon_list.high_light!=''"
                                                      :src="form.icon_list.high_light.file_url" class="avatar">
                                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                             </el-upload>
@@ -71,7 +71,7 @@
                                                     :disabled="!isEdit"
                                                     accept="image/png"
                                                     :data="normal_s_data">
-                                                <img v-if="normal_s_data.file_id!=''"
+                                                <img v-if="form.icon_list.normal_s!=''"
                                                      :src="form.icon_list.normal_s.file_url" class="avatar">
                                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                             </el-upload>

@@ -272,12 +272,8 @@
                     }
                 }).then(res=>{
                     this.form = res;
-                    this.form.add_type = Number(this.form.add_type);
-//                    switch (this.form.add_type){
-//                        case 0 : this.addType = 'DLNA';break;
-//                        case 1 : this.addType = '';break;
-//                        case 2: this.addType = '';break;
-//                    }
+                    this.form.add_type = this.form.add_type == '0' ? '': Number(this.form.add_type);
+
                     this.isLoadData = true;
                     this.handleImgAddToken();
                     this.getDeviceSelectAddtype();

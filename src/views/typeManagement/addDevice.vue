@@ -6,9 +6,9 @@
                 <el-button type="primary" @click="confirmDevice">确认并添加该设备</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
-                <el-form ref="form" :model="form" label-width="80px" style="margin-top: 20px;" size="large" label-position="left">
+                <el-form ref="ruleForm" :rules="rules" :model="form" label-width="80px" style="margin-top: 20px;" size="large" label-position="left">
                     <div class="title">基本信息</div>
-                    <el-form-item label="品类" label-width="120px">
+                    <el-form-item label="品类" label-width="120px" prop="type">
                         <el-col :span="12">
                             <el-select v-model="form.type" placeholder="请选择产品品类" style="width: 100%;" @change="changeType">
                                 <el-option
@@ -59,7 +59,7 @@
                     <el-form-item label="产品图片" label-width="120px">
                         <el-col :span="12">
                             <div class="flex">
-                                <el-input v-model="form.base_img.filename" readonly></el-input>
+                                <el-input v-model="form.base_img.filename" readonly placeholder="图片支持jpeg、jpg、png格式，大小5M内"></el-input>
                                 <el-upload
                                         class="upload-container"
                                         action="/api/index.php/files/save"
@@ -100,7 +100,7 @@
                         <el-col :span="12">
                             <div class="flex">
                                 <div class="desTitle">上传图片</div>
-                                <el-input v-model="form.add1_img.filename" readonly></el-input>
+                                <el-input v-model="form.add1_img.filename" readonly placeholder="图片支持jpeg、jpg、png格式，大小5M内"></el-input>
                                 <el-upload
                                         class="upload-container"
                                         action="/api/index.php/files/save"
@@ -124,7 +124,7 @@
                             </div>
                             <div class="marT20 flex">
                                 <div class="desTitle">按钮文字</div>
-                                <el-input v-model="form.add1_button"></el-input>
+                                <el-input v-model="form.add1_button" placeholder="文字最好控制在8个字内"></el-input>
                             </div>
                         </el-col>
                     </el-form-item>
@@ -132,7 +132,7 @@
                         <el-col :span="12">
                             <div class="flex">
                                 <div class="desTitle">上传图片</div>
-                                <el-input v-model="form.add2_img.filename"  readonly></el-input>
+                                <el-input v-model="form.add2_img.filename" readonly placeholder="图片支持jpeg、jpg、png格式，大小5M内"></el-input>
                                 <el-upload
                                         class="upload-container"
                                         action="/api/index.php/files/save"
@@ -157,10 +157,10 @@
                         </el-col>
                     </el-form-item>
                     <div class="title">重置方式</div>
-                    <el-form-item label="上传图片" label-width="120px">
+                    <el-form-item label="上传图片" label-width="120px" prop="resetImg">
                         <el-col :span="12">
                             <div class="flex">
-                                <el-input v-model="form.reset_img.filename" readonly></el-input>
+                                <el-input v-model="form.reset_img.filename" readonly placeholder="图片支持jpeg、jpg、png格式，大小5M内"></el-input>
                                 <el-upload
                                         class="upload-container"
                                         action="/api/index.php/files/save"
@@ -279,6 +279,11 @@
 
 
                 },
+                rules: {
+                    type: [
+                        { required: true, message: '请选择产品品类', trigger: 'change' }
+                    ],
+                },
                 deviceAddTypeList : []
             }
         },
@@ -368,28 +373,39 @@
                 this.$router.push({path: '/typeManagement/deviceManager'});
             },
             confirmDevice(){
-                this.form.id_type = this.form.id ? 2 : 1;
-                this.form.id = this.form.id ? this.form.id : this.form.type;
-                console.log(this.form.id_type);
-                fetch({
-                    url: '/device/deviceAdd',
-                    method: 'post',
-                    data: this.form
-                }).then(res=>{
-                    this.$message({
-                        type: 'success',
-                        message: '新增设备成功！'
-                    });
-                    setTimeout(()=>{
-                        this.$router.push({path: '/typeManagement/deviceManager'});
-                    },2000);
-                }).catch(error=>{
-                    this.$message({
-                        type: 'error',
-                        message: error.msg
-                    });
-                    this.form.id = '';
-                })
+                this.$refs['ruleForm'].validate((valid) => {
+                        console.log(valid);
+                        if (valid) {
+                            this.form.id_type = this.form.id ? 2 : 1;
+                            this.form.id = this.form.id ? this.form.id : this.form.type;
+                            console.log(this.form.id_type);
+                            fetch({
+                                url: '/device/deviceAdd',
+                                method: 'post',
+                                data: this.form
+                            }).then(res=>{
+                                this.$message({
+                                    type: 'success',
+                                    message: '新增设备成功！'
+                                });
+                                setTimeout(()=>{
+                                    this.$router.push({path: '/typeManagement/deviceManager'});
+                                },2000);
+                            }).catch(error=>{
+                                this.$message({
+                                    type: 'error',
+                                    message: error.msg
+                                });
+                                this.form.id = '';
+                            })
+                        }else{
+                            this.$message({
+                                type: 'error',
+                                message: error.msg
+                            });
+                        }
+                });
+
             }
         },
         components:{

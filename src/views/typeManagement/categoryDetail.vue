@@ -10,18 +10,18 @@
                 <el-tabs type="border-card" @tab-click="handleClick">
                     <el-tab-pane label="基本信息">
                         <el-col :span="24">
-                            <el-form ref="form" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
-                                <el-form-item label="子品类名称" label-width="120px">
+                            <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
+                                <el-form-item label="子品类名称" label-width="120px" prop="name">
                                     <el-col :span="12">
                                         <el-input v-model="form.name" :span="6" :disabled="!isEdit"></el-input>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="子品类英文名" label-width="120px">
+                                <el-form-item label="子品类英文名" label-width="120px" prop="name_e">
                                     <el-col :span="12">
                                         <el-input v-model="form.name_e" :span="6" :disabled="!isEdit"></el-input>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="所属品类" label-width="120px" v-if="isEdit">
+                                <el-form-item label="所属品类" label-width="120px" v-if="isEdit" prop="parent_type_id">
                                     <el-col :span="12">
                                         <el-select v-model="form.parent_type_id" placeholder="所属品类" style="width: 100%;"
                                                    :disabled="!isEdit">
@@ -34,13 +34,13 @@
                                         </el-select>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="所属品类" label-width="120px" v-else="isEdit">
+                                <el-form-item label="所属品类" label-width="120px" v-else="isEdit" prop="parent_type_name">
                                     <el-col :span="12">
                                         <el-input v-model="form.parent_type_name" :span="6"
                                                   :disabled="!isEdit"></el-input>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="品类图标" label-width="120px" v-if="isLoadData">
+                                <el-form-item label="品类图标" label-width="120px" v-if="isLoadData" >
                                     <el-col :span="12">
                                         <div class="fileuploadItem">
                                             <el-upload
@@ -132,6 +132,7 @@
                                 <addTechnical :typeid="typeid" v-on:get-data="getTech" :token="token"
                                               v-show="isEdit"></addTechnical>
                                 <el-table
+                                        class="technicalTabel"
                                         :data="technical_wifi"
                                         border
                                         stripe
@@ -238,6 +239,9 @@
 
 </template>
 <style>
+    .el-form-item__error{
+        padding: 5px 15px;
+    }
     .attribt_table .el-table__body-wrapper {
         overflow-y: scroll;
     }
@@ -286,7 +290,9 @@
         white-space: nowrap;
         -o-text-overflow: ellipsis;
     }
-
+    .technicalTabel .cell .cell-td:last-child{
+        border-bottom: none;
+    }
     /*.cell-td.no-border-bottom{*/
     /*border-bottom: none;*/
     /*}*/
@@ -436,7 +442,7 @@
                 editText: '编辑品类信息',
                 form: {
                     name: '',
-                    english: '',
+                    name_e: '',
                     dialogImageUrl: '',
                     dialogVisible: false,
                     imageUrl: [
@@ -452,6 +458,32 @@
                         {
                             "file_url": ''
                         }
+                    ],
+
+                },
+                rules: {
+                    name: [
+                        { required: true, message: '请输入子品类名称', trigger: 'blur' },
+                        { max: 32, message: '子品类名称不能超过32个字符', trigger: 'blur' },
+                        { validator(rule, value, callback){
+                            if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(value)) {
+                                callback(new Error('请输入正确的子品类英文名称'));
+                            }
+                            callback();
+                        } }
+                    ],
+                    name_e : [
+                        { required: true, message: '请输入子品类英文名称', trigger: 'blur' },
+                        { max: 32, message: '子品类英文名称不能超过32个字符', trigger: 'blur' },
+                        { validator(rule, value, callback){
+                            if (!/^[a-zA-Z\d-_/]+$/.test(value)) {
+                                callback(new Error('请输入正确的子品类英文名称'));
+                            }
+                            callback();
+                        } }
+                    ],
+                    parent_type_id: [
+                        { required: true, message: '请选择所属品类', trigger: 'change' }
                     ],
 
                 },
@@ -709,28 +741,40 @@
 
             //保存品类信息事件处理
             saveGoryInfo(){
-                this.isEdit = false;
-                this.editText = '编辑品类信息';
-                this.form.is_high_frequency = this.form.is_high_frequency == true ? 1 : 0;
-                this.form.is_relate_switch = this.form.is_relate_switch == true ? 1 : 0;
-                fetch({
-                    url: '/producttype/edit',
-                    method: 'post',
-                    data: this.form,
-                }).then(res => {
-                    this.isEdit = false;
-                    setTimeout(() => {
+                this.$refs['ruleForm'].validate((valid) => {
+                    console.log(valid);
+                    if (valid) {
+                        this.isEdit = false;
+                        this.editText = '编辑品类信息';
+                        this.form.is_high_frequency = this.form.is_high_frequency == true ? 1 : 0;
+                        this.form.is_relate_switch = this.form.is_relate_switch == true ? 1 : 0;
+                        fetch({
+                            url: '/producttype/edit',
+                            method: 'post',
+                            data: this.form,
+                        }).then(res => {
+                            this.isEdit = false;
+                            setTimeout(() => {
+                                this.$message({
+                                    type: 'success',
+                                    message: '保存成功!'
+                                });
+                            }, 1000);
+                        }).catch(res => {
+                            this.$message({
+                                type: 'error',
+                                message: res.msg
+                            });
+                        })
+                    } else {
                         this.$message({
-                            type: 'success',
-                            message: '保存成功!'
+                            type: 'error',
+                            message: '编辑信息失败!'
                         });
-                    }, 1000);
-                }).catch(res => {
-                    this.$message({
-                        type: 'error',
-                        message: res.msg
-                    });
-                })
+                        return false;
+                    }
+                });
+
             },
 
             //处理删除事件

@@ -46,7 +46,7 @@
                 width="30%">
             <span class="danger" style="display: inline-block;margin-bottom: 20px;">该设置影响所有设备的添加方式，请确认后操作</span>
             <div v-for="item in addFucForm">
-                <el-checkbox v-model="item.status">开启客户端添加设备功能</el-checkbox>
+                <el-checkbox v-model="item.status">{{item.name}}</el-checkbox>
             </div>
             <!--<div><el-checkbox v-model="addFucForm.isAllowChooseModel">添加设备时允许选择品牌型号</el-checkbox></div>-->
             <span slot="footer" class="dialog-footer">

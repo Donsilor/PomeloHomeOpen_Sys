@@ -55,7 +55,7 @@
                                                 type="textarea"
                                                 :autosize="{ minRows: 3, maxRows: 3}"
                                                 placeholder="请输入其他说明"
-                                                v-model="form.base_des" :disabled="!isEdit">
+                                                v-model="form.base_des" :disabled="!isEdit" :maxlength="64">
                                         </el-input>
                                     </el-col>
                                 </el-form-item>
@@ -105,7 +105,7 @@
                                                         :autosize="{ minRows: 3, maxRows: 3}"
                                                         placeholder="文字限制64个字符内"
                                                         v-model="form.add1_tips"
-                                                        class="add1TextArea" :disabled="!isEdit">
+                                                        class="add1TextArea" :disabled="!isEdit" :maxlength="64">
                                                 </el-input>
                                             </el-form-item>
                                         </div>
@@ -114,7 +114,7 @@
                                         <div class="marT20 flex">
                                             <el-form-item label="按钮文字" label-width="80px" prop="add1_button">
                                             <!--<div class="desTitle">按钮文字</div>-->
-                                                <el-input v-model="form.add1_button" :disabled="!isEdit"></el-input>
+                                                <el-input v-model="form.add1_button" :disabled="!isEdit" :maxlength="8"></el-input>
                                             </el-form-item>
                                         </div>
                                     </el-col>
@@ -149,7 +149,8 @@
                                                         placeholder="文字限制64个字符内"
                                                         v-model="form.add2_tips"
                                                         class="add1TextArea"
-                                                        :disabled="!isEdit">
+                                                        :disabled="!isEdit"
+                                                        :maxlength="64">
                                                 </el-input>
                                             </el-form-item>
                                         </div>
@@ -183,7 +184,8 @@
                                                 :autosize="{ minRows: 3, maxRows: 3}"
                                                 placeholder="请输入其他说明"
                                                 v-model="form.reset_tips"
-                                                :disabled="!isEdit">
+                                                :disabled="!isEdit"
+                                                :maxlength="64">
                                         </el-input>
                                     </el-col>
                                 </el-form-item>

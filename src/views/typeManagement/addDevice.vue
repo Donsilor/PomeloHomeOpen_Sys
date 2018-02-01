@@ -79,7 +79,7 @@
                                     type="textarea"
                                     :autosize="{ minRows: 3, maxRows: 3}"
                                     placeholder="请输入其他说明"
-                                    v-model="form.base_des" :maxlength="10">
+                                    v-model="form.base_des" :maxlength="64">
                             </el-input>
                         </el-col>
                     </el-form-item>
@@ -122,14 +122,15 @@
                                             :autosize="{ minRows: 3, maxRows: 3}"
                                             placeholder="文字限制64个字符内"
                                             v-model="form.add1_tips"
-                                            class="add1TextArea">
+                                            class="add1TextArea"
+                                            :maxlength="64">
                                     </el-input>
                                 </el-form-item>
                             </div>
                             <div class="marT20 flex">
                                 <el-form-item label="按钮文字" label-width="80px" prop="add1_button">
                                 <!--<div class="desTitle">按钮文字</div>-->
-                                    <el-input v-model="form.add1_button" placeholder="文字最好控制在8个字内"></el-input>
+                                    <el-input v-model="form.add1_button" placeholder="文字最好控制在8个字内" :maxlength="8"></el-input>
                                 </el-form-item>
                             </div>
                         </el-col>
@@ -160,7 +161,7 @@
                                             :autosize="{ minRows: 3, maxRows: 3}"
                                             placeholder="文字限制64个字符内"
                                             v-model="form.add2_tips"
-                                            class="add1TextArea">
+                                            class="add1TextArea" :maxlength="64">
                                     </el-input>
                                 </el-form-item>
                             </div>
@@ -191,7 +192,7 @@
                                     type="textarea"
                                     :autosize="{ minRows: 3, maxRows: 3}"
                                     placeholder="文字限制64个字符内"
-                                    v-model="form.reset_tips">
+                                    v-model="form.reset_tips" :maxlength="64">
                             </el-input>
                         </el-col>
                     </el-form-item>
@@ -357,15 +358,20 @@
             changeType(val){
                 console.log(val);
                 this.business = this.lists.find((x) => x.type_id === val).business;
+                this.form.business = '';
+                this.form.brand = '';
+                this.form.id = '';
                 console.log(this.business);
             },
             changeBusiness(val){
                 this.brand = this.business.find((x) => x.business_id === val).brand;
+                this.form.brand = '';
+                this.form.id = '';
                 console.log(this.brand);
             },
             changeBrand(val){
-                console.log(val);
                 this.model = this.brand[0].model;
+                this.form.id = '';
                 console.log(this.model);
             },
             handleAvatarSuccess(res, file) {

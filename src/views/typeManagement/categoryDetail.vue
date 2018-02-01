@@ -779,7 +779,7 @@
 
             //处理删除事件
             handleDelEvent(){
-                this.$confirm('是否确认删除此品类，删除不能恢复。', '提示', {
+                this.$confirm('删除后，厂商将无法再进行该品类的开发合作，确认请继续', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'

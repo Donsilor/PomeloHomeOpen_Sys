@@ -79,7 +79,7 @@
                                     type="textarea"
                                     :autosize="{ minRows: 3, maxRows: 3}"
                                     placeholder="请输入其他说明"
-                                    v-model="form.base_des">
+                                    v-model="form.base_des" :maxlength="10">
                             </el-input>
                         </el-col>
                     </el-form-item>

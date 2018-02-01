@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container calendar-list-container">
+    <div class="app-container calendar-list-container addDevice">
         <el-row :gutter="30">
             <el-col :span="24">
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
@@ -66,7 +66,7 @@
                                         :show-file-list="false"
                                         :on-success="handleAvatarSuccess"
                                         :before-upload="beforeAvatarUpload"
-                                        accept="image/png"
+                                        accept="image/png,image/jpeg,image/jpg"
                                         :data="form.base_img">
                                     <el-button size="middle" type="primary">选择文件</el-button>
                                 </el-upload>
@@ -84,7 +84,7 @@
                         </el-col>
                     </el-form-item>
                     <div class="title">添加方式</div>
-                    <el-form-item label="设备添加方式" label-width="120px">
+                    <el-form-item label="设备添加方式" label-width="120px" prop="add_type">
                         <el-col :span="12">
                             <el-select v-model="form.add_type" placeholder="请选择添加方式" style="width: 100%;">
                                 <el-option
@@ -98,66 +98,76 @@
                     </el-form-item>
                     <el-form-item label="第一步" label-width="120px">
                         <el-col :span="12">
-                            <div class="flex">
-                                <div class="desTitle">上传图片</div>
-                                <el-input v-model="form.add1_img.filename" readonly placeholder="图片支持jpeg、jpg、png格式，大小5M内"></el-input>
-                                <el-upload
-                                        class="upload-container"
-                                        action="/api/index.php/files/save"
-                                        :show-file-list="false"
-                                        :on-success="handleAddImg1Success"
-                                        :before-upload="beforeAvatarUpload"
-                                        accept="image/png"
-                                        :data="form.add1_img">
-                                    <el-button size="middle" type="primary">选择文件</el-button>
-                                </el-upload>
+                                <el-form-item label="上传图片" label-width="80px" prop="add1_img.filename">
+                                    <!--<div class="desTitle">上传图片</div>-->
+                                    <div class="flex">
+                                        <el-input v-model="form.add1_img.filename" readonly placeholder="图片支持jpeg、jpg、png格式，大小5M内"></el-input>
+                                        <el-upload
+                                                class="upload-container"
+                                                action="/api/index.php/files/save"
+                                                :show-file-list="false"
+                                                :on-success="handleAddImg1Success"
+                                                :before-upload="beforeAvatarUpload"
+                                                accept="image/png,image/jpeg,image/jpg"
+                                                :data="form.add1_img">
+                                            <el-button size="middle" type="primary">选择文件</el-button>
+                                        </el-upload>
+                                    </div>
+                                </el-form-item>
+                            <div class="marT20">
+                                <!--<div class="desTitle" style="vertical-align: top;">提示文字</div>-->
+                                <el-form-item label="提示文字" label-width="80px" prop="add1_tips">
+                                    <el-input
+                                            type="textarea"
+                                            :autosize="{ minRows: 3, maxRows: 3}"
+                                            placeholder="文字限制64个字符内"
+                                            v-model="form.add1_tips"
+                                            class="add1TextArea">
+                                    </el-input>
+                                </el-form-item>
                             </div>
                             <div class="marT20 flex">
-                                <div class="desTitle" style="vertical-align: top;">提示文字</div>
-                                <el-input
-                                        type="textarea"
-                                        :autosize="{ minRows: 3, maxRows: 3}"
-                                        placeholder="文字限制64个字符内"
-                                        v-model="form.add1_tips"
-                                        class="add1TextArea">
-                                </el-input>
-                            </div>
-                            <div class="marT20 flex">
-                                <div class="desTitle">按钮文字</div>
-                                <el-input v-model="form.add1_button" placeholder="文字最好控制在8个字内"></el-input>
+                                <el-form-item label="按钮文字" label-width="80px" prop="add1_button">
+                                <!--<div class="desTitle">按钮文字</div>-->
+                                    <el-input v-model="form.add1_button" placeholder="文字最好控制在8个字内"></el-input>
+                                </el-form-item>
                             </div>
                         </el-col>
                     </el-form-item>
                     <el-form-item label="第二步" label-width="120px">
                         <el-col :span="12">
-                            <div class="flex">
-                                <div class="desTitle">上传图片</div>
-                                <el-input v-model="form.add2_img.filename" readonly placeholder="图片支持jpeg、jpg、png格式，大小5M内"></el-input>
-                                <el-upload
-                                        class="upload-container"
-                                        action="/api/index.php/files/save"
-                                        :show-file-list="false"
-                                        :on-success="handleAddImg2Success"
-                                        :before-upload="beforeAvatarUpload"
-                                        accept="image/png"
-                                        :data="form.add2_img">
-                                    <el-button size="middle" type="primary">选择文件</el-button>
-                                </el-upload>
-                            </div>
-                            <div class="marT20 flex">
-                                <div class="desTitle" style="vertical-align: top;">提示文字</div>
-                                <el-input
-                                        type="textarea"
-                                        :autosize="{ minRows: 3, maxRows: 3}"
-                                        placeholder="文字限制64个字符内"
-                                        v-model="form.add2_tips"
-                                        class="add1TextArea">
-                                </el-input>
+                            <el-form-item label="上传图片" label-width="80px" prop="add2_img.filename">
+                                <div class="flex">
+                                    <!--<div class="desTitle">上传图片</div>-->
+                                    <el-input v-model="form.add2_img.filename" readonly placeholder="图片支持jpeg、jpg、png格式，大小5M内"></el-input>
+                                    <el-upload
+                                            class="upload-container"
+                                            action="/api/index.php/files/save"
+                                            :show-file-list="false"
+                                            :on-success="handleAddImg2Success"
+                                            :before-upload="beforeAvatarUpload"
+                                            accept="image/png,image/jpeg,image/jpg"
+                                            :data="form.add2_img">
+                                        <el-button size="middle" type="primary">选择文件</el-button>
+                                    </el-upload>
+                                </div>
+                            </el-form-item>
+                            <div class="marT20">
+                                <!--<div class="desTitle" style="vertical-align: top;">提示文字</div>-->
+                                <el-form-item label="提示文字" label-width="80px" prop="add2_tips">
+                                    <el-input
+                                            type="textarea"
+                                            :autosize="{ minRows: 3, maxRows: 3}"
+                                            placeholder="文字限制64个字符内"
+                                            v-model="form.add2_tips"
+                                            class="add1TextArea">
+                                    </el-input>
+                                </el-form-item>
                             </div>
                         </el-col>
                     </el-form-item>
                     <div class="title">重置方式</div>
-                    <el-form-item label="上传图片" label-width="120px" prop="resetImg">
+                    <el-form-item label="上传图片" label-width="120px" prop="reset_img.filename">
                         <el-col :span="12">
                             <div class="flex">
                                 <el-input v-model="form.reset_img.filename" readonly placeholder="图片支持jpeg、jpg、png格式，大小5M内"></el-input>
@@ -167,7 +177,7 @@
                                         :show-file-list="false"
                                         :on-success="handleAvatarSuccess"
                                         :before-upload="beforeAvatarUpload"
-                                        accept="image/png"
+                                        accept="image/png,image/jpeg,image/jpg"
                                         :data="form.reset_img">
                                     <el-button size="middle" type="primary">选择文件</el-button>
                                 </el-upload>
@@ -175,12 +185,12 @@
 
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="提示文字" label-width="120px">
+                    <el-form-item label="提示文字" label-width="120px" prop="reset_tips">
                         <el-col :span="12">
                             <el-input
                                     type="textarea"
                                     :autosize="{ minRows: 3, maxRows: 3}"
-                                    placeholder="请输入其他说明"
+                                    placeholder="文字限制64个字符内"
                                     v-model="form.reset_tips">
                             </el-input>
                         </el-col>
@@ -190,34 +200,40 @@
         </el-row>
     </div>
 </template>
-<style scoped>
-    .title{
-        height: 30px;
-        border-bottom: 1px #ededed solid;
-        width: 80%;
-        margin-bottom: 30px;
-    }
-    .upload-container{
-        float: right;
-        margin-left: 20px;
-    }
-    .flex{
-        display: flex;
-    }
+<style lang="scss">
+    .addDevice{
+        .el-form-item__error{
+            padding: 5px 15px!important;
+        }
+        .title{
+            height: 30px;
+            border-bottom: 1px #ededed solid;
+            width: 80%;
+            margin-bottom: 30px;
+        }
+        .upload-container{
+            float: right;
+            margin-left: 20px;
+        }
+        .flex{
+            display: flex;
+        }
 
-    .desTitle{
-        display: inline-block;
-        padding-right: 15px;
-        color: #5a5e66;
-        min-width: 81px;
-    }
-    .add1TextArea{
-        display: inline-block;
-        vertical-align: bottom;
-        margin-top: 0px;
-    }
-    .marT20{
-        margin-top: 20px;
+        .desTitle{
+            display: inline-block;
+            padding-right: 15px;
+            color: #5a5e66;
+            min-width: 81px;
+        }
+        .add1TextArea{
+            display: inline-block;
+            vertical-align: bottom;
+            margin-top: 0px;
+        }
+        .marT20{
+            margin-top: 20px;
+        }
+
     }
     .app-container{
         padding: 20px 40px;
@@ -265,15 +281,19 @@
                     add1_button : '',
                     add1_img : {
                         'type' : '24',
-                        'token' : getToken()
+                        'token' : getToken(),
+                        'filename' : ''
                     },
                     add2_img : {
                         'type' : '24',
-                        'token' : getToken()
+                        'token' : getToken(),
+                        'filename' : ''
                     },
+                    add2_tips : '',
                     reset_img : {
                         'type' : '25',
-                        'token' : getToken()
+                        'token' : getToken(),
+                        'filename' : ''
                     },
                     reset_tips :''
 
@@ -282,6 +302,52 @@
                 rules: {
                     type: [
                         { required: true, message: '请选择产品品类', trigger: 'change' }
+                    ],
+                    add_type: [
+                        { required: true, message: '请选择设备添加方式', trigger: 'change' }
+                    ],
+                    'add1_img.filename': [
+                        {validator(rule, value, callback, source, options) {
+                            var errors = [];
+                            if (!value) {
+                                callback('添加方式的图片不能为空');
+                            }
+                            callback(errors);
+                        }}
+                    ],
+                    add1_tips: [
+                        { required: true, message: '请输入提示文字', trigger: 'blur' },
+                        { max: 64, message: '提示文字不能超过64个字符', trigger: 'blur' },
+                    ],
+                    add1_button: [
+                        { required: true, message: '请输入按钮文字', trigger: 'blur' },
+                        { max: 8, message: '按钮文字不能超过8个字符', trigger: 'blur' },
+                    ],
+                    'add2_img.filename': [
+                        {validator(rule, value, callback, source, options) {
+                            var errors = [];
+                            if (!value) {
+                                callback('添加方式的图片不能为空');
+                            }
+                            callback(errors);
+                        }}
+                    ],
+                    add2_tips: [
+                        { required: true, message: '请输入提示文字', trigger: 'blur' },
+                        { max: 64, message: '提示文字不能超过64个字符', trigger: 'blur' },
+                    ],
+                    'reset_img.filename': [
+                        {validator(rule, value, callback, source, options) {
+                            var errors = [];
+                            if (!value) {
+                                callback('重置方式的图片不能为空');
+                            }
+                            callback(errors);
+                        }}
+                    ],
+                    reset_tips: [
+                        { required: true, message: '请输入重置提示文字', trigger: 'blur' },
+                        { max: 64, message: '重置提示文字不能超过64个字符', trigger: 'blur' },
                     ],
                 },
                 deviceAddTypeList : []
@@ -306,7 +372,7 @@
                 let data = res.result;
                 switch (data.type){
                     case 23 : this.form.base_img = data;this.form.base_img.token = this.token;break;
-                    case 25 : this.form.reset_img = data;this.form.reset_img.token = this.token;
+                    case 25 : this.form.reset_img = data;this.form.reset_img.token = this.token;break;
                 }
                 this.$message({
                     type: 'success',
@@ -331,16 +397,18 @@
             },
             beforeAvatarUpload(file) {
                 console.log(file);
-                const filter = file.type === 'image/png';
+                const isFormat = file.type === 'image/jpeg' || 'image/jpg' || 'image/png';
                 const isLt5M = file.size / 1024 / 1024 < 5;
 
-                if (!filter) {
-                    this.$message.error('请上传5M大小内PNG格式的文件');
+                if (!isFormat) {
+                    this.$message.error('请上传5M大小内JEPG、JPG、PNG格式的文件');
+                    return false;
                 }
                 if (!isLt5M) {
-                    this.$message.error('请上传5M大小内PNG格式的文件');
+                    this.$message.error('请上传5M大小内JEPG、JPG、PNG格式的文件');
+                    return false;
                 }
-                return filter && isLt5M;
+//                return filter && isLt5M;
             },
             //获取下拉选择列表
             getDeviceSelect(){
@@ -401,7 +469,7 @@
                         }else{
                             this.$message({
                                 type: 'error',
-                                message: error.msg
+                                message: '请完整填写表单再提交！'
                             });
                         }
                 });

@@ -7,7 +7,7 @@
                 <el-button type="danger" @click="handleDelEvent" v-show="!isEdit">删除该设备</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
-                <el-form ref="form" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
+                <el-form ref="ruleForm" :rules="rules" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
                     <el-tabs type="border-card">
                         <el-tab-pane label="基本信息">
                             <el-col :span="24">
@@ -64,7 +64,7 @@
                         </el-tab-pane>
                         <el-tab-pane label="添加方式">
                             <el-col :span="24">
-                                <el-form-item label="设备添加方式" label-width="120px">
+                                <el-form-item label="设备添加方式" label-width="120px" prop="add_type">
                                     <el-col :span="13">
                                         <el-select v-model="form.add_type" placeholder="请选择添加方式" style="width: 100%;" :disabled="!isEdit">
                                             <el-option
@@ -78,70 +78,80 @@
                                 </el-form-item>
                                 <el-form-item label="第一步" label-width="120px">
                                     <el-col :span="13">
-                                        <div class="flex">
-                                            <div class="desTitle">上传图片</div>
-                                            <el-input v-model="form.add1_img.filename" readonly v-if="form.add1_img" :disabled="!isEdit"></el-input>
-                                            <el-upload
-                                                    class="upload-container"
-                                                    action="/api/index.php/files/save"
-                                                    :show-file-list="false"
-                                                    :on-success="handleAddImg1Success"
-                                                    :before-upload="beforeAvatarUpload"
-                                                    accept="image/png"
-                                                    :data="form.add1_img"
-                                                    :disabled="!isEdit">
-                                                <el-button size="middle" type="primary">选择文件</el-button>
-                                            </el-upload>
+                                        <el-form-item label="上传图片" label-width="80px" prop="add1_img.filename" v-if="form.add1_img">
+                                            <div class="flex">
+                                                <!--<div class="desTitle">上传图片</div>-->
+                                                <el-input v-model="form.add1_img.filename" readonly  :disabled="!isEdit"></el-input>
+                                                <el-upload
+                                                        class="upload-container"
+                                                        action="/api/index.php/files/save"
+                                                        :show-file-list="false"
+                                                        :on-success="handleAddImg1Success"
+                                                        :before-upload="beforeAvatarUpload"
+                                                        accept="image/png"
+                                                        :data="form.add1_img"
+                                                        :disabled="!isEdit">
+                                                    <el-button size="middle" type="primary">选择文件</el-button>
+                                                </el-upload>
+                                            </div>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="13">
+                                        <div class="marT20">
+                                            <el-form-item label="提示文字" label-width="80px" prop="add1_tips">
+                                            <!--<div class="desTitle" style="vertical-align: top;">提示文字</div>-->
+                                                <el-input
+                                                        type="textarea"
+                                                        :autosize="{ minRows: 3, maxRows: 3}"
+                                                        placeholder="文字限制64个字符内"
+                                                        v-model="form.add1_tips"
+                                                        class="add1TextArea" :disabled="!isEdit">
+                                                </el-input>
+                                            </el-form-item>
                                         </div>
                                     </el-col>
                                     <el-col :span="13">
                                         <div class="marT20 flex">
-                                            <div class="desTitle" style="vertical-align: top;">提示文字</div>
-                                            <el-input
-                                                    type="textarea"
-                                                    :autosize="{ minRows: 3, maxRows: 3}"
-                                                    placeholder="文字限制64个字符内"
-                                                    v-model="form.add1_tips"
-                                                    class="add1TextArea" :disabled="!isEdit">
-                                            </el-input>
-                                        </div>
-                                    </el-col>
-                                    <el-col :span="13">
-                                        <div class="marT20 flex">
-                                            <div class="desTitle">按钮文字</div>
-                                            <el-input v-model="form.add1_button" :disabled="!isEdit"></el-input>
+                                            <el-form-item label="按钮文字" label-width="80px" prop="add1_tips">
+                                            <!--<div class="desTitle">按钮文字</div>-->
+                                                <el-input v-model="form.add1_button" :disabled="!isEdit"></el-input>
+                                            </el-form-item>
                                         </div>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="第二步" label-width="120px">
                                     <el-col :span="13">
-                                        <div class="flex">
-                                            <div class="desTitle">上传图片</div>
-                                            <el-input v-model="form.add2_img.filename"  readonly v-if="form.add2_img" :disabled="!isEdit"></el-input>
-                                            <el-upload
-                                                    class="upload-container"
-                                                    action="/api/index.php/files/save"
-                                                    :show-file-list="false"
-                                                    :on-success="handleAddImg2Success"
-                                                    :before-upload="beforeAvatarUpload"
-                                                    accept="image/png"
-                                                    :data="form.add2_img"
-                                                    :disabled="!isEdit">
-                                                <el-button size="middle" type="primary">选择文件</el-button>
-                                            </el-upload>
-                                        </div>
+                                        <el-form-item label="上传图片" label-width="80px" prop="add2_img.filename" v-if="form.add2_img">
+                                            <div class="flex">
+                                                <!--<div class="desTitle">上传图片</div>-->
+                                                <el-input v-model="form.add2_img.filename"  readonly  :disabled="!isEdit"></el-input>
+                                                <el-upload
+                                                        class="upload-container"
+                                                        action="/api/index.php/files/save"
+                                                        :show-file-list="false"
+                                                        :on-success="handleAddImg2Success"
+                                                        :before-upload="beforeAvatarUpload"
+                                                        accept="image/png"
+                                                        :data="form.add2_img"
+                                                        :disabled="!isEdit">
+                                                    <el-button size="middle" type="primary">选择文件</el-button>
+                                                </el-upload>
+                                            </div>
+                                        </el-form-item>
                                     </el-col>
                                     <el-col :span="13">
-                                        <div class="marT20 flex">
-                                            <div class="desTitle" style="vertical-align: top;">提示文字</div>
-                                            <el-input
-                                                    type="textarea"
-                                                    :autosize="{ minRows: 3, maxRows: 3}"
-                                                    placeholder="文字限制64个字符内"
-                                                    v-model="form.add2_tips"
-                                                    class="add1TextArea"
-                                                    :disabled="!isEdit">
-                                            </el-input>
+                                        <div class="marT20">
+                                            <!--<div class="desTitle" style="vertical-align: top;">提示文字</div>-->
+                                            <el-form-item label="提示文字" label-width="80px" prop="add2_tips">
+                                                <el-input
+                                                        type="textarea"
+                                                        :autosize="{ minRows: 3, maxRows: 3}"
+                                                        placeholder="文字限制64个字符内"
+                                                        v-model="form.add2_tips"
+                                                        class="add1TextArea"
+                                                        :disabled="!isEdit">
+                                                </el-input>
+                                            </el-form-item>
                                         </div>
                                     </el-col>
                                 </el-form-item>
@@ -149,10 +159,10 @@
                         </el-tab-pane>
                         <el-tab-pane label="重置方式">
                             <el-col :span="24">
-                                <el-form-item label="上传图片" label-width="120px">
-                                    <el-col :span="12">
+                                <el-form-item label="上传图片" label-width="120px" prop="reset_img.filename" v-if="form.reset_img">
+                                    <el-col :span="13">
                                         <div class="flex">
-                                            <el-input v-model="form.reset_img.filename" readonly v-if="form.reset_img" :disabled="!isEdit"></el-input>
+                                            <el-input v-model="form.reset_img.filename" readonly  :disabled="!isEdit"></el-input>
                                             <el-upload
                                                     class="upload-container"
                                                     action="/api/index.php/files/save"
@@ -164,11 +174,10 @@
                                                 <el-button size="middle" type="primary">选择文件</el-button>
                                             </el-upload>
                                         </div>
-
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="提示文字" label-width="120px">
-                                    <el-col :span="12">
+                                <el-form-item label="提示文字" label-width="120px"  prop="reset_tips">
+                                    <el-col :span="13">
                                         <el-input
                                                 type="textarea"
                                                 :autosize="{ minRows: 3, maxRows: 3}"
@@ -246,7 +255,58 @@
                 form:{
                 },
                 addType : '',
-                deviceAddTypeList : []
+                deviceAddTypeList : [],
+                rules: {
+                    type: [
+                        { required: true, message: '请选择产品品类', trigger: 'change' }
+                    ],
+                    add_type: [
+                        { required: true, message: '请选择设备添加方式', trigger: 'change' }
+                    ],
+                    'add1_img.filename': [
+                        {validator(rule, value, callback, source, options) {
+                            var errors = [];
+                            if (!value) {
+                                callback('添加方式的图片不能为空');
+                            }
+                            callback(errors);
+                        }}
+                    ],
+                    add1_tips: [
+                        { required: true, message: '请输入提示文字', trigger: 'blur' },
+                        { max: 64, message: '提示文字不能超过64个字符', trigger: 'blur' },
+                    ],
+                    add1_button: [
+                        { required: true, message: '请输入按钮文字', trigger: 'blur' },
+                        { max: 8, message: '按钮文字不能超过8个字符', trigger: 'blur' },
+                    ],
+                    'add2_img.filename': [
+                        {validator(rule, value, callback, source, options) {
+                            var errors = [];
+                            if (!value) {
+                                callback('添加方式的图片不能为空');
+                            }
+                            callback(errors);
+                        }}
+                    ],
+                    add2_tips: [
+                        { required: true, message: '请输入提示文字', trigger: 'blur' },
+                        { max: 64, message: '提示文字不能超过64个字符', trigger: 'blur' },
+                    ],
+                    'reset_img.filename': [
+                        {validator(rule, value, callback, source, options) {
+                            var errors = [];
+                            if (!value) {
+                                callback('添加方式的图片不能为空');
+                            }
+                            callback(errors);
+                        }}
+                    ],
+                    reset_tips: [
+                        { required: true, message: '请输入重置提示文字', trigger: 'blur' },
+                        { max: 64, message: '重置提示文字不能超过64个字符', trigger: 'blur' },
+                    ],
+                }
             }
         },
         methods: {
@@ -369,27 +429,37 @@
 
             //保存品类信息事件处理
             saveDeviceInfo(){
-                this.editText = '编辑设备信息';
-                this.form.token = this.token;
-                fetch({
-                    url: '/device/deviceEdit',
-                    method: 'post',
-                    data: this.form,
-                }).then(res=>{
-                    this.isEdit = false;
-                    this.$message({
-                        type: 'success',
-                        message: '编辑设备信息成功!'
-                    });
-                    setTimeout(()=>{
-                        this.$router.push({path: '/typeManagement/deviceManager'});
-                    },2000);
-                }).catch(res=>{
-                    this.$message({
-                        type: 'error',
-                        message: res.msg
-                    });
-                })
+                this.$refs['ruleForm'].validate((valid) => {
+                    if(valid){
+                        this.editText = '编辑设备信息';
+                        this.form.token = this.token;
+                        fetch({
+                            url: '/device/deviceEdit',
+                            method: 'post',
+                            data: this.form,
+                        }).then(res=>{
+                            this.isEdit = false;
+                            this.$message({
+                                type: 'success',
+                                message: '编辑设备信息成功!'
+                            });
+                            setTimeout(()=>{
+                                this.$router.push({path: '/typeManagement/deviceManager'});
+                            },2000);
+                        }).catch(res=>{
+                            this.$message({
+                                type: 'error',
+                                message: res.msg
+                            });
+                        })
+                    }else{
+                        this.$message({
+                            type: 'error',
+                            message:'请把表单填写完整再提交修改！'
+                        });
+                    }
+                });
+
             },
 
             //处理删除事件

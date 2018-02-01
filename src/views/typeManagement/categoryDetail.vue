@@ -465,22 +465,22 @@
                     name: [
                         { required: true, message: '请输入子品类名称', trigger: 'blur' },
                         { max: 32, message: '子品类名称不能超过32个字符', trigger: 'blur' },
-                        { validator(rule, value, callback){
-                            if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(value)) {
-                                callback(new Error('请输入正确的子品类英文名称'));
-                            }
-                            callback();
-                        } }
+//                        { validator(rule, value, callback){
+//                            if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(value)) {
+//                                callback(new Error('请输入正确的子品类英文名称'));
+//                            }
+//                            callback();
+//                        } }
                     ],
                     name_e : [
                         { required: true, message: '请输入子品类英文名称', trigger: 'blur' },
                         { max: 32, message: '子品类英文名称不能超过32个字符', trigger: 'blur' },
-                        { validator(rule, value, callback){
-                            if (!/^[a-zA-Z\d-_/]+$/.test(value)) {
-                                callback(new Error('请输入正确的子品类英文名称'));
-                            }
-                            callback();
-                        } }
+//                        { validator(rule, value, callback){
+//                            if (!/^[a-zA-Z\d-_/]+$/.test(value)) {
+//                                callback(new Error('请输入正确的子品类英文名称'));
+//                            }
+//                            callback();
+//                        } }
                     ],
                     parent_type_id: [
                         { required: true, message: '请选择所属品类', trigger: 'change' }

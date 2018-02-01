@@ -112,7 +112,7 @@
                                     </el-col>
                                     <el-col :span="13">
                                         <div class="marT20 flex">
-                                            <el-form-item label="按钮文字" label-width="80px" prop="add1_tips">
+                                            <el-form-item label="按钮文字" label-width="80px" prop="add1_button">
                                             <!--<div class="desTitle">按钮文字</div>-->
                                                 <el-input v-model="form.add1_button" :disabled="!isEdit"></el-input>
                                             </el-form-item>

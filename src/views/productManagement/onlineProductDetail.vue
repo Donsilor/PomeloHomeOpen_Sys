@@ -24,6 +24,14 @@
                         <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.model}}</el-col>
                     </el-row>
                     <el-row class="card-row">
+                        <el-col :span="3" class="card-span-left">渠道商</el-col>
+                        <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.distributor}}</el-col>
+                    </el-row>
+                    <el-row class="card-row">
+                        <el-col :span="3" class="card-span-left">渠道商ID</el-col>
+                        <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.distributor_pid}}</el-col>
+                    </el-row>
+                    <el-row class="card-row">
                         <el-col :span="3" class="card-span-left">产品图片（六观图）</el-col>
                         <el-col :span="20" :offset="1" class="card-span-right">
                             <img v-for="item in productDetail.images" class="six-img" :src="item" v-img:name alt="图片加载失败">
@@ -55,13 +63,17 @@
                         <el-col :span="3" class="card-span-left">选择技术方案</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.type_txt}}</el-col>
                     </el-row>
-                    <el-row class="card-row">
+                    <el-row class="card-row" v-show="productDetail.type==1">
                         <el-col :span="3" class="card-span-left">模组/芯片信息</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.type_vendor}}</el-col>
                     </el-row>
-                    <el-row class="card-row">
+                    <el-row class="card-row" v-show="productDetail.type==1">
                         <el-col :span="3" class="card-span-left">型号</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.type_model}}</el-col>
+                    </el-row>
+                    <el-row class="card-row" v-show="productDetail.type==2 || productDetail.type==3">
+                        <el-col :span="3" class="card-span-left">协议</el-col>
+                        <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.agreement}}</el-col>
                     </el-row>
                 </el-row>
             </el-tab-pane>

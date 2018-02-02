@@ -467,7 +467,7 @@
                 for(let i = 0;i<value.length;i++){
                     let code = value.charCodeAt(i);
                     //ASCII 65-90=>A-Z 97-122=>a-z  95=>_
-                    if((code>=65&&code<=90)||(code>=97&&code<=122)||code==95){
+                    if((code>=65&&code<=90)||(code>=97&&code<=122)||code==95 || (code>=33 && code <= 46) ||(code >=48 && code <=57)) {
                     }
                     else{
                         flag = false;

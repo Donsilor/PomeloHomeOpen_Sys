@@ -55,7 +55,7 @@
                                                 type="textarea"
                                                 :autosize="{ minRows: 3, maxRows: 3}"
                                                 placeholder="请输入其他说明"
-                                                v-model="form.base_des" :disabled="!isEdit" :maxlength="64">
+                                                v-model="form.base_des" :disabled="!isEdit">
                                         </el-input>
                                     </el-col>
                                 </el-form-item>

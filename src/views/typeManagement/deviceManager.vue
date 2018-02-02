@@ -154,7 +154,9 @@
                       message: '修改设置成功'
                   });
                   this.addFucSetModal = false;
-                  this.getAddType();
+                    this.addFucForm.forEach((val,index)=>{
+                      val.status = val.status ? true :  false;
+                  });
               }).catch(res=>{
                   this.$message({
                       type: 'error',

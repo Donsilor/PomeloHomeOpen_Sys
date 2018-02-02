@@ -99,7 +99,7 @@
 
             <el-table-column align="center" label="操作" width="150">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.status!='published'" size="small" type="success"
+                    <el-button v-if="scope.row.status!='published' && scope.row.can_approve" size="small" type="success"
                                @click="goCheckDetail(scope.row)">
                         <!--<svg-icon icon-class="check2"/>-->
                         进入审核

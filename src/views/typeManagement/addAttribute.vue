@@ -101,7 +101,7 @@
                                     >
                                         <el-input v-model="valueItem.value" class="input-width" placeholder="字母数字符号，最多32个字符"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="" style="padding-left: 25px;">
+                                    <el-form-item label="" style="padding-left: 25px;" v-if="listIndex>0">
                                         <i class="el-icon-delete" @click="delEnumerateItem(listIndex,paramKey)"></i>
                                     </el-form-item>
                                 </el-form-item>
@@ -113,7 +113,7 @@
                                     </template>
                                 </el-form-item>
                             </template>
-                            <template v-if="paramKey.key_type==2">
+                            <div v-if="paramKey.key_type==2">
                                 <el-form-item label="参数范围值" class="w100p mt0 pl8">
                                     <el-form-item label="" v-if="paramKey.value_list[1]"
                                                   :prop="'value_list.'+paramIndex+'.value_list.1.value'"
@@ -136,7 +136,7 @@
                                         </el-input>
                                     </el-form-item>
                                 </el-form-item>
-                            </template>
+                            </div>
                             <template v-if="paramKey.key_type==3">
                                 <div class="sec-item" v-for="(em,i) in paramKey.list">
                                     <el-form-item label="参数名称(key)"
@@ -214,7 +214,7 @@
                                             >
                                                 <el-input v-model="vi.value" class="input-width" placeholder="字母数字符号，最多32个字符"></el-input>
                                             </el-form-item>
-                                            <el-form-item label="" style="padding-left: 25px;">
+                                            <el-form-item label="" style="padding-left: 25px;" v-if="dx>0">
                                                 <i class="el-icon-delete" @click="delEnumerateItem(dx,em)"></i>
                                             </el-form-item>
                                         </el-form-item>
@@ -226,7 +226,7 @@
                                             </template>
                                         </el-form-item>
                                     </template>
-                                    <template v-if="em.key_type==2">
+                                    <div v-if="em.key_type==2">
                                         <el-form-item label="参数范围值" class="w100p mt0 pl8">
                                             <el-form-item label="" v-if="em.value_list[1]"
                                                           :prop="'value_list.'+paramIndex+'.list.'+i+'.value_list.1.value'"
@@ -250,16 +250,18 @@
                                                 </el-input>
                                             </el-form-item>
                                         </el-form-item>
-                                    </template>
-
+                                    </div>
+                                    <div style="text-align: right" v-if="i>0">
+                                        <span class="el-icon-delete" title="删除参数" @click="deleteAttr(paramKey,i)"></span>
+                                    </div>
                                 </div>
-
-
-
                                 <a href="javascript:void(0);" @click="addAttribute(paramKey)" class="addAttr"><i class="el-icon-plus"></i> 新增属性</a>
                             </template>
 
                         </el-col>
+                        <div style="text-align: right" v-if="paramIndex>0">
+                            <span title="删除参数" @click="deleteParams(paramIndex)" class="el-icon-delete"></span>
+                        </div>
                     </div>
                 </el-row>
                 <div class="buttonPos">
@@ -359,15 +361,32 @@
                 }).then(res=>{
                     this.form.nodeid = res.ret.nodeid;
                     this.form.is_default = res.ret.is_default;
+                    res.ret.value_list.forEach(function (item) {
+                        if(!item.list){
+                            item.list = [JSON.parse(JSON.stringify(s_form))];
+                        }
+                        if(!item.value_list){
+                            item.value_list = [{
+                                'value' : '',
+                                'value_des' : ''
+                            }];
+                        }
+                    })
                     this.form.value_list = res.ret.value_list;
                 })
             },
             addParams(){
                 this.form.value_list.push(JSON.parse(this.form_string));
             },
+            deleteParams(index){
+                this.form.value_list.splice(index,1);
+            },
             addAttribute(item){
                 let str = JSON.stringify(s_form);
                 item.list.push(JSON.parse(str));
+            },
+            deleteAttr(item,index){
+                item.list.splice(index,1);
             },
             //获得参数值类型改变的值
             changeTypeValue(val,item){

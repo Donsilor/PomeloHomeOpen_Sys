@@ -16,7 +16,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-show="showTypeKey" label="协议" prop="technology_type_key">
+          <el-form-item v-if="showTypeKey" label="协议" prop="technology_type_key">
             <el-select :disabled="isToModify" style="width: 100%;" v-model="form.technology_type_key" placeholder="请选择">
               <el-option v-for="item in agreementList"
                          :key="item.agreement_id"
@@ -197,18 +197,18 @@
             },
             // 叉叉按钮
             handleClose(done) {
-                this.isToModify = false;
-                this.showTypeKey = false;
                 this.$refs['uploadForm'].resetFields();
                 this.$refs.upload.clearFiles();
-                this.dialogVisible = false;
+                this.isToModify = false;
+                this.showTypeKey = false;
+                done();
             },
             // 关闭弹框
             closeDialog() {
-                this.isToModify = false;
-                this.showTypeKey = false;
                 this.$refs['uploadForm'].resetFields();
                 this.$refs.upload.clearFiles();
+                this.isToModify = false;
+                this.showTypeKey = false;
                 this.dialogVisible = false;
             },
             openDialog(row){

@@ -16,7 +16,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-show="showTypeKey" label="模组/芯片厂家" prop="technology_type_key_map">
+                    <el-form-item v-if="showTypeKey" label="模组/芯片厂家" prop="technology_type_key_map">
                         <el-cascader :disabled="isToModify" style="width: 100%;"
                                      v-model="form.technology_type_key_map"
                                      placeholder="请选择"
@@ -145,7 +145,7 @@
                         },trigger:'blur' },
                     ],
                     upload: [
-                        { required: true, validator: fileNumber },
+                        { required: true, validator: fileNumber,trigger:'change' },
                     ],
                 },
             }
@@ -214,18 +214,18 @@
             },
             // 叉叉按钮
             handleClose(done) {
-                this.isToModify = false;
-                this.showTypeKey = false;
                 this.$refs['uploadForm'].resetFields();
                 this.$refs.upload.clearFiles();
-                this.dialogVisible = false;
+                this.isToModify = false;
+                this.showTypeKey = false;
+                done();
             },
             // 关闭弹框
             closeDialog() {
-                this.isToModify = false;
-                this.showTypeKey = false;
                 this.$refs['uploadForm'].resetFields();
                 this.$refs.upload.clearFiles();
+                this.isToModify = false;
+                this.showTypeKey = false;
                 this.dialogVisible = false;
             },
             openDialog(row){

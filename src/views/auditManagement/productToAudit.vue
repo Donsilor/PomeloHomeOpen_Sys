@@ -158,7 +158,7 @@
           </el-table-column>
         </el-table>
       </el-row>
-      <el-row v-if="type=='audit' " class="card-handle">
+      <el-row v-if="type=='audit'&&must_fps.length>0 " class="card-handle">
         <el-col :span="6" :offset="4">
           <el-button @click="audit_info.must_fps.action_type=1" type="primary" size="small">
             <i v-show="audit_info.must_fps.action_type==1" class="el-icon-check"></i>
@@ -211,7 +211,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-row v-if="type=='audit' " class="card-handle">
+      <el-row v-if="type=='audit'&&opt_fps.length>0 " class="card-handle">
         <el-col :span="6" :offset="4">
           <el-button @click="audit_info.opt_fps.action_type=1" type="primary" size="small">
             <i v-show="audit_info.opt_fps.action_type==1" class="el-icon-check"></i>
@@ -325,6 +325,11 @@
             unapproved_list:function () {
                 let arry = [];
                 for(let k in this.audit_info){
+                    if(k=='must_fps'||k=='opt_fps'){
+                        if(this[k].length==0){
+                            continue;
+                        }
+                    }
                     if(this.audit_info[k].action_type==0){
                         arry.push(Object.assign({},this.audit_info[k]));
                     }
@@ -334,6 +339,11 @@
             reject_reason_list:function () {
                 let arry = [];
                 for(let k in this.audit_info){
+                    if(k=='must_fps'||k=='opt_fps'){
+                        if(this[k].length==0){
+                            continue;
+                        }
+                    }
                     if(this.audit_info[k].action_type==2){
                         arry.push(Object.assign({},this.audit_info[k]));
                     }

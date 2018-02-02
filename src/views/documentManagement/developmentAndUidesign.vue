@@ -174,16 +174,16 @@
             },
             // 叉叉按钮
             handleClose(done) {
-                this.isToModify = false;
                 this.$refs['uploadForm'].resetFields();
                 this.$refs.upload.clearFiles();
-                this.dialogVisible = false;
+                this.isToModify = false;
+                done();
             },
             // 关闭弹框
             closeDialog() {
-                this.isToModify = false;
                 this.$refs['uploadForm'].resetFields();
                 this.$refs.upload.clearFiles();
+                this.isToModify = false;
                 this.dialogVisible = false;
             },
             openDialog(row){

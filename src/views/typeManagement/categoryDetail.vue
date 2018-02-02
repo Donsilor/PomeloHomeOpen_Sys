@@ -200,7 +200,9 @@
                         <el-col :span="24">
                             <template>
                                 <el-button @click="attDialogVisible = true" v-show="isEdit">添加功能属性</el-button>
-                                <addAttribute :visible="attDialogVisible" :attrid="selectNodeId" :typeid="typeid" v-on:close-dialog="closeAttrDialog" :token="token">
+                                <addAttribute :visible="attDialogVisible" :attrid="selectNodeId"
+                                              :typeid="typeid" v-on:close-dialog="closeAttrDialog"
+                                              :token="token" v-on:fresh-list="getAttributeList">
                                 </addAttribute>
                                 <el-table :data="attr_list" border stripe style="width: 100%;margin-top: 15px;"
                                           class="attribt_table" :span-method="spanMethod">

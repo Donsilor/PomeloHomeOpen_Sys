@@ -47,7 +47,7 @@
                             <el-form-item label="单位" class="w50p pl8"
                                           :prop="'value_list.'+paramIndex+'.unit'"
                                           :rules="[
-                                          {min:0,max:16,message:'单位最多16个字符'}
+                                          {validator:lengthLimit.bind(null,16)},
                                           ]"
                             >
                                 <el-input v-model="paramKey.unit" placeholder="支持中英文、特殊字符，最多16个字符" class="input-width"></el-input>
@@ -86,7 +86,7 @@
                                                   :prop="'value_list.'+paramIndex+'.value_list.'+listIndex+'.value_des'"
                                                   :rules="[
                                                   {required:true,message:'数据说明不能为空'},
-                                                  {min:1,max:16,message:'数据说明最多64个字符'}
+                                                  {validator:lengthLimit.bind(null,64)},
                                                   ]"
                                     >
                                         <el-input v-model="valueItem.value_des" class="input-width" placeholder="最多64个字符"></el-input>
@@ -95,8 +95,8 @@
                                                   :prop="'value_list.'+paramIndex+'.value_list.'+listIndex+'.value'"
                                                   :rules="[
                                                   {required:true,message:'传送数据不能为空'},
-                                                  {min:1,max:32,message:'传送数据最多32个字符'},
-                                                  {validator:letterAndNum}
+                                                  {validator:lengthLimit.bind(null,32)},
+                                                  {validator:unCN}
                                                   ]"
                                     >
                                         <el-input v-model="valueItem.value" class="input-width" placeholder="字母数字符号，最多32个字符"></el-input>
@@ -160,7 +160,7 @@
                                     <el-form-item label="单位" class="pl8"
                                                   :prop="'value_list.'+paramIndex+'.list.'+i+'.unit'"
                                                   :rules="[
-                                                   {min:0,max:16,message:'单位最多16个字符'}
+                                                   {validator:lengthLimit.bind(null,16)},
                                                   ]"
                                     >
                                         <el-input v-model="em.unit" placeholder="支持中英文、特殊字符，最多16个字符" class="input-width"></el-input>
@@ -199,7 +199,7 @@
                                                           :prop="'value_list.'+paramIndex+'.list.'+i+'.value_list.'+dx+'.value_des' "
                                                           :rules="[
                                                            {required:true,message:'数据说明不能为空'},
-                                                           {min:1,max:16,message:'数据说明最多64个字符'}
+                                                           {validator:lengthLimit.bind(null,64)},
                                                           ]"
                                             >
                                                 <el-input v-model="vi.value_des" class="input-width" placeholder="最多64个字符"></el-input>
@@ -208,8 +208,8 @@
                                                           :prop="'value_list.'+paramIndex+'.list.'+i+'.value_list.'+dx+'.value' "
                                                           :rules="[
                                                            {required:true,message:'传送数据不能为空'},
-                                                           {min:1,max:32,message:'传送数据最多32个字符'},
-                                                           {validator:letterAndNum}
+                                                           {validator:lengthLimit.bind(null,32)},
+                                                           {validator:unCN}
                                                           ]"
                                             >
                                                 <el-input v-model="vi.value" class="input-width" placeholder="字母数字符号，最多32个字符"></el-input>
@@ -315,42 +315,6 @@
         mounted() {
         },
         data() {
-            //字母下划线校验
-            const letterAndUnderscode = (rule, value, callback) => {
-                let flag = true;
-                for(let i = 0;i<value.length;i++){
-                    let code = value.charCodeAt(i);
-                    //ASCII 65-90=>A-Z 97-122=>a-z  95=>_
-                    if((code>=65&&code<=90)||(code>=97&&code<=122)||code==95){
-                    }
-                    else{
-                        flag = false;
-                        callback('只能是字母下划线');
-                        break;
-                    }
-                }
-                if(flag){
-                    callback();
-                }
-            };
-            //字母下划线校验
-            const letterAndNum = (rule, value, callback) => {
-                let flag = true;
-                for(let i = 0;i<value.length;i++){
-                    let code = value.charCodeAt(i);
-                    //ASCII 65-90=>A-Z 97-122=>a-z  48-57=>0-9
-                    if((code>=65&&code<=90)||(code>=97&&code<=122)||(code>=48&&code<=57)){
-                    }
-                    else{
-                        flag = false;
-                        callback('只能是字母数字');
-                        break;
-                    }
-                }
-                if(flag){
-                    callback();
-                }
-            };
             const form_string = JSON.stringify(f_form);
             return {
                 //dialogFormVisible : this.visible,
@@ -358,8 +322,6 @@
                 dialogTitle:'新建属性参数',
                 hulian_value : true,
                 isChooseObject : false,
-                letterAndUnderscode:letterAndUnderscode,
-                letterAndNum:letterAndNum,
                 form_string:form_string,
                 form : {
                     "token":this.token,
@@ -372,7 +334,7 @@
                     nodeid:[
                         {required:true,message:'属性名称不能为空'},
                         {min:1,max:32,message:'属性名称最多32个字符'},
-                        {validator:letterAndUnderscode}
+                        {validator:this.letterAndUnderscode}
                     ]
                 }
             }
@@ -401,10 +363,11 @@
                 })
             },
             addParams(){
-                this.form.value_list.push(Object.assign({},f_form));
+                this.form.value_list.push(JSON.parse(this.form_string));
             },
             addAttribute(item){
-                item.list.push(Object.assign({},s_form));
+                let str = JSON.stringify(s_form);
+                item.list.push(JSON.parse(str));
             },
             //获得参数值类型改变的值
             changeTypeValue(val,item){
@@ -463,18 +426,72 @@
                                 delete item.list;
                             }
                         });
-                        //this.$emit('get-data',params);
+                        if(this.attrid){
+                            params.attr_id = this.attrid;
+                        }
                         fetch({
-                            url: '/attribute/add',
+                            url: this.attrid?'/attribute/edit':'/attribute/add',
                             method: 'post',
                             data: params,
                         }).then(res=>{
+                            this.$emit('fresh-list');
                             this.closeDialog();
                         })
                     }
                 });
 
 
+            },
+            //字母下划线
+            letterAndUnderscode(rule, value, callback){
+                let flag = true;
+                for(let i = 0;i<value.length;i++){
+                    let code = value.charCodeAt(i);
+                    //ASCII 65-90=>A-Z 97-122=>a-z  95=>_
+                    if((code>=65&&code<=90)||(code>=97&&code<=122)||code==95){
+                    }
+                    else{
+                        flag = false;
+                        callback('只能是字母下划线');
+                        break;
+                    }
+                }
+                if(flag){
+                    callback();
+                }
+            },
+            //非汉字
+            unCN(rule, value, callback){
+                let pattern = /[\u4e00-\u9fa5]+/g;
+                if(pattern.test(value)){
+                    callback('不支持中文汉字');
+                }
+                else{
+                    callback();
+                }/*
+                let flag = true;
+                for(let i = 0;i<value.length;i++){
+                    let code = value.charCodeAt(i);
+                    //ASCII 65-90=>A-Z 97-122=>a-z  48-57=>0-9
+                    if((code>=65&&code<=90)||(code>=97&&code<=122)||(code>=48&&code<=57)){
+                    }
+                    else{
+                        flag = false;
+                        callback('只能是字母数字');
+                        break;
+                    }
+                }
+                if(flag){
+                    callback();
+                }*/
+            },
+            //长度限制
+            lengthLimit(max,rule, value, callback){
+                if(value.length>max){
+                    callback('长度不能超过'+max+'字符');
+                }else{
+                    callback();
+                }
             }
 
         }
@@ -482,12 +499,10 @@
 </script>
 <style scoped>
     .addParams{
-        display: block;
         margin-top: 15px;
     }
     .addAttr{
         margin-left: 140px;
-        display: block;
         color: #409EFF;
     }
     .w100p{

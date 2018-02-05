@@ -129,4 +129,61 @@ export default {
         }
     },
 
+    /**
+     * 合并行解析数据方法
+     */
+    spanAnalyseData(item,targetList,targetMap){
+        let secCount=0;
+        targetMap[item.nodeid]={
+            index:targetList.length,
+            children:{}
+        }
+        item.list.forEach(function (v) {
+            let thirdCount=0;
+            if(v.key_type!='3'){
+                secCount++;
+                targetList.push(Object.assign({
+                    nodeid:item.nodeid,
+                    attr_id:item.attr_id
+                },v));
+            }
+            else{
+                v.remark.forEach(function (em,idx) {
+                    secCount++;
+                    thirdCount++;
+                    targetList.push({
+                        nodeid:item.nodeid,
+                        attr_id:item.attr_id,
+                        method_string:v.method_string,
+                        key:v.key,
+                        type:v.type,
+                        value_list:v.value_list[idx].value_list,
+                        remark:em.remark
+                    });
+                })
+            }
+        })
+        targetMap[item.nodeid].len = secCount;
+    },
+
+    /**
+     * 合并行方法
+     */
+    spanMethod(pt,columnIndex,rowIndex){
+        if(columnIndex==0){
+            if(pt){
+                if(pt.index==rowIndex){
+                    return [pt.len,1]
+                }
+                else{
+                    return [0,0]
+                }
+            }else{
+                return [1,1]
+            }
+        }
+        else{
+            return [1,1]
+        }
+    }
 }

@@ -4,7 +4,7 @@
         <el-button  @click="$router.go(-1)" size="medium">返回</el-button>
         <el-button type="primary" @click="productUnshelve" size="medium">下架该产品</el-button>
         <h3>{{productDetail.brand_name+productDetail.type_name+productDetail.model}}</h3>
-        <el-tabs v-model="activeName" type="card">
+        <el-tabs v-model="activeName" type="card" style="padding-bottom: 30px;">
             <el-tab-pane label="基本信息" name="basic">
                 <el-row class="">
                     <el-row class="card-row">
@@ -123,6 +123,7 @@
 
 <script>
     import {getProductInfo, productUnshelve} from '@/api/check';
+    import utils from '@/utils/helper';
     import {Message} from 'element-ui';
 
     export default {
@@ -158,18 +159,7 @@
                     response.attr_list.forEach(function (item) {
                         let key = item.is_default ? 'must_fps' : 'opt_fps';
                         if(item.list){
-                            _this.spanMap[item.nodeid] = {
-                                index:_this[key].length,
-                                len:item.list.length
-                            };
-                            item.list.forEach(function (em) {
-                                _this[key].push({
-                                    nodeid:item.nodeid,
-                                    remark:em.remark,
-                                    value_list:em.value_list,
-                                    is_enable:item.is_enable
-                                });
-                            })
+                            utils.spanAnalyseData(item,_this[key],_this.spanMap);
                         }
                         else{
                             _this[key].push(item);
@@ -210,13 +200,9 @@
                 return row.value_list.join('/');
             },
             //合并行
-            spanMethod(cell){
-                if(cell.columnIndex==0&&this.spanMap[cell.row.nodeid]){
-                    if(this.spanMap[cell.row.nodeid].index==cell.rowIndex){
-                        return [this.spanMap[cell.row.nodeid].len,1]
-                    }
-                    return [0,0]
-                }
+            spanMethod({row, column, rowIndex, columnIndex}){
+                let pt = this.spanMap[row.nodeid];
+                return utils.spanMethod(pt,columnIndex,rowIndex);
             }
         },
         deactivated() {

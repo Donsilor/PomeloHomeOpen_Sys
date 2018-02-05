@@ -875,9 +875,6 @@
                 })
             },
             spanMethod({row, column, rowIndex, columnIndex}){
-                if(columnIndex==0&&row.key=='is_config_device'){
-
-                }
                 let pt = this.spanMap[row.nodeid];
                 if(columnIndex==0||columnIndex==6){
                     if(pt){

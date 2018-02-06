@@ -93,6 +93,8 @@ a:hover {
 //二级菜单公共样式
 .sec-menu{
   height: 100vh;
+  position: fixed;
+  left: 150px;
   /*width: 160px;*/
   .el-menu-item{
     height: 40px;

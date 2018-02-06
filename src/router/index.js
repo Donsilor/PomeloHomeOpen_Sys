@@ -206,6 +206,29 @@ export const constantRouterMap = [
                         component:_import('documentManagement/developmentAndUidesign')
                     }
                 ]
+            },
+            {
+                path:'enterpriseManagement',
+                name:'企业管理',
+                component:_import('enterpriseManagement/index'),
+                redirect: '/enterpriseManagement/list',
+                children:[
+                    {
+                        path:'list',
+                        name:'list',
+                        component:_import('enterpriseManagement/list')
+                    },
+                    {
+                        path:'enterpriseInfo',
+                        name:'enterpriseInfo',
+                        component:_import('enterpriseManagement/enterpriseInfo')
+                    },
+                    {
+                        path:'enterpriseProducts',
+                        name:'enterpriseProducts',
+                        component:_import('enterpriseManagement/enterpriseProducts')
+                    }
+                ]
             }
         ]
     },

@@ -38,6 +38,11 @@
                         name: '资料管理',
                         url: '/documentManagement',
                         icon: 'el-icon-document'
+                    },
+                    {
+                        name:'企业管理',
+                        url:'/enterpriseManagement',
+                        icon:'el-icon-tickets'
                     }
                 ]
             }

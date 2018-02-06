@@ -154,7 +154,7 @@
                                                      class-name="cell-column-no-padding">
                                         <template slot-scope="scope">
                                             <div v-for="item in scope.row.model_list" class="cell-td option">
-                                                <i class="el-icon-delete" @click="delTechnical(item.id,1)"></i>
+                                                <i class="el-icon-delete" title="删除技术方案" @click="delTechnical(item.id,1)"></i>
                                             </div>
                                         </template>
                                     </el-table-column>
@@ -171,7 +171,7 @@
                                     <el-table-column prop="agreement" label="标准协议"></el-table-column>
                                     <el-table-column label="操作" width="130" align="center" v-if="isEdit">
                                         <template slot-scope="scope">
-                                            <i class="el-icon-delete" @click="delTechnical(scope.row.id,2)"></i>
+                                            <i class="el-icon-delete" title="删除技术方案" @click="delTechnical(scope.row.id,2)"></i>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -187,7 +187,7 @@
                                     <el-table-column prop="agreement" label="标准协议"></el-table-column>
                                     <el-table-column label="操作" width="130" align="center" v-if="isEdit">
                                         <template slot-scope="scope">
-                                            <i class="el-icon-delete" @click="delTechnical(scope.row.id,3)"></i>
+                                            <i class="el-icon-delete" title="删除技术方案" @click="delTechnical(scope.row.id,3)"></i>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -226,8 +226,8 @@
                                     </el-table-column>
                                     <el-table-column label="操作" width="80" align="center" v-if="isEdit">
                                         <template slot-scope="scope">
-                                            <i class="el-icon-delete" @click="delProperty(scope.row.attr_id)"></i>
-                                            <i class="el-icon-edit-outline" @click="editProperty(scope.row.attr_id)"></i>
+                                            <i class="el-icon-delete" title="删除属性" @click="delProperty(scope.row.attr_id)"></i>
+                                            <i class="el-icon-edit-outline" title="编辑属性" @click="editProperty(scope.row.attr_id)"></i>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -360,6 +360,9 @@
 
     .el-icon-delete,.el-icon-edit-outline {
         cursor: pointer;
+        color: #409EFF;
+        font-size: 16px;
+        font-weight: bold;
     }
 
     .fileuploadItem {

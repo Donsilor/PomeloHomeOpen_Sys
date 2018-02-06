@@ -100,7 +100,7 @@
 
             <el-table-column align="center" label="操作" width="150">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.status!='published'" size="small" type="success"
+                    <el-button v-if="scope.row.status!='published'" size="small" type="primary"
                                @click="goCheckDetail(scope.row)">
                         查看详情
                     </el-button>

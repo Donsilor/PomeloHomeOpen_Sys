@@ -722,17 +722,20 @@
 
             //删除属性
             delProperty(attr_id){
-                fetch({
-                    url: '/attribute/del',
-                    method: 'post',
-                    data: {attr_id,}
-                }).then(res=>{
-                    this.$message({
-                        type: 'success',
-                        message: '操作成功！'
+                this.$confirm('确认删除此属性？','提示').then(()=>{
+                    fetch({
+                        url: '/attribute/del',
+                        method: 'post',
+                        data: {attr_id,}
+                    }).then(res=>{
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功！'
+                        });
+                        this.getAttributeList();
                     });
-                    this.getAttributeList();
                 });
+
             },
             //编辑属性
             editProperty(attr_id){

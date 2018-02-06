@@ -1,22 +1,18 @@
 <template>
       <div class="tab-container">
-          <el-row>
-              <el-col :span="2">
-                  <el-menu class="sec-menu" mode="vertical" :default-active="activeName" background-color="#f2f2f2" text-color="#666"
-                           active-text-color="#409EFF">
-                      <template v-for="item in navs">
-                          <router-link :to="item.url">
-                              <el-menu-item :index="item.type">
-                                  <i v-if="item.icon" :class="item.icon"></i>
-                                  {{item.name}}
-                              </el-menu-item>
-                          </router-link>
-                      </template>
-                  </el-menu>
-              </el-col>
-              <el-col :span="22">
-                  <router-view ></router-view>
-              </el-col>
+          <el-row style="padding-left: 160px;padding-bottom: 30px;">
+              <el-menu class="sec-menu" mode="vertical" :default-active="activeName" background-color="#f2f2f2" text-color="#666"
+                       active-text-color="#409EFF">
+                  <template v-for="item in navs">
+                      <router-link :to="item.url">
+                          <el-menu-item :index="item.type">
+                              <i v-if="item.icon" :class="item.icon"></i>
+                              {{item.name}}
+                          </el-menu-item>
+                      </router-link>
+                  </template>
+              </el-menu>
+              <router-view ></router-view>
           </el-row>
       </div>
 </template>
@@ -60,3 +56,10 @@
         }
     }
 </script>
+<style scoped>
+    .sec-menu{
+        position: fixed;
+        left: 150px;
+        width: 160px;
+    }
+</style>

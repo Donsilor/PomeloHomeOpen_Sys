@@ -237,7 +237,7 @@
             },
             beforeZipUpload(file){
                 let _file = file.raw;
-                const isZip = _file.type === 'application/zip';
+                const isZip = _file.type.toLowerCase().indexOf('zip')>=0;
                 const isLt5M = _file.size / 1024 / 1024 < 5;
                 if (!isZip) {
                     this.$message.error('只能上传zip文件!');
@@ -245,7 +245,9 @@
                 if (!isLt5M) {
                     this.$message.error('zip文件大小不能超过 5MB!');
                 }
-                this.form.url = _file.name;
+                if(isZip && isLt5M){
+                    this.form.url = _file.name;
+                }
                 return isZip && isLt5M;
             },
             // 上传成功的回调

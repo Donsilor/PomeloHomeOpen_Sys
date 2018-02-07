@@ -254,8 +254,7 @@
             },
             beforeZipUpload(file){
                 let _file = file.raw;
-                let tmp = _file.type.split('/');
-                const isZip = tmp[tmp.length-1].toLowerCase()==='zip';
+                const isZip = _file.type.toLowerCase().indexOf('zip')>=0;
                 const isLt5M = _file.size / 1024 / 1024 < 5;
                 if (!isZip) {
                     this.$message.error('只能上传zip文件!');

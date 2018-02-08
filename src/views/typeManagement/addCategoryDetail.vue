@@ -423,6 +423,10 @@
                 })
             },
             handleAvatarSuccess(res, file) {
+                if(res.code!==200){
+                    this.$message.error('上传出错，请重新上传');
+                    return;
+                }
                 let data = res.result;
                 switch (res.result.type) {
                     case 'high_light' :
@@ -458,7 +462,6 @@
                         this.parent_disabled_data.file_id = data.parent_disabled.file_id;
                         break;
                 }
-                console.log(this.form.high_light);
             },
             beforeAvatarUpload(file) {
                 const filter = file.type === 'image/png';

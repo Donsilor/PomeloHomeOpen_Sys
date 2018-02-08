@@ -229,6 +229,19 @@ export const constantRouterMap = [
                         component:_import('enterpriseManagement/enterpriseProducts')
                     }
                 ]
+            },
+            {
+                path:'authorityManagement',
+                name:'权限管理',
+                component:_import('authorityManagement/index'),
+                redirect:'/authorityManagement/enterpriseAudit',
+                children:[
+                    {
+                        path:'enterpriseAudit',
+                        name:'enterpriseAudit',
+                        component:_import('authorityManagement/enterpriseAudit')
+                    }
+                ]
             }
         ]
     },

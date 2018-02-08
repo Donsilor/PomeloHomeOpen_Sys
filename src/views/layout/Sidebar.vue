@@ -43,6 +43,11 @@
                         name:'企业管理',
                         url:'/enterpriseManagement',
                         icon:'el-icon-tickets'
+                    },
+                    {
+                        name:'权限管理',
+                        url:'/authorityManagement',
+                        icon:'el-icon-view'
                     }
                 ]
             }

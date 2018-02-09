@@ -1,4 +1,4 @@
-import {login, logout,getAuditMenus,getDocumentMenus} from '@/api/login'
+import {login, logout,getAuditMenus,getDocumentMenus,getAuthorityMenus} from '@/api/login'
 import {getToken, setToken, removeToken,getUserName,setUserName,removeUserName} from '@/utils/auth'
 
 const user = {
@@ -7,8 +7,9 @@ const user = {
         name: getUserName(),
         avatar: '',
         roles: [],
-        auditMenus:[],
-        documentMenus:[]
+        auditMenus:{},
+        documentMenus:{},
+        authorityMenus:{},
     },
 
     mutations: {
@@ -29,6 +30,9 @@ const user = {
         },
         SET_DOCUMENT_MENUS: (state, menus)=>{
             state.documentMenus = menus;
+        },
+        SET_AUTHORITY_MENUS: (state, menus)=>{
+            state.authorityMenus = menus;
         }
     },
 
@@ -111,6 +115,22 @@ const user = {
                     resolve()
                 }).catch(error => {
                     reject(error)
+                })
+            })
+        },
+        //获取权限管理菜单
+        GetAuthorityMenus({commit},state){
+            return new Promise((resolve,reject)=>{
+                getAuthorityMenus().then(response=>{
+                    let list =　{};
+                    response.forEach(function (v) {
+                        list[v.menu_name] = v;
+                    })
+                    const data = response;
+                    commit('SET_AUTHORITY_MENUS', list);
+                    resolve();
+                }).catch(error=>{
+                    reject(error);
                 })
             })
         }

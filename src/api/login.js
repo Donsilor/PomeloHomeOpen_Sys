@@ -35,3 +35,11 @@ export function getDocumentMenus() {
         data: {}
     })
 }
+
+export function getAuthorityMenus() {
+    return fetch({
+        url: '/admin/menu',
+        method: 'post',
+        data: {}
+    })
+}

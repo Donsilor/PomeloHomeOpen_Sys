@@ -6,5 +6,6 @@ const getters = {
     roles: state => state.user.roles,
     auditMenus: state => state.auditMenus,
     documentMenus: state => state.documentMenus,
+    authorityMenus: state => state.authorityMenus
 }
 export default getters

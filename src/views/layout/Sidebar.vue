@@ -40,7 +40,7 @@
                         icon: 'el-icon-document'
                     },
                     {
-                        name:'企业管理',
+                        name:'厂商管理',
                         url:'/enterpriseManagement',
                         icon:'el-icon-tickets'
                     },

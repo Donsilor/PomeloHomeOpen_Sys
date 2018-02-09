@@ -6,48 +6,55 @@
             </el-row>
             <el-dialog :before-close="handleClose" center width="700px" class="doc-dialog" :title="dialogTitle" :visible.sync="dialogVisible">
                 <el-form :rules="rules" ref="uploadForm" :model="form" label-width="110px">
-                    <el-form-item label="姓名" prop="type_id">
+                    <el-form-item label="姓名" prop="username">
                         <el-input placeholder="请输入姓名"></el-input>
                     </el-form-item>
-                    <el-form-item label="邮箱" prop="type_id">
+                    <el-form-item label="邮箱" prop="email">
                         <el-input placeholder="请输入公司邮箱"></el-input>
                     </el-form-item>
-                    <el-form-item label="电话" prop="type_id">
+                    <el-form-item label="电话" prop="tel">
                         <el-input placeholder="请输入电话"></el-input>
                     </el-form-item>
-                    <el-form-item v-if="showTypeKey" label="部门" prop="technology_type_key_map">
+                    <el-form-item label="部门" prop="department">
                         <el-select placeholder="请选择所在部门">
-
+                            <el-option v-for="item in departmentOptions"
+                                       :value="item.value"
+                                       :key="item.value"
+                                       :label="item.label"
+                            >
+                            </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="职务" prop="type_id">
+                    <el-form-item label="职务" prop="job">
                         <el-input placeholder="请输入职务"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="closeDialog">取 消</el-button>
-                    <el-button type="primary" @click="uploadSDK">确 定</el-button>
+                    <el-button type="primary">确 定</el-button>
                 </div>
             </el-dialog>
         </div>
 
         <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" stripe fit highlight-current-row
                   style="width: 100%">
-            <el-table-column align="center" label="品类" prop="type_name">
+            <el-table-column align="center" label="姓名" prop="name">
             </el-table-column>
 
-            <el-table-column align="center" label="模组/芯片厂家" prop="technology_module_vendor">
+            <el-table-column align="center" label="电话" prop="mobile">
             </el-table-column>
 
-            <el-table-column align="center" label="型号" prop="technology_module_model">
+            <el-table-column align="center" label="部门" prop="depart">
             </el-table-column>
 
-            <el-table-column align="center" label="包大小" prop="size">
+            <el-table-column align="center" label="职务" prop="duty">
             </el-table-column>
 
-            <el-table-column align="center" label="上传时间" prop="updated_at_txt">
+            <el-table-column align="center" label="最新操作记录" prop="duty">
+                <template slot-scope="scope">
+                    <span>{{scope.row.last_action+' '+scope.row.last_action_at}}</span>
+                </template>
             </el-table-column>
-
             <el-table-column align="center" label="操作" width="150">
                 <template slot-scope="scope">
                     <el-button @click="openDialog(scope.row)" size="small" type="primary">
@@ -72,6 +79,7 @@
     import { getSdkList, getWifiModuleList } from '@/api/infoUpload';
     import {getProductType} from '@/api/check'
     import { getToken } from '@/utils/auth'
+    import fetch from '@/utils/fetch';
 
     export default {
         name: 'wifi',
@@ -90,7 +98,7 @@
                     limit: 10,
                 },
                 form:{
-                    type_id:'',
+                    type_id:0,
                     technology_type_key_map:'',
                     technology_type_key:'',
                     technology_type:1,
@@ -99,27 +107,31 @@
                 },
                 dialogTitle:'添加权限用户',
                 dialogVisible:false,
+                departmentOptions:[
+                    {label:'总经办',value:1},
+                    {label:'前端开发部',value:2}
+                ],
                 moduleProps:{
                     children: 'modellist',
                     value:'module_id',
                     label:'model'
                 },
                 rules: {
-                    type_id: [
-                        { required: true, message: '请选择产品品类'},
+                    username: [
+                        { required: true, message: '用户姓名不能为空'},
                     ],
-                    technology_type_key_map: [
-                        { required: true,  validator: function (rule, value, callback) {
-                            if(!value[1]){
-                                callback('请选择模组/芯片厂家');
-                            }else{
-                                callback()
-                            }
-                        },trigger:'blur' },
+                    email:[
+                        {required:true,message:'公司邮箱不能为空'}
                     ],
-                    upload: [
-                        { required: true, validator: fileNumber,trigger:'change' },
+                    tel:[
+                        {required:true,message:'电话不能为空'}
                     ],
+                    department:[
+                        {required:true,message:'请选择部门'}
+                    ],
+                    job:[
+                        {required:true,message:'职务不能为空'}
+                    ]
                 },
             }
         },
@@ -139,25 +151,28 @@
         },
         mounted() {
             this.refresh();
-            this.getProductType();
         },
         methods: {
             refresh(){
-                this.$store.dispatch('GetDocumentMenus');
+                this.$store.dispatch('GetAuthorityMenus');
                 this.getList();
             },
             getList() {
                 this.listLoading = true;
                 let params = {
-                    technology_type:this.form.technology_type,// 技术方案，1=wifi, 2=zigbee, 3=蓝牙
+                    id:this.form.type_id,
                     limit: this.listQuery.limit,
                     page: this.listQuery.page
                 };
-                getSdkList(params).then(response => {
+                fetch({
+                    url:'/admin/list',
+                    method:'post',
+                    data:params
+                }).then(response => {
                     this.list = response.data;
                     this.total = response.total;
                     this.listLoading = false
-                })
+                });
             },
 
             handleSizeChange(val) {
@@ -171,17 +186,13 @@
             // 叉叉按钮
             handleClose(done) {
                 this.$refs['uploadForm'].resetFields();
-                this.$refs.upload.clearFiles();
                 this.isToModify = false;
-                this.showTypeKey = false;
                 done();
             },
             // 关闭弹框
             closeDialog() {
                 this.$refs['uploadForm'].resetFields();
-                this.$refs.upload.clearFiles();
                 this.isToModify = false;
-                this.showTypeKey = false;
                 this.dialogVisible = false;
             },
             openDialog(row){

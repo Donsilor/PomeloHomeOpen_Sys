@@ -29,7 +29,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api/index.php/': {
-        target: 'http://devpho.evergrande.cn/api/index.php', // 开发环境
+        target: 'http://devpho-v03.evergrande.cn/api/index.php', // 开发环境
         // target: 'http://betapho.evergrande.cn/api/index.php', // 测试环境
         changeOrigin: true,
         pathRewrite: {

@@ -44,7 +44,7 @@
                                                     accept="image/png"
                                                     :data="form.base_img"
                                                     :disabled="!isEdit">
-                                                <el-button size="middle" type="primary">选择文件</el-button>
+                                                <el-button size="middle" type="primary" :disabled="!isEdit">选择文件</el-button>
                                             </el-upload>
                                         </div>
                                     </el-col>
@@ -91,7 +91,7 @@
                                                         accept="image/png"
                                                         :data="form.add1_img"
                                                         :disabled="!isEdit">
-                                                    <el-button size="middle" type="primary">选择文件</el-button>
+                                                    <el-button size="middle" type="primary" :disabled="!isEdit">选择文件</el-button>
                                                 </el-upload>
                                             </div>
                                         </el-form-item>
@@ -134,7 +134,7 @@
                                                         accept="image/png"
                                                         :data="form.add2_img"
                                                         :disabled="!isEdit">
-                                                    <el-button size="middle" type="primary">选择文件</el-button>
+                                                    <el-button size="middle" type="primary" :disabled="!isEdit">选择文件</el-button>
                                                 </el-upload>
                                             </div>
                                         </el-form-item>
@@ -172,7 +172,7 @@
                                                     :before-upload="beforeAvatarUpload"
                                                     accept="image/png"
                                                     :data="form.reset_img" :disabled="!isEdit">
-                                                <el-button size="middle" type="primary">选择文件</el-button>
+                                                <el-button size="middle" type="primary" :disabled="!isEdit">选择文件</el-button>
                                             </el-upload>
                                         </div>
                                     </el-col>

@@ -6,7 +6,7 @@
                 <el-button type="primary" @click="addGory">确定并添加该品类</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
-                        <div class="desTitle">基本信息</div>
+                        <div class="desTitleTop">基本信息</div>
                         <el-col :span="24">
                             <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
                                 <el-form-item label="子品类名称" label-width="120px" prop="name">
@@ -190,6 +190,12 @@
             border-bottom: 1px #ddd solid;
             line-height: 30px;
             height: 30px;
+        }
+        .desTitleTop{
+            border-bottom: 1px #ddd solid;
+            line-height: 30px;
+            height: 30px;
+            width: 100%;
         }
 
         .fileuploadItem .avatar-uploader{
@@ -423,6 +429,10 @@
                 })
             },
             handleAvatarSuccess(res, file) {
+                if(res.code!==200){
+                    this.$message.error('上传出错，请重新上传');
+                    return;
+                }
                 let data = res.result;
                 switch (res.result.type) {
                     case 'high_light' :
@@ -458,7 +468,6 @@
                         this.parent_disabled_data.file_id = data.parent_disabled.file_id;
                         break;
                 }
-                console.log(this.form.high_light);
             },
             beforeAvatarUpload(file) {
                 const filter = file.type === 'image/png';

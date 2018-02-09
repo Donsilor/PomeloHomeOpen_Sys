@@ -85,7 +85,6 @@
                                     <el-form-item label=""
                                                   :prop="'value_list.'+paramIndex+'.value_list.'+listIndex+'.value_des'"
                                                   :rules="[
-                                                  {required:true,message:'数据说明不能为空'},
                                                   {validator:lengthLimit.bind(null,64)},
                                                   ]"
                                     >
@@ -94,7 +93,6 @@
                                     <el-form-item label=""
                                                   :prop="'value_list.'+paramIndex+'.value_list.'+listIndex+'.value'"
                                                   :rules="[
-                                                  {required:true,message:'传送数据不能为空'},
                                                   {validator:lengthLimit.bind(null,32)},
                                                   {validator:unCN}
                                                   ]"
@@ -198,7 +196,6 @@
                                             <el-form-item label=""
                                                           :prop="'value_list.'+paramIndex+'.list.'+i+'.value_list.'+dx+'.value_des' "
                                                           :rules="[
-                                                           {required:true,message:'数据说明不能为空'},
                                                            {validator:lengthLimit.bind(null,64)},
                                                           ]"
                                             >
@@ -207,7 +204,6 @@
                                             <el-form-item label=""
                                                           :prop="'value_list.'+paramIndex+'.list.'+i+'.value_list.'+dx+'.value' "
                                                           :rules="[
-                                                           {required:true,message:'传送数据不能为空'},
                                                            {validator:lengthLimit.bind(null,32)},
                                                            {validator:unCN}
                                                           ]"
@@ -464,6 +460,10 @@
             //字母下划线
             letterAndUnderscode(rule, value, callback){
                 let flag = true;
+                if(!value){
+                    callback();
+                    return;
+                }
                 for(let i = 0;i<value.length;i++){
                     let code = value.charCodeAt(i);
                     //ASCII 65-90=>A-Z 97-122=>a-z  95=>_
@@ -506,7 +506,7 @@
             },
             //长度限制
             lengthLimit(max,rule, value, callback){
-                if(value.length>max){
+                if(value&&value.length>max){
                     callback('长度不能超过'+max+'字符');
                 }else{
                     callback();

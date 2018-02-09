@@ -99,11 +99,20 @@
                 },
                 form:{
                     type_id:0,
+<<<<<<< HEAD
                     technology_type_key_map:'',
                     technology_type_key:'',
                     technology_type:1,
                     token: getToken(),
                     url:''
+=======
+                    name:'',
+                    mail:'',
+                    mobile:'',
+                    token: getToken(),
+                    depart:'',
+                    duty:''
+>>>>>>> origin/master
                 },
                 dialogTitle:'添加权限用户',
                 dialogVisible:false,
@@ -123,6 +132,7 @@
                     email:[
                         {required:true,message:'公司邮箱不能为空'}
                     ],
+<<<<<<< HEAD
                     tel:[
                         {required:true,message:'电话不能为空'}
                     ],
@@ -130,6 +140,15 @@
                         {required:true,message:'请选择部门'}
                     ],
                     job:[
+=======
+                    mobile:[
+                        {required:true,message:'电话不能为空'}
+                    ],
+                    depart:[
+                        {required:true,message:'请选择部门'}
+                    ],
+                    duty:[
+>>>>>>> origin/master
                         {required:true,message:'职务不能为空'}
                     ]
                 },

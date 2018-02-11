@@ -81,7 +81,7 @@
                 <h5>必选功能点</h5>
                 <el-table :data="must_fps" :span-method="spanMethod"
                           highlight-current-row border stripe fit style="width:100%;">
-                    <el-table-column align="center" label="Stream_ID" prop="nodeid">
+                    <el-table-column align="center" label="node_ID" prop="nodeid">
                     </el-table-column>
                     <el-table-column align="center" label="参数名称" prop="remark">
                     </el-table-column>
@@ -96,7 +96,7 @@
                 <h5>可选功能点</h5>
                 <el-table :data="opt_fps" :span-method="spanMethod"
                           highlight-current-row border stripe fit style="width:100%;">
-                    <el-table-column align="center" label="Stream_ID" prop="nodeid">
+                    <el-table-column align="center" label="node_ID" prop="nodeid">
                     </el-table-column>
                     <el-table-column align="center" label="参数名称" prop="remark">
                     </el-table-column>

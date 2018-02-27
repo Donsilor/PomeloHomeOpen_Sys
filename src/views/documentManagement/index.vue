@@ -17,7 +17,8 @@
     </div>
 </template>
 
-<script>import fetch from '@/utils/fetch';
+<script>
+    import fetch from '@/utils/fetch';
 
     export default {
         name: 'documentManagement',
@@ -52,9 +53,9 @@
                         num:0
                     },
                     {
-                        name:'UI设计规范',
-                        url:'/documentManagement/uiDesign',
-                        type:'uiDesign',
+                        name:'厂商文档管理',
+                        url:'/documentManagement/enterprise',
+                        type:'enterprise',
                         num:0
                     }
                 ]

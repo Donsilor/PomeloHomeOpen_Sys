@@ -3,22 +3,15 @@
 
         <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" stripe fit highlight-current-row
                   style="width: 100%">
-            <el-table-column align="center" label="品类" prop="type_name">
+            <el-table-column align="center" label="厂商名称" prop="name">
             </el-table-column>
 
-            <el-table-column align="center" label="品牌" prop="brand_name">
+            <el-table-column align="center" label="联系人" prop="contacts">
             </el-table-column>
 
-            <el-table-column align="center" label="型号" prop="model">
-            </el-table-column>
+            <el-table-column align="center" label="联系人手机" prop="contacts_mobile"></el-table-column>
 
-            <el-table-column align="center" label="厂商" prop="business_name">
-            </el-table-column>
-
-            <el-table-column align="center" label="版本号" prop="version_no">
-            </el-table-column>
-
-            <el-table-column align="center" label="创建时间" prop="created_at">
+            <el-table-column align="center" label="审核时间" prop="approved_at">
             </el-table-column>
 
             <el-table-column align="center" label="操作" width="150">
@@ -42,7 +35,7 @@
 </template>
 
 <script>
-    import {getProductList} from '@/api/check';
+    import fetch from '@/utils/fetch';
 
     export default {
         name: 'enterpriseList',
@@ -74,11 +67,16 @@
                     limit: this.listQuery.limit,
                     page: this.listQuery.page
                 };
-                getProductList(params).then(response => {
+
+                fetch({
+                    url:'/user/list',
+                    method:'post',
+                    data:params
+                }).then(response => {
                     this.list = response.data;
                     this.total = response.total;
                     this.listLoading = false
-                })
+                });
             },
 
             handleSizeChange(val) {
@@ -91,9 +89,9 @@
             },
             toDetai(row){
                 let query = {
-                    product_id:row.product_id
+                    business_id:row.business_id
                 };
-                this.$router.push({path:'/enterpriseManagement/enterpriseProducts',query:query});
+                this.$router.push({path:'/enterpriseManagement/enterpriseInfo',query:query});
             }
         }
     }

@@ -138,6 +138,12 @@ export const constantRouterMap = [
                         meta: {breadNumber: 1, notKeepAlive: true}
                     },
                     {
+                        path: 'bigCategory',
+                        name: 'bigCategory',
+                        component: _import('typeManagement/bigCategory'),
+                        meta: {breadNumber: 1, notKeepAlive: true}
+                    },
+                    {
                         path: 'deviceManager',
                         name: 'deviceManager',
                         component: _import('typeManagement/deviceManager'),
@@ -166,7 +172,13 @@ export const constantRouterMap = [
                         name: 'addDevice',
                         component: _import('typeManagement/addDevice'),
                         meta: {breadNumber: 1, notKeepAlive: true,key : 'deviceManager'}
-                    }
+                    },
+                    {
+                        path: 'addBigCategory',
+                        name: 'addBigCategory',
+                        component: _import('typeManagement/addBigCategory'),
+                        meta: {breadNumber: 1, notKeepAlive: true,key : 'bigCategory'}
+                    },
                 ]
             },
             {
@@ -201,9 +213,9 @@ export const constantRouterMap = [
                         component:_import('documentManagement/developmentAndUidesign')
                     },
                     {
-                        path:'uiDesign',
-                        name:'uiDesign',
-                        component:_import('documentManagement/developmentAndUidesign')
+                        path:'enterprise',
+                        name:'enterprise',
+                        component:_import('documentManagement/enterpriseDoc')
                     }
                 ]
             },
@@ -234,13 +246,38 @@ export const constantRouterMap = [
                 path:'authorityManagement',
                 name:'权限管理',
                 component:_import('authorityManagement/index'),
-                redirect:'/authorityManagement/enterpriseAudit',
+                redirect:'/authorityManagement/all',
                 children:[
                     {
-                        path:'enterpriseAudit',
-                        name:'enterpriseAudit',
-                        component:_import('authorityManagement/enterpriseAudit')
-                    }
+                        path:'all',
+                        name:'all',
+                        component:_import('authorityManagement/authorityList')
+                    },
+                    {
+                        path:'comAu',
+                        name:'comAu',
+                        component:_import('authorityManagement/authorityList')
+                    },
+                    {
+                        path:'ptAu',
+                        name:'ptAu',
+                        component:_import('authorityManagement/authorityList')
+                    },
+                    {
+                        path:'olAu',
+                        name:'olAu',
+                        component:_import('authorityManagement/authorityList')
+                    },
+                    {
+                        path:'ptmAu',
+                        name:'ptmAu',
+                        component:_import('authorityManagement/authorityList')
+                    },
+                    {
+                        path:'docAu',
+                        name:'docAu',
+                        component:_import('authorityManagement/authorityList')
+                    },
                 ]
             }
         ]

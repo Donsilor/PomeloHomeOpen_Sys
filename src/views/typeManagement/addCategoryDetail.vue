@@ -91,78 +91,6 @@
                                         </el-select>
                                     </el-col>
                                 </el-form-item>
-                                <div v-if="form.parent_type_id=='0'">
-                                    <el-form-item label="大品类名称" label-width="120px" prop="parent_name">
-                                        <el-col :span="12">
-                                            <el-input v-model="form.parent_name" :span="6" placeholder="请输入大品类名称"></el-input>
-                                        </el-col>
-                                    </el-form-item>
-                                    <el-form-item label="大品类英文名" label-width="120px" prop="parent_name_e" v-show="form.parent_type_id=='0'">
-                                        <el-col :span="12">
-                                            <el-input v-model="form.parent_name_e" :span="6" placeholder="请输入大品类英文"></el-input>
-                                        </el-col>
-                                    </el-form-item>
-                                    <el-form-item label="大品类图标" label-width="120px" style="padding-bottom: 30px;">
-                                        <el-col :span="12">
-                                            <div class="fileuploadItem">
-                                                <el-upload
-                                                        class="avatar-uploader"
-                                                        action="/api/index.php/producttype/iconupload"
-                                                        :show-file-list="false"
-                                                        :on-success="handleAvatarSuccess"
-                                                        :before-upload="beforeAvatarUpload"
-                                                        accept="image/png"
-                                                        :data="parent_high_light_data">
-                                                    <img v-if="parent_high_light_data.file_id!=''" :src="form.parent_icon_list.high_light.file_url" class="avatar">
-                                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                                </el-upload>
-                                                <span class="file_upload_img_des">高亮状态</span>
-                                            </div>
-                                            <div class="fileuploadItem">
-                                                <el-upload
-                                                        class="avatar-uploader"
-                                                        action="/api/index.php/producttype/iconupload"
-                                                        :show-file-list="false"
-                                                        :on-success="handleAvatarSuccess"
-                                                        :before-upload="beforeAvatarUpload"
-                                                        accept="image/png"
-                                                        :data="parent_normal_s_data">
-                                                    <img v-if="parent_normal_s_data.file_id!=''" :src="form.parent_icon_list.normal_s.file_url" class="avatar">
-                                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                                </el-upload>
-                                                <span class="file_upload_img_des">默认状态小尺寸</span>
-                                            </div>
-                                            <div class="fileuploadItem">
-                                                <el-upload
-                                                        class="avatar-uploader"
-                                                        action="/api/index.php/producttype/iconupload"
-                                                        :show-file-list="false"
-                                                        :on-success="handleAvatarSuccess"
-                                                        :before-upload="beforeAvatarUpload"
-                                                        accept="image/png"
-                                                        :data="parent_normal_data">
-                                                    <img v-if="parent_normal_data.file_id!=''" :src="form.parent_icon_list.normal.file_url" class="avatar">
-                                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                                </el-upload>
-                                                <span class="file_upload_img_des">默认状态大尺寸</span>
-                                            </div>
-                                            <div class="fileuploadItem">
-                                                <el-upload
-                                                        class="avatar-uploader"
-                                                        action="/api/index.php/producttype/iconupload"
-                                                        :show-file-list="false"
-                                                        :on-success="handleAvatarSuccess"
-                                                        :before-upload="beforeAvatarUpload"
-                                                        accept="image/png"
-                                                        :data="parent_disabled_data">
-                                                    <img v-if="parent_disabled_data.file_id!=''" :src="form.parent_icon_list.disabled.file_url" class="avatar">
-                                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                                </el-upload>
-                                                <span class="file_upload_img_des">不可用状态</span>
-                                            </div>
-                                        </el-col>
-                                    </el-form-item>
-                                </div>
                                 <el-form-item label="是否高频使用" label-width="120px">
                                     <el-col :span="12">
                                         <el-checkbox v-model="form.is_high_frequency">是</el-checkbox>
@@ -353,16 +281,7 @@
                     ],
                     parent_type_id: [
                         { required: true, message: '请选择所属品类', trigger: 'change' }
-                    ],
-                    parent_name: [
-                        { required: true, message: '请输入大品类名称', trigger: 'blur' },
-                        { max: 32, message: '大品类名称不能超过32个字符', trigger: 'blur' },
-                    ],
-                    parent_name_e : [
-                        { required: true, message: '请输入大品类英文名称', trigger: 'blur' },
-                        { required: false, message: '请输入大品类英文名称', trigger: 'blur' },
-                        { max: 32, message: '大品类英文名称不能超过32个字符', trigger: 'blur' }
-                    ],
+                    ]
 
                 },
                 technical_wifi:[],
@@ -420,12 +339,7 @@
                     method: 'post',
                     data: {}
                 }).then(res => {
-                    let param = {
-                        'id' : 0,
-                        'name' : '新增品类'
-                    }
                     this.parentList = res.list;
-                    this.parentList.unshift(param);
                 })
             },
             handleAvatarSuccess(res, file) {

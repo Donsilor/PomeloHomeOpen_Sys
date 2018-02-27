@@ -4,7 +4,7 @@
             <el-menu class="sec-menu doc-menu" mode="vertical" :default-active="activeName" background-color="#f2f2f2" text-color="#666"
                      active-text-color="#409EFF">
                 <template v-for="item in navs">
-                    <router-link class="_li" :to="item.url">
+                    <router-link class="_li" :to="{path:item.url,query:{id:item.id}}">
                         <el-menu-item :index="item.type">
                             {{item.name}}
                             <span class="num">{{item.num}}</span>
@@ -29,43 +29,43 @@
                 navs:[
                     {
                         name:'全部',
-                        url:'',
-                        type:'',
+                        url:'/authorityManagement/all',
+                        type:'all',
                         num:0,
                         id:0
                     },
                     {
                         name: '企业审核',
-                        url: '/authorityManagement/wifi',
-                        type:'wifi',
+                        url: '/authorityManagement/comAu',
+                        type:'comAu',
                         num:0,
                         id:1
                     },
                     {
                         name:'产品审核',
-                        url:'/authorityManagement/zigbee',
-                        type:'zigbee',
+                        url:'/authorityManagement/ptAu',
+                        type:'ptAu',
                         num:0,
                         id:2
                     },
                     {
                         name:'上线审核',
-                        url:'/authorityManagement/bluetooth',
-                        type:'bluetooth',
+                        url:'/authorityManagement/olAu',
+                        type:'olAu',
                         num:0,
                         id:3
                     },
                     {
                         name:'产品管理',
-                        url:'/authorityManagement/development',
-                        type:'development',
+                        url:'/authorityManagement/ptmAu',
+                        type:'ptmAu',
                         num:0,
                         id:5
                     },
                     {
                         name:'资料管理',
-                        url:'/authorityManagement/uiDesign',
-                        type:'uiDesign',
+                        url:'/authorityManagement/docAu',
+                        type:'docAu',
                         num:0,
                         id:6
                     }

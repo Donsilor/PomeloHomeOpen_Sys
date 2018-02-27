@@ -25,19 +25,22 @@
         created() {
         },
         mounted() {
-            console.log(this.$route.meta.key);
         },
         data() {
-            console.log(this.$route);
             return {
                 activeName: this.$route.meta.key || this.$route.name,
                 isCheckedRender: false, // 已审核界面是否渲染
                 height: window.innerHeight - 50,
                 navs:[
                     {
-                        name: '已有品类',
+                        name: '产品子品类',
                         url: '/typeManagement/existedCategory',
                         type: 'existedCategory'
+                    },
+                    {
+                        name: '产品大品类',
+                        url: '/typeManagement/bigCategory',
+                        type: 'bigCategory'
                     },
                     {
                         name: '设备管理',

@@ -13,12 +13,11 @@
         </el-row>
         <div class="table-container">
             <template>
-                <el-table :data="tableData"stripe style="width: 100%">
-                    <el-table-column prop="name" label="子品类" width="250"></el-table-column>
-                    <el-table-column prop="parent_type_name" label="所属大品类"></el-table-column>
-                    <el-table-column  prop="created_user" label="创建人" width="120" align="center"></el-table-column>
-                    <el-table-column  prop="created_at_txt" label="创建时间" width="220"></el-table-column>
-                    <el-table-column label="操作"  width="130" align="center">
+                <el-table :data="tableData"fit stripe style="width: 100%">
+                    <el-table-column prop="name" label="大品类"></el-table-column>
+                    <el-table-column  prop="created_user" label="创建人" align="center"></el-table-column>
+                    <el-table-column  prop="created_at" label="创建时间"></el-table-column>
+                    <el-table-column label="操作" width="130"  align="center">
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
@@ -48,7 +47,7 @@
 <script>
     import fetch from '@/utils/fetch';
     export default {
-        name: 'existedCategory',
+        name: 'bigCategory',
         computed: {
         },
         created() {
@@ -64,21 +63,18 @@
         methods: {
             getList(){
                 fetch({
-                    url: '/product/type_lists',
+                    url: '/product/parenttype_lists',
                     method: 'post',
-                    data: {
-                        'search_type' : 0
-                    }
+                    data: {}
                 }).then(res=>{
                     this.tableData = res.list;
                 })
             },
             handleEnterPage(row){
-                console.log(row);
-                this.$router.push({path: '/typeManagement/categoryDetail', query: {'id' : row.id}});
+                this.$router.push({path: '/typeManagement/addBigCategory', query: {'id' : row.id}});
             },
             handelAddCateGory(){
-                this.$router.push({path: '/typeManagement/addCategoryDetail'});
+                this.$router.push({path: '/typeManagement/addBigCategory'});
             }
         }
     }

@@ -13,66 +13,74 @@
                     <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
                         <el-form-item label="大品类名称" label-width="120px" prop="name">
                             <el-col :span="12">
-                                <el-input v-model="form.name" :span="6" placeholder="请输入子品类名称"></el-input>
+                                <el-input v-model="form.name" :span="6" :disabled="disabled" placeholder="请输入子品类名称"></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="大品类英文名" label-width="120px" prop="name_e">
                             <el-col :span="12">
-                                <el-input v-model="form.name_e" :span="6" placeholder="请输入子品类英文"></el-input>
+                                <el-input v-model="form.name_e" :disabled="disabled" :span="6" placeholder="请输入子品类英文"></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="品类图标" label-width="120px" style="padding-bottom: 30px;">
                             <el-col :span="12">
-                                <div class="fileuploadItem">
+                                <div class="fileuploadItem bigCategory">
                                     <el-upload
                                             class="avatar-uploader"
+                                            :class="disabled ? 'disabled' : ''"
                                             action="/api/index.php/producttype/iconupload"
                                             :show-file-list="false"
                                             :on-success="handleAvatarSuccess"
                                             :before-upload="beforeAvatarUpload"
                                             accept="image/png"
+                                            :disabled="disabled"
                                             :data="high_light_data">
                                         <img v-if="high_light_data.file_id!=''" :src="form.icon_list.high_light.file_url" class="avatar">
                                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                     </el-upload>
                                     <span class="file_upload_img_des">高亮状态</span>
                                 </div>
-                                <div class="fileuploadItem">
+                                <div class="fileuploadItem bigCategory">
                                     <el-upload
                                             class="avatar-uploader"
+                                            :class="disabled ? 'disabled' : ''"
                                             action="/api/index.php/producttype/iconupload"
                                             :show-file-list="false"
                                             :on-success="handleAvatarSuccess"
                                             :before-upload="beforeAvatarUpload"
                                             accept="image/png"
+                                            :disabled="disabled"
                                             :data="normal_s_data">
                                         <img v-if="normal_s_data.file_id!=''" :src="form.icon_list.normal_s.file_url" class="avatar">
                                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                     </el-upload>
                                     <span class="file_upload_img_des">默认状态小尺寸</span>
                                 </div>
-                                <div class="fileuploadItem">
+                                <div class="fileuploadItem bigCategory">
                                     <el-upload
                                             class="avatar-uploader"
+                                            :class="disabled ? 'disabled' : ''"
                                             action="/api/index.php/producttype/iconupload"
                                             :show-file-list="false"
                                             :on-success="handleAvatarSuccess"
                                             :before-upload="beforeAvatarUpload"
                                             accept="image/png"
+                                            :disabled="disabled"
                                             :data="normal_data">
                                         <img v-if="normal_data.file_id!=''" :src="form.icon_list.normal.file_url" class="avatar">
                                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                     </el-upload>
                                     <span class="file_upload_img_des">默认状态大尺寸</span>
                                 </div>
-                                <div class="fileuploadItem">
+                                <div class="fileuploadItem bigCategory">
                                     <el-upload
                                             class="avatar-uploader"
+                                            :class="disabled ? 'disabled' : ''"
                                             action="/api/index.php/producttype/iconupload"
                                             :show-file-list="false"
                                             :on-success="handleAvatarSuccess"
                                             :before-upload="beforeAvatarUpload"
                                             accept="image/png"
+                                            :disabled="disabled"
                                             :data="disabled_data">
                                         <img v-if="disabled_data.file_id!=''" :src="form.icon_list.disabled.file_url" class="avatar">
                                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -106,8 +114,8 @@
         width: 100%;
     }
 
-    .fileuploadItem .avatar-uploader{
-        border: 1px dashed #d9d9d9!important;
+    .bigCategory .el-upload{
+        border: 1px dashed #d9d9d9;
         border-radius: 6px;
         cursor: pointer;
         position: relative;
@@ -115,7 +123,7 @@
         width: 110px;
         height: 110px;
     }
-    .fileuploadItem .avatar-uploader:hover {
+    .bigCategory .el-upload:hover {
         border-color: #409EFF;
     }
     .avatar-uploader-icon {
@@ -196,6 +204,7 @@
                 token : getToken(),
                 isLoadData : false,
                 editText : '编辑品类信息',
+                disabled:this.$route.query.id ? true : false,
                 form:{
                     "id":this.$route.query.id,
                     "name":"",
@@ -280,7 +289,7 @@
             },
             handleAvatarSuccess(res, file) {
                 if(res.code!==200){
-                    this.$message.error('上传出错，请重新上传');
+                    this.$message.error(res.msg);
                     return;
                 }
                 let data = res.result;
@@ -318,6 +327,11 @@
             },
             //编辑品类信息
             editGory(){
+                if(this.disabled){
+                    this.editText = '确认并提交修改';
+                    this.disabled = false;
+                    return false;
+                }
                 this.$refs['ruleForm'].validate((valid) => {
                     if (valid) {
                         this.$confirm('是否确认保存修改后品类信息？', '提示', {

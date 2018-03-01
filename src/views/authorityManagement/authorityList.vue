@@ -25,7 +25,7 @@
                     </el-form-item>
                     <el-form-item label="操作权限" prop="permission_ids">
                         <el-checkbox-group v-model="form.permission_ids">
-                            <el-checkbox v-for="item in permissionList"
+                            <el-checkbox v-for="item in permissionList" class="p-checkbox"
                                          :label="item.menu_name"
                                          :key="item.id"
                                          :value="item.id"
@@ -58,7 +58,7 @@
 
             <el-table-column align="center" label="最新操作记录">
                 <template slot-scope="scope">
-                    <span>{{scope.row.last_action+' '+scope.row.last_action_at}}</span>
+                    <span>{{scope.row.last_action}}  {{scope.row.last_action_at}}</span>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="操作" width="150">
@@ -256,7 +256,7 @@
                             data:data
                         }).then(res=>{
                             this.closeDialog();
-                            refresh();
+                            this.refresh();
                         })
                     }
                 })
@@ -273,7 +273,7 @@
                         data:{admin_id:this.form.admin_id}
                     }).then(res=>{
                         this.closeDialog();
-                        refresh();
+                        this.refresh();
                     })
                 }).catch(() => {
                 });
@@ -281,3 +281,8 @@
         }
     }
 </script>
+<style>
+    .p-checkbox:last-child{
+        margin-left: 0;
+    }
+</style>

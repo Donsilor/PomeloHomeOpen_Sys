@@ -21,7 +21,7 @@
                                 </el-form-item>
                                 <el-form-item label="品类图标" label-width="120px" style="padding-bottom: 30px;">
                                     <el-col :span="12">
-                                        <div class="fileuploadItem">
+                                        <div class="fileuploadItem gavin">
                                             <el-upload
                                                     class="avatar-uploader"
                                                     action="/api/index.php/producttype/iconupload"
@@ -35,7 +35,7 @@
                                             </el-upload>
                                             <span class="file_upload_img_des">高亮状态</span>
                                         </div>
-                                        <div class="fileuploadItem">
+                                        <div class="fileuploadItem gavin">
                                             <el-upload
                                                     class="avatar-uploader"
                                                     action="/api/index.php/producttype/iconupload"
@@ -49,7 +49,7 @@
                                             </el-upload>
                                             <span class="file_upload_img_des">默认状态小尺寸</span>
                                         </div>
-                                        <div class="fileuploadItem">
+                                        <div class="fileuploadItem gavin">
                                             <el-upload
                                                     class="avatar-uploader"
                                                     action="/api/index.php/producttype/iconupload"
@@ -63,7 +63,7 @@
                                             </el-upload>
                                             <span class="file_upload_img_des">默认状态大尺寸</span>
                                         </div>
-                                        <div class="fileuploadItem">
+                                        <div class="fileuploadItem gavin">
                                             <el-upload
                                                     class="avatar-uploader"
                                                     action="/api/index.php/producttype/iconupload"
@@ -126,8 +126,8 @@
             width: 100%;
         }
 
-        .fileuploadItem .avatar-uploader{
-            border: 1px dashed #d9d9d9!important;
+        .gavin .avatar-uploader .el-upload{
+            border: 1px dashed #d9d9d9;
             border-radius: 6px;
             cursor: pointer;
             position: relative;
@@ -135,7 +135,7 @@
             width: 110px;
             height: 110px;
         }
-        .fileuploadItem .avatar-uploader:hover {
+        .gavin .avatar-uploader .el-upload:hover {
             border-color: #409EFF;
         }
         .avatar-uploader-icon {

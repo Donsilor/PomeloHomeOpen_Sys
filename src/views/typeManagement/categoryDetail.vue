@@ -42,7 +42,7 @@
                                 </el-form-item>
                                 <el-form-item label="品类图标" label-width="120px" v-if="isLoadData" >
                                     <el-col :span="12">
-                                        <div class="fileuploadItem">
+                                        <div class="fileuploadItem childCategory">
                                             <el-upload
                                                     class="avatar-uploader"
                                                     :class="isEdit ? '' : 'disabled'"
@@ -59,7 +59,7 @@
                                             </el-upload>
                                             <span class="file_upload_img_des">高亮状态</span>
                                         </div>
-                                        <div class="fileuploadItem">
+                                        <div class="fileuploadItem childCategory">
                                             <el-upload
                                                     class="avatar-uploader"
                                                     :class="isEdit ? '' : 'disabled'"
@@ -76,7 +76,7 @@
                                             </el-upload>
                                             <span class="file_upload_img_des">默认状态小尺寸</span>
                                         </div>
-                                        <div class="fileuploadItem">
+                                        <div class="fileuploadItem childCategory">
                                             <el-upload
                                                     class="avatar-uploader"
                                                     :class="isEdit ? '' : 'disabled'"
@@ -93,7 +93,7 @@
                                             </el-upload>
                                             <span class="file_upload_img_des">默认状态大尺寸</span>
                                         </div>
-                                        <div class="fileuploadItem">
+                                        <div class="fileuploadItem childCategory">
                                             <el-upload
                                                     class="avatar-uploader"
                                                     :class="isEdit ? '' : 'disabled'"
@@ -318,7 +318,7 @@
         box-sizing: border-box;
     }
 
-    .avatar-uploader .el-upload {
+    .childCategory .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
         border-radius: 6px;
         cursor: pointer;
@@ -326,7 +326,7 @@
         overflow: hidden;
     }
 
-    .avatar-uploader .el-upload:hover {
+    .childCategory .avatar-uploader .el-upload:hover {
         border-color: #409EFF;
     }
 
@@ -634,6 +634,10 @@
             },
             handleAvatarSuccess(res, file) {
                 let data = res.result;
+                if(res.code!==200){
+                    this.$message.error(res.msg);
+                    return;
+                }
                 switch (res.result.type) {
                     case 'high_light' :
                         this.form.icon_list.high_light = data.high_light;

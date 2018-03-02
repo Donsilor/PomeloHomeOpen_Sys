@@ -758,12 +758,13 @@
                     if (valid) {
                         this.isEdit = false;
                         this.editText = '编辑品类信息';
-                        this.form.is_high_frequency = this.form.is_high_frequency == true ? 1 : 0;
-                        this.form.is_relate_switch = this.form.is_relate_switch == true ? 1 : 0;
+                        let form = JSON.parse(JSON.stringify(this.form));
+                        form.is_high_frequency = form.is_high_frequency == true ? 1 : 0;
+                        form.is_relate_switch = form.is_relate_switch == true ? 1 : 0;
                         fetch({
                             url: '/producttype/edit',
                             method: 'post',
-                            data: this.form,
+                            data: form,
                         }).then(res => {
                             this.isEdit = false;
                             setTimeout(() => {

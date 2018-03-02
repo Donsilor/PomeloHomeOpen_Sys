@@ -87,7 +87,7 @@
                     </el-table-column>
                     <el-table-column align="center" :formatter="arrayToString" label="value" prop="value_list">
                     </el-table-column>
-                    <el-table-column align="center" label="是否开启" prop="is_enable">
+                    <el-table-column align="center" label="是否开启">
                         <template slot-scope="scope">
                             <el-switch :active-value="1" :inactive-value="0" v-model="scope.row.is_enable" disabled></el-switch>
                         </template>
@@ -166,6 +166,7 @@
                         }
                     })
                 })
+                console.log(this.must_fps)
             },
 
             // 图片预览

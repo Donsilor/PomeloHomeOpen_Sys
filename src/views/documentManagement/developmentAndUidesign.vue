@@ -4,7 +4,7 @@
       <el-row style="margin-bottom: 20px;">
         <el-button type="primary" @click="openDialog('')">新建{{labelText}}</el-button>
       </el-row>
-      <el-dialog :before-close="handleClose" center width="700px" class="doc-dialog" title="上传SDK文件" :visible.sync="dialogVisible">
+      <el-dialog :before-close="handleClose" center width="700px" class="doc-dialog" title="上传开发文档" :visible.sync="dialogVisible">
         <el-form :rules="rules" ref="uploadForm" :model="form" label-width="110px">
           <el-form-item label="产品品类" prop="type_id">
             <el-select :disabled="isToModify" style="width: 100%;" v-model="form.type_id" placeholder="请选择">

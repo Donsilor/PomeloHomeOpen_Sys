@@ -4,12 +4,12 @@
             <el-col :span="2">
                 <el-button type="primary" @click="handelAddCateGory">新增品类</el-button>
             </el-col>
-            <el-col :span="18">
+            <!--<el-col :span="18">
                 <span class="tipStyle">
                     <i class="el-icon-warning"></i>
                     品类被添加后，厂商在开放平台才能看到并加入合作意向
                 </span>
-            </el-col>
+            </el-col>-->
         </el-row>
         <div class="table-container">
             <template>
@@ -27,6 +27,13 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div v-show="!listLoading" class="pagination-container">
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                                   :current-page.sync="listQuery.page"
+                                   :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit"
+                                   layout="total, sizes, prev, pager, next, jumper" :total="total">
+                    </el-pagination>
+                </div>
             </template>
         </div>
     </div>
@@ -57,18 +64,39 @@
         },
         data() {
             return {
+                total: null,
+                listLoading: false,
+                listQuery: {
+                    page: 1,
+                    limit: 10,
+                },
                 tableData: []
             }
         },
         methods: {
             getList(){
+                this.listLoading = true;
+                let params = {
+                    limit: this.listQuery.limit,
+                    page: this.listQuery.page
+                };
                 fetch({
                     url: '/product/parenttype_lists',
                     method: 'post',
-                    data: {}
+                    data: params
                 }).then(res=>{
                     this.tableData = res.list;
+                    this.total = res.total;
+                    this.listLoading = false
                 })
+            },
+            handleSizeChange(val) {
+                this.listQuery.limit = val;
+                this.getList()
+            },
+            handleCurrentChange(val) {
+                this.listQuery.page = val;
+                this.getList()
             },
             handleEnterPage(row){
                 this.$router.push({path: '/typeManagement/addBigCategory', query: {'id' : row.id}});

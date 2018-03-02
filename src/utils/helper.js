@@ -144,7 +144,8 @@ export default {
                 secCount++;
                 targetList.push(Object.assign({
                     nodeid:item.nodeid,
-                    attr_id:item.attr_id
+                    attr_id:item.attr_id,
+                    is_enable:item.is_enable
                 },v));
             }
             else{

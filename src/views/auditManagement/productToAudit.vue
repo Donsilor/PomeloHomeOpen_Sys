@@ -464,4 +464,7 @@
     max-height: 120px;
     margin-right: 15px;
   }
+  .el-switch{
+    z-index: 100;
+  }
 </style>

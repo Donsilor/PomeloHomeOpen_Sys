@@ -28,6 +28,13 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div v-show="!listLoading" class="pagination-container">
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                                   :current-page.sync="listQuery.page"
+                                   :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit"
+                                   layout="total, sizes, prev, pager, next, jumper" :total="total">
+                    </el-pagination>
+                </div>
             </template>
         </div>
     </div>
@@ -58,20 +65,40 @@
         },
         data() {
             return {
+                total: null,
+                listLoading: false,
+                listQuery: {
+                    page: 1,
+                    limit: 10,
+                },
                 tableData: []
             }
         },
         methods: {
             getList(){
+                this.listLoading = true;
+                let params = {
+                    limit: this.listQuery.limit,
+                    page: this.listQuery.page,
+                    'search_type' : 0
+                };
                 fetch({
                     url: '/product/type_lists',
                     method: 'post',
-                    data: {
-                        'search_type' : 0
-                    }
+                    data: params
                 }).then(res=>{
                     this.tableData = res.list;
+                    this.total = res.total;
+                    this.listLoading = false;
                 })
+            },
+            handleSizeChange(val) {
+                this.listQuery.limit = val;
+                this.getList()
+            },
+            handleCurrentChange(val) {
+                this.listQuery.page = val;
+                this.getList()
             },
             handleEnterPage(row){
                 console.log(row);

@@ -104,7 +104,7 @@
                 listLoading: false,
                 isToModify:false,
                 productTypeList:[],
-                typesMap:null,
+                typesMap:{},
                 listQuery: {
                     page: 1,
                     limit: 10,

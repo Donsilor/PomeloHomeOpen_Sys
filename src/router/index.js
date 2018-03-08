@@ -246,36 +246,11 @@ export const constantRouterMap = [
                 path:'authorityManagement',
                 name:'权限管理',
                 component:_import('authorityManagement/index'),
-                redirect:'/authorityManagement/all',
+                redirect:'/authorityManagement/authority/0',
                 children:[
                     {
-                        path:'all',
-                        name:'all',
-                        component:_import('authorityManagement/authorityList')
-                    },
-                    {
-                        path:'comAu',
-                        name:'comAu',
-                        component:_import('authorityManagement/authorityList')
-                    },
-                    {
-                        path:'ptAu',
-                        name:'ptAu',
-                        component:_import('authorityManagement/authorityList')
-                    },
-                    {
-                        path:'olAu',
-                        name:'olAu',
-                        component:_import('authorityManagement/authorityList')
-                    },
-                    {
-                        path:'ptmAu',
-                        name:'ptmAu',
-                        component:_import('authorityManagement/authorityList')
-                    },
-                    {
-                        path:'docAu',
-                        name:'docAu',
+                        path:'authority/:id',
+                        name:'authority',
                         component:_import('authorityManagement/authorityList')
                     },
                 ]

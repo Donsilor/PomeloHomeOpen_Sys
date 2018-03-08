@@ -262,6 +262,7 @@
             this.status = this.$route.query.status||'0';
         },
         mounted() {
+            this.$store.dispatch('GetAuditMenus');
             this.getReviewInfo();
         },
         methods: {

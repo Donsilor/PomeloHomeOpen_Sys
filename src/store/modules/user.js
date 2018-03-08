@@ -9,7 +9,7 @@ const user = {
         roles: [],
         auditMenus:{},
         documentMenus:{},
-        authorityMenus:{},
+        authorityMenus:[],
     },
 
     mutations: {
@@ -122,12 +122,7 @@ const user = {
         GetAuthorityMenus({commit},state){
             return new Promise((resolve,reject)=>{
                 getAuthorityMenus().then(response=>{
-                    let list =　{};
-                    response.forEach(function (v) {
-                        list[v.menu_name] = v;
-                    })
-                    const data = response;
-                    commit('SET_AUTHORITY_MENUS', list);
+                    commit('SET_AUTHORITY_MENUS', response);
                     resolve();
                 }).catch(error=>{
                     reject(error);

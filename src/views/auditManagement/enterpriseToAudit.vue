@@ -14,7 +14,7 @@
                 <p v-for="(item,index) in checkDetail.approved_reason">{{index+1}}、{{item}}</p>
             </div>
         </el-card>
-        <el-card class="box-card">
+        <el-card class="box-card">fan
             <el-row class="card-header" slot="header">
                 <i></i>联系人信息
             </el-row>
@@ -344,6 +344,7 @@
             this.status = this.$route.query.status||'0';
         },
         mounted() {
+            this.$store.dispatch('GetAuditMenus');
             this.getReviewInfo();
         },
         methods: {

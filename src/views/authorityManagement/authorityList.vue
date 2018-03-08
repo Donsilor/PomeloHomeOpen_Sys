@@ -98,7 +98,7 @@
                     page: 1,
                     limit: 10,
                 },
-                type_id: 0,
+                type_id: this.$route.params.id,
                 form: {
                     admin_id:'',
                     name: '',
@@ -158,7 +158,7 @@
         },
         watch:{
             $route(curVal,oldVal){
-                this.type_id = curVal.query.id;
+                this.type_id = curVal.params.id;
                 this.refresh();
             }
         },

@@ -13,12 +13,12 @@
                     <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
                         <el-form-item label="大品类名称" label-width="120px" prop="name">
                             <el-col :span="12">
-                                <el-input v-model="form.name" :span="6" :disabled="disabled" placeholder="请输入子品类名称"></el-input>
+                                <el-input v-model="form.name" :span="6" :disabled="disabled" placeholder="请输入大品类名称"></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="大品类英文名" label-width="120px" prop="name_e">
                             <el-col :span="12">
-                                <el-input v-model="form.name_e" :disabled="disabled" :span="6" placeholder="请输入子品类英文"></el-input>
+                                <el-input v-model="form.name_e" :disabled="disabled" :span="6" placeholder="请输入大品类英文"></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="品类图标" label-width="120px" style="padding-bottom: 30px;">
@@ -87,6 +87,14 @@
                                     </el-upload>
                                     <span class="file_upload_img_des">不可用状态</span>
                                 </div>
+                            </el-col>
+                        </el-form-item>
+                        <el-form-item label="大品类是否在设备选择列表显示" label-width="120px" class="line25">
+                            <el-col :span="12">
+                                <el-radio-group :disabled="disabled" v-model="form.show_in_select_list">
+                                    <el-radio :label="1">是</el-radio>
+                                    <el-radio :label="0">否</el-radio>
+                                </el-radio-group>
                             </el-col>
                         </el-form-item>
                     </el-form>
@@ -209,6 +217,7 @@
                     "id":this.$route.query.id,
                     "name":"",
                     "name_e":"",
+                    "show_in_select_list":1,
                     "icon_list":{
                         "high_light":{
                             "file_id":"",
@@ -278,6 +287,9 @@
                     this.form.name = res.name;
                     this.form.name_e = res.name_e;
                     this.form.icon_list = res.icon_list;
+                    if(res.show_in_select_list!==undefined){
+                        this.form.show_in_select_list = res.show_in_select_list;
+                    }
                     this.handleIconList(this.form.icon_list);
                 });
             },

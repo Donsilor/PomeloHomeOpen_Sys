@@ -24,6 +24,10 @@
                         <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.model}}</el-col>
                     </el-row>
                     <el-row class="card-row">
+                        <el-col :span="3" class="card-span-left">兼容机型</el-col>
+                        <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.compat}}</el-col>
+                    </el-row>
+                    <el-row class="card-row">
                         <el-col :span="3" class="card-span-left">渠道商</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.distributor}}</el-col>
                     </el-row>

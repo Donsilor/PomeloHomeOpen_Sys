@@ -110,16 +110,25 @@
       <el-row class="card-body">
         <el-row class="card-row">
           <el-col :span="3" class="card-span-left">选择技术方案</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.type_txt}}</el-col>
+          <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.type_txt||'无'}}</el-col>
         </el-row>
-        <el-row class="card-row">
-          <el-col :span="3" class="card-span-left">模组/芯片信息</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.type_vendor}}</el-col>
-        </el-row>
-        <el-row class="card-row">
-          <el-col :span="3" class="card-span-left">型号</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.type_model}}</el-col>
-        </el-row>
+        <template v-if="checkDetail.type==1">
+          <el-row class="card-row">
+            <el-col :span="3" class="card-span-left">模组/芯片信息</el-col>
+            <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.type_vendor}}</el-col>
+          </el-row>
+          <el-row class="card-row">
+            <el-col :span="3" class="card-span-left">型号</el-col>
+            <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.type_model}}</el-col>
+          </el-row>
+        </template>
+        <template v-if="checkDetail.type==2||checkDetail.type==3">
+          <el-row class="card-row">
+            <el-col :span="3" class="card-span-left">标准协议</el-col>
+            <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.agreement}}</el-col>
+          </el-row>
+        </template>
+
       </el-row>
       <el-row v-if="type=='audit' " class="card-handle">
         <el-col :span="6" :offset="4">

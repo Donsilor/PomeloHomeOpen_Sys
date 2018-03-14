@@ -71,7 +71,7 @@
                 <el-row class="">
                     <el-row class="card-row">
                         <el-col :span="3" class="card-span-left">选择技术方案</el-col>
-                        <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.type_txt}}</el-col>
+                        <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.type_txt||'无'}}</el-col>
                     </el-row>
                     <el-row class="card-row" v-show="productDetail.type==1">
                         <el-col :span="3" class="card-span-left">模组/芯片信息</el-col>

@@ -14,7 +14,7 @@
                 <p v-for="(item,index) in checkDetail.approved_reason">{{index+1}}、{{item}}</p>
             </div>
         </el-card>
-        <el-card class="box-card">fan
+        <el-card class="box-card">
             <el-row class="card-header" slot="header">
                 <i></i>联系人信息
             </el-row>
@@ -264,7 +264,7 @@
 
 <script>
     import {getReviewInfo, commitCheck} from '@/api/check';
-    import {originalCheckType} from '@/utils/config'; // 复核原件类型
+    //import {originalCheckType} from '@/utils/config'; // 复核原件类型
     import {licenseTranslate} from '@/utils';
     import {Message} from 'element-ui';
 
@@ -362,7 +362,8 @@
                             _this.$set(item, 'action_type', 0);
                             _this.$set(item, 'prefix', '上传——');
                             _this.$set(item, 'url', item.file_url);
-                            item.description = licenseTranslate(item.type);
+                            //item.description = licenseTranslate(item.type);
+                            item.description = item.filename;
                             _this.$set(item, 'unapproved_reason', '');
                             temp.push({
                                 action_type: 0,

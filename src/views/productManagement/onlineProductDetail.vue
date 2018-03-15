@@ -38,7 +38,7 @@
                     <el-row class="card-row">
                         <el-col :span="3" class="card-span-left">产品小图</el-col>
                         <el-col :span="20" :offset="1" class="card-span-right">
-                            <img class="six-img" :src="productDetail.icon" v-img:name alt="图片加载失败">
+                            <img v-if="productDetail.icon" class="six-img" :src="productDetail.icon" v-img:name alt="图片加载失败">
                         </el-col>
                     </el-row>
                     <el-row class="card-row">

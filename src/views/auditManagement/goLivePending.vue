@@ -82,7 +82,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column align="center" label="创建时间" prop="approved_at_txt" width="180px">
+            <el-table-column align="center" label="创建时间" prop="created_at_txt" width="180px">
                 <template slot-scope="scope">
                     <span>{{scope.row.approved_at_txt}}</span>
                 </template>

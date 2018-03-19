@@ -78,7 +78,7 @@
                                 </el-form-item>
                                 <el-form-item label="第一步" label-width="120px">
                                     <el-col :span="13">
-                                        <el-form-item label="上传图片" label-width="80px" prop="add1_img.filename" v-if="form.add1_img">
+                                        <el-form-item label="上传图片" label-width="80px"  v-if="form.add1_img">
                                             <div class="flex">
                                                 <!--<div class="desTitle">上传图片</div>-->
                                                 <el-input v-model="form.add1_img.filename" readonly  :disabled="!isEdit"></el-input>
@@ -121,7 +121,7 @@
                                 </el-form-item>
                                 <el-form-item label="第二步" label-width="120px">
                                     <el-col :span="13">
-                                        <el-form-item label="上传图片" label-width="80px" prop="add2_img.filename" v-if="form.add2_img">
+                                        <el-form-item label="上传图片" label-width="80px"  v-if="form.add2_img">
                                             <div class="flex">
                                                 <!--<div class="desTitle">上传图片</div>-->
                                                 <el-input v-model="form.add2_img.filename"  readonly  :disabled="!isEdit"></el-input>
@@ -160,7 +160,7 @@
                         </el-tab-pane>
                         <el-tab-pane label="重置方式">
                             <el-col :span="24">
-                                <el-form-item label="上传图片" label-width="120px" prop="reset_img.filename" v-if="form.reset_img">
+                                <el-form-item label="上传图片" label-width="120px" v-if="form.reset_img">
                                     <el-col :span="13">
                                         <div class="flex">
                                             <el-input v-model="form.reset_img.filename" readonly  :disabled="!isEdit"></el-input>
@@ -265,15 +265,15 @@
                     add_type: [
                         { required: true, message: '请选择设备添加方式', trigger: 'change' }
                     ],
-                    'add1_img.filename': [
-                        {validator(rule, value, callback, source, options) {
-                            var errors = [];
-                            if (!value) {
-                                callback('添加方式的图片不能为空');
-                            }
-                            callback(errors);
-                        }}
-                    ],
+//                  'add1_img.filename': [
+//                        {validator(rule, value, callback, source, options) {
+//                            var errors = [];
+//                            if (!value) {
+//                                callback('添加方式的图片不能为空');
+//                            }
+//                            callback(errors);
+//                        }}
+//                    ],
                     add1_tips: [
                         { required: true, message: '请输入提示文字', trigger: 'blur' },
                         { max: 64, message: '提示文字不能超过64个字符', trigger: 'blur' },
@@ -282,28 +282,28 @@
                         { required: true, message: '请输入按钮文字', trigger: 'blur' },
                         { max: 8, message: '按钮文字不能超过8个字符', trigger: 'blur' },
                     ],
-                    'add2_img.filename': [
-                        {validator(rule, value, callback, source, options) {
-                            var errors = [];
-                            if (!value) {
-                                callback('添加方式的图片不能为空');
-                            }
-                            callback(errors);
-                        }}
-                    ],
+//                    'add2_img.filename': [
+//                        {validator(rule, value, callback, source, options) {
+//                            var errors = [];
+//                            if (!value) {
+//                                callback('添加方式的图片不能为空');
+//                            }
+//                            callback(errors);
+//                        }}
+//                    ],
                     add2_tips: [
                         { required: true, message: '请输入提示文字', trigger: 'blur' },
                         { max: 64, message: '提示文字不能超过64个字符', trigger: 'blur' },
                     ],
-                    'reset_img.filename': [
-                        {validator(rule, value, callback, source, options) {
-                            var errors = [];
-                            if (!value) {
-                                callback('添加方式的图片不能为空');
-                            }
-                            callback(errors);
-                        }}
-                    ],
+//                    'reset_img.filename': [
+//                        {validator(rule, value, callback, source, options) {
+//                            var errors = [];
+//                            if (!value) {
+//                                callback('添加方式的图片不能为空');
+//                            }
+//                            callback(errors);
+//                        }}
+//                    ],
                     reset_tips: [
                         { required: true, message: '请输入重置提示文字', trigger: 'blur' },
                         { max: 64, message: '重置提示文字不能超过64个字符', trigger: 'blur' },

@@ -77,7 +77,7 @@
                 business_id:this.$route.query.business_id,
                 listQuery: {
                     page: 1,
-                    limit: 10,
+                    limit: 15,
                     business_id:this.$route.query.business_id
                 },
                 activeName:'enterpriseProducts',

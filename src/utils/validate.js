@@ -30,4 +30,46 @@ export function validatAlphabets(str) {
   const reg = /^[A-Za-z]+$/
   return reg.test(str)
 }
+/*字母下划线*/
+export function letterAndUnderscode(rule, value, callback) {
+    let flag = true;
+    if(!value){
+        callback();
+        return;
+    }
+    for(let i = 0;i<value.length;i++){
+        let code = value.charCodeAt(i);
+        //ASCII 65-90=>A-Z 97-122=>a-z  95=>_
+        if((code>=65&&code<=90)||(code>=97&&code<=122)||code==95 || (code>=33 && code <= 46) ||(code >=48 && code <=57)) {
+        }
+        else{
+            flag = false;
+            callback('只能是字母下划线');
+            break;
+        }
+    }
+    if(flag){
+        callback();
+    }
+}
+/*中文字母*/
+export function letterAndCN(rule, value, callback){
+    let flag = true;
+    if(!value){
+        callback();
+        return;
+    }
+    for(let i = 0;i<value.length;i++){
+        let pattern = /[\u4e00-\u9fa5a-zA-Z]+/g;
+        let code = value.charAt(i);
+        if(!pattern.test(code)){
+            flag = false;
+            callback('只能是中文字母');
+            break;
+        }
+    }
+    if(flag){
+        callback();
+    }
+}
 

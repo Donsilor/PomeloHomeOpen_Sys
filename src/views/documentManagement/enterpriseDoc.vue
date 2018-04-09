@@ -107,7 +107,7 @@
                 typesMap:{},
                 listQuery: {
                     page: 1,
-                    limit: 10,
+                    limit: 15,
                 },
                 form:{
                     type_id:'',

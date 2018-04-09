@@ -3,7 +3,7 @@
         <el-dialog title="增加技术方案" :visible.sync="dialogFormVisible" width="50%" custom-class="addTechDialog">
             <el-form :model="form" ref="techniForm" :inline="true" label-position="top">
                 <el-row :span="24" v-for="(item,index) in form.technology_list" :key="item.value">
-                    <el-col :span="8">
+                    <el-col :span="7">
                         <el-form-item
                                 label="技术方案"
                                 :prop="'technology_list.'+index+'.technology_type'"
@@ -18,8 +18,8 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="模组/芯片厂家"  v-if="item.technology_type == 1"
+                    <el-col :span="7" v-if="item.technology_type == 1">
+                        <el-form-item label="模组/芯片厂家"
                                       :prop="'technology_list.'+index+'.vendor'"
                                       :rules="[
                                           {required:true,message:'模组/芯片厂家不能为空',trigger: 'blur'}
@@ -27,8 +27,8 @@
                             <el-input v-model="item.vendor"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="模组/芯片型号"  v-if="item.technology_type == 1"
+                    <el-col :span="7" v-if="item.technology_type == 1">
+                        <el-form-item label="模组/芯片型号"
                                       :prop="'technology_list.'+index+'.model'"
                                       :rules="[
                                           {required:true,message:'模组/芯片型号不能为空',trigger: 'blur'}
@@ -36,8 +36,8 @@
                             <el-input v-model="item.model"></el-input>
                         </el-form-item>
                     </el-col>
-                   <el-col :span="8">
-                       <el-form-item label="协议" v-if="item.technology_type == 2 || item.technology_type == 3"
+                   <el-col :span="7" v-if="item.technology_type == 2 || item.technology_type == 3">
+                       <el-form-item label="协议"
                                      :prop="'technology_list.'+index+'.agreement'"
                                      :rules="[
                                           {required:true,message:'协议不能为空',trigger: 'blur'}
@@ -45,6 +45,13 @@
                            <el-input v-model="item.agreement"></el-input>
                        </el-form-item>
                    </el-col>
+                    <el-col :span="3">
+                        <el-form-item label=" ">
+                            <i v-if="form.technology_list.length>1"
+                               @click="removeTechnicalList(index)"
+                               class="el-icon-circle-close remove-item"></i>
+                        </el-form-item>
+                    </el-col>
                 </el-row>
             </el-form>
             <a href="javascript:void(0);" @click="addTechnicalList" class="addbtn"><i class="el-icon-plus"></i> 添加更多技术方案</a>
@@ -70,6 +77,13 @@
     .addTechDialog .el-form-item__label{
         padding-bottom: 0px;
         line-height: 30px;
+    }
+    .remove-item{
+        font-size: 24px;
+        cursor: pointer;
+        color: #409EFF;
+        position: relative;
+        top: 30px;
     }
 </style>
 <script>
@@ -125,14 +139,17 @@
         },
         methods: {
             addTechnicalList(){
-                let index = this.form.technology_list.length;
+                //let index = this.form.technology_list.length;
                 this.form.technology_list.push({
                     'technology_type' : '',
-                    'index': index,
+                    //'index': index,
                     'vendor' : '',
                     'model' : '',
                     'agreement' : ''
                 })
+            },
+            removeTechnicalList(index){
+                this.form.technology_list.splice(index,1);
             },
             confirmTechnical(){
                 this.$refs['techniForm'].validate((valid) => {

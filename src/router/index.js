@@ -150,6 +150,28 @@ export const constantRouterMap = [
                         meta: {breadNumber: 1, notKeepAlive: true}
                     },
                     {
+                        path: 'channelManager',
+                        name: 'channelManager',
+                        component: _import('typeManagement/channelManager'),
+                    },
+                    {
+                        path: 'networkManager',
+                        name: 'networkManager',
+                        component: _import('typeManagement/networkManager'),
+                    },
+                    {
+                        path: 'channelDetail',
+                        name: 'channelDetail',
+                        component: _import('typeManagement/channelDetail'),
+                        meta: {breadNumber: 1, notKeepAlive: true,key : 'channelManager'}
+                    },
+                    {
+                        path: 'addNetwork',
+                        name: 'addNetwork',
+                        component: _import('typeManagement/addNetwork'),
+                        meta: {breadNumber: 1, notKeepAlive: true,key : 'networkManager'}
+                    },
+                    {
                         path: 'categoryDetail',
                         name: 'categoryDetail',
                         component: _import('typeManagement/categoryDetail'),

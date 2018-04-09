@@ -11,27 +11,32 @@
                     <el-tabs type="border-card">
                         <el-tab-pane label="基本信息">
                             <el-col :span="24">
+                                <el-form-item label-width="120px">
+                                    <el-col :span="12">
+                                        <el-checkbox disabled v-model="is_evergrande" :true-label="1" :false-label="0">属于恒腾快联设备</el-checkbox>
+                                    </el-col>
+                                </el-form-item>
                                 <el-form-item label="品类" label-width="120px">
                                     <el-col :span="12">
                                         <el-input v-model="form.type_name" disabled></el-input>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="厂商" label-width="120px">
+                                <el-form-item v-if="!is_evergrande" label="厂商" label-width="120px">
                                     <el-col :span="12">
                                         <el-input v-model="form.business_name"  disabled></el-input>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="品牌" label-width="120px">
+                                <el-form-item v-if="!is_evergrande" label="品牌" label-width="120px">
                                     <el-col :span="12">
                                         <el-input v-model="form.brand_name"  disabled></el-input>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="型号" label-width="120px">
+                                <el-form-item v-if="!is_evergrande" label="型号" label-width="120px">
                                     <el-col :span="12">
                                         <el-input v-model="form.model"  disabled></el-input>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="产品图片" label-width="120px">
+                                <el-form-item v-if="!is_evergrande" label="产品图片" label-width="120px">
                                     <el-col :span="12">
                                         <div class="flex">
                                             <el-input v-model="form.base_img.filename" readonly v-if="form.base_img" :disabled="!isEdit"></el-input>
@@ -49,7 +54,7 @@
                                         </div>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="其他说明" label-width="120px">
+                                <el-form-item v-if="!is_evergrande" label="其他说明" label-width="120px">
                                     <el-col :span="12">
                                         <el-input
                                                 type="textarea"
@@ -254,6 +259,7 @@
                 business:{},
                 brand : {},
                 model : {},
+                is_evergrande:0,
                 form:{
                 },
                 addType : '',
@@ -334,8 +340,13 @@
                     }
                 }).then(res=>{
                     this.form = res;
+                    if(this.form.type==3){
+                        this.is_evergrande = 1;
+                    }
                     this.form.add_type = this.form.add_type == '0' ? '': Number(this.form.add_type);
-
+                    if(!this.form.base_des){
+                        this.form.base_des = '';
+                    }
                     this.isLoadData = true;
                     this.handleImgAddToken();
                     this.getDeviceSelectAddtype();

@@ -8,9 +8,14 @@
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <el-form ref="ruleForm" :rules="rules" :model="form" label-width="80px" style="margin-top: 20px;" size="large" label-position="left">
                     <div class="title">基本信息</div>
+                    <el-form-item label-width="120px">
+                        <el-col :span="12">
+                            <el-checkbox v-model="is_evergrande" :true-label="1" :false-label="0">属于恒腾快联设备</el-checkbox>
+                        </el-col>
+                    </el-form-item>
                     <el-form-item label="品类" label-width="120px" prop="type">
                         <el-col :span="12">
-                            <el-select v-model="form.type" placeholder="请选择产品品类" style="width: 100%;" @change="changeType">
+                            <el-select v-if="!is_evergrande" v-model="form.type" placeholder="请选择产品品类" style="width: 100%;" @change="changeType">
                                 <el-option
                                         v-for="item in type"
                                         :key="item.type_id"
@@ -18,9 +23,17 @@
                                         :value="item.type_id">
                                 </el-option>
                             </el-select>
+                            <el-select v-else v-model="form.type" placeholder="请选择产品品类" style="width: 100%;">
+                                <el-option
+                                        v-for="item in categoryList"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="厂商" label-width="120px">
+                    <el-form-item  v-show="!is_evergrande" label="厂商" label-width="120px">
                         <el-col :span="12">
                             <el-select v-model="form.business" placeholder="请选择厂商" style="width: 100%;" @change="changeBusiness">
                                 <el-option
@@ -32,7 +45,7 @@
                             </el-select>
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="品牌" label-width="120px">
+                    <el-form-item v-show="!is_evergrande" label="品牌" label-width="120px">
                         <el-col :span="12">
                             <el-select v-model="form.brand" placeholder="请选择品牌" style="width: 100%;" @change="changeBrand">
                                 <el-option
@@ -44,7 +57,7 @@
                             </el-select>
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="型号" label-width="120px">
+                    <el-form-item v-show="!is_evergrande" label="型号" label-width="120px">
                         <el-col :span="12">
                             <el-select v-model="form.id" placeholder="请选择型号" style="width: 100%;">
                                 <el-option
@@ -56,7 +69,7 @@
                             </el-select>
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="产品图片" label-width="120px">
+                    <el-form-item v-show="!is_evergrande" label="产品图片" label-width="120px">
                         <el-col :span="12">
                             <div class="flex">
                                 <el-input v-model="form.base_img.filename" readonly placeholder="图片支持jpeg、jpg、png格式，大小5M内"></el-input>
@@ -73,7 +86,7 @@
                             </div>
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="其他说明" label-width="120px">
+                    <el-form-item v-show="!is_evergrande" label="其他说明" label-width="120px">
                         <el-col :span="12">
                             <el-input
                                     type="textarea"
@@ -83,6 +96,7 @@
                             </el-input>
                         </el-col>
                     </el-form-item>
+
                     <div class="title">添加方式</div>
                     <el-form-item label="设备添加方式" label-width="120px" prop="add_type">
                         <el-col :span="12">
@@ -255,6 +269,7 @@
         mounted() {
             this.getDeviceSelect();
             this.getDeviceSelectAddtype();
+            this.getBigCategory();
         },
         data() {
             return {
@@ -266,9 +281,10 @@
                 business:{},
                 brand : {},
                 model : {},
+                is_evergrande:0,
                 form:{
                     type : '',
-                    id_type : '',   //设备类型,1:品牌类型，2：产品类型'
+                    id_type : '',   //设备类型,1:品牌类型，2：产品类型',3:大品类类型
                     business : '',
                     brand : '',
                     id : '',
@@ -351,28 +367,37 @@
                         { max: 64, message: '重置提示文字不能超过64个字符', trigger: 'blur' },
                     ],
                 },
-                deviceAddTypeList : []
+                deviceAddTypeList : [],
+                categoryList:[]
+            }
+        },
+        watch:{
+            'is_evergrande'(curVal,oldVal) {
+                this.form.type='';
+                /*if(curVal==1){
+                    this.form.business = '';
+                    this.form.brand = '';
+                    this.form.id = '';
+                    this.form.base_img='';
+                    this.form.base_des = '';
+                }*/
             }
         },
         methods: {
             changeType(val){
-                console.log(val);
                 this.business = this.lists.find((x) => x.type_id === val).business;
                 this.form.business = '';
                 this.form.brand = '';
                 this.form.id = '';
-                console.log(this.business);
             },
             changeBusiness(val){
                 this.brand = this.business.find((x) => x.business_id === val).brand;
                 this.form.brand = '';
                 this.form.id = '';
-                console.log(this.brand);
             },
             changeBrand(val){
                 this.model = this.brand[0].model;
                 this.form.id = '';
-                console.log(this.model);
             },
             handleAvatarSuccess(res, file) {
                 let data = res.result;
@@ -429,6 +454,18 @@
                     this.lists = res;
                 })
             },
+            //获取大品类
+            getBigCategory(){
+                fetch({
+                    url: '/product/parenttype_lists',
+                    method: 'post',
+                    data: {
+                        'token' :  this.token
+                    }
+                }).then(res=>{
+                    this.categoryList = res.list;
+                })
+            },
             //获取设备添加方式
             getDeviceSelectAddtype(){
                 fetch({
@@ -448,15 +485,20 @@
             },
             confirmDevice(){
                 this.$refs['ruleForm'].validate((valid) => {
-                        console.log(valid);
                         if (valid) {
-                            this.form.id_type = this.form.id ? 2 : 1;
-                            this.form.id = this.form.id ? this.form.id : this.form.type;
-                            console.log(this.form.id_type);
+                            let formData = JSON.parse(JSON.stringify(this.form));
+                            if(!this.is_evergrande){
+                                formData.id_type = this.form.id ? 2 : 1;
+                                formData.id = this.form.id ? this.form.id : this.form.type;
+                            }
+                            else{
+                                formData.id_type = 3;
+                                formData.id = this.form.type;
+                            }
                             fetch({
                                 url: '/device/deviceAdd',
                                 method: 'post',
-                                data: this.form
+                                data: formData
                             }).then(res=>{
                                 this.$message({
                                     type: 'success',

@@ -47,6 +47,16 @@
                         url: '/typeManagement/deviceManager',
                         type:'deviceManager'
                     },
+                    {
+                        name: '配网方式管理',
+                        url: '/typeManagement/networkManager',
+                        type:'networkManager'
+                    },
+                    {
+                        name: '渠道商管理',
+                        url: '/typeManagement/channelManager',
+                        type:'channelManager'
+                    },
                 ]
             }
         },

@@ -96,7 +96,7 @@
                 isToModify: false,
                 listQuery: {
                     page: 1,
-                    limit: 10,
+                    limit: 15,
                 },
                 type_id: this.$route.params.id,
                 form: {

@@ -48,6 +48,14 @@
               <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.distributor_pid}}</el-col>
           </el-row>
         <el-row class="card-row">
+          <el-col :span="3" class="card-span-left">配网方式</el-col>
+          <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.network_name}}</el-col>
+        </el-row>
+        <el-row class="card-row">
+          <el-col :span="3" class="card-span-left">配网方式描述</el-col>
+          <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.network_des}}</el-col>
+        </el-row>
+        <el-row class="card-row">
           <el-col :span="3" class="card-span-left">产品小图</el-col>
           <el-col :span="20" :offset="1" class="card-span-right">
             <img v-if="checkDetail.icon" class="six-img" :src="checkDetail.icon" v-img:name alt="图片加载失败">

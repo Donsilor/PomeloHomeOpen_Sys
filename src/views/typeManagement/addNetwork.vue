@@ -26,6 +26,11 @@
                                 <el-input v-model="form.network_name" :span="6" placeholder="中英文、数字、特殊字符输入,最多32个字符，区分大小写"></el-input>
                             </el-col>
                         </el-form-item>
+                        <el-form-item label="配网方式描述" label-width="120px" prop="network_des">
+                            <el-col :span="12">
+                                <el-input v-model="form.network_des" maxlength="500" rows="5" :span="6" type="textarea"></el-input>
+                            </el-col>
+                        </el-form-item>
                     </el-form>
                 </el-col>
 
@@ -137,6 +142,7 @@
                 form:{
                     "distributors_id":"",
                     "network_name":"",
+                    "network_des":''
                 },
                 channelList:[],
                 rules: {
@@ -189,7 +195,7 @@
                 fetch({
                     url: '/distributor/lists',
                     method: 'post',
-                    data: {}
+                    data: {type:1}
                 }).then(res=>{
                     res.list.forEach(item=>{
                         this.channelList.push(item);

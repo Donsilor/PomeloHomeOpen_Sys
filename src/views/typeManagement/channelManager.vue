@@ -10,13 +10,19 @@
                 <el-table :data="tableData"fit stripe style="width: 100%">
                     <el-table-column prop="logo_url" label="渠道商logo">
                         <template slot-scope="scope">
-                            <img :src="scope.row.logo_url" alt="logo">
+                            <img width="50" style="display: block" :src="scope.row.logo_url" alt="logo">
                         </template>
                     </el-table-column>
                     <el-table-column  prop="name" label="渠道商名称" align="center"></el-table-column>
                     <el-table-column  prop="created_user" label="记录">
                         <template slot-scope="scope">
                             {{scope.row.created_user+' '+scope.row.created_at_txt}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="is_open" label="是否启用">
+                        <template slot-scope="scope">
+                            <el-switch disabled v-model="scope.row.is_open" :active-value="1" :inactive-value="0">
+                            </el-switch>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="130"  align="center">
@@ -73,7 +79,8 @@
                 this.listLoading = true;
                 let params = {
                     limit: this.listQuery.limit,
-                    page: this.listQuery.page
+                    page: this.listQuery.page,
+                    type:0
                 };
                 fetch({
                     url: '/distributor/lists',

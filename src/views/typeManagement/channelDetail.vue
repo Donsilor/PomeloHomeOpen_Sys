@@ -242,7 +242,8 @@
                     this.$message.error(res.msg);
                     return;
                 }
-                let tmp = Object.assign({id:this.form.logo.id},res.result);
+                let tmp = Object.assign({},res.result);
+                tmp.url = tmp.file_url;
                 this.form.logo = tmp;
             },
             handleQrSuccess(res, file) {
@@ -250,7 +251,8 @@
                     this.$message.error(res.msg);
                     return;
                 }
-                let tmp = Object.assign({id:this.form.qrcode.id},res.result);
+                let tmp = Object.assign({},res.result);
+                tmp.url = tmp.file_url;
                 this.form.qrcode = tmp;
             },
             beforeLogoUpload(file) {

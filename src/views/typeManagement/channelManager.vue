@@ -21,8 +21,11 @@
                     </el-table-column>
                     <el-table-column  prop="is_open" label="是否启用">
                         <template slot-scope="scope">
-                            <el-switch disabled v-model="scope.row.is_open" :active-value="1" :inactive-value="0">
-                            </el-switch>
+                            <div>
+                                <el-switch @change="setOpen(scope.row)"  v-model="scope.row.is_open" :active-value="1" :inactive-value="0">
+                                </el-switch>
+                            </div>
+
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="130"  align="center">
@@ -90,6 +93,17 @@
                     this.tableData = res.list;
                     this.total = res.total;
                     this.listLoading = false
+                })
+            },
+            setOpen(row){
+                fetch({
+                    url: '/distributor/setopen',
+                    method: 'post',
+                    data: {id:row.id,is_open:row.is_open}
+                }).then(res=>{
+                }).catch(()=>{
+                    //失败还原状态，按位非运算符完成0、1互转
+                    row.is_open = ~row.is_open+2;
                 })
             },
             handleSizeChange(val) {

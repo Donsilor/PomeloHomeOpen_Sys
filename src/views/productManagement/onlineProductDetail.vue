@@ -25,7 +25,7 @@
                                 </el-row>
                                 <el-row>
                                     <img :src="productDetail.brand_logo" v-img:name v-if="productDetail.brand_logo" alt="品牌logo">
-                                    <img :src="productDetail.brand_cert" v-img:name v-if="productDetail.brand_cert" alt="资格证书">
+                                    <img :src="productDetail.brand_certs" v-img:name v-if="productDetail.brand_certs" alt="资格证书">
                                 </el-row>
                             </div>
                         </el-col>
@@ -93,13 +93,13 @@
                         <el-col :span="3" class="card-span-left">产品图片（六观图）</el-col>
                         <el-col :span="20" :offset="1" class="card-span-right">
                             <p style="margin-top: 5px;font-size: 13px;color: darkgrey;">支持JPEG、JPG、PNG、BMP、GIF格式，大小5M以内</p>
-                            <div class="six-img" v-for="(item,index) in productDetail.images" :key="index">
-                                <img :src="item" v-img:name alt="图片加载失败">
+                            <div class="six-img" v-for="(v,k,index) in productDetail.images_new" :key="index">
+                                <img :src="v" v-img:name alt="图片加载失败">
                                 <el-upload v-if="edit"
                                            action="/api/index.php/files/save"
                                            accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
                                            :show-file-list="false"
-                                           :on-success="handleImgElseSuccess(index)"
+                                           :on-success="handleImgElseSuccess(k)"
                                            :before-upload="beforeImgUpload"
                                            :data="{type:12,token:token}"
                                 >
@@ -112,7 +112,7 @@
                         <el-col :span="3" class="card-span-left" style="line-height: 32px;">产品规格书</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">
                             <a class="is-link" :href="productDetail.spec_url" download>{{productDetail.spec_name}}</a>
-                            <a style="margin-left: 30px" v-if="!edit" :href="productDetail.spec_url" download>
+                            <a style="margin-left: 30px"  target="_blank" v-if="!edit" :href="productDetail.spec_url" download>
                                 <el-button type="primary" size="small">下载</el-button>
                             </a>
                             <el-upload v-if="edit" class="p30"
@@ -131,7 +131,7 @@
                         <el-col :span="3" class="card-span-left" style="line-height: 32px;">产品使用说明书</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">
                             <a class="is-link" :href="productDetail.instruct_url">{{productDetail.instruct_name}}</a>
-                            <a style="margin-left: 30px" v-if="!edit" :href="productDetail.instruct_url" download>
+                            <a style="margin-left: 30px" v-if="!edit" target="_blank" :href="productDetail.instruct_url" download>
                                 <el-button type="primary" size="small">下载</el-button>
                             </a>
                             <el-upload v-if="edit" class="p30"
@@ -294,7 +294,7 @@
                 agreement_list:[],
                 module_list:[],
                 model_list:[],
-                modifyData:{},
+                modifyData:{images:[]},
                 attr_map:{}
             }
         },
@@ -402,11 +402,13 @@
                 }
                 else if(res.result.type==10){//产品规格书
                     this.productDetail.spec_url = res.result.file_url;
+                    this.productDetail.spec_name = res.result.filename;
                     obj = Object.assign({id:this.productDetail.spec_id},res.result);
                     this.modifyData.spec = obj;
                 }
                 else if(res.result.type==11){//产品使用说明书
                     this.productDetail.instruct_url = res.result.file_url;
+                    this.productDetail.instruct_name = res.result.filename;
                     obj = Object.assign({id:this.productDetail.instruct_id},res.result);
                     this.modifyData.instruct = obj;
                 }
@@ -419,13 +421,11 @@
                         _this.$message.error('上传出错，请重新上传');
                         return;
                     }
-                    let arry = [].concat(_this.productDetail.images);
-                    arry[ind] = res.result.file_url;
-                    _this.productDetail.images = arry;
+                    _this.productDetail.images_new[ind] = res.result.file_url;
                     _this.modifyData.images.filter(function (v) {
                         return v.type!=res.result.type;
                     });
-                    _this.modifyData.images.push(Object.assign({},res.result));
+                    _this.modifyData.images.push(Object.assign({id:ind},res.result));
                 }
             },
             //获得配网方式列表
@@ -529,10 +529,26 @@
                 });
                 this.modifyData.id = this.productDetail.id;
                 console.log(this.modifyData);
+                let formData = JSON.parse(JSON.stringify(this.modifyData));
+                if(formData.icon){
+                    formData.icon = JSON.stringify(formData.icon);
+                }
+                if(formData.images){
+                    formData.images = JSON.stringify(formData.images);
+                }
+                if(formData.spec){
+                    formData.spec = JSON.stringify(formData.spec);
+                }
+                if(formData.instruct){
+                    formData.instruct = JSON.stringify(formData.instruct);
+                }
+                if(formData.attr_list){
+                    formData.attr_list = JSON.stringify(formData.attr_list);
+                }
                 fetch({
                     url:'/admin/product_edit',
                     method:'post',
-                    data:this.modifyData
+                    data:formData
                 }).then(res=>{
                     this.$message.info('保存成功');
                 }).catch(e=>{
@@ -540,11 +556,11 @@
                 })
             },
             setEnable(row){
-                if(this.attr_map[row.nodeid]){
-                    delete this.attr_map[row.nodeid];
+                if(this.attr_map[row.attr_id]){
+                    delete this.attr_map[row.attr_id];
                     return;
                 }
-                this.attr_map[row.nodeid] = {attr_id:row.nodeid};
+                this.attr_map[row.attr_id] = {attr_id:row.attr_id};
             }
         },
         deactivated() {

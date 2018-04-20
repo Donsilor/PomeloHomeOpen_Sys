@@ -309,7 +309,6 @@
                     }
                     let arry = [].concat(_this.checkDetail.licenses);
                     arry[ind].file_url = res.result.file_url;
-                    arry[ind].filename = res.result.filename;
                     _this.checkDetail.images = arry;
                 }
 
@@ -423,6 +422,7 @@
         .no-border{
             .el-input__inner{
                 border: none;
+                padding-left: 15px;
             }
         }
         .brand-box{

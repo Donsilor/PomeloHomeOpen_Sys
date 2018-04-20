@@ -17,25 +17,24 @@
                 <router-link to="/enterpriseManagement/list">
                     <el-button type="primary" size="medium">返 回</el-button>
                 </router-link>
+                <el-button type="primary" style="margin-left: 15px;" @click="doEdit" size="medium">{{edit?'确定并提交修改':'编辑厂商信息'}}</el-button>
             </el-row>
             <h3>{{checkDetail.name}}</h3>
+            <el-form ref="form" :model="checkDetail" :rules="rules" class="enterprise-form" label-width="200px">
             <el-card class="box-card">
                 <el-row class="card-header" slot="header">
                     <i></i>联系人信息
                 </el-row>
                 <el-row class="card-body">
-                    <el-row class="card-row">
-                        <el-col :span="3" class="card-span-left">联系人姓名</el-col>
-                        <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.contacts}}</el-col>
-                    </el-row>
-                    <el-row class="card-row">
-                        <el-col :span="3" class="card-span-left">联系人手机</el-col>
-                        <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.contacts_mobile}}</el-col>
-                    </el-row>
-                    <el-row class="card-row">
-                        <el-col :span="3" class="card-span-left">职位</el-col>
-                        <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.contacts_duty}}</el-col>
-                    </el-row>
+                    <el-form-item label="联系人姓名" prop="contacts">
+                        <el-input :class="{'no-border':!edit}" v-model="checkDetail.contacts"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系人手机" prop="contacts_mobile">
+                        <el-input :class="{'no-border':!edit}" v-model="checkDetail.contacts_mobile"></el-input>
+                    </el-form-item>
+                    <el-form-item label="职位" prop="contacts_duty">
+                        <el-input :class="{'no-border':!edit}" v-model="checkDetail.contacts_duty"></el-input>
+                    </el-form-item>
                 </el-row>
             </el-card>
             <el-card class="box-card">
@@ -43,65 +42,113 @@
                     <i></i>公司/团队信息
                 </el-row>
                 <el-row class="card-body">
-                    <el-row class="card-row">
-                        <el-col :span="3" class="card-span-left">公司名称</el-col>
-                        <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.name}}</el-col>
-                    </el-row>
-                    <el-row class="card-row">
-                        <el-col :span="3" class="card-span-left">公司地址</el-col>
-                        <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.address}}</el-col>
-                    </el-row>
-                    <el-row class="card-row">
-                        <el-col :span="3" class="card-span-left">营业执照注册号</el-col>
-                        <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.registration_No}}</el-col>
-                    </el-row>
-                    <el-row class="card-row">
-                        <el-col :span="3" class="card-span-left">合作品牌
-                        </el-col>
-                        <el-col :span="20" :offset="1" class="card-span-right">
-                            <el-tag style="margin: 0 10px 10px 0;" v-for="item in checkDetail.brands"
-                                    :key="item.name">{{item.brand_name}}
-                            </el-tag>
-                        </el-col>
-                    </el-row>
-                    <el-row class="card-row">
-                        <el-col :span="3" class="card-span-left">合作产品
-                        </el-col>
-                        <el-col :span="20" :offset="1" class="card-span-right">
-                            <el-tag type="success" style="margin: 0 10px 10px 0;" v-for="item in checkDetail.type"
-                                    :key="item.name">
+                    <el-form-item label="公司名称" prop="name">
+                        <el-input :class="{'no-border':!edit}" v-model="checkDetail.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="公司地址" prop="address">
+                        <el-input :class="{'no-border':!edit}" v-model="checkDetail.address"></el-input>
+                    </el-form-item>
+                    <el-form-item label="营业执照注册号" prop="registration_No">
+                        <el-input :class="{'no-border':!edit}" v-model="checkDetail.registration_No"></el-input>
+                    </el-form-item>
+                    <el-form-item label="合作产品" prop="type">
+                        <div :style="{paddingLeft: edit?0:15+'px'}">
+                            <el-tag type="success" style="margin: 0 10px 10px 0;" v-for="(item,index) in checkDetail.type"
+                                    :key="item.name" :closable="edit" @close="removeType(index,item)">
                                 {{item.name}}
                             </el-tag>
-                        </el-col>
-                    </el-row>
+                            <el-button v-if="edit" type="primary" size="small" @click="checkTypeList">+添加更多</el-button>
+                        </div>
+                    </el-form-item>
+                    <el-form-item label="合作品牌" prop="brands">
+                        <div v-for="(item,index) in checkDetail.brands" :class="{'edit-brand-box':edit}" class="brand-box" :key="index">
+                            <el-row>
+                                <span>品牌中文：{{item.brand_name}}</span>
+                            </el-row>
+                            <el-row>
+                                <span>品牌英文：{{item.manufacturer_name}}</span>
+                            </el-row>
+                            <el-row class="brand-img">
+                                <div class="brand-img-box">
+                                    <img :src="item.logo" v-img:name v-if="item.logo" alt="品牌logo">
+                                    <el-upload v-if="edit"
+                                               action="/api/index.php/files/save"
+                                               accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+                                               :on-success="handleImgElseSuccess(index)"
+                                               :before-upload="beforeImgUpload"
+                                               :show-file-list="false"
+                                               :data="{type:3,token:token}"
+                                    >
+                                        <el-button size="small" type="primary">更新</el-button>
+                                    </el-upload>
+                                </div>
+                                <div class="brand-img-box">
+                                    <img :src="item.certs" v-img:name v-if="item.certs" alt="资格证书">
+                                    <el-upload v-if="edit"
+                                               action="/api/index.php/files/save"
+                                               accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+                                               :on-success="handleImgElseSuccess(index)"
+                                               :before-upload="beforeImgUpload"
+                                               :show-file-list="false"
+                                               :data="{type:9,token:token}"
+                                    >
+                                        <el-button size="small" type="primary">更新</el-button>
+                                    </el-upload>
+                                </div>
+
+                            </el-row>
+                            <i v-if="edit" class="el-icon-circle-close" @click="removeBrand(index,item)"></i>
+                        </div>
+                    </el-form-item>
+
                 </el-row>
             </el-card>
+
             <!--===========上传公司资质说明==============-->
             <el-card class="box-card">
                 <el-row class="card-header" slot="header">
                     <i></i>上传公司资质说明
                 </el-row>
-                <div v-for="(item,index) in checkDetail.licenses" class="license-box" :key="item.file_id">
-                    <el-row>
-                        <el-col class="license-title" :offset="4">
-                            {{index+1}}、{{item.filename}}
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :offset="4">
-                            <img style="max-height: 300px" v-img:name alt="图片加载失败" class="card-img-size"
-                                 :src="item.file_url">
-                        </el-col>
-                    </el-row>
-                </div>
+                <el-form-item v-for="(item,index) in checkDetail.licenses" class="license-box" :label="item.filename" :key="item.file_id">
+                    <img style="max-height: 300px" v-img:name alt="图片加载失败" class="card-img-size"
+                         :src="item.file_url">
+                    <el-upload v-if="edit"
+                               action="/api/index.php/files/save"
+                               accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+                               :on-success="handleImgSuccess(index)"
+                               :before-upload="beforeImgUpload"
+                               :show-file-list="false"
+                               :data="{type:item.type,token:token}"
+                    >
+                        <el-button size="small" type="primary">更换资质</el-button>
+                    </el-upload>
+                </el-form-item>
             </el-card>
-
+            </el-form>
         </div>
+        <el-dialog
+                title="选择意向合作产品"
+                :visible.sync="typeDialogVisible"
+                width="610px"
+                center>
+            <div class="type-list">
+                <div v-for="item in typeList" @click="setCheck(item)" :class="{active:item.status}">
+                    <span :title="item.name">{{item.name}}</span>
+                    <i class="el-icon-circle-check" v-if="item.status"></i>
+                </div>
+            </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="typeDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addType">确 定</el-button>
+        </span>
+        </el-dialog>
     </el-row>
+
 </template>
 
 <script>
     import fetch from '@/utils/fetch';
+    import {getToken} from '@/utils/auth';
     import {Message} from 'element-ui';
 
     export default {
@@ -109,9 +156,74 @@
 
         data() {
             return {
+                token:getToken(),
                 checkDetail: {},
                 business_name: '',
                 activeName:'enterpriseInfo',
+                edit:false,
+                rules:{
+                    contacts:[ { required: true, message: '联系人姓名不能为空', trigger: 'blur' }],
+                    mail:[
+                        { required: true, message: '邮箱不能为空'},
+                        {validator(rule, value, callback) {
+                            if (!/^[\w\.-]+@\w+\.\w{2,}$/.test(value)) {
+                                callback('请输入正确的邮箱地址');
+                                return;
+                            }
+                            callback();
+                        }}
+                    ],
+                    contacts_mobile:[
+                        { required: true, message: '联系人手机不能为空' },
+                        {validator(rule, value, callback) {
+                            if (!/^1\d{10}$/.test(value)) {
+                                callback('请填写11位正确的手机号码');
+                                return;
+                            }
+                            callback();
+                        }}
+                    ],
+                    contacts_duty : [
+                        { required: true, message: '职位不能为空', trigger: 'blur' }
+                    ],
+                    name: [
+                        { required: true, message: '公司名称不能为空', trigger: 'blur' }
+                    ],
+                    address : [
+                        { required: true, message: '公司地址不能为空', trigger: 'blur' }
+                    ],
+                    registration_No : [
+                        { required: true, message: '营业执照号不能为空'},
+                        {validator(rule, value, callback) {
+                            if (!/(?!^\d+$)(?!^[a-zA-Z]+$)[0-9a-zA-Z]{18}/.test(value)) {
+                                callback('请填写18位正确的营业执照号');
+                                return;
+                            }
+                            callback();
+                        }}
+                    ],
+                    type : [
+                        {required: true},
+                        {validator(rule, value, callback, source, options) {
+                            if (value.length <=0) {
+                                callback('合作产品不能为空！');
+                            }
+                            callback();
+                        }}
+                    ],
+                    brands : [
+                        {required: true},
+                        {validator(rule, value, callback, source, options) {
+                            if (value.length <=0) {
+                                callback('合作品牌不能为空！');
+                            }
+                            callback();
+                        }}
+                    ],
+
+                },
+                typeList:[],
+                typeDialogVisible:false,
                 navs:[
                     {
                         name: '厂商信息',
@@ -147,11 +259,158 @@
                     this.checkDetail = response;
                 });
             },
-
-            // 图片预览
-            imgPreview (e) {
-                fancyBox(e.target, this.checkDetail.licenses);
+            doEdit(){
+                if(this.edit){
+                    this.modify();
+                    return;
+                }
+                this.edit = true;
+                this.getTypeList();
             },
+            modify(){
+                this.$refs.form.validate(valid=>{
+                    if(valid){
+                        let types = this.checkDetail.type.map(function (v) {
+                            return v.type_id;
+                        });
+                        let brands = this.checkDetail.brands.map(function (v) {
+                            return v.brand_id;
+                        });
+                        let formData = JSON.parse(JSON.stringify(this.checkDetail));
+                        formData.business_id = this.business_id;
+                        formData.types = types;
+                        formData.brands = brands;
+                        delete formData.type;
+                        fetch({
+                            url:'/user/edit_by_admin',
+                            method:'post',
+                            data:formData
+                        }).then(res=>{
+                            this.$message.info('保存成功');
+                        }).catch(e=>{
+                            this.$message.error(e.msg);
+                        })
+                    }
+                })
+            },
+            beforeImgUpload(file){
+                const isLt5M = file.size / 1024 / 1024 < 5;
+                if (!isLt5M) {
+                    this.$message.error('请上传5M大小内图片文件');
+                }
+                return isLt5M;
+            },
+            handleImgSuccess(index){
+                let _this = this;
+                return function g(res, file,fileList,ind=index){
+                    if(res.code!==200){
+                        _this.$message.error('上传出错，请重新上传');
+                        return;
+                    }
+                    let arry = [].concat(_this.checkDetail.licenses);
+                    arry[ind].file_url = res.result.file_url;
+                    arry[ind].filename = res.result.filename;
+                    _this.checkDetail.images = arry;
+                }
+
+            },
+            handleImgElseSuccess(index){
+                let _this = this;
+                return function g(res, file,fileList,ind=index){
+                    if(res.code!==200){
+                        _this.$message.error('上传出错，请重新上传');
+                        return;
+                    }
+                    if(res.result.type==3){
+                        _this.checkDetail.brands[ind].logo = res.result.file_url;
+                    }
+                    else if(res.result.type==9){
+                        _this.checkDetail.brands[ind].certs = res.result.file_url;
+                    }
+                }
+            },
+            removeType(index,item){
+                fetch({
+                    url:'/admin/check_has_product',
+                    method:'post',
+                    data:{type_id:item.type_id}
+                }).then(res=>{
+                    if(res.ret){
+                        this.checkDetail.type.splice(index,1);
+                    }else{
+                        this.$message.warning('该产品下有关联设备，不可删除！');
+                    }
+                }).catch(e=>{
+                    this.$message.error(e.msg);
+                });
+            },
+            addType(){
+                let arry = [];
+                for(let item of this.typeList){
+                    if(item.status){
+                        arry.push({
+                            type_id:item.id,
+                            name:item.name
+                        })
+                    }
+                }
+                this.checkDetail.type = arry;
+                this.typeDialogVisible = false;
+            },
+            removeBrand(index,item){
+                fetch({
+                    url:'/admin/check_has_product',
+                    method:'post',
+                    data:{brand_id:item.brand_id}
+                }).then(res=>{
+                    if(res.ret){
+                        this.checkDetail.brands.splice(index,1);
+                    }else{
+                        this.$message.warning('该品牌下有关联设备，不可删除！');
+                    }
+                }).catch(e=>{
+                    this.$message.error(e.msg);
+                })
+
+            },
+            getTypeList(){
+                fetch({
+                    url:'product/type_lists',
+                    method:'post',
+                    data:{}
+                }).then(res=>{
+                    let addLabelList = res.list;
+                    for(let i of addLabelList){
+                        i.status = false;
+                    }
+                    function campare(a,b) {
+                        return a.id-b.id
+                    }
+                    addLabelList.sort(campare);
+                    this.typeList = addLabelList;
+                }).catch(e=>{
+                    this.$message.error(e.msg);
+                })
+            },
+            checkTypeList(){
+                this.typeDialogVisible = true;
+                let checkedTypes = this.checkDetail.type.map(function(el){
+                    return el.type_id;
+                });
+                for(let item of this.typeList){
+                    if(checkedTypes.indexOf(item.id)>=0){
+                        item.status = true;
+                    }
+                    else{
+                        item.status = false;
+                    }
+                }
+            },
+            setCheck(item){
+                if(!item.status){
+                    item.status = true;
+                }
+            }
         },
         deactivated() {
             this.$destroy();
@@ -160,4 +419,82 @@
 </script>
 
 <style lang="scss">
+    .enterprise-form{
+        .no-border{
+            .el-input__inner{
+                border: none;
+            }
+        }
+        .brand-box{
+            padding: 0px 15px;
+            margin-bottom: 30px;
+            position:relative;
+            width:700px;
+            &.edit-brand-box{
+                padding: 15px;
+                border: 1px solid #d8dce5;
+                border-radius:4px;
+                .el-icon-circle-close{
+                    font-size: 20px;
+                    cursor: pointer;
+                    position: absolute;
+                    color: #409EFF;
+                    top:0;
+                    right: 0;
+                }
+             }
+        }
+        .brand-img{
+            display: flex;
+            align-items: flex-end;
+            .brand-img-box{
+                float: left;
+                margin-right: 30px;
+                max-width: 300px;
+                img{
+                    max-height: 150px;
+                }
+            }
+        }
+        .license-box{
+            .el-form-item__label{
+                line-height: 24px;
+            }
+        }
+    }
+    .type-list{
+        display: flex;
+        flex-wrap: wrap;
+        div{
+            position: relative;
+            margin: 0px 10px 10px 0px;
+            &.active{
+                 border-color: #15a05d;
+                 color: #15a05d;
+             }
+            span{
+                width: 100px;
+                height: 40px;
+                line-height: 40px;
+                background: #f8f9fc;
+                border: 1px solid #c2d1db;
+                border-radius: 2px;
+                text-align: center;
+                cursor: pointer;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                display: inline-block;
+                font-size: 12px;
+            }
+            i{
+                color: #15a05d;
+                z-index: 10;
+                position: absolute;
+                font-size: 20px;
+                top:-5px;
+                right: -5px;
+            }
+        }
+    }
 </style>

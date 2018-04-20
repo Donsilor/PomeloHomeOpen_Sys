@@ -18,14 +18,28 @@
       <el-row class="card-header" slot="header">
         <i></i>产品基本信息
       </el-row>
-      <el-row class="card-body">
+      <el-row class="card-body product-audit">
         <el-row class="card-row">
           <el-col :span="3" class="card-span-left">产品品类</el-col>
           <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.type_name}}</el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col :span="3" class="card-span-left">产品品牌</el-col>
-          <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.brand_name}}</el-col>
+          <el-col :span="3" class="card-span-left">合作品牌
+          </el-col>
+          <el-col :span="20" :offset="1" class="card-span-right">
+            <div class="brand-box">
+              <el-row>
+                <span>品牌中文：{{checkDetail.brand_name}}</span>
+              </el-row>
+              <el-row style="margin: 10px auto">
+                <span>品牌英文：{{checkDetail.manufacturer_name}}</span>
+              </el-row>
+              <el-row>
+                <img :src="checkDetail.brand_logo" v-img:name v-if="checkDetail.brand_logo" alt="品牌logo">
+                <img :src="checkDetail.brand_cert" v-img:name v-if="checkDetail.brand_cert" alt="资格证书">
+              </el-row>
+            </div>
+          </el-col>
         </el-row>
         <el-row class="card-row">
           <el-col :span="3" class="card-span-left">产品名称</el-col>
@@ -489,10 +503,19 @@
 
 <style lang="scss">
   .six-img{
+     max-height: 120px;
+     margin-right: 15px;
+   }
+  .el-switch{
+    z-index: 100;
+  }
+  .product-audit{
+  .brand-box{
+    padding: 0;
+  img{
     max-height: 120px;
     margin-right: 15px;
   }
-  .el-switch{
-    z-index: 100;
+  }
   }
 </style>

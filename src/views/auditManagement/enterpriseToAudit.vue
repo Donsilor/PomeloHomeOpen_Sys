@@ -67,7 +67,7 @@
             <el-row class="card-header" slot="header">
                 <i></i>公司/团队信息
             </el-row>
-            <el-row class="card-body">
+            <el-row class="card-body enterprise-audit">
                 <el-row class="card-row">
                     <el-col :span="3" class="card-span-left">公司名称</el-col>
                     <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.name}}</el-col>
@@ -81,15 +81,6 @@
                     <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.registration_No}}</el-col>
                 </el-row>
                 <el-row class="card-row">
-                    <el-col :span="3" class="card-span-left">合作品牌
-                    </el-col>
-                    <el-col :span="20" :offset="1" class="card-span-right">
-                        <el-tag style="margin: 0 10px 10px 0;" v-for="item in checkDetail.brands"
-                                :key="item.name">{{item.brand_name}}
-                        </el-tag>
-                    </el-col>
-                </el-row>
-                <el-row class="card-row">
                     <el-col :span="3" class="card-span-left">合作产品
                     </el-col>
                     <el-col :span="20" :offset="1" class="card-span-right">
@@ -99,6 +90,25 @@
                         </el-tag>
                     </el-col>
                 </el-row>
+                <el-row class="card-row">
+                    <el-col :span="3" class="card-span-left">合作品牌
+                    </el-col>
+                    <el-col :span="20" :offset="1" class="card-span-right">
+                        <div v-for="(item,index) in checkDetail.brands" class="brand-box" :key="index">
+                            <el-row>
+                                <span>品牌中文：{{item.brand_name}}</span>
+                            </el-row>
+                            <el-row style="margin: 10px auto">
+                                <span>品牌英文：{{item.manufacturer_name}}</span>
+                            </el-row>
+                            <el-row>
+                                <img :src="item.logo" v-img:name v-if="item.logo" alt="品牌logo">
+                                <img :src="item.certs" v-img:name v-if="item.certs" alt="资格证书">
+                            </el-row>
+                        </div>
+                    </el-col>
+                </el-row>
+
             </el-row>
             <el-row v-if="type=='audit' " class="card-handle">
                 <el-col :span="6" :offset="4">
@@ -446,4 +456,19 @@
 </script>
 
 <style lang="scss">
+    .enterprise-audit{
+    .brand-box{
+        padding: 0;
+        margin-bottom: 30px;
+        position:relative;
+    &:last-child{
+         margin-bottom: 0;
+     }
+    img{
+        max-height: 120px;
+        margin-right: 15px;
+    }
+    }
+    }
+
 </style>

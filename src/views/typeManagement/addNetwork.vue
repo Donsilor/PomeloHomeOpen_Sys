@@ -28,7 +28,7 @@
                         </el-form-item>
                         <el-form-item label="配网方式描述" label-width="120px" prop="network_des">
                             <el-col :span="12">
-                                <el-input v-model="form.network_des" maxlength="500" rows="5" :span="6" type="textarea"></el-input>
+                                <el-input v-model="form.network_des" :maxlength="500" :rows="5" :span="6" type="textarea"></el-input>
                             </el-col>
                         </el-form-item>
                     </el-form>

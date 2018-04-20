@@ -396,7 +396,7 @@
                 this.form.id = '';
             },
             changeBrand(val){
-                this.model = this.brand[0].model;
+                this.model = this.brand.find(x=>x.brand_id==val).model;
                 this.form.id = '';
             },
             handleAvatarSuccess(res, file) {

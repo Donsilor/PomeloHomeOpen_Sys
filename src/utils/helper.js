@@ -155,6 +155,7 @@ export default {
                     targetList.push({
                         nodeid:item.nodeid,
                         attr_id:item.attr_id,
+                        is_enable:item.is_enable,
                         method_string:v.method_string,
                         key:v.key,
                         type:v.type,
@@ -171,7 +172,7 @@ export default {
      * 合并行方法
      */
     spanMethod(pt,columnIndex,rowIndex){
-        if(columnIndex==0){
+        if(columnIndex==0||columnIndex==3){
             if(pt){
                 if(pt.index==rowIndex){
                     return [pt.len,1]

@@ -31,7 +31,7 @@
                                    style="display: inline-block;margin-left: 12px;"
                                    :data="form"
                                    ref="upload"
-                                   accept=".zip"
+                                   accept=".zip,.gz,.rar"
                                    name="file"
                                    :auto-upload="false"
                                    :multiple="false"
@@ -43,7 +43,7 @@
                             <el-button type="primary">选择文件...</el-button>
                         </el-upload>
                     </el-form-item>
-                    <div class="upload-tips">只能上传zip文件，且不超过5M</div>
+                    <div class="upload-tips">支持zip、gz、rar格式文件，且不超过5M</div>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="closeDialog">取 消</el-button>
@@ -254,18 +254,18 @@
             },
             beforeZipUpload(file){
                 let _file = file.raw;
-                const isZip = _file.type.toLowerCase().indexOf('zip')>=0;
+                //const isZip = _file.type.toLowerCase().indexOf('zip')>=0;
                 const isLt5M = _file.size / 1024 / 1024 < 5;
-                if (!isZip) {
+                /*if (!isZip) {
                     this.$message.error('只能上传zip文件!');
-                }
+                }*/
                 if (!isLt5M) {
                     this.$message.error('zip文件大小不能超过 5MB!');
                 }
-                if(isZip && isLt5M){
+                if(isLt5M){
                     this.form.url = _file.name;
                 }
-                return isZip && isLt5M;
+                return isLt5M;
             },
             // 上传成功的回调
             uploadSuccess(response, file, fileList) {

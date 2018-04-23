@@ -545,7 +545,7 @@
                             logo:this.brandForm.logo_s,
                             certs:this.brandForm.cert_s,
                             logoData:this.brandForm.logoData,
-                            certsData:this.brandForm.certDataData,
+                            certsData:this.brandForm.certData,
                         });
                         this.brandDialogVisible = false;
                     }

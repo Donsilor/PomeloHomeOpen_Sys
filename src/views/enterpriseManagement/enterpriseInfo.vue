@@ -99,6 +99,9 @@
                             </el-row>
                             <i v-if="edit" class="el-icon-circle-close" @click="removeBrand(index,item)"></i>
                         </div>
+                        <el-row>
+                            <el-button @click="brandDialogVisible=true">添加品牌</el-button>
+                        </el-row>
                     </el-form-item>
 
                 </el-row>
@@ -123,23 +126,98 @@
                         <el-button size="small" type="primary">更换资质</el-button>
                     </el-upload>
                 </el-form-item>
+                <el-form-item v-if="edit">
+                    <el-button  @click="otherImageVisible=true">添加其他资质证书</el-button>
+                </el-form-item>
             </el-card>
             </el-form>
         </div>
         <el-dialog
-                title="选择意向合作产品"
-                :visible.sync="typeDialogVisible"
-                width="610px"
-                center>
-            <div class="type-list">
-                <div v-for="item in typeList" @click="setCheck(item)" :class="{active:item.status}">
-                    <span :title="item.name">{{item.name}}</span>
-                    <i class="el-icon-circle-check" v-if="item.status"></i>
-                </div>
+            title="选择意向合作产品"
+            :visible.sync="typeDialogVisible"
+            width="610px"
+            center>
+        <div class="type-list">
+            <div v-for="item in typeList" @click="setCheck(item)" :class="{active:item.status}">
+                <span :title="item.name">{{item.name}}</span>
+                <i class="el-icon-circle-check" v-if="item.status"></i>
             </div>
+        </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="typeDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="addType">确 定</el-button>
+        </span>
+    </el-dialog>
+        <el-dialog
+                title="添加其他资质证书"
+                :visible.sync="otherImageVisible"
+                width="600px"
+                center>
+            <el-form :rules="otherRules" ref="uploadForm" :model="uploadForm" label-width="90px">
+                <el-form-item label="文件名称" prop="file_name">
+                    <el-input v-model="uploadForm.file_name" :maxlength="10" placeholder="请输入文件名称，10个字内"></el-input>
+                </el-form-item>
+                <el-form-item label="文件上传" prop="url">
+                    <el-input style="width: 72%;" readonly v-model="uploadForm.url" placeholder="请选择文件"></el-input>
+                    <el-upload style="display: inline-block;margin-left: 12px;"
+                               action="/api/index.php/files/save"
+                               accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+                               :on-success="handeler"
+                               :before-upload="beforeImgUpload"
+                               :show-file-list="false"
+                               :data="{type:8,token:token}"
+                    >
+                        <el-button type="primary">选择文件...</el-button>
+                    </el-upload>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+          <el-button @click="otherImageVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addImage">确 定</el-button>
+        </span>
+        </el-dialog>
+        <el-dialog
+                title="添加产品品牌名称"
+                :visible.sync="brandDialogVisible"
+                width="600px"
+                center>
+            <el-form :rules="brandRules" ref="brandForm" :model="brandForm" label-width="90px">
+                <el-form-item label="品牌名称" prop="name">
+                    <el-input v-model="brandForm.name" :maxlength="10" placeholder="请输入品牌名称，10个字内"></el-input>
+                </el-form-item>
+                <el-form-item label="品牌英文" prop="name_e">
+                    <el-input v-model="brandForm.name_e" :maxlength="10" placeholder="请输入品牌英文名称，32个字符内"></el-input>
+                </el-form-item>
+                <el-form-item label="品牌logo" prop="logo">
+                    <el-input style="width: 72%;" readonly v-model="brandForm.logo" placeholder="请选择文件"></el-input>
+                    <el-upload style="display: inline-block;margin-left: 12px;"
+                               action="/api/index.php/files/save"
+                               accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+                               :on-success="handeler"
+                               :before-upload="beforeImgUpload"
+                               :show-file-list="false"
+                               :data="{type:3,token:token}"
+                    >
+                        <el-button type="primary">选择文件...</el-button>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="品牌资质" prop="cert">
+                    <el-input style="width: 72%;" readonly v-model="brandForm.cert" placeholder="请选择文件"></el-input>
+                    <el-upload style="display: inline-block;margin-left: 12px;"
+                               action="/api/index.php/files/save"
+                               accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+                               :on-success="handeler"
+                               :before-upload="beforeImgUpload"
+                               :show-file-list="false"
+                               :data="{type:9,token:token}"
+                    >
+                        <el-button type="primary">选择文件...</el-button>
+                    </el-upload>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+          <el-button @click="brandDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addBrand">确 定</el-button>
         </span>
         </el-dialog>
     </el-row>
@@ -222,8 +300,44 @@
                     ],
 
                 },
+                uploadForm:{
+                    file_name:'',
+                    url:''
+                },
+                brandForm:{
+                    name:'',
+                    name_text:'',
+                    name_e:'',
+                    name_e_text:'',
+                    logo:'',
+                    cert:''
+                },
+                otherRules:{
+                    file_name:[
+                        { required: true, message: '文件名称不能为空'},
+                    ],
+                    url:[
+                        {required: true,message:'请上传文件'},
+                    ]
+                },
+                brandRules:{
+                    name:[
+                        { required: true, message: '品牌名称不能为空'},
+                    ],
+                    name_e:[
+                        { required: true, message: '品牌英文不能为空'},
+                    ],
+                    logo:[
+                        { required: true, message: '请上传品牌logo'},
+                    ],
+                    cert:[
+                        { required: true, message: '请上传品牌资质'},
+                    ],
+                },
                 typeList:[],
                 typeDialogVisible:false,
+                otherImageVisible:false,
+                brandDialogVisible:false,
                 navs:[
                     {
                         name: '厂商信息',
@@ -274,7 +388,21 @@
                             return v.type_id;
                         });
                         let brands = this.checkDetail.brands.map(function (v) {
-                            return v.brand_id;
+                            return {
+                                brand_id:v.brand_id?v.brand_id:0,
+                                brand_name:v.brand_name?v.brand_name:'',
+                                manufacturer_name:v.manufacturer_name?v.manufacturer_name:'',
+                                logo:{
+                                    file_id:v.logo_id?v.logo_id:0,
+                                    type:3,
+                                    file_url:v.logo
+                                },
+                                certs:[{
+                                    file_id:v.cert_ids?v.cert_ids:0,
+                                    type:9,
+                                    file_url:v.certs
+                                }]
+                            };
                         });
                         let formData = JSON.parse(JSON.stringify(this.checkDetail));
                         formData.business_id = this.business_id;
@@ -309,7 +437,23 @@
                     }
                     let arry = [].concat(_this.checkDetail.licenses);
                     arry[ind].file_url = res.result.file_url;
-                    _this.checkDetail.images = arry;
+                    _this.checkDetail.licenses = arry;
+                }
+
+            },
+            handeler(res, file,fileList){debugger
+                if(res.code!==200){
+                    this.$message.error('上传出错，请重新上传');
+                    return;
+                }
+                if(res.result.type==8){
+                    this.uploadForm.url= res.result.file_url;
+                }
+                else if(res.result.type==3){
+                    this.brandForm.logo= res.result.file_url;
+                }
+                else if(res.result.type==9){
+                    this.brandForm.cert= res.result.file_url;
                 }
 
             },
@@ -332,9 +476,9 @@
                 fetch({
                     url:'/admin/check_has_product',
                     method:'post',
-                    data:{type_id:item.type_id}
+                    data:{type_id:item.type_id,business_id:this.business_id}
                 }).then(res=>{
-                    if(res.ret){
+                    if(res.ret==0){
                         this.checkDetail.type.splice(index,1);
                     }else{
                         this.$message.warning('该产品下有关联设备，不可删除！');
@@ -356,13 +500,38 @@
                 this.checkDetail.type = arry;
                 this.typeDialogVisible = false;
             },
+            addImage(){
+                this.$refs.uploadForm.validate(valid=>{
+                    if(valid){
+                        this.checkDetail.licenses.push({
+                            type:8,
+                            filename:this.uploadForm.file_name,
+                            file_url:this.uploadForm.url
+                        });
+                        this.otherImageVisible = false;
+                    }
+                });
+            },
+            addBrand(){
+                this.$refs.brandForm.validate(valid=>{
+                    if(valid){
+                        this.checkDetail.brands.push({
+                            brand_name:this.brandForm.name,
+                            manufacturer_name:this.brandForm.name_e,
+                            logo:this.brandForm.logo,
+                            certs:this.brandForm.cert
+                        });
+                        this.brandDialogVisible = false;
+                    }
+                });
+            },
             removeBrand(index,item){
                 fetch({
                     url:'/admin/check_has_product',
                     method:'post',
-                    data:{brand_id:item.brand_id}
+                    data:{brand_id:item.brand_id,business_id:this.business_id}
                 }).then(res=>{
-                    if(res.ret){
+                    if(res.ret==0){
                         this.checkDetail.brands.splice(index,1);
                     }else{
                         this.$message.warning('该品牌下有关联设备，不可删除！');

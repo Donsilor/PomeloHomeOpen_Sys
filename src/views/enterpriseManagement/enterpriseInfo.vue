@@ -302,15 +302,19 @@
                 },
                 uploadForm:{
                     file_name:'',
-                    url:''
+                    url:'',
+                    url_s:'',
+                    fileData:null
                 },
                 brandForm:{
                     name:'',
-                    name_text:'',
                     name_e:'',
-                    name_e_text:'',
                     logo:'',
-                    cert:''
+                    logo_s:'',
+                    cert:'',
+                    cert_s:'',
+                    logoData:null,
+                    certData:null
                 },
                 otherRules:{
                     file_name:[
@@ -388,26 +392,35 @@
                             return v.type_id;
                         });
                         let brands = this.checkDetail.brands.map(function (v) {
+
                             return {
                                 brand_id:v.brand_id?v.brand_id:0,
                                 brand_name:v.brand_name?v.brand_name:'',
                                 manufacturer_name:v.manufacturer_name?v.manufacturer_name:'',
-                                logo:{
-                                    file_id:v.logo_id?v.logo_id:0,
+                                logo:v.logoData?v.logoData:{
+                                    file_id:v.logo_id,
                                     type:3,
                                     file_url:v.logo
                                 },
-                                certs:[{
-                                    file_id:v.cert_ids?v.cert_ids:0,
+                                certs:[v.certsData?v.certsData:{
+                                    file_id:v.cert_ids,
                                     type:9,
                                     file_url:v.certs
                                 }]
                             };
                         });
+                        let licenses = this.checkDetail.licenses.map(function (v) {
+                            return v.fileData ? Object.assign({},v.fileData,{filename:v.filename}) : {
+                                    file_id:v.file_id,
+                                    type:v.type,
+                                    filename:v.filename
+                                }
+                        });
                         let formData = JSON.parse(JSON.stringify(this.checkDetail));
                         formData.business_id = this.business_id;
                         formData.types = types;
                         formData.brands = brands;
+                        formData.licenses = licenses;
                         delete formData.type;
                         fetch({
                             url:'/user/edit_by_admin',
@@ -435,25 +448,33 @@
                         _this.$message.error('上传出错，请重新上传');
                         return;
                     }
-                    let arry = [].concat(_this.checkDetail.licenses);
+                    /*let arry = [].concat(_this.checkDetail.licenses);
                     arry[ind].file_url = res.result.file_url;
-                    _this.checkDetail.licenses = arry;
+                    _this.checkDetail.licenses = arry;*/
+                    _this.checkDetail.licenses[ind].file_url = res.result.file_url;
+                    _this.checkDetail.licenses[ind].fileData = res.result;
                 }
 
             },
-            handeler(res, file,fileList){debugger
+            handeler(res, file,fileList){
                 if(res.code!==200){
                     this.$message.error('上传出错，请重新上传');
                     return;
                 }
                 if(res.result.type==8){
-                    this.uploadForm.url= res.result.file_url;
+                    this.uploadForm.url= res.result.filename;
+                    this.uploadForm.url_s= res.result.file_url;
+                    this.uploadForm.fileData= res.result;
                 }
                 else if(res.result.type==3){
-                    this.brandForm.logo= res.result.file_url;
+                    this.brandForm.logo= res.result.filename;
+                    this.brandForm.logo_s= res.result.file_url;
+                    this.brandForm.logoData= res.result;
                 }
                 else if(res.result.type==9){
-                    this.brandForm.cert= res.result.file_url;
+                    this.brandForm.cert= res.result.filename;
+                    this.brandForm.cert_s= res.result.file_url;
+                    this.brandForm.certData= res.result;
                 }
 
             },
@@ -466,9 +487,11 @@
                     }
                     if(res.result.type==3){
                         _this.checkDetail.brands[ind].logo = res.result.file_url;
+                        _this.checkDetail.brands[ind].logoData = res.result;
                     }
                     else if(res.result.type==9){
                         _this.checkDetail.brands[ind].certs = res.result.file_url;
+                        _this.checkDetail.brands[ind].certsData = res.result;
                     }
                 }
             },
@@ -506,7 +529,8 @@
                         this.checkDetail.licenses.push({
                             type:8,
                             filename:this.uploadForm.file_name,
-                            file_url:this.uploadForm.url
+                            file_url:this.uploadForm.url_s,
+                            fileData:this.uploadForm.fileData,
                         });
                         this.otherImageVisible = false;
                     }
@@ -518,8 +542,10 @@
                         this.checkDetail.brands.push({
                             brand_name:this.brandForm.name,
                             manufacturer_name:this.brandForm.name_e,
-                            logo:this.brandForm.logo,
-                            certs:this.brandForm.cert
+                            logo:this.brandForm.logo_s,
+                            certs:this.brandForm.cert_s,
+                            logoData:this.brandForm.logoData,
+                            certsData:this.brandForm.certDataData,
                         });
                         this.brandDialogVisible = false;
                     }

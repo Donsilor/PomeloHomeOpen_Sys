@@ -99,7 +99,7 @@
                             </el-row>
                             <i v-if="edit" class="el-icon-circle-close" @click="removeBrand(index,item)"></i>
                         </div>
-                        <el-row>
+                        <el-row v-if="edit">
                             <el-button @click="brandDialogVisible=true">添加品牌</el-button>
                         </el-row>
                     </el-form-item>
@@ -281,7 +281,7 @@
                         }}
                     ],
                     type : [
-                        {required: true},
+                        {required: true,message:'合作产品不能为空'},
                         {validator(rule, value, callback, source, options) {
                             if (value.length <=0) {
                                 callback('合作产品不能为空！');
@@ -290,7 +290,7 @@
                         }}
                     ],
                     brands : [
-                        {required: true},
+                        {required: true,message:'合作品牌不能为空'},
                         {validator(rule, value, callback, source, options) {
                             if (value.length <=0) {
                                 callback('合作品牌不能为空！');

@@ -17,7 +17,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item v-if="showTypeKey" label="模组/芯片厂家" prop="technology_type_key_map">
-                        <el-cascader :disabled="isToModify" style="width: 100%;"
+                        <el-cascader :disabled="isToModify||cascaderDisabled" style="width: 100%;" expand-trigger="hover"
                                      v-model="form.technology_type_key_map"
                                      placeholder="请选择"
                                      :options="moduleList"
@@ -88,7 +88,11 @@
 
     </div>
 </template>
-
+<style lang="scss">
+    .el-cascader-menu{
+        height: auto;
+    }
+</style>
 <script>
     import { getSdkList, getWifiModuleList } from '@/api/infoUpload';
     import {getProductType} from '@/api/check'
@@ -110,6 +114,7 @@
                 total: null,
                 listLoading: false,
                 isToModify: false,
+                cascaderDisabled:false,
                 showTypeKey : false,
                 productTypeList:[],
                 moduleList:[],
@@ -197,6 +202,12 @@
                 getWifiModuleList({type_id:type_id}).then(response =>{
                     this.moduleList = response.list;
                     let _this = this;
+                    if(response.list.length){
+                        this.cascaderDisabled = false;
+                    }
+                    else{
+                        this.cascaderDisabled = true;
+                    }
                     this.moduleList.forEach(function (item) {
                         _this.$set(item,'module_id',item.vendor);
                         _this.$set(item,'model',item.vendor);

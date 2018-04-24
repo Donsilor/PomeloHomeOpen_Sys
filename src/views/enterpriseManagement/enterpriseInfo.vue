@@ -609,6 +609,20 @@
             setCheck(item){
                 if(!item.status){
                     item.status = true;
+                }else{
+                    fetch({
+                        url:'/admin/check_has_product',
+                        method:'post',
+                        data:{type_id:item.id,business_id:this.business_id}
+                    }).then(res=>{
+                        if(res.ret==0){
+                            item.status = false;
+                        }else{
+                            this.$message.warning('该产品下有关联设备，不可删除！');
+                        }
+                    }).catch(e=>{
+                        this.$message.error(e.msg);
+                    });
                 }
             }
         },

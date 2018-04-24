@@ -93,19 +93,30 @@
                         <el-col :span="3" class="card-span-left">产品图片（六观图）</el-col>
                         <el-col :span="20" :offset="1" class="card-span-right">
                             <p style="margin-top: 5px;font-size: 13px;color: darkgrey;">支持JPEG、JPG、PNG、BMP、GIF格式，大小5M以内</p>
-                            <div class="six-img" v-for="(v,k,index) in productDetail.images_new" :key="index">
-                                <img :src="v" v-img:name alt="图片加载失败">
+                            <div class="six-img" v-for="(item,index) in productDetail.images" :key="index">
+                                <img :src="item.file_url" v-img:name alt="图片加载失败">
                                 <el-upload v-if="edit"
                                            action="/api/index.php/files/save"
                                            accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
                                            :show-file-list="false"
-                                           :on-success="handleImgElseSuccess(k)"
+                                           :on-success="handleImgElseSuccess(item.id,index)"
                                            :before-upload="beforeImgUpload"
                                            :data="{type:12,token:token}"
                                 >
                                     <el-button size="small" type="primary">上传图片</el-button>
                                 </el-upload>
                             </div>
+                            <el-upload v-if="edit&&productDetail.images.length<6"
+                                       action="/api/index.php/files/save"
+                                       style="display: inline-block;border: 1px solid #d8dce5;padding: 20px;"
+                                       accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+                                       :show-file-list="false"
+                                       :on-success="addSixImg"
+                                       :before-upload="beforeImgUpload"
+                                       :data="{type:12,token:token}"
+                            >
+                                <i class="el-icon-plus" style="font-size: 60px;color: #d8dce5;"></i>
+                            </el-upload>
                         </el-col>
                     </el-row>
                     <el-row class="card-row">
@@ -232,8 +243,8 @@
                     </el-table-column>
                     <el-table-column align="center" label="是否开启">
                         <template slot-scope="scope">
-                            <el-switch :active-value="1" :inactive-value="0" @change="setEnable(scope.row)"
-                                       v-model="scope.row.is_enable" :disabled="!edit">
+                            <el-switch :active-value="1" :inactive-value="0"
+                                       v-model="scope.row.is_enable" disabled>
                             </el-switch>
                         </template>
                     </el-table-column>
@@ -313,6 +324,14 @@
                 };
                 getProductInfo(params).then(response => {
                     this.productDetail = response;
+                    let arry = [];
+                    for(let k in response.images_new){
+                        arry.push({id:k,file_url:response.images_new[k]})
+                    }
+                    this.productDetail.images= arry;
+                    this.modifyData.images = arry.map(function (v) {
+                        return {id:v.id};
+                    });
                     this.copyProductDetail = JSON.parse(JSON.stringify(response));
                     response.attr_list.forEach(function (item) {
                         let key = item.is_default ? 'must_fps' : 'opt_fps';
@@ -414,18 +433,28 @@
                 }
 
             },
-            handleImgElseSuccess(index){
+            addSixImg(res, file){
+                if(res.code!==200){
+                    this.$message.error('上传出错，请重新上传');
+                    return;
+                }
+                this.productDetail.images.push({id:'add',file_url:res.result.file_url});
+                this.modifyData.images.push(res.result);
+            },
+            handleImgElseSuccess(id,index){
                 let _this = this;
-                return function g(res, file,fileList,ind=index){
+                return function g(res, file,fileList,key=id,ind=index){
                     if(res.code!==200){
                         _this.$message.error('上传出错，请重新上传');
                         return;
                     }
-                    _this.productDetail.images_new[ind] = res.result.file_url;
-                    _this.modifyData.images.filter(function (v) {
-                        return v.type!=res.result.type;
-                    });
-                    _this.modifyData.images.push(Object.assign({id:ind},res.result));
+                    _this.productDetail.images[ind]['file_url'] = res.result.file_url;
+                    if(key=='add'){
+                        _this.modifyData.images.splice(ind,1,res.result);
+                    }
+                    else{
+                        _this.modifyData.images.splice(ind,1,Object.assign({id:key},res.result));
+                    }
                 }
             },
             //获得配网方式列表

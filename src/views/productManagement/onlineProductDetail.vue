@@ -551,6 +551,7 @@
                     data:formData
                 }).then(res=>{
                     this.$message.info('保存成功');
+                    this.$router.go(-1);
                 }).catch(e=>{
                     this.$message.error(e.msg);
                 })

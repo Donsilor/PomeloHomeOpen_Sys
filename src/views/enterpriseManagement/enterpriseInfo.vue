@@ -125,6 +125,8 @@
                     >
                         <el-button size="small" type="primary">更换资质</el-button>
                     </el-upload>
+                    <el-button type="primary" class="remove-liscense" size="small"
+                               v-if="edit&&item.type==8" @click="removeLicense(index)">删除资质</el-button>
                 </el-form-item>
                 <el-form-item v-if="edit">
                     <el-button  @click="otherImageVisible=true">添加其他资质证书</el-button>
@@ -173,7 +175,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
           <el-button @click="otherImageVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addImage">确 定</el-button>
+          <el-button type="primary" @click="addLicense">确 定</el-button>
         </span>
         </el-dialog>
         <el-dialog
@@ -428,6 +430,7 @@
                             data:formData
                         }).then(res=>{
                             this.$message.info('保存成功');
+                            this.$router.go(-1);
                         }).catch(e=>{
                             this.$message.error(e.msg);
                         })
@@ -523,7 +526,7 @@
                 this.checkDetail.type = arry;
                 this.typeDialogVisible = false;
             },
-            addImage(){
+            addLicense(){
                 this.$refs.uploadForm.validate(valid=>{
                     if(valid){
                         this.checkDetail.licenses.push({
@@ -535,6 +538,9 @@
                         this.otherImageVisible = false;
                     }
                 });
+            },
+            removeLicense(index){
+                this.checkDetail.licenses.splice(index,1);
             },
             addBrand(){
                 this.$refs.brandForm.validate(valid=>{
@@ -656,6 +662,11 @@
                 line-height: 24px;
             }
         }
+       .remove-liscense{
+           position: absolute;
+           bottom: 3px;
+           left: 100px;
+       }
     }
     .type-list{
         display: flex;

@@ -3,7 +3,7 @@
         <el-row :gutter="30">
             <el-col :span="24">
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
-                <el-button type="primary" @click="addNetword">确定并添加该配网方式</el-button>
+                <el-button v-if="add" type="primary" @click="addNetword">确定并添加该配网方式</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <div class="desTitleTop">基本信息</div>
@@ -11,7 +11,7 @@
                     <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
                         <el-form-item label="渠道商名称" label-width="120px" prop="distributors_id">
                             <el-col :span="12">
-                                <el-select v-model="form.distributors_id" placeholder="请选择渠道商名称" style="width:100%">
+                                <el-select :disabled="!add" v-model="form.distributors_id" placeholder="请选择渠道商名称" style="width:100%">
                                     <el-option
                                             v-for="item in channelList"
                                             :key="item.id"
@@ -23,12 +23,12 @@
                         </el-form-item>
                         <el-form-item label="配网方式" label-width="120px" prop="network_name">
                             <el-col :span="12">
-                                <el-input v-model="form.network_name" :span="6" placeholder="中英文、数字、特殊字符输入,最多32个字符，区分大小写"></el-input>
+                                <el-input :readonly="!add" v-model="form.network_name" :span="6" placeholder="中英文、数字、特殊字符输入,最多32个字符，区分大小写"></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="配网方式描述" label-width="120px" prop="network_des">
                             <el-col :span="12">
-                                <el-input v-model="form.network_des" :maxlength="500" :rows="5" :span="6" type="textarea"></el-input>
+                                <el-input :readonly="!add" v-model="form.network_des" :maxlength="500" :rows="5" :span="6" type="textarea"></el-input>
                             </el-col>
                         </el-form-item>
                     </el-form>
@@ -133,14 +133,19 @@
         },
         created() {
             this.getChannelList();
+            if(this.$route.query.distributors_id){
+                this.getInfo(this.$route.query.distributors_id);
+            }
         },
         mounted() {
+
         },
         data() {
             return {
                 token : getToken(),
+                add:this.$route.query.distributors_id?false:true,
                 form:{
-                    "distributors_id":"",
+                    "distributors_id":this.$route.query.distributors_id?parseInt(this.$route.query.distributors_id):"",
                     "network_name":"",
                     "network_des":''
                 },
@@ -200,6 +205,20 @@
                     res.list.forEach(item=>{
                         this.channelList.push(item);
                     });
+                })
+            },
+            getInfo(id){
+                fetch({
+                    url: '/distribution/get',
+                    method: 'post',
+                    data: {distributors_id:id}
+                }).then(res=>{
+                    res.forEach(v=>{
+                        if(v.id==this.$route.query.id){
+                            this.form.network_name = v.network_name;
+                            this.form.network_des = v.network_des;
+                        }
+                    })
                 })
             },
             //处理返回事件

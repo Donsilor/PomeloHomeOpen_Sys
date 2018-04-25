@@ -12,6 +12,15 @@
                     <el-table-column  prop="network_name" label="配网方式" align="center"></el-table-column>
                     <el-table-column  prop="a_name" label="创建人"></el-table-column>
                     <el-table-column  prop="created_at" label="创建时间"></el-table-column>
+                    <el-table-column label="操作" width="130"  align="center">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    type="primary"
+                                    align="center"
+                                    @click="handleEnterPage(scope.row)">进入详情</el-button>
+                        </template>
+                    </el-table-column>
                 </el-table>
                 <div v-show="!listLoading" class="pagination-container">
                     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
@@ -79,6 +88,9 @@
             },
             handelAddNetWork(){
                 this.$router.push({path: '/typeManagement/addNetWork'});
+            },
+            handleEnterPage(row){
+                this.$router.push({path: '/typeManagement/addNetWork', query: {'distributors_id' : row.distributors_id,id:row.id}});
             }
         }
     }

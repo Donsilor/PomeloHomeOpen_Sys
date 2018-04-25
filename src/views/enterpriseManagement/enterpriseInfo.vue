@@ -126,7 +126,7 @@
                         <el-button size="small" type="primary">更换资质</el-button>
                     </el-upload>
                     <el-button type="primary" class="remove-liscense" size="small"
-                               v-if="edit&&item.type==8" @click="removeLicense(index)">删除资质</el-button>
+                               v-if="edit&&(item.type==6||item.type==7||item.type==8)" @click="removeLicense(index)">删除资质</el-button>
                 </el-form-item>
                 <el-form-item v-if="edit">
                     <el-button  @click="otherImageVisible=true">添加其他资质证书</el-button>
@@ -154,6 +154,7 @@
                 title="添加其他资质证书"
                 :visible.sync="otherImageVisible"
                 width="600px"
+                :before-close="handleClose('uploadForm')"
                 center>
             <el-form :rules="otherRules" ref="uploadForm" :model="uploadForm" label-width="90px">
                 <el-form-item label="文件名称" prop="file_name">
@@ -174,7 +175,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-          <el-button @click="otherImageVisible = false">取 消</el-button>
+          <el-button @click="$refs.uploadForm.resetFields();otherImageVisible = false">取 消</el-button>
           <el-button type="primary" @click="addLicense">确 定</el-button>
         </span>
         </el-dialog>
@@ -182,6 +183,7 @@
                 title="添加产品品牌名称"
                 :visible.sync="brandDialogVisible"
                 width="600px"
+                :before-close="handleClose('brandForm')"
                 center>
             <el-form :rules="brandRules" ref="brandForm" :model="brandForm" label-width="90px">
                 <el-form-item label="品牌名称" prop="name">
@@ -218,7 +220,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-          <el-button @click="brandDialogVisible = false">取 消</el-button>
+          <el-button @click="$refs.brandForm.resetFields();brandDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="addBrand">确 定</el-button>
         </span>
         </el-dialog>
@@ -623,6 +625,12 @@
                     }).catch(e=>{
                         this.$message.error(e.msg);
                     });
+                }
+            },
+            handleClose(formName){
+                return (done,form = formName )=> {
+                    this.$refs[form].resetFields();
+                    done();
                 }
             }
         },

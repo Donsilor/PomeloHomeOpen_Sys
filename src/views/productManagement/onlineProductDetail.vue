@@ -58,7 +58,8 @@
                         <el-col :span="3" class="card-span-left" :class="{'edit-label':edit}">配网方式</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">
                             <span v-if="!edit">{{productDetail.network_name}}</span>
-                            <el-select v-if="edit" v-model="productDetail.network_id" placeholder="请选择" style="width: 100%">
+                            <el-select v-if="edit&&productDetail.distributor_id" clearable
+                                       v-model="productDetail.network_id" placeholder="请选择" style="width: 100%">
                                 <el-option
                                         v-for="item in networkList"
                                         :key="item.id"
@@ -332,6 +333,9 @@
                     this.modifyData.images = arry.map(function (v) {
                         return {id:v.id};
                     });
+                    if(this.productDetail.network_id==0){
+                        this.productDetail.network_id = '';
+                    }
                     this.copyProductDetail = JSON.parse(JSON.stringify(response));
                     response.attr_list.forEach(function (item) {
                         let key = item.is_default ? 'must_fps' : 'opt_fps';
@@ -387,7 +391,7 @@
                     return;
                 }
                 this.edit = true;
-                if(this.productDetail.distributor_id+''){
+                if(this.productDetail.distributor_id){
                     this.getNetworkList(this.productDetail.distributor_id);
                 }
                 if(this.productDetail.type){
@@ -540,6 +544,9 @@
                 }
                 if(this.productDetail.network_id!=this.copyProductDetail.network_id){
                     this.modifyData.network_id = this.productDetail.network_id;
+                    if(!this.modifyData.network_id){
+                        this.modifyData.network_id = 0;
+                    }
                 }
                 if(this.productDetail.type!=this.copyProductDetail.type){
                     this.modifyData.type = this.productDetail.type;

@@ -537,6 +537,7 @@
                             file_url:this.uploadForm.url_s,
                             fileData:this.uploadForm.fileData,
                         });
+                        this.$refs.uploadForm.resetFields();
                         this.otherImageVisible = false;
                     }
                 });
@@ -555,6 +556,7 @@
                             logoData:this.brandForm.logoData,
                             certsData:this.brandForm.certData,
                         });
+                        this.$refs.brandForm.resetFields();
                         this.brandDialogVisible = false;
                     }
                 });

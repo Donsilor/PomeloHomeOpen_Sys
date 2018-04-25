@@ -84,13 +84,13 @@
         <el-row class="card-row">
           <el-col :span="3" class="card-span-left">产品规格书</el-col>
           <el-col :span="16" :offset="1" class="card-span-right">
-            <a :href="checkDetail.spec_url" download>{{checkDetail.spec_name}}</a>
+            <a :href="checkDetail.spec_url" target="_blank" download>{{checkDetail.spec_name}}</a>
           </el-col>
         </el-row>
         <el-row class="card-row">
           <el-col :span="3" class="card-span-left">产品使用说明书</el-col>
           <el-col :span="16" :offset="1" class="card-span-right">
-            <a :href="checkDetail.instruct_url">{{checkDetail.instruct_name}}</a>
+            <a :href="checkDetail.instruct_url" target="_blank" download>{{checkDetail.instruct_name}}</a>
           </el-col>
         </el-row>
       </el-row>

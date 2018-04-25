@@ -64,7 +64,7 @@
           <el-row class="card-row">
             <el-col :span="3" class="card-span-left">{{item.type_txt}}</el-col>
             <el-col :span="16" :offset="1" class="card-span-right">
-              <a :href="item.file_url" download>
+              <a :href="item.file_url" target="_blank" download>
                 <svg-icon icon-class="zip"/>
                 {{item.filename}}
               </a>
@@ -113,7 +113,7 @@
           <el-row class="card-row">
             <el-col :span="3" class="card-span-left">{{item.type_txt}}</el-col>
             <el-col :span="16" :offset="1" class="card-span-right">
-              <a :href="item.file_url" download>
+              <a :href="item.file_url" target="_blank" download>
                 <svg-icon icon-class="zip"/>
                 {{item.filename}}
               </a>

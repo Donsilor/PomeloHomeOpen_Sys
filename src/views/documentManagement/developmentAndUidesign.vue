@@ -50,7 +50,7 @@
 
       <el-table-column align="center" label="文件名" prop="filename">
         <template slot-scope="scope">
-          <a :href="scope.row.url" download>{{scope.row.filename}}</a>
+          <a :href="scope.row.url" target="_blank" download>{{scope.row.filename}}</a>
         </template>
       </el-table-column>
 

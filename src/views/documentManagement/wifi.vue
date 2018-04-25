@@ -271,7 +271,7 @@
                     this.$message.error('只能上传zip文件!');
                 }*/
                 if (!isLt5M) {
-                    this.$message.error('zip文件大小不能超过 5MB!');
+                    this.$message.error('文件大小不能超过 5MB!');
                 }
                 if(isLt5M){
                     this.form.url = _file.name;

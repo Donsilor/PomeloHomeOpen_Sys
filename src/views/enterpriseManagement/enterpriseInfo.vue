@@ -182,18 +182,18 @@
         <el-dialog
                 title="添加产品品牌名称"
                 :visible.sync="brandDialogVisible"
-                width="600px"
+                width="650px"
                 :before-close="handleClose('brandForm')"
                 center>
-            <el-form :rules="brandRules" ref="brandForm" :model="brandForm" label-width="90px">
+            <el-form :rules="brandRules" ref="brandForm" :model="brandForm" label-width="150px">
                 <el-form-item label="品牌名称" prop="name">
                     <el-input v-model="brandForm.name" :maxlength="10" placeholder="请输入品牌名称，10个字内"></el-input>
                 </el-form-item>
                 <el-form-item label="品牌英文" prop="name_e">
-                    <el-input v-model="brandForm.name_e" :maxlength="10" placeholder="请输入品牌英文名称，32个字符内"></el-input>
+                    <el-input v-model="brandForm.name_e" :maxlength="32" placeholder="请输入品牌英文名称，32个字符内"></el-input>
                 </el-form-item>
                 <el-form-item label="品牌logo" prop="logo">
-                    <el-input style="width: 72%;" readonly v-model="brandForm.logo" placeholder="请选择文件"></el-input>
+                    <el-input style="width: 72%;" readonly v-model="brandForm.logo" placeholder="400px*400px以上"></el-input>
                     <el-upload style="display: inline-block;margin-left: 12px;"
                                action="/api/index.php/files/save"
                                accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
@@ -205,8 +205,8 @@
                         <el-button type="primary">选择文件...</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="品牌资质" prop="cert">
-                    <el-input style="width: 72%;" readonly v-model="brandForm.cert" placeholder="请选择文件"></el-input>
+                <el-form-item label="品牌中英文&商标资格证，回执加盖公章" prop="cert" class="ff">
+                    <el-input style="width: 72%;" readonly v-model="brandForm.cert" placeholder="商标未注册完成的上传商标注册记录"></el-input>
                     <el-upload style="display: inline-block;margin-left: 12px;"
                                action="/api/index.php/files/save"
                                accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
@@ -724,5 +724,8 @@
                 right: -5px;
             }
         }
+    }
+    .ff{
+        .el-form-item__label{line-height: 20px;}
     }
 </style>

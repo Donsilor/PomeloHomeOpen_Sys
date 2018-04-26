@@ -43,7 +43,14 @@
                     <el-row class="card-row">
                         <el-col :span="3" class="card-span-left edit-label">兼容机型</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">
-                            <el-input :readonly="!edit" :class="{'no-border':!edit}" v-model="productDetail.compat"></el-input>
+                            <el-form :model="productDetail">
+                                <el-form-item prop="compat" :rules="[{validator:validCompat}]">
+                                    <el-input :readonly="!edit" :class="{'no-border':!edit}"
+                                              v-model="productDetail.compat">
+                                    </el-input>
+                                </el-form-item>
+                            </el-form>
+
                         </el-col>
                     </el-row>
                     <el-row class="card-row">
@@ -75,10 +82,10 @@
                     </el-row>
                     <el-row class="card-row">
                         <el-col :span="3" class="card-span-left">产品小图</el-col>
-                        <el-col v-if="productDetail.icon" :span="20" :offset="1" class="card-span-right">
+                        <el-col :span="20" :offset="1" class="card-span-right">
                             <p style="margin-top: 5px;font-size: 13px;color: darkgrey;">用户添加设备时看到的列表图片，支持JPEG、JPG、PNG、BMP、GIF格式，大小5M以内</p>
-                            <img style="max-height: 120px" :src="productDetail.icon" v-img:name alt="图片加载失败">
-                            <el-upload v-if="edit"
+                            <img v-if="productDetail.icon" style="max-height: 120px" :src="productDetail.icon" v-img:name alt="图片加载失败">
+                            <el-upload v-if="edit&&productDetail.icon"
                                        action="/api/index.php/files/save"
                                        accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
                                        :show-file-list="false"
@@ -87,6 +94,17 @@
                                        :data="{type:26,token:token}"
                             >
                                 <el-button size="small" type="primary">上传图片</el-button>
+                            </el-upload>
+                            <el-upload v-if="edit&&!productDetail.icon"
+                                       action="/api/index.php/files/save"
+                                       style="display: inline-block;border: 1px solid #d8dce5;padding: 20px;"
+                                       accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+                                       :show-file-list="false"
+                                       :on-success="handleImgSuccess"
+                                       :before-upload="beforeImgUpload"
+                                       :data="{type:26,token:token}"
+                            >
+                                <i class="el-icon-plus" style="font-size: 60px;color: #d8dce5;"></i>
                             </el-upload>
                         </el-col>
                     </el-row>
@@ -307,7 +325,7 @@
                 module_list:[],
                 model_list:[],
                 modifyData:{images:[]},
-                attr_map:{}
+                attr_map:{},
             }
         },
         created() {
@@ -420,8 +438,14 @@
                 let obj;
                 if(res.result.type==26){//产品小图
                     this.productDetail.icon = res.result.file_url;
-                    obj = Object.assign({id:this.productDetail.icon_id},res.result);
-                    this.modifyData.icon = obj;
+                    if(this.productDetail.icon_id){
+                        obj = Object.assign({id:this.productDetail.icon_id},res.result);
+                        this.modifyData.icon = obj;
+                    }
+                    else{
+                        this.modifyData.icon = res.result;
+                    }
+
                 }
                 else if(res.result.type==10){//产品规格书
                     this.productDetail.spec_url = res.result.file_url;
@@ -598,6 +622,14 @@
                     return;
                 }
                 this.attr_map[row.attr_id] = {attr_id:row.attr_id};
+            },
+            validCompat(rule, value, callback){
+                if(value){
+                    if (!/^[a-zA-Z0-9,$%&*./\-_#!~|<>^+=]*$/.test(value)) {
+                        callback('请输入字母/数字/特殊符号组成的机型，以英文逗号隔开；');
+                    }
+                }
+                callback();
             }
         },
         deactivated() {

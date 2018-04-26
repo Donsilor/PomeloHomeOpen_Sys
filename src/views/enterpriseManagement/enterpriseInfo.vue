@@ -562,6 +562,10 @@
                 });
             },
             removeBrand(index,item){
+                if(!item.brand_id){//新增的直接删除
+                    this.checkDetail.brands.splice(index,1);
+                    return;
+                }
                 fetch({
                     url:'/admin/check_has_product',
                     method:'post',

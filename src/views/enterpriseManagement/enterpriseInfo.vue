@@ -583,7 +583,7 @@
             },
             getTypeList(){
                 fetch({
-                    url:'product/type_lists',
+                    url:'/admin/product/type_lists',
                     method:'post',
                     data:{}
                 }).then(res=>{

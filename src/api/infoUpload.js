@@ -27,7 +27,7 @@ export function uploadSDK (params) {
 export function getWifiModuleList (params) {
   // console.log('查询入参', params);
   return fetch({
-    url: '/wifimodule/lists',
+    url: '/admin/wifimodule/lists',
     method: 'post',
     data: params
     
@@ -38,7 +38,7 @@ export function getWifiModuleList (params) {
 export function getAgreementList (params) {
   // console.log('查询入参', params);
   return fetch({
-    url: '/agreement/lists',
+    url: '/admin/agreement/lists',
     method: 'post',
     data: params
     

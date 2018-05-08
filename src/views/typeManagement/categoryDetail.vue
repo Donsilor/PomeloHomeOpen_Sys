@@ -543,7 +543,7 @@
                 this.attr_list =[];
                 this.spanMap = {};
                 fetch({
-                    url: '/attribute/lists',
+                    url: '/admin/attribute/lists',
                     method: 'post',
                     data: {
                         'type_id': this.typeid

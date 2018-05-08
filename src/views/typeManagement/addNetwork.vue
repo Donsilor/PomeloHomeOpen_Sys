@@ -198,7 +198,7 @@
             //获得渠道商列表
             getChannelList(){
                 fetch({
-                    url: '/distributor/lists',
+                    url: '/admin/distributor/lists',
                     method: 'post',
                     data: {type:1}
                 }).then(res=>{

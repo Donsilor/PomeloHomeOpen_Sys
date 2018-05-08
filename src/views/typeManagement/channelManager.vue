@@ -86,7 +86,7 @@
                     type:0
                 };
                 fetch({
-                    url: '/distributor/lists',
+                    url: '/admin/distributor/lists',
                     method: 'post',
                     data: params
                 }).then(res=>{

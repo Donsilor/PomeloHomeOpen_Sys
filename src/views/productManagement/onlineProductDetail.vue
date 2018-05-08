@@ -519,7 +519,7 @@
             //获得wifi方案列表
             getWiFiList(){
                 fetch({
-                    url:'/wifimodule/lists',
+                    url:'/admin/wifimodule/lists',
                     method:'post',
                     data:{'type_id' : this.productDetail.type_id}
                 }).then(data => {
@@ -538,7 +538,7 @@
             },
             getAgreementData(str){
                 fetch({
-                    url:'/agreement/lists',
+                    url:'/admin/agreement/lists',
                     method:'post',
                     data:{'type_id':this.productDetail.type_id,'agreement_type':str}
                 }).then(data => {

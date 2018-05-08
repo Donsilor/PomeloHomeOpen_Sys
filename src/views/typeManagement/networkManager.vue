@@ -69,7 +69,7 @@
                     page: this.listQuery.page
                 };
                 fetch({
-                    url: '/distribution/list',
+                    url: '/admin/distribution/list',
                     method: 'post',
                     data: params
                 }).then(res=>{

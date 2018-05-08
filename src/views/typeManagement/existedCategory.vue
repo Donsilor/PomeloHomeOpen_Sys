@@ -83,7 +83,7 @@
                     'search_type' : 0
                 };
                 fetch({
-                    url: '/product/type_lists',
+                    url: '/admin/product/type_lists',
                     method: 'post',
                     data: params
                 }).then(res=>{

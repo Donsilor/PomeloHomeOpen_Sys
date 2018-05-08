@@ -14,7 +14,7 @@ export function getReviewList(params) {
 // 获取产品品类
 export function getProductType() {
     return fetch({
-        url: '/product/type_lists',
+        url: '/admin/product/type_lists',
         method: 'post',
         data: {}
 

@@ -57,6 +57,11 @@
                         url: '/typeManagement/channelManager',
                         type:'channelManager'
                     },
+                    {
+                        name: '语音平台管理',
+                        url: '/typeManagement/voicePlatform',
+                        type:'voicePlatform'
+                    },
                 ]
             }
         },

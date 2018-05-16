@@ -1,12 +1,12 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-row style="margin-bottom: 20px;">
+      <el-row style="margin-bottom: 20px;" v-if="showAdd">
         <el-button type="primary" @click="openDialog('')">新建SDK包</el-button>
       </el-row>
       <el-dialog :before-close="handleClose" center width="700px" class="doc-dialog" title="上传SDK文件" :visible.sync="dialogVisible">
         <el-form :rules="rules" ref="uploadForm" :model="form" label-width="110px">
-          <el-form-item label="产品品类" prop="type_id">
+          <!--<el-form-item label="产品品类" prop="type_id">
             <el-select :disabled="isToModify" style="width: 100%;" v-model="form.type_id" placeholder="请选择">
               <el-option v-for="item in productTypeList"
                          :key="item.id"
@@ -25,7 +25,7 @@
               >
               </el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item>-->
           <el-form-item label="SDK文件" prop="upload">
             <el-input style="width: 75%;" readonly v-model="form.url" placeholder="请选择文件"></el-input>
             <el-upload action="/api/index.php/admin/sdk_upload"
@@ -55,10 +55,7 @@
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" stripe fit highlight-current-row
               style="width: 100%">
-      <el-table-column align="center" label="品类" prop="type_name">
-      </el-table-column>
-
-      <el-table-column align="center" label="协议" prop="technology_agreement">
+      <el-table-column align="center" label="包名称" prop="filename">
       </el-table-column>
 
       <el-table-column align="center" label="包大小" prop="size">
@@ -76,13 +73,13 @@
       </el-table-column>
     </el-table>
 
-    <div v-show="!listLoading" class="pagination-container">
+    <!--<div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                      :current-page.sync="listQuery.page"
                      :page-sizes="[15,20,30, 50]" :page-size="listQuery.limit"
                      layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
-    </div>
+    </div>-->
 
   </div>
 </template>
@@ -104,11 +101,12 @@
             };
             return {
                 // ====table===
-                list: null,
+                list: [],
                 total: null,
                 listLoading: false,
                 isToModify:false,
                 showTypeKey : false,
+                showAdd:false,
                 productTypeList:[],
                 agreementList:[],
                 listQuery: {
@@ -116,20 +114,20 @@
                     limit: 15,
                 },
                 form:{
-                    type_id:'',
-                    technology_type_key:'',
+                    //type_id:'',
+                    //technology_type_key:'',
                     technology_type:this.$route.name=='zigbee'?2:3,
                     token: getToken(),
                     url:''
                 },
                 dialogVisible:false,
                 rules: {
-                    type_id: [
+                    /*type_id: [
                         { required: true, message: '请选择产品品类'},
                     ],
                     technology_type_key: [
                         { required: true, message: '请选择产品协议' },
-                    ],
+                    ],*/
                     upload: [
                         { required: true, validator: fileNumber },
                     ],
@@ -140,12 +138,12 @@
         created() {
         },
         watch:{
-            'form.type_id'(curVal,oldVal){
+            /*'form.type_id'(curVal,oldVal){
                 this.agreementList = [];
                 if(curVal){
                     this.getAgreementList(curVal);
                 }
-            },
+            },*/
             $route(curVal,oldVal){
                 let map = {zigbee:2,bluetooth:3};
                 this.form.technology_type = map[curVal.name];
@@ -154,7 +152,7 @@
         },
         mounted() {
             this.refresh();
-            this.getProductType();
+            //this.getProductType();
         },
         methods: {
             refresh(){
@@ -170,7 +168,10 @@
                 };
                 getSdkList(params).then(response => {
                     this.list = response.data;
-                    this.total = response.total;
+                    if(this.list.length<1){
+                        this.showAdd = true;
+                    }
+                    //this.total = response.total;
                     this.listLoading = false
                 })
             },

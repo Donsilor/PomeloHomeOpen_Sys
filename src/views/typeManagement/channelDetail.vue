@@ -5,6 +5,7 @@
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
                 <el-button v-if="!isEdit" type="primary" @click="addChannel">确定并添加该渠道商</el-button>
                 <el-button v-if="isEdit" type="primary" @click="editChannel">{{editText}}</el-button>
+                <el-button type="danger" @click="handleDelEvent" v-if="isEdit&&!hasProduct">删除该设备</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <div class="desTitleTop">基本信息</div>
@@ -174,6 +175,7 @@
                 isEdit: this.$route.query.id ? true : false,
                 token : getToken(),
                 isLoadData : false,
+                hasProduct:1,
                 editText : '编辑渠道商信息',
                 disabled:this.$route.query.id ? true : false,
                 id:this.$route.query.id ? this.$route.query.id : '',
@@ -235,6 +237,7 @@
                     this.form.name_e = res.name_e;
                     this.form.logo = res.logo;
                     this.form.qrcode = res.qrcode;
+                    this.hasProduct = res.has_product;
                 });
             },
             handleLogoSuccess(res, file) {
@@ -347,6 +350,30 @@
                     }
                 })
 
+            },
+            //处理删除事件
+            handleDelEvent(){
+                this.$confirm('是否确认删除此渠道商，删除不能恢复。', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.deleteChannel();
+                }).catch(() => {
+                });
+            },
+            deleteChannel(){
+                fetch({
+                    url:'/distributor/delete',
+                    method:'post',
+                    data:{id:this.form.id}
+                }).then(res=>{
+                    if(res){
+                        this.$message.info('删除成功！');
+                        this.$router.push({path: '/typeManagement/channelManager'});
+                    }
+                }).catch(e=>{
+                });
             },
             //处理返回事件
             handleBackEvent(){

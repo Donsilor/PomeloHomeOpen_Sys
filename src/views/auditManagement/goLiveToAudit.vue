@@ -29,6 +29,12 @@
             {{checkDetail.des}}
           </el-col>
         </el-row>
+        <el-row class="card-row">
+          <el-col :span="3" class="card-span-left">固件版本要求</el-col>
+          <el-col :span="16" :offset="1" class="card-span-right">
+            {{'需'+checkDetail.firmware_ids_txt+'版本以上'}}
+          </el-col>
+        </el-row>
         <el-row v-if="type=='audit' " class="card-handle-else">
           <el-col :span="6" :offset="4">
             <el-button @click="version_info.action_type=1" type="primary" size="small">

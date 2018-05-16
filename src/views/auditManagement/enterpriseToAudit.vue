@@ -81,6 +81,10 @@
                     <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.registration_No}}</el-col>
                 </el-row>
                 <el-row class="card-row">
+                    <el-col :span="3" class="card-span-left">客服电话</el-col>
+                    <el-col :span="16" :offset="1" class="card-span-right">{{checkDetail.customer_num}}</el-col>
+                </el-row>
+                <el-row class="card-row">
                     <el-col :span="3" class="card-span-left">合作产品
                     </el-col>
                     <el-col :span="20" :offset="1" class="card-span-right">

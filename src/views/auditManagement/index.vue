@@ -1,7 +1,7 @@
 <template>
     <div class="tab-container">
-        <el-row style="padding-left: 160px;padding-bottom: 30px;">
-            <el-menu class="sec-menu" mode="vertical" :default-active="activeName" background-color="#f2f2f2" text-color="#666"
+        <el-row style="padding-left: 190px;padding-bottom: 30px;">
+            <el-menu class="sec-menu ga" mode="vertical" :default-active="activeName" background-color="#f2f2f2" text-color="#666"
                      active-text-color="#409EFF">
                 <template v-for="item in navs">
                     <router-link :to="item.url">
@@ -54,15 +54,27 @@
                         num:0
                     },
                     {
-                        name:'待审核上线申请',
+                        name:'待审核H5控制页申请',
                         url:'/auditManagement/goLivePending',
                         type:'goLivePending',
                         num:0
                     },
                     {
-                        name:'已审核上线申请',
+                        name:'已审核H5控制页申请',
                         url:'/auditManagement/goLiveAudited',
                         type:'goLiveAudited',
+                        num:0
+                    },
+                    {
+                        name:'待审核固件申请',
+                        url:'/auditManagement/firmwarePending',
+                        type:'firmwarePending',
+                        num:0
+                    },
+                    {
+                        name:'已审核固件申请',
+                        url:'/auditManagement/firmwareAudited',
+                        type:'firmwareAudited',
                         num:0
                     }
                 ]
@@ -105,9 +117,9 @@
 </script>
 
 <style scoped>
-    .sec-menu{
+    .sec-menu.ga{
         position: fixed;
         left: 150px;
-        width: 160px;
+        width: 190px;
     }
 </style>

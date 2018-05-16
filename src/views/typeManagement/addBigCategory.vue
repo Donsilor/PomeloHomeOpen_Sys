@@ -89,6 +89,11 @@
                                 </div>
                             </el-col>
                         </el-form-item>
+                        <el-form-item label="品类离线提示语" label-width="120px" prop="offline_hint">
+                            <el-col :span="12">
+                                <el-input :rows="4" type="textarea" v-model="form.offline_hint" :disabled="disabled" :span="6" placeholder="请输入离线提示语"></el-input>
+                            </el-col>
+                        </el-form-item>
                         <el-form-item label="大品类是否在设备选择列表显示" label-width="120px" class="line25">
                             <el-col :span="12">
                                 <el-radio-group :disabled="disabled" v-model="form.show_in_select_list">
@@ -217,6 +222,7 @@
                     "id":this.$route.query.id,
                     "name":"",
                     "name_e":"",
+                    "offline_hint":"",
                     "show_in_select_list":1,
                     "icon_list":{
                         "high_light":{
@@ -250,7 +256,8 @@
                     name_e : [
                         { required: true, message: '请输入大品类英文名称', trigger: 'blur' },
                         { max: 32, message: '大品类英文名称不能超过32个字符', trigger: 'blur' }
-                    ]
+                    ],
+                    offline_hint:[{ required: true, message: '请输入离线提示语', trigger: 'blur' }]
 
                 },
                 high_light_data : {
@@ -287,6 +294,7 @@
                     this.form.name = res.name;
                     this.form.name_e = res.name_e;
                     this.form.icon_list = res.icon_list;
+                    this.form.offline_hint = res.offline_hint;
                     if(res.show_in_select_list!==undefined){
                         this.form.show_in_select_list = res.show_in_select_list;
                     }

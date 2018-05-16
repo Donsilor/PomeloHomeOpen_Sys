@@ -1,12 +1,12 @@
 <template>
     <div class="app-container calendar-list-container">
         <div class="filter-container">
-            <el-row style="margin-bottom: 20px;">
+            <el-row style="margin-bottom: 20px;" v-if="showAdd">
                 <el-button type="primary" @click="openDialog('')">新建SDK包</el-button>
             </el-row>
             <el-dialog :before-close="handleClose" center width="700px" class="doc-dialog" title="上传SDK文件" :visible.sync="dialogVisible">
                 <el-form :rules="rules" ref="uploadForm" :model="form" label-width="110px">
-                    <el-form-item label="产品品类" prop="type_id">
+                    <!--<el-form-item label="产品品类" prop="type_id">
                         <el-select :disabled="isToModify" style="width: 100%;" v-model="form.type_id" placeholder="请选择">
                             <el-option v-for="item in productTypeList"
                                        :key="item.id"
@@ -24,7 +24,7 @@
                                      :props="moduleProps"
                         >
                         </el-cascader>
-                    </el-form-item>
+                    </el-form-item>-->
                     <el-form-item label="SDK文件" prop="upload">
                         <el-input style="width: 75%;" readonly v-model="form.url" placeholder="请选择文件"></el-input>
                         <el-upload action="/api/index.php/admin/sdk_upload"
@@ -54,13 +54,8 @@
 
         <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" stripe fit highlight-current-row
                   style="width: 100%">
-            <el-table-column align="center" label="品类" prop="type_name">
-            </el-table-column>
 
-            <el-table-column align="center" label="模组/芯片厂家" prop="technology_module_vendor">
-            </el-table-column>
-
-            <el-table-column align="center" label="型号" prop="technology_module_model">
+            <el-table-column align="center" label="包名称" prop="filename">
             </el-table-column>
 
             <el-table-column align="center" label="包大小" prop="size">
@@ -78,13 +73,13 @@
             </el-table-column>
         </el-table>
 
-        <div v-show="!listLoading" class="pagination-container">
+        <!--<div v-show="!listLoading" class="pagination-container">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                            :current-page.sync="listQuery.page"
                            :page-sizes="[15,20,30, 50]" :page-size="listQuery.limit"
                            layout="total, sizes, prev, pager, next, jumper" :total="total">
             </el-pagination>
-        </div>
+        </div>-->
 
     </div>
 </template>
@@ -110,12 +105,13 @@
             };
             return {
                 // ====table===
-                list: null,
+                list: [],
                 total: null,
                 listLoading: false,
                 isToModify: false,
                 cascaderDisabled:false,
                 showTypeKey : false,
+                showAdd:false,
                 productTypeList:[],
                 moduleList:[],
                 listQuery: {
@@ -124,20 +120,20 @@
                 },
                 form:{
                     type_id:'',
-                    technology_type_key_map:'',
-                    technology_type_key:'',
+                    //technology_type_key_map:'',
+                    //technology_type_key:'',
                     technology_type:1,
                     token: getToken(),
                     url:''
                 },
                 dialogVisible:false,
-                moduleProps:{
+                /*moduleProps:{
                     children: 'modellist',
                     value:'module_id',
                     label:'model'
-                },
+                },*/
                 rules: {
-                    type_id: [
+                    /*type_id: [
                         { required: true, message: '请选择产品品类'},
                     ],
                     technology_type_key_map: [
@@ -148,7 +144,7 @@
                                 callback()
                             }
                         },trigger:'blur' },
-                    ],
+                    ],*/
                     upload: [
                         { required: true, validator: fileNumber,trigger:'change' },
                     ],
@@ -159,7 +155,7 @@
         created() {
         },
         watch:{
-            'form.type_id'(curVal,oldVal){
+            /*'form.type_id'(curVal,oldVal){
                 this.moduleList = [];
                 if(curVal){
                     this.getWifiModule(curVal);
@@ -167,11 +163,11 @@
             },
             'form.technology_type_key_map'(curVal,oldVal){
                 this.form.technology_type_key = curVal[1];
-            }
+            }*/
         },
         mounted() {
             this.refresh();
-            this.getProductType();
+            //this.getProductType();
         },
         methods: {
             refresh(){
@@ -187,7 +183,10 @@
                 };
                 getSdkList(params).then(response => {
                     this.list = response.data;
-                    this.total = response.total;
+                    if(this.list.length<1){
+                        this.showAdd = true;
+                    }
+                    //this.total = response.total;
                     this.listLoading = false
                 })
             },

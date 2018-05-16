@@ -4,6 +4,23 @@
             <el-col :span="24">
                 <el-button type="primary" @click="addDevice">新增设备</el-button>
                 <el-button type="ghost" @click="addFucSetModal=true">添加方式设置</el-button>
+                <el-button class="frt" @click="search" type="primary">查找</el-button>
+                <el-select class="frt" v-model="business_id" clearable placeholder="全部厂商">
+                    <el-option v-for="(item,index) in businessList" :key="index" :label="item.name" :value="item.business_id">
+
+                    </el-option>
+                </el-select>
+                <el-select class="frt" v-model="child_id" clearable placeholder="全部子品类">
+                    <el-option v-for="(item,index) in childType" :key="index" :label="item.name" :value="item.type_id">
+
+                    </el-option>
+                </el-select>
+                <el-select class="frt" v-model="type_id" clearable placeholder="全部大品类" @change="changeType">
+                    <el-option v-for="(item,index) in typeTree" :key="index" :label="item.name" :value="item.type_id">
+
+                    </el-option>
+                </el-select>
+
             </el-col>
         </el-row>
         <div class="table-container">
@@ -61,6 +78,10 @@
         margin-top: 20px;
         padding-bottom: 60px;
     }
+    .frt{
+        float: right;
+        margin-left: 20px;
+    }
 </style>
 <script>
     import fetch from '@/utils/fetch';
@@ -73,8 +94,10 @@
       created() {
       },
       mounted() {
-          this.getList(1);
+          this.getList();
           this.getAddType();
+          this.getTypeTree();
+          this.getBusinessList();
       },
       data() {
           return {
@@ -83,21 +106,31 @@
               addFucForm:[],
               total : 0,
               limit : 0,
-              token : getToken()
+              token : getToken(),
+              typeTree:[],
+              childType:[],
+              businessList:[],
+              type_id:'',
+              child_id:'',
+              business_id:'',
+              currentPage:1,
           }
       },
       methods: {
           handleCurrentChange(val){
-            this.getList(val);
+              this.currentPage = val;
+              this.getList();
           },
-          getList(page){
+          getList(){
               fetch({
                   url: '/device/deviceList',
                   method: 'post',
                   data: {
-                      'page' :page,
+                      'page' :this.currentPage,
                       'token' : getToken(),
-                      'limit' : 15
+                      'limit' : 15,
+                      'type_id':this.child_id||this.type_id,
+                      'business_id':this.business_id
                   }
               }).then(res=>{
                   this.tableData = res.data;
@@ -109,6 +142,31 @@
                       message: res.msg
                   });
               })
+          },
+          getTypeTree(){
+              fetch({
+                  url:'/producttype/tree?token='+getToken(),
+                  method:'get',
+                  data:{}
+              }).then(res=>{
+                  this.typeTree = res;
+              })
+          },
+          getBusinessList(){
+              fetch({
+                  url:'/user/select?token='+getToken(),
+                  method:'get',
+                  data:{}
+              }).then(res=>{
+                  this.businessList = res;
+              })
+          },
+          changeType(val){
+              let tmp = this.typeTree.find(item=>{
+                  return item.type_id == parseInt(val);
+              });
+              this.childType = tmp ? tmp.children : [];
+              this.child_id = '';
           },
           handleEnterPage(row){
               this.$router.push({path: '/typeManagement/deviceDetail', query: {'id' : row.id}});
@@ -163,6 +221,9 @@
                       message: res.msg
                   });
               })
+          },
+          search(){
+              this.getList();
           }
       }
   }

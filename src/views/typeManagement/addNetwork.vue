@@ -209,7 +209,7 @@
             },
             getInfo(id){
                 fetch({
-                    url: '/distribution/get',
+                    url: '/admin/distribution/get',
                     method: 'post',
                     data: {distributors_id:id}
                 }).then(res=>{

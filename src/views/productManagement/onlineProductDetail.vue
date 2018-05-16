@@ -488,7 +488,7 @@
             //获得配网方式列表
             getNetworkList(distributors_id){
                 fetch({
-                    url: '/distribution/get',
+                    url: '/admin/distribution/get',
                     method: 'post',
                     data: {distributors_id,}
                 }).then(res => {

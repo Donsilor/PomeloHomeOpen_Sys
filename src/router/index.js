@@ -18,6 +18,7 @@ Vue.use(Router)
 export const constantRouterMap = [
     {path: '/login', component: _import('login/index'), hidden: true},
     {path: '/404', component: _import('404'), hidden: true},
+    {path: '/resetpsw', component: _import('login/resetpsw'), hidden: true},
     /*{
      path: '/',
      component: Layout,
@@ -67,13 +68,29 @@ export const constantRouterMap = [
                     },
                     {
                         path: 'goLivePending',
-                        name: 'goLivePending',//待审核上线申请
+                        name: 'goLivePending',//待审核H5控制页申请
                         component: _import('auditManagement/goLivePending')
                     },
                     {
                         path: 'goLiveAudited',
-                        name: 'goLiveAudited',//已审核上线申请
+                        name: 'goLiveAudited',//已审核H5控制页申请
                         component: _import('auditManagement/goLiveAudited')
+                    },
+                    {
+                        path: 'firmwarePending',
+                        name: 'firmwarePending',//待审核固件申请
+                        component: _import('auditManagement/firmwarePending')
+                    },
+                    {
+                        path: 'firmwareAudited',
+                        name: 'firmwareAudited',//已审核固件申请
+                        component: _import('auditManagement/firmwareAudited')
+                    },
+                    {
+                        path: 'firmwareToAudit',
+                        name: '固件上线申请页面',
+                        component: _import('auditManagement/firmwareToAudit'),
+                        meta: {breadNumber: 1, notKeepAlive: true,key:'firmwarePending'}
                     },
                     {
                         path: 'enterpriseToAudit',
@@ -89,7 +106,7 @@ export const constantRouterMap = [
                     },
                     {
                         path: 'goLiveToAudit',
-                        name: '上线申请审核页面',
+                        name: 'H5上线申请审核页面',
                         component: _import('auditManagement/goLiveToAudit'),
                         meta: {breadNumber: 1, notKeepAlive: true,key:'goLivePending'}
                     }
@@ -166,10 +183,21 @@ export const constantRouterMap = [
                         meta: {breadNumber: 1, notKeepAlive: true,key : 'channelManager'}
                     },
                     {
+                        path: 'voicePlatform',
+                        name: 'voicePlatform',
+                        component: _import('typeManagement/voicePlatform'),
+                    },
+                    {
                         path: 'addNetwork',
                         name: 'addNetwork',
                         component: _import('typeManagement/addNetwork'),
                         meta: {breadNumber: 1, notKeepAlive: true,key : 'networkManager'}
+                    },
+                    {
+                        path: 'addVoicePlatform',
+                        name: 'addVoicePlatform',
+                        component: _import('typeManagement/addVoicePlatform'),
+                        meta: {breadNumber: 1, notKeepAlive: true,key : 'voicePlatform'}
                     },
                     {
                         path: 'categoryDetail',

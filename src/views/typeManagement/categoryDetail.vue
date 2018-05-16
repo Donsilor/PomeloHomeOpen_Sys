@@ -114,13 +114,18 @@
                                 </el-form-item>
                                 <el-form-item label="是否高频使用" label-width="120px">
                                     <el-col :span="12">
-                                        <el-checkbox v-model="form.is_high_frequency" :disabled="!isEdit">是
+                                        <el-checkbox :true-label="1" :false-label="0" v-model="form.is_high_frequency" :disabled="!isEdit">是
                                         </el-checkbox>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="是否为智能开关关联设备品类" label-width="120px" class="line25">
                                     <el-col :span="12">
-                                        <el-checkbox v-model="form.is_relate_switch" :disabled="!isEdit">是</el-checkbox>
+                                        <el-checkbox :true-label="1" :false-label="0" v-model="form.is_relate_switch" :disabled="!isEdit">是</el-checkbox>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="恒腾快联设备" label-width="120px">
+                                    <el-col :span="12">
+                                        <el-checkbox :true-label="1" :false-label="0" v-model="form.show_in_select_list" :disabled="!isEdit">是</el-checkbox>
                                     </el-col>
                                 </el-form-item>
                             </el-form>
@@ -228,6 +233,27 @@
                                         <template slot-scope="scope">
                                             <i class="el-icon-delete" title="删除属性" @click="delProperty(scope.row.attr_id)"></i>
                                             <i class="el-icon-edit-outline" title="编辑属性" @click="editProperty(scope.row.attr_id)"></i>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </template>
+                        </el-col>
+                    </el-tab-pane>
+                    <el-tab-pane label="关联设备">
+                        <el-col :span="24">
+                            <template>
+                                <el-table :data="device_list" border stripe style="width: 100%;margin-top: 15px;">
+                                    <el-table-column label="品牌" align="center"></el-table-column>
+                                    <el-table-column label="型号" align="center"></el-table-column>
+                                    <el-table-column label="厂商" align="center"></el-table-column>
+                                    <el-table-column label="版本信息" align="center"></el-table-column>
+                                    <el-table-column label="创建时间" align="center"></el-table-column>
+                                    <el-table-column label="操作" width="130"  align="center">
+                                        <template slot-scope="scope">
+                                            <el-button
+                                                    size="mini"
+                                                    type="primary"
+                                                    align="center">进入详情</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -493,6 +519,7 @@
 
                 },
                 attr_list: [],
+                device_list:[],
                 technical_wifi: [],
                 technical_bluetooth: [],
                 technical_zigbee: [],
@@ -607,8 +634,8 @@
                     }
                 }).then(res => {
                     this.form = res;
-                    this.form.is_high_frequency = this.form.is_high_frequency == 1 ? true : false;
-                    this.form.is_relate_switch = this.form.is_relate_switch == 1 ? true : false;
+                    //this.form.is_high_frequency = this.form.is_high_frequency == 1 ? true : false;
+                   // this.form.is_relate_switch = this.form.is_relate_switch == 1 ? true : false;
                     this.handleIconList(this.form.icon_list);
                     this.isLoadData = true;
                 }).catch(res => {
@@ -759,8 +786,8 @@
                         this.isEdit = false;
                         this.editText = '编辑品类信息';
                         let form = JSON.parse(JSON.stringify(this.form));
-                        form.is_high_frequency = form.is_high_frequency == true ? 1 : 0;
-                        form.is_relate_switch = form.is_relate_switch == true ? 1 : 0;
+                        //form.is_high_frequency = form.is_high_frequency == true ? 1 : 0;
+                        //form.is_relate_switch = form.is_relate_switch == true ? 1 : 0;
                         fetch({
                             url: '/producttype/edit',
                             method: 'post',

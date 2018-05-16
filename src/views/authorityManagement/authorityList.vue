@@ -35,7 +35,7 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button v-if="isToModify" @click="del" type="danger" plain>删除该用户</el-button>
+                    <el-button v-if="isToModify" @click="del" type="danger" plain>停用该用户</el-button>
                     <el-button @click="closeDialog">取 消</el-button>
                     <el-button type="primary" @click="addOrEdit">{{isToModify?'保存修改':'确 定'}}</el-button>
                 </div>

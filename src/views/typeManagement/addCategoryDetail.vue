@@ -93,12 +93,18 @@
                                 </el-form-item>
                                 <el-form-item label="是否高频使用" label-width="120px">
                                     <el-col :span="12">
-                                        <el-checkbox v-model="form.is_high_frequency">是</el-checkbox>
+                                        <el-checkbox :true-label="1" :false-label="0" v-model="form.is_high_frequency">是</el-checkbox>
                                     </el-col>
                                 </el-form-item>
+
                                 <el-form-item label="是否为智能开关关联设备品类" label-width="120px" class="line25">
                                     <el-col :span="12">
-                                        <el-checkbox v-model="form.is_relate_switch">是</el-checkbox>
+                                        <el-checkbox :true-label="1" :false-label="0" v-model="form.is_relate_switch">是</el-checkbox>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="恒腾快联设备" label-width="120px">
+                                    <el-col :span="12">
+                                        <el-checkbox :true-label="1" :false-label="0" v-model="form.show_in_select_list">是</el-checkbox>
                                     </el-col>
                                 </el-form-item>
                             </el-form>
@@ -266,9 +272,9 @@
                             "file_name":""
                         }
                     },
-                    "is_relate_switch":false,
-                    "is_high_frequency":false,
-
+                    "is_relate_switch":0,
+                    "is_high_frequency":0,
+                    "show_in_select_list":0,
                 },
                 rules: {
                     name: [
@@ -411,8 +417,8 @@
                 this.$refs['ruleForm'].validate((valid) => {
                     if(valid){
                         let form = JSON.parse(JSON.stringify(this.form));
-                        form.is_high_frequency = form.is_high_frequency == true ? 1 : 0;
-                        form.is_relate_switch = form.is_relate_switch == true ? 1 : 0;
+                        //form.is_high_frequency = form.is_high_frequency == true ? 1 : 0;
+                        //form.is_relate_switch = form.is_relate_switch == true ? 1 : 0;
                         fetch({
                             url: '/producttype/add',
                             method: 'post',

@@ -178,7 +178,7 @@
                 }
                 this.listLoading = true
                 let params = {
-                    type: 4, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
+                    type: 5, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
                     status: 3, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
                     limit: this.listQuery.limit,
                     page: this.listQuery.page

@@ -54,13 +54,14 @@
                                         </div>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item v-if="!is_evergrande" label="其他说明" label-width="120px">
+                                <el-form-item label="离线提示语" label-width="120px" prop="offline_hint">
                                     <el-col :span="12">
                                         <el-input
                                                 type="textarea"
                                                 :autosize="{ minRows: 3, maxRows: 3}"
-                                                placeholder="请输入其他说明"
-                                                v-model="form.base_des" :disabled="!isEdit">
+                                                placeholder="请输入离线提示语"
+                                                :maxlength="500"
+                                                v-model="form.offline_hint" :disabled="!isEdit">
                                         </el-input>
                                     </el-col>
                                 </el-form-item>
@@ -314,6 +315,9 @@
                         { required: true, message: '请输入重置提示文字', trigger: 'blur' },
                         { max: 64, message: '重置提示文字不能超过64个字符', trigger: 'blur' },
                     ],
+                    offline_hint:[
+                        {required:true,message:'请输入离线提示语',trigger: 'blur' }
+                    ]
                 }
             }
         },
@@ -344,8 +348,8 @@
                         this.is_evergrande = 1;
                     }
                     this.form.add_type = this.form.add_type == '0' ? '': Number(this.form.add_type);
-                    if(!this.form.base_des){
-                        this.form.base_des = '';
+                    if(!this.form.offline_hint){
+                        this.form.offline_hint = '';
                     }
                     this.isLoadData = true;
                     this.handleImgAddToken();

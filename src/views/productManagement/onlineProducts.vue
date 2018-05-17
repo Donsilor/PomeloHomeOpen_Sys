@@ -1,6 +1,8 @@
 <template>
     <div class="app-container calendar-list-container">
-
+        <el-row>
+            <el-button size="small" type="primary">查找</el-button>
+        </el-row>
         <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" stripe fit highlight-current-row
                   style="width: 100%">
             <el-table-column align="center" label="品类" prop="type_name">
@@ -52,6 +54,9 @@
                 list: null,
                 total: null,
                 listLoading: false,
+                businessList:[],
+                brandsList:[],
+                typeList:[],
                 listQuery: {
                     page: 1,
                     limit: 15,
@@ -60,6 +65,8 @@
         },
         computed: {},
         created() {
+            this.getBusinessList();
+            this.getTypeList();
         },
         mounted() {
             this.refresh();
@@ -78,6 +85,26 @@
                     this.list = response.data;
                     this.total = response.total;
                     this.listLoading = false
+                })
+            },
+            getBusinessList(){
+                fetch({
+                    url:'/user/select?token='+getToken(),
+                    method:'get',
+                    data:{}
+                }).then(res=>{
+                    this.businessList = res;
+                })
+            },
+            getTypeList(){
+                fetch({
+                    url:'/admin/product/type_lists',
+                    method:'post',
+                    data:{}
+                }).then(res=>{
+                    this.typeList = res.list;
+                }).catch(e=>{
+                    this.$message.error(e.msg);
                 })
             },
 

@@ -61,7 +61,7 @@
             <el-table-column align="center" label="包大小" prop="size">
             </el-table-column>
 
-            <el-table-column align="center" label="上传时间" prop="updated_at_txt">
+            <el-table-column align="center" label="上传时间" prop="created_at_txt">
             </el-table-column>
 
             <el-table-column align="center" label="操作" width="150">

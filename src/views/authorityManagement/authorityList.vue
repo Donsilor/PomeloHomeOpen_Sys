@@ -9,19 +9,19 @@
                        :visible.sync="dialogVisible">
                 <el-form :rules="rules" ref="permissionForm" :model="form" label-width="90px">
                     <el-form-item label="姓名" prop="name">
-                        <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
+                        <el-input :readonly="status==1?false:true" v-model="form.name" placeholder="请输入姓名"></el-input>
                     </el-form-item>
                     <el-form-item label="邮箱" prop="mail">
-                        <el-input v-model="form.mail" placeholder="请输入公司邮箱"></el-input>
+                        <el-input :readonly="status==1?false:true" v-model="form.mail" placeholder="请输入公司邮箱"></el-input>
                     </el-form-item>
                     <el-form-item label="电话" prop="mobile">
-                        <el-input v-model="form.mobile" placeholder="请输入手机号码"></el-input>
+                        <el-input :readonly="status==1?false:true" v-model="form.mobile" placeholder="请输入手机号码"></el-input>
                     </el-form-item>
                     <el-form-item label="部门" prop="depart">
-                        <el-input v-model="form.depart" placeholder="请输入所在部门"></el-input>
+                        <el-input :readonly="status==1?false:true" v-model="form.depart" placeholder="请输入所在部门"></el-input>
                     </el-form-item>
                     <el-form-item label="职务" prop="duty">
-                        <el-input v-model="form.duty" placeholder="请输入职务"></el-input>
+                        <el-input :readonly="status==1?false:true" v-model="form.duty" placeholder="请输入职务"></el-input>
                     </el-form-item>
                     <el-form-item label="操作权限" prop="permission_ids">
                         <el-checkbox-group v-model="form.permission_ids">
@@ -29,13 +29,15 @@
                                          :label="item.menu_name"
                                          :key="item.id"
                                          :value="item.id"
+                                         :disabled="status==1?false:true"
                             >
                             </el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
                 </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button v-if="isToModify" @click="del" type="danger" plain>停用该用户</el-button>
+                <div slot="footer" class="dialog-footer" v-if="status==0||status==1">
+                    <el-button v-if="isToModify&&status==1" @click="del" type="danger" plain>停用该用户</el-button>
+                    <el-button v-if="isToModify&&status==0" @click="enabled" type="danger" plain>启用该用户</el-button>
                     <el-button @click="closeDialog">取 消</el-button>
                     <el-button type="primary" @click="addOrEdit">{{isToModify?'保存修改':'确 定'}}</el-button>
                 </div>
@@ -55,17 +57,20 @@
 
             <el-table-column align="center" label="职务" prop="duty">
             </el-table-column>
+            <el-table-column align="center" label="状态" prop="status_txt">
+            </el-table-column>
 
             <el-table-column align="center" label="最新操作记录">
                 <template slot-scope="scope">
                     <span>{{scope.row.last_action}}  {{scope.row.last_action_at}}</span>
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="操作" width="150">
+            <el-table-column align="center" label="操作" width="200">
                 <template slot-scope="scope">
-                    <el-button @click="openDialog(scope.row)" size="small" type="primary">
+                    <el-button @click="openDialog(scope.row)" size="mini" type="primary">
                         修改
                     </el-button>
+                    <el-button @click="resendMail(scope.row)" v-if="scope.row.status==2" size="mini" type="primary">重发激活邮件</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -109,6 +114,7 @@
                     duty: '',
                     permission_ids:[]
                 },
+                status:1,
                 dialogVisible: false,
                 permissionList: [],
                 permissionMap:null,
@@ -240,8 +246,12 @@
                         this.form.mobile = res.mobile;
                         this.form.depart = res.depart;
                         this.form.duty = res.duty;
+                        this.status = res.status;
                         this.form.permission_ids = res.permission_ids.map(v=>this.permissionMap[v]);
                     })
+                }
+                else{
+                    this.status = 1;
                 }
                 this.dialogVisible = true;
             },
@@ -262,7 +272,7 @@
                 })
             },
             del(){
-                this.$confirm('是否确定删除该用户？', '提示', {
+                this.$confirm('是否确定停用该用户？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -277,6 +287,34 @@
                     })
                 }).catch(() => {
                 });
+            },
+            enabled(){
+                this.$confirm('是否确定启用该用户？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    fetch({
+                        url:'/admin/enabled',
+                        method:'post',
+                        data:{admin_id:this.form.admin_id}
+            }).then(res=>{
+                    this.closeDialog();
+                this.refresh();
+            })
+            }).catch(() => {
+                });
+            },
+            resendMail(row){
+                fetch({
+                    url:'/admin/resendMail',
+                    method:'post',
+                    data:{mail:row.mail}
+                }).then(res=>{
+                    if(res){
+                        this.$message.info('发送成功，请前往邮件激活');
+                    }
+                })
             }
         }
     }

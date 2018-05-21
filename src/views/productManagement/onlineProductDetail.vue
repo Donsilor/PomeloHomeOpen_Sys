@@ -54,6 +54,19 @@
                         </el-col>
                     </el-row>
                     <el-row class="card-row">
+                        <el-col :span="3" class="card-span-left edit-label">离线提示语</el-col>
+                        <el-col :span="16" :offset="1" class="card-span-right">
+                            <el-form :model="productDetail">
+                                <el-form-item prop="offline_hint">
+                                    <el-input :readonly="!edit" :class="{'no-border':!edit}"
+                                              v-model="productDetail.offline_hint">
+                                    </el-input>
+                                </el-form-item>
+                            </el-form>
+
+                        </el-col>
+                    </el-row>
+                    <el-row class="card-row">
                         <el-col :span="3" class="card-span-left">渠道商</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.distributor}}</el-col>
                     </el-row>
@@ -565,6 +578,9 @@
                 }
                 if(this.productDetail.compat!=this.copyProductDetail.compat){
                     this.modifyData.compat = this.productDetail.compat;
+                }
+                if(this.productDetail.offline_hint!=this.copyProductDetail.offline_hint){
+                    this.modifyData.offline_hint = this.productDetail.offline_hint;
                 }
                 if(this.productDetail.network_id!=this.copyProductDetail.network_id){
                     this.modifyData.network_id = this.productDetail.network_id;

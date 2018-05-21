@@ -8,8 +8,12 @@
         <div class="table-container">
             <template>
                 <el-table :data="tableData"fit stripe style="width: 100%">
-                    <el-table-column prop="distribution_name" label="语音平台logo"></el-table-column>
-                    <el-table-column  prop="network_name" label="语音平台名称" align="center"></el-table-column>
+                    <el-table-column prop="logo_url" label="语音平台logo">
+                        <template slot-scope="scope">
+                            <img width="50" style="display: block" :src="scope.row.logo_url" alt="logo">
+                        </template>
+                    </el-table-column>
+                    <el-table-column  prop="name" label="语音平台名称" align="center"></el-table-column>
                     <el-table-column  prop="created_at" label="创建时间"></el-table-column>
                     <el-table-column label="操作" width="130"  align="center">
                         <template slot-scope="scope">
@@ -40,6 +44,7 @@
 </style>
 <script>
     import fetch from '@/utils/fetch';
+    import { getToken } from '@/utils/auth'
     export default {
         name: 'voicePlatform',
         computed: {
@@ -68,8 +73,8 @@
                     page: this.listQuery.page
                 };
                 fetch({
-                    url: '/admin/distribution/list',
-                    method: 'post',
+                    url: '/admin/voice/list',
+                    method: 'get',
                     data: params
                 }).then(res=>{
                     this.tableData = res.data;
@@ -89,7 +94,7 @@
                 this.$router.push({path: '/typeManagement/addVoicePlatform'});
             },
             handleEnterPage(row){
-                this.$router.push({path: '/typeManagement/addVoicePlatform', query: {'distributors_id' : row.distributors_id,id:row.id}});
+                this.$router.push({path: '/typeManagement/addVoicePlatform', query: {'distributors_id' : row.distributors_id,id:row.voice_id}});
             }
         }
     }

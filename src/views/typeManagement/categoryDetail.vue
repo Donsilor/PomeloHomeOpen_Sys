@@ -243,17 +243,17 @@
                         <el-col :span="24">
                             <template>
                                 <el-table :data="device_list" border stripe style="width: 100%;margin-top: 15px;">
-                                    <el-table-column label="品牌" align="center"></el-table-column>
-                                    <el-table-column label="型号" align="center"></el-table-column>
-                                    <el-table-column label="厂商" align="center"></el-table-column>
-                                    <el-table-column label="版本信息" align="center"></el-table-column>
-                                    <el-table-column label="创建时间" align="center"></el-table-column>
+                                    <el-table-column label="品牌" align="center" prop="brand_name"></el-table-column>
+                                    <el-table-column label="型号" align="center" prop="model"></el-table-column>
+                                    <el-table-column label="厂商" align="center" prop="business_name"></el-table-column>
+                                    <el-table-column label="版本信息" align="center" prop="version_no"></el-table-column>
+                                    <el-table-column label="创建时间" align="center" prop="created_at"></el-table-column>
                                     <el-table-column label="操作" width="130"  align="center">
                                         <template slot-scope="scope">
-                                            <el-button
+                                            <el-button v-if="scope.row.is_online"
                                                     size="mini"
                                                     type="primary"
-                                                    align="center">进入详情</el-button>
+                                                    align="center" @click="toDetai(scope.row.product_id)">进入详情</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
@@ -460,6 +460,7 @@
             this.getTypeInfo();
             this.getParentType();
             this.getAttributeList();
+            this.getProductList();
         },
         data() {
             return {
@@ -622,6 +623,21 @@
             }).
                 catch(res => {}
             )
+            },
+            //获取关联设备
+            getProductList(){
+                fetch({
+                    url: '/admin/product_lists',
+                    method: 'post',
+                    data: {
+                        'search_type': 2,
+                        'type_id': this.typeid
+                    }
+                }).then(res => {
+                    this.device_list = res.data;
+                }).catch(res => {
+
+                })
             },
 
             // 获取品类详情信息
@@ -883,6 +899,9 @@
                         message: res.msg
                     });
                 })
+            },
+            toDetai(product_id){
+                this.$router.push({path:'/productManagement/onlineProductDetail',query:{product_id:product_id}});
             },
             getTechList(technology_type){
                 fetch({

@@ -3,8 +3,8 @@
         <el-row :gutter="30">
             <el-col :span="24">
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
-                <el-button v-if="!isEdit" type="primary" @click="addChannel">确定并添加该渠道商</el-button>
-                <el-button v-if="isEdit" type="primary" @click="editChannel">{{editText}}</el-button>
+                <el-button v-if="!isEdit" type="primary" @click="addVoice">确定并添加该语音平台</el-button>
+                <el-button v-if="isEdit" type="primary" @click="editVoice">{{editText}}</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <div class="desTitleTop">基本信息</div>
@@ -15,9 +15,9 @@
                                 <el-input v-model="form.name" :span="6" :disabled="disabled" placeholder=" 中文名限中文、字母、32个字符、区分大小写"></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="语音平台英文" label-width="120px" prop="name_e">
+                        <el-form-item label="语音平台描述" label-width="120px" prop="desc">
                             <el-col :span="12">
-                                <el-input v-model="form.name_e" :disabled="disabled" :span="6" placeholder=" 字母、下划线, 最多32个字符，区分大小写"></el-input>
+                                <el-input v-model="form.desc" type="textarea" :rows="6" :disabled="disabled" :span="6" placeholder=" 请输入语音平台描述"></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="语音平台logo" label-width="120px" style="padding-bottom: 30px;">
@@ -144,7 +144,7 @@
         },
         created() {
             if(this.isEdit){
-                this.getChannelInfo();
+                this.getVoiceInfo();
             }
         },
         mounted() {
@@ -154,67 +154,50 @@
                 isEdit: this.$route.query.id ? true : false,
                 token : getToken(),
                 isLoadData : false,
-                editText : '编辑渠道商信息',
+                editText : '编辑语音平台信息',
                 disabled:this.$route.query.id ? true : false,
                 id:this.$route.query.id ? this.$route.query.id : '',
                 form:{
-                    "id":this.$route.query.id,
+                    "voice_id":this.$route.query.id,
                     "name":"",
-                    "name_e":"",
+                    "desc":"",
                     "logo":{
                         id:'',
-                        type:27,
+                        type:29,
                         object:'',
                         filename:'',
                         url:'',
                         md5:''
                     },
-                    "qrcode":{
-                        id:'',
-                        type:28,
-                        object:'',
-                        filename:'',
-                        url:'',
-                        md5:''
-                    }
-
                 },
                 rules: {
                     name: [
-                        { required: true, message: '请输入渠道商名称', trigger: 'blur' },
-                        { max: 32, message: '渠道商名称不能超过32个字符', trigger: 'blur' },
+                        { required: true, message: '请输入语音平台中文', trigger: 'blur' },
                         { validator:letterAndCN}
                     ],
-                    name_e : [
-                        { required: true, message: '请输入渠道商英文', trigger: 'blur' },
-                        { max: 32, message: '渠道商英文不能超过32个字符', trigger: 'blur' },
-                        { validator:letterAndUnderscode}
+                    desc : [
+                        { required: true, message: '请输入语音平台描述', trigger: 'blur' },
                     ]
 
                 },
                 logo : {
                     'token' : getToken(),
-                    'type' : 27,
-                },
-                qrcode : {
-                    'token' : getToken(),
-                    'type' : 28,
+                    'type' : 29,
                 },
             }
         },
         methods: {
-            getChannelInfo(){
+            getVoiceInfo(){
                 fetch({
-                    url: '/distributor/info',
-                    method: 'post',
+                    url: '/admin/voice/info',
+                    method: 'get',
                     data: {
-                        'id': this.$route.query.id
+                        'voice_id': this.$route.query.id
                     }
                 }).then(res=>{
                     this.form.name = res.name;
-                    this.form.name_e = res.name_e;
+                    this.form.desc = res.desc;
                     this.form.logo = res.logo;
-                    this.form.qrcode = res.qrcode;
                 });
             },
             handleLogoSuccess(res, file) {
@@ -222,18 +205,9 @@
                     this.$message.error(res.msg);
                     return;
                 }
-                let tmp = Object.assign({},res.result);
+                let tmp = Object.assign({id:this.form.logo.id},res.result);
                 tmp.url = tmp.file_url;
                 this.form.logo = tmp;
-            },
-            handleQrSuccess(res, file) {
-                if(res.code!==200){
-                    this.$message.error(res.msg);
-                    return;
-                }
-                let tmp = Object.assign({},res.result);
-                tmp.url = tmp.file_url;
-                this.form.qrcode = tmp;
             },
             beforeLogoUpload(file) {
                 const filter = file.type === 'image/png';
@@ -247,15 +221,8 @@
                 }
                 return filter && isLt5M;
             },
-            beforeQrUpload(file) {
-                const isLt5M = file.size / 1024 / 1024 < 5;
-                if (!isLt5M) {
-                    this.$message.error('请上传5M大小内的二维码图标');
-                }
-                return isLt5M;
-            },
             //编辑渠道商信息
-            editChannel(){
+            editVoice(){
                 if(this.disabled){
                     this.editText = '确认并提交修改';
                     this.disabled = false;
@@ -263,17 +230,17 @@
                 }
                 this.$refs['ruleForm'].validate((valid) => {
                     if (valid) {
-                        if(this.form.logo.url==''||this.form.qrcode.url==''){
-                            this.$message.error('请上传渠道商logo和二维码！');
+                        if(this.form.logo.url==''){
+                            this.$message.error('请上传语音平台logo！');
                             return;
                         }
-                        this.$confirm('是否确认保存修改后渠道商信息？', '提示', {
+                        this.$confirm('是否确认保存修改后语音平台信息？', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
                             type: 'warning'
                         }).then(()=>{
                             fetch({
-                                url: '/distributor/edit',
+                                url: '/admin/voice/edit',
                                 method: 'post',
                                 data: this.form,
                             }).then(res => {
@@ -293,11 +260,11 @@
 
             },
             //添加渠道商信息
-            addChannel(){
+            addVoice(){
                 this.$refs['ruleForm'].validate((valid) => {
                     if(valid){
-                        if(this.form.logo.url==''||this.form.qrcode.url==''){
-                            this.$message.error('请上传渠道商logo和二维码！');
+                        if(this.form.logo.url==''){
+                            this.$message.error('请上传渠道商logo');
                             return;
                         }
                         this.$confirm('是否确定添加该渠道商？', '提示', {
@@ -306,7 +273,7 @@
                             type: 'warning'
                         }).then(()=>{
                             fetch({
-                                url: '/distributor/add',
+                                url: '/admin/voice/add',
                                 method: 'post',
                                 data: this.form,
                             }).then(res => {
@@ -315,7 +282,7 @@
                                     message: '保存成功!'
                                 });
                                 setTimeout(() => {
-                                    this.$router.push({path: '/typeManagement/channelManager'});
+                                    this.$router.push({path: '/typeManagement/voicePlatform'});
                                 }, 2000);
                             }).catch(res => {
                                 this.$message({

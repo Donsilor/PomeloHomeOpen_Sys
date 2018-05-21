@@ -1,7 +1,22 @@
 <template>
     <div class="app-container calendar-list-container">
-        <el-row>
-            <el-button size="small" type="primary">查找</el-button>
+        <el-row style="padding-bottom: 30px;">
+            <el-select v-model="business_id" clearable placeholder="全部厂商">
+                <el-option v-for="(item,index) in businessList" :key="index" :label="item.name" :value="item.business_id">
+
+                </el-option>
+            </el-select>
+            <el-select v-model="brand_id" clearable placeholder="全部品牌">
+                <el-option v-for="(item,index) in brandsList" :key="index" :label="item.brand_name" :value="item.brand_id">
+
+                </el-option>
+            </el-select>
+            <el-select v-model="type_id" clearable placeholder="全部品类">
+                <el-option v-for="(item,index) in typeList" :key="index" :label="item.name" :value="item.id">
+
+                </el-option>
+            </el-select>
+            <el-button type="primary" @click="getList">查找</el-button>
         </el-row>
         <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" stripe fit highlight-current-row
                   style="width: 100%">
@@ -45,7 +60,8 @@
 
 <script>
     import {getProductList} from '@/api/check';
-
+    import fetch from '@/utils/fetch';
+    import { getToken } from '@/utils/auth'
     export default {
         name: 'onlineProducts',
         data() {
@@ -57,6 +73,9 @@
                 businessList:[],
                 brandsList:[],
                 typeList:[],
+                business_id:'',
+                brand_id:'',
+                type_id:'',
                 listQuery: {
                     page: 1,
                     limit: 15,
@@ -67,6 +86,7 @@
         created() {
             this.getBusinessList();
             this.getTypeList();
+            this.getBrandList();
         },
         mounted() {
             this.refresh();
@@ -81,6 +101,15 @@
                     limit: this.listQuery.limit,
                     page: this.listQuery.page
                 };
+                if(this.business_id!=''){
+                    params.business_id = this.business_id;
+                }
+                if(this.brand_id!=''){
+                    params.brand_id = this.brand_id;
+                }
+                if(this.type_id!=''){
+                    params.type_id = this.type_id;
+                }
                 getProductList(params).then(response => {
                     this.list = response.data;
                     this.total = response.total;
@@ -89,11 +118,20 @@
             },
             getBusinessList(){
                 fetch({
-                    url:'/user/select?token='+getToken(),
+                    url:'/user/select',
                     method:'get',
-                    data:{}
+                    data:{is_online:1}
                 }).then(res=>{
                     this.businessList = res;
+                })
+            },
+            getBrandList(){
+                fetch({
+                    url:'/brand/select',
+                    method:'post',
+                    data:{is_online:1}
+                }).then(res=>{
+                    this.brandsList = res;
                 })
             },
             getTypeList(){

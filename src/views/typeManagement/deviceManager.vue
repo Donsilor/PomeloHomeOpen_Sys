@@ -145,7 +145,7 @@
           },
           getTypeTree(){
               fetch({
-                  url:'/producttype/tree?token='+getToken(),
+                  url:'/producttype/tree',
                   method:'get',
                   data:{}
               }).then(res=>{
@@ -154,7 +154,7 @@
           },
           getBusinessList(){
               fetch({
-                  url:'/user/select?token='+getToken(),
+                  url:'/user/select',
                   method:'get',
                   data:{}
               }).then(res=>{

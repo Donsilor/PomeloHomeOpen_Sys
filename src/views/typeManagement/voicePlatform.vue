@@ -2,7 +2,7 @@
     <div class="app-container calendar-list-container">
         <el-row :gutter="30">
             <el-col :span="2">
-                <el-button type="primary" @click="dddVoicePlatform">新增语音平台</el-button>
+                <el-button type="primary" @click="addVoicePlatform">新增语音平台</el-button>
             </el-col>
         </el-row>
         <div class="table-container">
@@ -14,7 +14,11 @@
                         </template>
                     </el-table-column>
                     <el-table-column  prop="name" label="语音平台名称" align="center"></el-table-column>
-                    <el-table-column  prop="created_at" label="创建时间"></el-table-column>
+                    <el-table-column  prop="created_at" label="创建时间">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.created_user+'  创建于'+scope.row.created_at}}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作" width="130"  align="center">
                         <template slot-scope="scope">
                             <el-button
@@ -90,7 +94,7 @@
                 this.listQuery.page = val;
                 this.getList()
             },
-            dddVoicePlatform(){
+            addVoicePlatform(){
                 this.$router.push({path: '/typeManagement/addVoicePlatform'});
             },
             handleEnterPage(row){

@@ -16,7 +16,7 @@
                     <el-table-column  prop="name" label="渠道商名称" align="center"></el-table-column>
                     <el-table-column  prop="created_user" label="记录">
                         <template slot-scope="scope">
-                            {{scope.row.created_user+' '+scope.row.created_at_txt}}
+                            {{scope.row.created_user+' '+scope.row.created_at}}
                         </template>
                     </el-table-column>
                     <el-table-column  prop="is_open" label="是否启用">

@@ -5,7 +5,7 @@
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
                 <el-button v-if="!isEdit" type="primary" @click="addChannel">确定并添加该渠道商</el-button>
                 <el-button v-if="isEdit" type="primary" @click="editChannel">{{editText}}</el-button>
-                <el-button type="danger" @click="handleDelEvent" v-if="isEdit&&!hasProduct">删除该设备</el-button>
+                <el-button type="danger" @click="handleDelEvent" v-if="isEdit&&!hasProduct">删除该渠道商</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <div class="desTitleTop">基本信息</div>

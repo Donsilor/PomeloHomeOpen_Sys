@@ -54,7 +54,7 @@
                                         </div>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="离线提示语" label-width="120px" prop="offline_hint">
+                                <!--<el-form-item label="离线提示语" label-width="120px" prop="offline_hint">
                                     <el-col :span="12">
                                         <el-input
                                                 type="textarea"
@@ -64,7 +64,7 @@
                                                 v-model="form.offline_hint" :disabled="!isEdit">
                                         </el-input>
                                     </el-col>
-                                </el-form-item>
+                                </el-form-item>-->
 
                             </el-col>
                         </el-tab-pane>
@@ -109,9 +109,9 @@
                                                 <el-input
                                                         type="textarea"
                                                         :autosize="{ minRows: 3, maxRows: 3}"
-                                                        placeholder="文字限制64个字符内"
+                                                        placeholder="文字限制255个字符内"
                                                         v-model="form.add1_tips"
-                                                        class="add1TextArea" :disabled="!isEdit" :maxlength="64">
+                                                        class="add1TextArea" :disabled="!isEdit" :maxlength="255">
                                                 </el-input>
                                             </el-form-item>
                                         </div>
@@ -152,11 +152,11 @@
                                                 <el-input
                                                         type="textarea"
                                                         :autosize="{ minRows: 3, maxRows: 3}"
-                                                        placeholder="文字限制64个字符内"
+                                                        placeholder="文字限制255个字符内"
                                                         v-model="form.add2_tips"
                                                         class="add1TextArea"
                                                         :disabled="!isEdit"
-                                                        :maxlength="64">
+                                                        :maxlength="255">
                                                 </el-input>
                                             </el-form-item>
                                         </div>
@@ -191,7 +191,7 @@
                                                 placeholder="请输入其他说明"
                                                 v-model="form.reset_tips"
                                                 :disabled="!isEdit"
-                                                :maxlength="64">
+                                                :maxlength="255">
                                         </el-input>
                                     </el-col>
                                 </el-form-item>
@@ -283,7 +283,7 @@
 //                    ],
                     add1_tips: [
                         { required: true, message: '请输入提示文字', trigger: 'blur' },
-                        { max: 64, message: '提示文字不能超过64个字符', trigger: 'blur' },
+                        { max: 255, message: '提示文字不能超过255个字符', trigger: 'blur' },
                     ],
                     add1_button: [
                         { required: true, message: '请输入按钮文字', trigger: 'blur' },
@@ -300,7 +300,7 @@
 //                    ],
                     add2_tips: [
                         { required: true, message: '请输入提示文字', trigger: 'blur' },
-                        { max: 64, message: '提示文字不能超过64个字符', trigger: 'blur' },
+                        { max: 255, message: '提示文字不能超过255个字符', trigger: 'blur' },
                     ],
 //                    'reset_img.filename': [
 //                        {validator(rule, value, callback, source, options) {
@@ -313,11 +313,11 @@
 //                    ],
                     reset_tips: [
                         { required: true, message: '请输入重置提示文字', trigger: 'blur' },
-                        { max: 64, message: '重置提示文字不能超过64个字符', trigger: 'blur' },
+                        { max: 255, message: '重置提示文字不能超过255个字符', trigger: 'blur' },
                     ],
-                    offline_hint:[
+                    /*offline_hint:[
                         {required:true,message:'请输入离线提示语',trigger: 'blur' }
-                    ]
+                    ]*/
                 }
             }
         },

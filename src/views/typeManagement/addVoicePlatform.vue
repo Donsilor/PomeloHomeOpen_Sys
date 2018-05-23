@@ -12,7 +12,7 @@
                     <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
                         <el-form-item label="语音平台中文" label-width="120px" prop="name">
                             <el-col :span="12">
-                                <el-input v-model="form.name" :span="6" :disabled="disabled" placeholder=" 中文名限中文、字母、32个字符、区分大小写"></el-input>
+                                <el-input v-model="form.name" :maxlength="32" :span="6" :disabled="disabled" placeholder=" 中文名限中文、字母、32个字符、区分大小写"></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="语音平台描述" label-width="120px" prop="desc">
@@ -264,10 +264,10 @@
                 this.$refs['ruleForm'].validate((valid) => {
                     if(valid){
                         if(this.form.logo.url==''){
-                            this.$message.error('请上传渠道商logo');
+                            this.$message.error('请上传语音平台logo');
                             return;
                         }
-                        this.$confirm('是否确定添加该渠道商？', '提示', {
+                        this.$confirm('是否确定添加该语音平台？', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
                             type: 'warning'

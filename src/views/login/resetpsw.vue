@@ -43,7 +43,7 @@
                     mail:this.$route.query.mail
                 },
                 loading: false,
-                showReset:false
+                showReset:true
             }
         },
         created(){

@@ -5,7 +5,7 @@
                 <el-button type="primary" @click="openDialog('')">新增权限</el-button>
             </el-row>
             <el-dialog :before-close="handleClose" center width="720px" class="doc-dialog"
-                       :title="isToModify ? '修改用户权限' : '添加权限用户' "
+                       :title="isToModify ? status==2 ? '查看用户权限' : '修改用户权限' : '添加权限用户' "
                        :visible.sync="dialogVisible">
                 <el-form :rules="rules" ref="permissionForm" :model="form" label-width="90px">
                     <el-form-item label="姓名" prop="name">
@@ -39,7 +39,7 @@
                     <el-button v-if="isToModify&&status==1" @click="del" type="danger" plain>停用该用户</el-button>
                     <el-button v-if="isToModify&&status==0" @click="enabled" type="danger" plain>启用该用户</el-button>
                     <el-button @click="closeDialog">取 消</el-button>
-                    <el-button type="primary" @click="addOrEdit">{{isToModify?'保存修改':'确 定'}}</el-button>
+                    <el-button v-if="status!=0" type="primary" @click="addOrEdit">{{isToModify?'保存修改':'确 定'}}</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -68,7 +68,7 @@
             <el-table-column align="center" label="操作" width="200">
                 <template slot-scope="scope">
                     <el-button @click="openDialog(scope.row)" size="mini" type="primary">
-                        修改
+                        {{scope.row.status==2?'查看':'修改'}}
                     </el-button>
                     <el-button @click="resendMail(scope.row)" v-if="scope.row.status==2" size="mini" type="primary">重发激活邮件</el-button>
                 </template>

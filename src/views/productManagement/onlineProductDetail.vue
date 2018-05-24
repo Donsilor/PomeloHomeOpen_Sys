@@ -299,7 +299,7 @@
                 </el-table>
             </el-tab-pane>
             <el-tab-pane label="版本信息" name="version">
-                <el-table :data="productDetail.version_list" highlight-current-row border stripe fit style="width:100%;">
+                <el-table v-if="productDetail.version_list" :data="productDetail.version_list.list" highlight-current-row border stripe fit style="width:100%;">
                     <el-table-column label="版本号" prop="version_no"></el-table-column>
                     <el-table-column label="版本描述" prop="des"></el-table-column>
                     <el-table-column label="状态" :formatter="statusMap" prop="status"></el-table-column>

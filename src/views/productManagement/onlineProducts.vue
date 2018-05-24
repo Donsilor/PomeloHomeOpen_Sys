@@ -99,7 +99,8 @@
                 this.listLoading = true;
                 let params = {
                     limit: this.listQuery.limit,
-                    page: this.listQuery.page
+                    page: this.listQuery.page,
+                    search_type:1
                 };
                 if(this.business_id!=''){
                     params.business_id = this.business_id;

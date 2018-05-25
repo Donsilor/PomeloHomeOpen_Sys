@@ -53,19 +53,7 @@
 
                         </el-col>
                     </el-row>
-                    <el-row class="card-row">
-                        <el-col :span="3" class="card-span-left edit-label">离线提示语</el-col>
-                        <el-col :span="16" :offset="1" class="card-span-right">
-                            <el-form :model="productDetail">
-                                <el-form-item prop="offline_hint">
-                                    <el-input :readonly="!edit" :class="{'no-border':!edit}"
-                                              v-model="productDetail.offline_hint">
-                                    </el-input>
-                                </el-form-item>
-                            </el-form>
 
-                        </el-col>
-                    </el-row>
                     <el-row class="card-row">
                         <el-col :span="3" class="card-span-left">渠道商</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">{{productDetail.distributor}}</el-col>
@@ -305,6 +293,20 @@
                     <el-table-column label="状态" :formatter="statusMap" prop="status"></el-table-column>
                     <el-table-column label="创建时间" prop="created_at_txt"></el-table-column>
                 </el-table>
+            </el-tab-pane>
+            <el-tab-pane label="离线提示语" name="offline_hint">
+                <el-row class="card-row">
+                    <el-col :span="3" class="card-span-left edit-label">离线提示语</el-col>
+                    <el-col :span="16" :offset="1" class="card-span-right">
+                        <el-form :model="productDetail">
+                            <el-form-item prop="offline_hint">
+                                <el-input :readonly="!edit" type="textarea" :class="{'no-border':!edit}" :rows="5"
+                                          v-model="productDetail.offline_hint">
+                                </el-input>
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+                </el-row>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -672,6 +674,13 @@
             padding-left: 0;
             font-size: 15px;
             color: #000000;
+        }
+        .el-textarea__inner{
+            border: none;
+            font-size: 15px;
+            color: #000000;
+            resize: none;
+            padding-top: 10px;
         }
 
     }

@@ -12,7 +12,7 @@
                         <el-input :readonly="status==1?false:true" v-model="form.name" placeholder="请输入姓名"></el-input>
                     </el-form-item>
                     <el-form-item label="邮箱" prop="mail">
-                        <el-input :readonly="status==1?false:true" v-model="form.mail" placeholder="请输入公司邮箱"></el-input>
+                        <el-input :readonly="isToModify?true:false" v-model="form.mail" placeholder="请输入公司邮箱"></el-input>
                     </el-form-item>
                     <el-form-item label="电话" prop="mobile">
                         <el-input :readonly="status==1?false:true" v-model="form.mobile" placeholder="请输入手机号码"></el-input>

@@ -287,7 +287,15 @@
                 </el-table>
             </el-tab-pane>
             <el-tab-pane label="版本信息" name="version">
-                <el-table v-if="productDetail.version_list" :data="productDetail.version_list.list" highlight-current-row border stripe fit style="width:100%;">
+                <h5>客户端H5控制页</h5>
+                <el-table :data="h5version_list" highlight-current-row border stripe fit style="width:100%;">
+                    <el-table-column label="版本号" prop="version_no"></el-table-column>
+                    <el-table-column label="版本描述" prop="des"></el-table-column>
+                    <el-table-column label="状态" :formatter="statusMap" prop="status"></el-table-column>
+                    <el-table-column label="创建时间" prop="created_at_txt"></el-table-column>
+                </el-table>
+                <h5>固件</h5>
+                <el-table :data="version_list" highlight-current-row border stripe fit style="width:100%;">
                     <el-table-column label="版本号" prop="version_no"></el-table-column>
                     <el-table-column label="版本描述" prop="des"></el-table-column>
                     <el-table-column label="状态" :formatter="statusMap" prop="status"></el-table-column>
@@ -341,6 +349,8 @@
                 model_list:[],
                 modifyData:{images:[]},
                 attr_map:{},
+                version_list:[],
+                h5version_list:[],
             }
         },
         created() {
@@ -378,6 +388,14 @@
                         else{
                             _this[key].push(item);
                         }
+                    });
+                    response.version_list.list.forEach(v=>{
+                        if(v.type==1){
+                    this.version_list.push(v);
+                     }
+                     else{
+                    this.h5version_list.push(v);
+                }
                     })
                 })
             },

@@ -49,7 +49,7 @@
                                 <el-input v-show="version_info.action_type == 2"
                                           type="textarea" autosize :maxlength="500"
                                           placeholder="审核未通过理由"
-
+                                          v-model="version_info.unapproved_reason"
                                 >
 
                                 </el-input>
@@ -307,10 +307,13 @@
                 if(this.reject_reason_list.length>0){
                     this.action_type = 2;
                 }
+                let arry = this.reject_reason_list.map(v=>{
+                        return v.description+'未审核通过'+(v.unapproved_reason?'——'+v.unapproved_reason:'');
+                });
                 let params = {
                     record_id: this.record_id,
                     action_type: this.action_type,
-                    approved_reason: this.approved_reason
+                    approved_reason: arry.join('|')
                 };
                 this.$confirm('确认提交？').then(()=>{
                     commitCheck(params).then(response => {

@@ -13,12 +13,12 @@
                     <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
                         <el-form-item label="渠道商名称" label-width="120px" prop="name">
                             <el-col :span="12">
-                                <el-input v-model="form.name" :span="6" :disabled="disabled" placeholder=" 中文名限中文、字母、32个字符、区分大小写"></el-input>
+                                <el-input v-model="form.name" :span="6" :disabled="disabled||hasProduct" placeholder=" 中文名限中文、字母、32个字符、区分大小写"></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="渠道商英文" label-width="120px" prop="name_e">
                             <el-col :span="12">
-                                <el-input v-model="form.name_e" :disabled="disabled" :span="6" placeholder=" 字母、下划线, 最多32个字符，区分大小写"></el-input>
+                                <el-input v-model="form.name_e" :disabled="disabled||hasProduct" :span="6" placeholder=" 字母、下划线, 最多32个字符，区分大小写"></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="渠道商logo" label-width="120px" style="padding-bottom: 30px;">
@@ -300,6 +300,8 @@
                                 method: 'post',
                                 data: this.form,
                             }).then(res => {
+                                this.disabled = true;
+                                this.editText = '编辑渠道商信息';
                                 this.$message({
                                     type: 'success',
                                     message: '保存成功!'

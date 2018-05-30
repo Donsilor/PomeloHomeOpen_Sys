@@ -422,27 +422,28 @@
                         type: item.type || ''
                     };*/
                 }).join('|');
-                }
+                };
+                let arry = this.reject_reason_list.map(v=>{
+                        return v.description+'未审核通过'+(v.unapproved_reason?'——'+v.unapproved_reason:'');
+                });
                 let params = {
                     record_id: this.record_id,
                     action_type: this.action_type,
-                    approved_reason: this.approved_reason
+                    approved_reason: arry.join('|')
                 };
+
                 this.$confirm('确认提交？').then(() => {
                     commitCheck(params).then(response => {
-                    if (response.res
-            )
-                {
-                    Message({
-                        message: '审核成功',
-                        type: 'success',
-                        duration: 2 * 1000
-                    });
-                    this.$router.go(-1);
-                }
-            })
-            })
-                ;
+                    if (response.res){
+                           Message({
+                             message: '审核成功',
+                             type: 'success',
+                             duration: 2 * 1000
+                           });
+                           this.$router.go(-1);
+                      }
+                  })
+                });
             },
 
             // 取消审核

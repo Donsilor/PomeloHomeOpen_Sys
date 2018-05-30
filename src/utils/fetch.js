@@ -32,7 +32,7 @@ service.interceptors.response.use(
   /**
   * code为非200是抛错
   */
-    const res = response.data
+    const res = response.data;
     if (res.code !== 200) {
       Message({
         message: res.msg,
@@ -63,13 +63,22 @@ service.interceptors.response.use(
     }
   },
   error => {
+    const res = error.response.data;
     console.log('err' + error)// for debug
+
     Message({
-      message: error.msg,
+      message: res.msg,
       type: 'error',
       duration: 5 * 1000
     })
-    return Promise.reject(error)
+      // 401:未授权
+      if (res.code === 401) {
+          store.dispatch('FedLogOut').then(() => {
+              // location.reload()// 为了重新实例化vue-router对象 避免bug
+              window.location.assign(window.location.origin + window.location.pathname + '#/login');
+          })
+      }
+    return Promise.reject(res)
   }
 )
 

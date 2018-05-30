@@ -168,7 +168,7 @@
         methods: {
             getList() {
                 // 时间格式化
-                if (this.queryCondition.created_date[0]) {
+                if (this.queryCondition.created_date) {
                     this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
                     this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
                 } else {

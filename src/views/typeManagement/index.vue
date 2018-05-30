@@ -43,7 +43,7 @@
                         type: 'bigCategory'
                     },
                     {
-                        name: '设备管理',
+                        name: '引导页管理',
                         url: '/typeManagement/deviceManager',
                         type:'deviceManager'
                     },

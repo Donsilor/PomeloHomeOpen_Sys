@@ -460,9 +460,9 @@
                                 type: 'success',
                                 message: '编辑设备信息成功!'
                             });
-                            setTimeout(()=>{
+                            /*setTimeout(()=>{
                                 this.$router.push({path: '/typeManagement/deviceManager'});
-                            },2000);
+                            },2000);*/
                         }).catch(res=>{
                             this.$message({
                                 type: 'error',

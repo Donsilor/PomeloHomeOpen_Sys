@@ -32,7 +32,7 @@
         <el-row class="card-row">
           <el-col :span="3" class="card-span-left">固件版本要求</el-col>
           <el-col :span="16" :offset="1" class="card-span-right">
-            {{'需'+checkDetail.firmware_ids_txt+'版本以上'}}
+            {{'需'+checkDetail.firmware_ids_txt+'及以上版本'}}
           </el-col>
         </el-row>
         <el-row v-if="type=='audit' " class="card-handle-else">
@@ -55,7 +55,7 @@
                 <el-input v-show="version_info.action_type == 2"
                         type="textarea" autosize :maxlength="500"
                         placeholder="审核未通过理由"
-
+                          v-model="version_info.unapproved_reason"
                 >
 
                 </el-input>
@@ -185,7 +185,7 @@
       <el-row style="padding-top: 15px;">
         <el-col :span="3" :offset="4">
           <el-button :disabled="unapproved_list.length>0||reject_reason_list>0"
-                     type="primary" @click="commitCheck">提交
+                     type="primary" :loading="loading" @click="commitCheck">提交
           </el-button>
         </el-col>
         <el-col :span="3">
@@ -215,6 +215,7 @@
                 business_name: '',
                 action_type: 1, // 提交审核操作类型 ，1 = 通过，2 = 驳回
                 approved_reason: '审核通过', // 审核原因
+                loading:false
             }
         },
         computed: {
@@ -313,10 +314,13 @@
                 if(this.reject_reason_list.length>0){
                     this.action_type = 2;
                 }
+                let arry = this.reject_reason_list.map(v=>{
+                        return v.description+'未审核通过'+(v.unapproved_reason?'——'+v.unapproved_reason:'');
+                });
                 let params = {
                     record_id: this.record_id,
                     action_type: this.action_type,
-                    approved_reason: this.approved_reason
+                    approved_reason: arry.join('|')
                 };
                 this.$confirm('确认提交？').then(()=>{
                     commitCheck(params).then(response => {

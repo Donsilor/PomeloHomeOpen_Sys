@@ -244,6 +244,8 @@
                                 method: 'post',
                                 data: this.form,
                             }).then(res => {
+                                this.disabled = true;
+                                this.editText = '编辑语音平台信息';
                                 this.$message({
                                     type: 'success',
                                     message: '保存成功!'

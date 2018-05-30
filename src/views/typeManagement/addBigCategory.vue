@@ -5,7 +5,7 @@
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
                 <el-button v-if="!isEdit" type="primary" @click="addGory">确定并添加该品类</el-button>
                 <el-button v-if="isEdit" type="primary" @click="editGory">{{editText}}</el-button>
-                <el-button v-if="isEdit" type="danger" @click="handleDelEvent">删除该品类</el-button>
+                <el-button v-if="isEdit&&disabled" type="danger" @click="handleDelEvent">删除该品类</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <div class="desTitleTop">基本信息</div>
@@ -364,6 +364,8 @@
                                 method: 'post',
                                 data: this.form,
                             }).then(res => {
+                                this.disabled = true;
+                                this.editText = '编辑品类信息';
                                 this.$message({
                                     type: 'success',
                                     message: '保存成功!'

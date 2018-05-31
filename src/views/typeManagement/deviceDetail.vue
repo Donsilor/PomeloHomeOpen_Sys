@@ -4,7 +4,7 @@
             <el-col :span="24">
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
                 <el-button type="primary" @click="editDevice">{{editText}}</el-button>
-                <el-button type="danger" @click="handleDelEvent" v-show="!isEdit">删除该设备</el-button>
+                <el-button type="danger" @click="handleDelEvent" v-show="!isEdit">删除该引导页</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <el-form ref="ruleForm" :rules="rules" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
@@ -13,7 +13,7 @@
                             <el-col :span="24">
                                 <el-form-item label-width="120px">
                                     <el-col :span="12">
-                                        <el-checkbox disabled v-model="is_evergrande" :true-label="1" :false-label="0">属于恒腾快联设备</el-checkbox>
+                                        <el-checkbox disabled v-model="is_evergrande" :true-label="1" :false-label="0">属于{{COLTD}}快联产品设备</el-checkbox>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="品类" label-width="120px">
@@ -70,7 +70,7 @@
                         </el-tab-pane>
                         <el-tab-pane label="添加方式">
                             <el-col :span="24">
-                                <el-form-item label="设备添加方式" label-width="120px" prop="add_type">
+                                <el-form-item label="产品添加方式" label-width="120px" prop="add_type">
                                     <el-col :span="13">
                                         <el-select v-model="form.add_type" placeholder="请选择添加方式" style="width: 100%;" :disabled="!isEdit">
                                             <el-option
@@ -234,6 +234,7 @@
     import fetch from '@/utils/fetch';
     import helper from '@/utils/helper';
     import {getToken} from '@/utils/auth';
+    import {COLTD} from '@/utils/config';
     import addTechnical from './addTechnical.vue';
     import addAttribute from './addAttribute.vue';
     export default {
@@ -254,13 +255,14 @@
                 token : getToken(),
                 isLoadData : false,
                 isEdit : false, //判断是否是编辑
-                editText : '编辑设备信息',
+                editText : '编辑产品信息',
                 product : {},
                 type : {},
                 business:{},
                 brand : {},
                 model : {},
                 is_evergrande:0,
+                COLTD:COLTD,
                 form:{
                 },
                 addType : '',
@@ -270,7 +272,7 @@
                         { required: true, message: '请选择产品品类', trigger: 'change' }
                     ],
                     add_type: [
-                        { required: true, message: '请选择设备添加方式', trigger: 'change' }
+                        { required: true, message: '请选择产品添加方式', trigger: 'change' }
                     ],
 //                  'add1_img.filename': [
 //                        {validator(rule, value, callback, source, options) {
@@ -439,7 +441,7 @@
                         this.saveDeviceInfo();
                     }).catch(() => {
                         this.isEdit = false;
-                        this.editText = '编辑设备信息';
+                        this.editText = '编辑产品信息';
                     });
                 }
             },
@@ -448,7 +450,7 @@
             saveDeviceInfo(){
                 this.$refs['ruleForm'].validate((valid) => {
                     if(valid){
-                        this.editText = '编辑设备信息';
+                        this.editText = '编辑产品信息';
                         this.form.token = this.token;
                         fetch({
                             url: '/device/deviceEdit',
@@ -458,7 +460,7 @@
                             this.isEdit = false;
                             this.$message({
                                 type: 'success',
-                                message: '编辑设备信息成功!'
+                                message: '编辑产品信息成功!'
                             });
                             /*setTimeout(()=>{
                                 this.$router.push({path: '/typeManagement/deviceManager'});
@@ -481,7 +483,7 @@
 
             //处理删除事件
             handleDelEvent(){
-                this.$confirm('是否确认删除此设备，删除不能恢复。', '提示', {
+                this.$confirm('是否确认删除此产品，删除不能恢复。', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'

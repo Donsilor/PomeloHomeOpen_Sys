@@ -2,8 +2,8 @@
     <div class="app-container calendar-list-container">
         <el-row :gutter="30">
             <el-col :span="24">
-                <el-button type="primary" @click="addDevice">新增设备</el-button>
-                <el-button type="ghost" @click="addFucSetModal=true">添加方式设置</el-button>
+                <el-button type="primary" @click="addDevice">新增引导页</el-button>
+                <el-button type="ghost" @click="addFucSetModal=true">引导页设置</el-button>
                 <el-button class="frt" @click="search" type="primary">查找</el-button>
                 <el-select class="frt" v-model="business_id" clearable placeholder="全部厂商">
                     <el-option v-for="(item,index) in businessList" :key="index" :label="item.name" :value="item.business_id">
@@ -28,9 +28,9 @@
                 <el-table :data="tableData" border stripe style="width: 100%">
                     <el-table-column  prop="type_name" label="子品类" width="220"></el-table-column>
                     <el-table-column  prop="parent_type_name" label="所属大品类" width="220"></el-table-column>
-                    <el-table-column prop="model" label="设备型号" width="150"></el-table-column>
+                    <el-table-column prop="model" label="产品型号" width="150"></el-table-column>
                     <el-table-column prop="business_name" label="厂商"></el-table-column>
-                    <el-table-column prop="business_name" label="是否默认设备" align="center">
+                    <el-table-column prop="business_name" label="是否默认产品" align="center">
                         <template slot-scope="scope">
                             <span v-if="scope.row.is_default">是</span>
                             <span v-else>否</span>
@@ -61,7 +61,7 @@
                 title="添加方式设置"
                 :visible.sync="addFucSetModal"
                 width="30%">
-            <span class="danger" style="display: inline-block;margin-bottom: 20px;">该设置影响所有设备的添加方式，请确认后操作</span>
+            <span class="danger" style="display: inline-block;margin-bottom: 20px;">该设置影响所有产品设备的添加方式，请确认后操作</span>
             <div v-for="item in addFucForm">
                 <el-checkbox v-model="item.status">{{item.name}}</el-checkbox>
             </div>
@@ -129,7 +129,8 @@
                       'page' :this.currentPage,
                       'token' : getToken(),
                       'limit' : 15,
-                      'type_id':this.child_id||this.type_id,
+                      'type_id':this.child_id,
+                      'parent_type_id':this.type_id,
                       'business_id':this.business_id
                   }
               }).then(res=>{

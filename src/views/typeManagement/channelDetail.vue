@@ -175,7 +175,7 @@
                 isEdit: this.$route.query.id ? true : false,
                 token : getToken(),
                 isLoadData : false,
-                hasProduct:1,
+                hasProduct:false,
                 editText : '编辑渠道商信息',
                 disabled:this.$route.query.id ? true : false,
                 id:this.$route.query.id ? this.$route.query.id : '',
@@ -237,7 +237,10 @@
                     this.form.name_e = res.name_e;
                     this.form.logo = res.logo;
                     this.form.qrcode = res.qrcode;
-                    this.hasProduct = res.has_product;
+                    if(res.has_product){
+                        this.hasProduct = true;
+                    }
+
                 });
             },
             handleLogoSuccess(res, file) {

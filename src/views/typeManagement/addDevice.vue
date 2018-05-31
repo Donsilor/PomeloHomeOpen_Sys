@@ -3,14 +3,14 @@
         <el-row :gutter="30">
             <el-col :span="24">
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
-                <el-button type="primary" @click="confirmDevice">确认并添加该设备</el-button>
+                <el-button type="primary" @click="confirmDevice">确认并添加该产品</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <el-form ref="ruleForm" :rules="rules" :model="form" label-width="80px" style="margin-top: 20px;" size="large" label-position="left">
                     <div class="title">基本信息</div>
                     <el-form-item label-width="120px">
                         <el-col :span="12">
-                            <el-checkbox v-model="is_evergrande" :true-label="1" :false-label="0">属于恒腾快联设备</el-checkbox>
+                            <el-checkbox v-model="is_evergrande" :true-label="1" :false-label="0">属于{{COLTD}}快联产品设备</el-checkbox>
                         </el-col>
                     </el-form-item>
                     <el-form-item label="品类" label-width="120px" prop="type">
@@ -99,7 +99,7 @@
                     </el-form-item>-->
 
                     <div class="title">添加方式</div>
-                    <el-form-item label="设备添加方式" label-width="120px" prop="add_type">
+                    <el-form-item label="产品添加方式" label-width="120px" prop="add_type">
                         <el-col :span="12">
                             <el-select v-model="form.add_type" placeholder="请选择添加方式" style="width: 100%;">
                                 <el-option
@@ -260,6 +260,7 @@
     import { Loading } from 'element-ui';
     import fetch from '@/utils/fetch';
     import helper from '@/utils/helper';
+    import {COLTD} from '@/utils/config';
     import {getToken} from '@/utils/auth';
     export default {
         name: 'addDevice',
@@ -283,6 +284,7 @@
                 brand : {},
                 model : {},
                 is_evergrande:0,
+                COLTD:COLTD,
                 form:{
                     type : '',
                     id_type : '',   //设备类型,1:品牌类型，2：产品类型',3:大品类类型
@@ -322,7 +324,7 @@
                         { required: true, message: '请选择产品品类', trigger: 'change' }
                     ],
                     add_type: [
-                        { required: true, message: '请选择设备添加方式', trigger: 'change' }
+                        { required: true, message: '请选择产品添加方式', trigger: 'change' }
                     ],
 //                    'add1_img.filename': [
 //                        {validator(rule, value, callback, source, options) {
@@ -506,7 +508,7 @@
                             }).then(res=>{
                                 this.$message({
                                     type: 'success',
-                                    message: '新增设备成功！'
+                                    message: '新增产品成功！'
                                 });
                                 setTimeout(()=>{
                                     this.$router.push({path: '/typeManagement/deviceManager'});

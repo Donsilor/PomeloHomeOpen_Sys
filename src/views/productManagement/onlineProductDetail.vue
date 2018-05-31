@@ -190,13 +190,13 @@
                                 <p class="cname">Wi-Fi方案</p>
                                 <p class="cdes">适合空调、空气净化器、洗衣机等</p>
                             </div>
-                            <div class="accessProgram" :class="{'active':productDetail.type==2,'dis':!edit}" @click="chooseAccess(2)">
+                            <div class="accessProgram" :class="{'active':productDetail.type==3,'dis':!edit}" @click="chooseAccess(3)">
                                 <div class="c-icon bluetooth"></div>
                                 <i class="el-icon-circle-check"></i>
                                 <p class="cname">蓝牙方案</p>
                                 <p class="cdes">适合音箱、健康监护设备等…</p>
                             </div>
-                            <div class="accessProgram" :class="{'active':productDetail.type==3,'dis':!edit}" @click="chooseAccess(3)">
+                            <div class="accessProgram" :class="{'active':productDetail.type==2,'dis':!edit}" @click="chooseAccess(2)">
                                 <div class="c-icon zigbee"></div>
                                 <i class="el-icon-circle-check"></i>
                                 <p class="cname">ZigBee方案</p>
@@ -538,10 +538,8 @@
                 this.getAgreementList(str);
             },
             getAgreementList(str){
-                if(str==3){
-                    this.getAgreementData(2);   //因为zigbee的请求type为2
-                }else if(str==2){
-                    this.getAgreementData(3);
+                if(str==3||str==2){
+                    this.getAgreementData(str);
                 }
                 else{
                     if(this.module_list.length === 0){

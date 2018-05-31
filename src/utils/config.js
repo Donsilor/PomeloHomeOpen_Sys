@@ -58,3 +58,6 @@ export const dict = {
         {'DICT_VALUE': 4, 'DICT_DESC': '已审批',},
     ]
 }
+
+//公司名称
+export const COLTD = '科技公司';

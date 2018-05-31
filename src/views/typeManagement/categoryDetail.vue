@@ -10,18 +10,18 @@
                 <el-tabs type="border-card" @tab-click="handleClick">
                     <el-tab-pane label="基本信息">
                         <el-col :span="24">
-                            <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
-                                <el-form-item label="子品类名称" label-width="120px" prop="name">
+                            <el-form :rules="rules" ref="ruleForm" :model="form" label-width="125px" style="margin-top: 20px;" size="large">
+                                <el-form-item label="子品类名称" prop="name">
                                     <el-col :span="12">
                                         <el-input v-model="form.name" :span="6" :disabled="!isEdit"></el-input>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="子品类英文名" label-width="120px" prop="name_e">
+                                <el-form-item label="子品类英文名" prop="name_e">
                                     <el-col :span="12">
                                         <el-input v-model="form.name_e" :span="6" :disabled="!isEdit"></el-input>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="所属品类" label-width="120px" v-if="isEdit" prop="parent_type_id">
+                                <el-form-item label="所属品类" v-if="isEdit" prop="parent_type_id">
                                     <el-col :span="12">
                                         <el-select v-model="form.parent_type_id" placeholder="所属品类" style="width: 100%;"
                                                    :disabled="!isEdit">
@@ -34,13 +34,13 @@
                                         </el-select>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="所属品类" label-width="120px" v-else="isEdit" prop="parent_type_name">
+                                <el-form-item label="所属品类" v-else="isEdit" prop="parent_type_name">
                                     <el-col :span="12">
                                         <el-input v-model="form.parent_type_name" :span="6"
                                                   :disabled="!isEdit"></el-input>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="品类图标" label-width="120px" v-if="isLoadData" >
+                                <el-form-item label="品类图标" v-if="isLoadData" >
                                     <el-col :span="12">
                                         <div class="fileuploadItem childCategory">
                                             <el-upload
@@ -112,18 +112,18 @@
                                         </div>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="是否高频使用" label-width="120px">
+                                <el-form-item label="是否高频使用">
                                     <el-col :span="12">
                                         <el-checkbox :true-label="1" :false-label="0" v-model="form.is_high_frequency" :disabled="!isEdit">是
                                         </el-checkbox>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="是否为智能开关关联设备品类" label-width="120px" class="line25">
+                                <el-form-item label="是否为智能开关关联设备品类" class="line25">
                                     <el-col :span="12">
                                         <el-checkbox :true-label="1" :false-label="0" v-model="form.is_relate_switch" :disabled="!isEdit">是</el-checkbox>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="恒腾快联设备" label-width="120px">
+                                <el-form-item :label="COLTD+'快联设备'">
                                     <el-col :span="12">
                                         <el-checkbox :true-label="1" :false-label="0" v-model="form.show_in_select_list" :disabled="!isEdit">是</el-checkbox>
                                     </el-col>
@@ -453,6 +453,7 @@
     import fetch from '@/utils/fetch';
     import helper from '@/utils/helper';
     import {getToken} from '@/utils/auth';
+    import {COLTD} from '@/utils/config';
     import addTechnical from './addTechnical.vue';
     import addAttribute from './addAttribute.vue';
     export default {
@@ -476,6 +477,7 @@
                 isLoadData: false,
                 isEdit: false, //判断是否是编辑
                 editText: '编辑品类信息',
+                COLTD:COLTD,
                 form: {
                     name: '',
                     name_e: '',

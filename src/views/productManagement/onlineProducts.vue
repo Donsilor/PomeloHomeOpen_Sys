@@ -32,7 +32,10 @@
             <el-table-column align="center" label="厂商" prop="business_name">
             </el-table-column>
 
-            <el-table-column align="center" label="版本号" prop="version_no">
+            <el-table-column align="center" label="版本号">
+                <template slot-scope="scope">
+                    {{scope.row.version_no_H5?'H5控制页版本'+scope.row.version_no_H5:''}}{{' 固件版本'+scope.row.version_no_firmware}}
+                </template>
             </el-table-column>
 
             <el-table-column align="center" label="创建时间" prop="created_at">

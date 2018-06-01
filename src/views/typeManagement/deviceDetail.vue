@@ -255,7 +255,7 @@
                 token : getToken(),
                 isLoadData : false,
                 isEdit : false, //判断是否是编辑
-                editText : '编辑产品信息',
+                editText : '编辑引导页',
                 product : {},
                 type : {},
                 business:{},
@@ -433,7 +433,7 @@
                     this.isEdit = true;
                     this.editText = '确定并提交修改';
                 }else{
-                    this.$confirm('是否确认保存修改后品类信息？', '提示', {
+                    this.$confirm('是否确认保存修改后引导页信息？', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
@@ -441,7 +441,7 @@
                         this.saveDeviceInfo();
                     }).catch(() => {
                         this.isEdit = false;
-                        this.editText = '编辑产品信息';
+                        this.editText = '编辑引导页';
                     });
                 }
             },
@@ -450,7 +450,7 @@
             saveDeviceInfo(){
                 this.$refs['ruleForm'].validate((valid) => {
                     if(valid){
-                        this.editText = '编辑产品信息';
+                        this.editText = '编辑引导页';
                         this.form.token = this.token;
                         fetch({
                             url: '/device/deviceEdit',
@@ -460,7 +460,7 @@
                             this.isEdit = false;
                             this.$message({
                                 type: 'success',
-                                message: '编辑产品信息成功!'
+                                message: '编辑引导页成功!'
                             });
                             /*setTimeout(()=>{
                                 this.$router.push({path: '/typeManagement/deviceManager'});
@@ -483,7 +483,7 @@
 
             //处理删除事件
             handleDelEvent(){
-                this.$confirm('是否确认删除此产品，删除不能恢复。', '提示', {
+                this.$confirm('是否确认删除此引导页，删除不能恢复。', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'

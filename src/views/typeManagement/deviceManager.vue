@@ -3,7 +3,7 @@
         <el-row :gutter="30">
             <el-col :span="24">
                 <el-button type="primary" @click="addDevice">新增引导页</el-button>
-                <el-button type="ghost" @click="addFucSetModal=true">引导页设置</el-button>
+                <el-button type="ghost" @click="addFucSetModal=true">客户端添加设备设置</el-button>
                 <el-button class="frt" @click="search" type="primary">查找</el-button>
                 <el-select class="frt" v-model="business_id" clearable placeholder="全部厂商">
                     <el-option v-for="(item,index) in businessList" :key="index" :label="item.name" :value="item.business_id">
@@ -58,10 +58,10 @@
 
         </div>
         <el-dialog
-                title="添加方式设置"
+                title="客户端添加设备设置"
                 :visible.sync="addFucSetModal"
                 width="30%">
-            <span class="danger" style="display: inline-block;margin-bottom: 20px;">该设置影响所有产品设备的添加方式，请确认后操作</span>
+            <span class="danger" style="display: inline-block;margin-bottom: 20px;">该设置影响客户端能否添加设备，请确认后谨慎操作</span>
             <div v-for="item in addFucForm">
                 <el-checkbox v-model="item.status">{{item.name}}</el-checkbox>
             </div>

@@ -3,7 +3,7 @@
         <el-row :gutter="30">
             <el-col :span="24">
                 <el-button type="ghost" @click="handleBackEvent">返回</el-button>
-                <el-button type="primary" @click="confirmDevice">确认并添加该产品</el-button>
+                <el-button type="primary" @click="confirmDevice">确认并添加该引导页</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <el-form ref="ruleForm" :rules="rules" :model="form" label-width="80px" style="margin-top: 20px;" size="large" label-position="left">
@@ -508,7 +508,7 @@
                             }).then(res=>{
                                 this.$message({
                                     type: 'success',
-                                    message: '新增产品成功！'
+                                    message: '新增引导页成功！'
                                 });
                                 setTimeout(()=>{
                                     this.$router.push({path: '/typeManagement/deviceManager'});

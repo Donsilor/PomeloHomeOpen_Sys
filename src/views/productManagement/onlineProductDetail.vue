@@ -309,7 +309,7 @@
                         <el-form :model="productDetail">
                             <el-form-item prop="offline_hint">
                                 <el-input :readonly="!edit" type="textarea" :class="{'no-border':!edit}" :rows="5"
-                                          v-model="productDetail.offline_hint">
+                                          v-model="productDetail.offline_hint" :maxlength="1000">
                                 </el-input>
                             </el-form-item>
                         </el-form>

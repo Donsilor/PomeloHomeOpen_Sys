@@ -91,7 +91,7 @@
                         </el-form-item>
                         <el-form-item label="品类离线提示语" label-width="120px" prop="offline_hint">
                             <el-col :span="12">
-                                <el-input :rows="4" type="textarea" v-model="form.offline_hint" :disabled="disabled" :span="6" placeholder="请输入离线提示语"></el-input>
+                                <el-input :rows="4" :maxlength="1000" type="textarea" v-model="form.offline_hint" :disabled="disabled" :span="6" placeholder="请输入离线提示语"></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="大品类是否在设备选择列表显示" label-width="120px" class="line25">

@@ -597,6 +597,10 @@
                 if(this.productDetail.compat!=this.copyProductDetail.compat){
                     this.modifyData.compat = this.productDetail.compat;
                 }
+                if(this.productDetail.offline_hint.replace(/\s/g,"")==''){
+                    this.$message.error('离线提示语不能为空');
+                    return;
+                }
                 if(this.productDetail.offline_hint!=this.copyProductDetail.offline_hint){
                     this.modifyData.offline_hint = this.productDetail.offline_hint;
                 }
@@ -622,7 +626,6 @@
                     return _map[el];
                 });
                 this.modifyData.id = this.productDetail.id;
-                console.log(this.modifyData);
                 let formData = JSON.parse(JSON.stringify(this.modifyData));
                 if(formData.icon){
                     formData.icon = JSON.stringify(formData.icon);

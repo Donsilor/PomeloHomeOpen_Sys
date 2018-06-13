@@ -51,6 +51,9 @@
                     <el-form-item label="营业执照注册号" prop="registration_No">
                         <el-input :class="{'no-border':!edit}" v-model="checkDetail.registration_No"></el-input>
                     </el-form-item>
+                    <el-form-item label="客服电话" prop="customer_phone">
+                        <el-input :class="{'no-border':!edit}" v-model="checkDetail.customer_phone"></el-input>
+                    </el-form-item>
                     <el-form-item label="合作产品" prop="type">
                         <div :style="{paddingLeft: edit?0:15+'px'}">
                             <el-tag type="success" style="margin: 0 10px 10px 0;" v-for="(item,index) in checkDetail.type"
@@ -273,6 +276,9 @@
                     ],
                     address : [
                         { required: true, message: '公司地址不能为空', trigger: 'blur' }
+                    ],
+                    customer_phone:[
+                        { required: true, message: '客服电话不能为空', trigger: 'blur' }
                     ],
                     registration_No : [
                         { required: true, message: '营业执照号不能为空'},

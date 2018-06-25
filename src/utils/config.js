@@ -60,4 +60,4 @@ export const dict = {
 }
 
 //公司名称
-export const COLTD = '科技公司';
+export const COLTD = '星络科技';

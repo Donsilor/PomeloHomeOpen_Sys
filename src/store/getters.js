@@ -4,8 +4,8 @@ const getters = {
     avatar: state => state.user.avatar,
     name: state => state.user.name,
     roles: state => state.user.roles,
-    auditMenus: state => state.auditMenus,
-    documentMenus: state => state.documentMenus,
-    authorityMenus: state => state.authorityMenus
+    auditMenus: state => state.user.auditMenus,
+    documentMenus: state => state.user.documentMenus,
+    authorityMenus: state => state.user.authorityMenus
 }
 export default getters

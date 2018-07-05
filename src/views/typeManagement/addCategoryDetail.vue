@@ -91,17 +91,7 @@
                                         </el-select>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="是否高频使用">
-                                    <el-col :span="12">
-                                        <el-checkbox :true-label="1" :false-label="0" v-model="form.is_high_frequency">是</el-checkbox>
-                                    </el-col>
-                                </el-form-item>
 
-                                <el-form-item label="是否为智能开关关联设备品类" class="line25">
-                                    <el-col :span="12">
-                                        <el-checkbox :true-label="1" :false-label="0" v-model="form.is_relate_switch">是</el-checkbox>
-                                    </el-col>
-                                </el-form-item>
                                 <el-form-item :label="COLTD+'快联设备'" >
                                     <el-col :span="12">
                                         <el-checkbox :true-label="1" :false-label="0" v-model="form.show_in_select_list">是</el-checkbox>
@@ -274,8 +264,8 @@
                             "file_name":""
                         }
                     },
-                    "is_relate_switch":0,
-                    "is_high_frequency":0,
+                    /*"is_relate_switch":0,
+                    "is_high_frequency":0,*/
                     "show_in_select_list":0,
                 },
                 rules: {

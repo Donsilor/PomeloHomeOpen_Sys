@@ -62,6 +62,11 @@
                         url: '/typeManagement/voicePlatform',
                         type:'voicePlatform'
                     },
+                    {
+                        name: '技术方案管理',
+                        url: '/typeManagement/technology',
+                        type:'technology'
+                    },
                 ]
             }
         },

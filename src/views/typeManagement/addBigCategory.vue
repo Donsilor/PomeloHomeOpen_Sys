@@ -10,18 +10,18 @@
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <div class="desTitleTop">基本信息</div>
                 <el-col :span="24">
-                    <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
-                        <el-form-item label="大品类名称" label-width="120px" prop="name">
+                    <el-form :rules="rules" ref="ruleForm" :model="form" label-width="120px" style="margin-top: 20px;" size="large">
+                        <el-form-item label="大品类名称" prop="name">
                             <el-col :span="12">
                                 <el-input v-model="form.name" :span="6" :disabled="disabled" placeholder="请输入大品类名称"></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="大品类英文名" label-width="120px" prop="name_e">
+                        <el-form-item label="大品类英文名" prop="name_e">
                             <el-col :span="12">
                                 <el-input v-model="form.name_e" :disabled="disabled" :span="6" placeholder="请输入大品类英文"></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="品类图标" label-width="120px" style="padding-bottom: 30px;">
+                        <el-form-item label="品类图标" style="padding-bottom: 30px;">
                             <el-col :span="12">
                                 <div class="fileuploadItem bigCategory">
                                     <el-upload
@@ -89,17 +89,28 @@
                                 </div>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="品类离线提示语" label-width="120px" prop="offline_hint">
+                        <el-form-item label="品类离线提示语" prop="offline_hint">
                             <el-col :span="12">
                                 <el-input :rows="4" :maxlength="1000" type="textarea" v-model="form.offline_hint" :disabled="disabled" :span="6" placeholder="请输入离线提示语"></el-input>
                             </el-col>
                         </el-form-item>
-                        <el-form-item label="大品类是否在设备选择列表显示" label-width="120px" class="line25">
+                        <el-form-item label="大品类是否在设备选择列表显示" class="line25">
                             <el-col :span="12">
                                 <el-radio-group :disabled="disabled" v-model="form.show_in_select_list">
                                     <el-radio :label="1">是</el-radio>
                                     <el-radio :label="0">否</el-radio>
                                 </el-radio-group>
+                            </el-col>
+                        </el-form-item>
+                        <el-form-item label="是否高频使用">
+                            <el-col :span="12">
+                                <el-checkbox :disabled="disabled" :true-label="1" :false-label="0" v-model="form.is_high_frequency">是</el-checkbox>
+                            </el-col>
+                        </el-form-item>
+
+                        <el-form-item label="是否为智能开关关联设备品类" class="line25">
+                            <el-col :span="12">
+                                <el-checkbox :disabled="disabled" :true-label="1" :false-label="0" v-model="form.is_relate_switch">是</el-checkbox>
                             </el-col>
                         </el-form-item>
                     </el-form>
@@ -224,6 +235,8 @@
                     "name_e":"",
                     "offline_hint":"",
                     "show_in_select_list":1,
+                    "is_relate_switch":0,
+                    "is_high_frequency":0,
                     "icon_list":{
                         "high_light":{
                             "file_id":"",
@@ -297,6 +310,12 @@
                     this.form.offline_hint = res.offline_hint;
                     if(res.show_in_select_list!==undefined){
                         this.form.show_in_select_list = res.show_in_select_list;
+                    }
+                    if(res.is_high_frequency!==undefined){
+                        this.form.is_high_frequency = res.is_high_frequency;
+                    }
+                    if(res.is_relate_switch!==undefined){
+                        this.form.is_relate_switch = res.is_relate_switch;
                     }
                     this.handleIconList(this.form.icon_list);
                 });

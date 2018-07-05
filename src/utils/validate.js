@@ -1,10 +1,8 @@
 
 
 export function isvalidUsername(str) {
-  // console.log('str', str);
-  var reg = /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/; // 邮箱验证
-  console.log('用户名验证', reg.test(str));
-  return reg.test(str);
+    var reg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/g; // 邮箱验证
+    return reg.test(str);
 }
 
 /* 合法uri*/

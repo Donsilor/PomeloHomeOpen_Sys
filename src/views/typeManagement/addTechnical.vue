@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="display: inline-block;">
         <el-dialog title="增加技术方案" :visible.sync="dialogFormVisible" width="50%" custom-class="addTechDialog">
             <el-form :model="form" ref="techniForm" :inline="true" label-position="top">
                 <el-row :span="24" v-for="(item,index) in form.technology_list" :key="item.value">
@@ -60,7 +60,7 @@
                 <el-button type="primary" @click="confirmTechnical">确 定</el-button>
             </div>
         </el-dialog>
-        <el-button @click="dialogFormVisible = true">添加技术方案</el-button>
+        <el-button style="margin-right: 15px;" @click="dialogFormVisible = true">添加技术方案</el-button>
     </div>
 
 </template>
@@ -87,8 +87,6 @@
     }
 </style>
 <script>
-    import fetch from '@/utils/fetch';
-    import {getToken} from '@/utils/auth';
     const f_technology = [
         {
             technology_type : '',
@@ -106,13 +104,11 @@
         }
     ];
     export default {
-        props: ['typeid','token'],
         computed: {
         },
         created() {
         },
         mounted() {
-            console.log(getToken());
         },
         data() {
             return {
@@ -153,7 +149,6 @@
             },
             confirmTechnical(){
                 this.$refs['techniForm'].validate((valid) => {
-                    console.log(valid);
                     if (valid) {
                         let param = [],params = {};
                         this.form.technology_list.forEach((val,index) =>{
@@ -176,8 +171,6 @@
                         })
 
                         params = {
-                            'token' : this.token,
-                            'type_id' : this.typeid,
                             'technology_list' : param
                         }
                         this.$emit('get-data',params);

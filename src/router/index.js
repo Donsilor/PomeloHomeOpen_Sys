@@ -188,6 +188,11 @@ export const constantRouterMap = [
                         component: _import('typeManagement/voicePlatform'),
                     },
                     {
+                        path: 'technology',
+                        name: 'technology',
+                        component: _import('typeManagement/technology'),
+                    },
+                    {
                         path: 'addNetwork',
                         name: 'addNetwork',
                         component: _import('typeManagement/addNetwork'),

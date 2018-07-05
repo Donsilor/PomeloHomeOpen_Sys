@@ -4,8 +4,8 @@ import fetch from '@/utils/fetch';
 export function getSdkList (params) {
   // console.log('查询入参', params);
   return fetch({
-    url: '/admin/sdklists?page='+params.page,
-    method: 'post',
+    url: '/admin/sdk/list',
+    method: 'get',
     data: params
     
   })
@@ -25,12 +25,10 @@ export function uploadSDK (params) {
 
 // 获取WIFI模组/芯片列表
 export function getWifiModuleList (params) {
-  // console.log('查询入参', params);
   return fetch({
-    url: '/admin/wifimodule/lists',
+    url: '/producttype/technologylists',
     method: 'post',
-    data: params
-    
+    data: {}
   })
 }
 
@@ -38,7 +36,7 @@ export function getWifiModuleList (params) {
 export function getAgreementList (params) {
   // console.log('查询入参', params);
   return fetch({
-    url: '/admin/agreement/lists',
+    url: '/producttype/technologylists',
     method: 'post',
     data: params
     

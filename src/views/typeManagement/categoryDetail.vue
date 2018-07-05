@@ -7,7 +7,7 @@
                 <el-button type="danger" @click="handleDelEvent" v-show="!isEdit">删除该品类</el-button>
             </el-col>
             <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
-                <el-tabs type="border-card" @tab-click="handleClick">
+                <el-tabs type="border-card">
                     <el-tab-pane label="基本信息">
                         <el-col :span="24">
                             <el-form :rules="rules" ref="ruleForm" :model="form" label-width="125px" style="margin-top: 20px;" size="large">
@@ -112,7 +112,7 @@
                                         </div>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="是否高频使用">
+                                <!--<el-form-item label="是否高频使用">
                                     <el-col :span="12">
                                         <el-checkbox :true-label="1" :false-label="0" v-model="form.is_high_frequency" :disabled="!isEdit">是
                                         </el-checkbox>
@@ -122,83 +122,13 @@
                                     <el-col :span="12">
                                         <el-checkbox :true-label="1" :false-label="0" v-model="form.is_relate_switch" :disabled="!isEdit">是</el-checkbox>
                                     </el-col>
-                                </el-form-item>
+                                </el-form-item>-->
                                 <el-form-item :label="COLTD+'快联设备'">
                                     <el-col :span="12">
                                         <el-checkbox :true-label="1" :false-label="0" v-model="form.show_in_select_list" :disabled="!isEdit">是</el-checkbox>
                                     </el-col>
                                 </el-form-item>
                             </el-form>
-                        </el-col>
-                    </el-tab-pane>
-                    <el-tab-pane label="技术方案">
-                        <el-col :span="24">
-                            <template>
-                                <addTechnical :typeid="typeid" v-on:get-data="getTech" :token="token"
-                                              v-show="isEdit"></addTechnical>
-                                <el-table
-                                        class="technicalTabel"
-                                        :data="technical_wifi"
-                                        border
-                                        stripe
-                                        style="width: 100%;margin-top: 15px;"
-                                        v-if="technical_wifi"
-                                        :span-method="arrayWifiSpanMethod">
-                                    <el-table-column prop='name' label="技术方案" width="150"></el-table-column>
-                                    <el-table-column prop="vendor" label="模组厂商" width="250"
-                                                     align="center"></el-table-column>
-                                    <el-table-column prop="model_list" label="模组芯片" class-name="cell-column-no-padding"
-                                                     align="center">
-                                        <template slot-scope="scope">
-                                            <div v-for="item in scope.row.model_list" class="cell-td paddl20">
-                                                {{item.name}}
-                                            </div>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column label="操作" width="130" align="center" v-if="isEdit"
-                                                     class-name="cell-column-no-padding">
-                                        <template slot-scope="scope">
-                                            <div v-for="item in scope.row.model_list" class="cell-td option">
-                                                <i class="el-icon-delete" title="删除技术方案" @click="delTechnical(item.id,1)"></i>
-                                            </div>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-
-                                <el-table
-                                        :data="technical_zigbee"
-                                        border
-                                        stripe
-                                        style="width: 100%;margin-top: 15px;"
-                                        v-if="technical_zigbee"
-                                        :span-method="arrayZigbeeSpanMethod">
-                                    <el-table-column prop='name' label="技术方案" width="150"></el-table-column>
-                                    <el-table-column prop="agreement" label="标准协议"></el-table-column>
-                                    <el-table-column label="操作" width="130" align="center" v-if="isEdit">
-                                        <template slot-scope="scope">
-                                            <i class="el-icon-delete" title="删除技术方案" @click="delTechnical(scope.row.id,2)"></i>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-
-                                <el-table
-                                        :data="technical_bluetooth"
-                                        border
-                                        stripe
-                                        style="width: 100%;margin-top: 15px;"
-                                        v-if="technical_bluetooth"
-                                        :span-method="arrayBlueToothSpanMethod">
-                                    <el-table-column prop='name' label="技术方案" width="150"></el-table-column>
-                                    <el-table-column prop="agreement" label="标准协议"></el-table-column>
-                                    <el-table-column label="操作" width="130" align="center" v-if="isEdit">
-                                        <template slot-scope="scope">
-                                            <i class="el-icon-delete" title="删除技术方案" @click="delTechnical(scope.row.id,3)"></i>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-
-
-                            </template>
                         </el-col>
                     </el-tab-pane>
                     <el-tab-pane label="功能属性">

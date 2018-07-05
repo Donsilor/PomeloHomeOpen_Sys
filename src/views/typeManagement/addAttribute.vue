@@ -73,7 +73,17 @@
                                     <el-radio label="float">float</el-radio>
                                     <el-radio label="array">array</el-radio>
                                     <el-radio label="bool">bool</el-radio>
+                                    <el-radio label="otc">otc</el-radio>
                                 </el-radio-group>
+                            </el-form-item>
+                            <el-form-item v-if="['string','float','array','bool'].indexOf(paramKey.type)>=0" label="复选/单选" class="w100p pl8">
+                                <el-radio-group v-model="paramKey.is_checkbox">
+                                    <el-radio label="1">复选</el-radio>
+                                    <el-radio label="0">单选</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item v-if="paramKey.type=='otc'" label="参数值" class="w100p pl8">
+                                <el-input v-model="paramKey.origin_value_string"></el-input>
                             </el-form-item>
                             <template v-if="paramKey.key_type==1">
                                 <el-form-item label="枚举参数值" class="w100p mt0 pl8">
@@ -136,7 +146,7 @@
                                 </el-form-item>
                             </div>
                             <template v-if="paramKey.key_type==3">
-                                <div class="sec-item" v-for="(em,i) in paramKey.list">
+                                <div class="sec-item" v-for="(em,i) in paramKey.list" :key="i">
                                     <el-form-item label="参数名称(key)"
                                                   :prop="'value_list.'+paramIndex+'.list.'+i+'.key'"
                                                   :rules="[
@@ -183,7 +193,18 @@
                                             <el-radio label="float">float</el-radio>
                                             <el-radio label="array">array</el-radio>
                                             <el-radio label="bool">bool</el-radio>
+                                            <el-radio label="otc">otc</el-radio>
                                         </el-radio-group>
+                                    </el-form-item>
+                                    <el-form-item label="复选/单选" class="w100p pl8">
+                                        <el-radio-group v-if="['string','float','array','bool'].indexOf(em.type)>=0" v-model="em.is_checkbox">
+                                            <el-radio label="1">复选</el-radio>
+                                            <el-radio label="0">单选</el-radio>
+                                        </el-radio-group>
+                                    </el-form-item>
+
+                                    <el-form-item v-if="em.type=='otc'" label="参数值" class="w100p pl8">
+                                        <el-input v-model="em.origin_value_string"></el-input>
                                     </el-form-item>
 
                                     <template v-if="em.key_type==1">
@@ -192,7 +213,7 @@
                                             <el-form-item label="传送数据" label-width="290px"></el-form-item>
                                             <el-form-item label="操作" label-width="60px"></el-form-item>
                                         </el-form-item>
-                                        <el-form-item label=" " class="w100p mt0" v-for="(vi,dx) in em.value_list" >
+                                        <el-form-item label=" " class="w100p mt0" v-for="(vi,dx) in em.value_list" :key="dx">
                                             <el-form-item label=""
                                                           :prop="'value_list.'+paramIndex+'.list.'+i+'.value_list.'+dx+'.value_des' "
                                                           :rules="[
@@ -283,6 +304,8 @@
         "type":"string",
         "key_type":1,
         "unit":"",
+        "is_checkbox":'1',
+        "origin_value_string":"",
         "value_list" : [{
             'value' : '',
             'value_des' : ''
@@ -297,6 +320,8 @@
         "key_type":1,
         "remark":"",
         "unit":"",
+        "is_checkbox":'1',
+        "origin_value_string":"",
         "value_list" : [{
             'value' : '',
             'value_des' : ''
@@ -407,6 +432,9 @@
                 }
                 else if(val=='object'){
                     item.key_type =3;
+                }
+                else if(val=='otc'){
+                    item.key_type =4;
                 }
                 else{
                     item.key_type = 1;

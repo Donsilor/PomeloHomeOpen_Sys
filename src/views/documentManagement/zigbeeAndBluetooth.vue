@@ -1,40 +1,30 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-row style="margin-bottom: 20px;" v-if="showAdd">
+      <el-row style="margin-bottom: 20px;">
         <el-button type="primary" @click="openDialog('')">新建SDK包</el-button>
       </el-row>
       <el-dialog :before-close="handleClose" center width="700px" class="doc-dialog" title="上传SDK文件" :visible.sync="dialogVisible">
         <el-form :rules="rules" ref="uploadForm" :model="form" label-width="110px">
-          <!--<el-form-item label="产品品类" prop="type_id">
-            <el-select :disabled="isToModify" style="width: 100%;" v-model="form.type_id" placeholder="请选择">
-              <el-option v-for="item in productTypeList"
+          <el-form-item label="协议" prop="type_key">
+            <el-select :disabled="isToModify" style="width: 100%;" v-model="form.type_key" placeholder="请选择">
+              <el-option v-for="item in agreementList"
                          :key="item.id"
-                         :label="item.name"
+                         :label="item.agreement"
                          :value="item.id"
               >
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="showTypeKey" label="协议" prop="technology_type_key">
-            <el-select :disabled="isToModify" style="width: 100%;" v-model="form.technology_type_key" placeholder="请选择">
-              <el-option v-for="item in agreementList"
-                         :key="item.agreement_id"
-                         :label="item.agreement"
-                         :value="item.agreement_id"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>-->
           <el-form-item label="SDK文件" prop="upload">
             <el-input style="width: 75%;" readonly v-model="form.url" placeholder="请选择文件"></el-input>
-            <el-upload action="/api/index.php/admin/sdk_upload"
+            <el-upload action="/api/index.php/files/save"
                        style="display: inline-block;margin-left: 12px;"
-                       :data="form"
+                       :data="uploadForm"
                        ref="upload"
                        accept=".zip"
                        name="file"
-                       :auto-upload="false"
+                       :auto-upload="true"
                        :multiple="false"
                        :show-file-list="false"
                        :on-change="beforeZipUpload"
@@ -61,7 +51,9 @@
       <el-table-column align="center" label="包大小" prop="size">
       </el-table-column>
 
-      <el-table-column align="center" label="上传时间" prop="created_at_txt">
+      <el-table-column align="center" label="上传时间" prop="updated_at">
+      </el-table-column>
+      <el-table-column align="center" label="最新更新人" prop="name">
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="150">
@@ -86,9 +78,8 @@
 
 <script>
     import { getSdkList, getAgreementList } from '@/api/infoUpload';
-    import {getProductType} from '@/api/check'
     import { getToken } from '@/utils/auth'
-
+    import fetch from '@/utils/fetch';
     export default {
         name: 'zigbeeAndBluetooth',
         data() {
@@ -105,29 +96,27 @@
                 total: null,
                 listLoading: false,
                 isToModify:false,
-                showTypeKey : false,
-                showAdd:false,
-                productTypeList:[],
                 agreementList:[],
                 listQuery: {
                     page: 1,
                     limit: 15,
                 },
                 form:{
-                    //type_id:'',
-                    //technology_type_key:'',
-                    technology_type:this.$route.name=='zigbee'?2:3,
+                    type_key:'',
+                    type:this.$route.name=='zigbee'?2:3,
+                    url:'',
+                    package_id:'',
+                    sdk:{}
+                },
+                uploadForm:{
+                    type:13,
                     token: getToken(),
-                    url:''
                 },
                 dialogVisible:false,
                 rules: {
-                    /*type_id: [
-                        { required: true, message: '请选择产品品类'},
-                    ],
-                    technology_type_key: [
+                    type_key: [
                         { required: true, message: '请选择产品协议' },
-                    ],*/
+                    ],
                     upload: [
                         { required: true, validator: fileNumber },
                     ],
@@ -138,52 +127,33 @@
         created() {
         },
         watch:{
-            /*'form.type_id'(curVal,oldVal){
-                this.agreementList = [];
-                if(curVal){
-                    this.getAgreementList(curVal);
-                }
-            },*/
             $route(curVal,oldVal){
                 let map = {zigbee:2,bluetooth:3};
-                this.form.technology_type = map[curVal.name];
+                this.form.type = map[curVal.name];
                 this.refresh();
             }
         },
         mounted() {
             this.refresh();
-            //this.getProductType();
         },
         methods: {
             refresh(){
                 this.$store.dispatch('GetDocumentMenus');
                 this.getList();
+                this.getAgreementList(this.form.type);
             },
             getList() {
                 this.listLoading = true;
                 let params = {
-                    technology_type:this.form.technology_type,// 技术方案，1=wifi, 2=zigbee, 3=蓝牙
-                    limit: this.listQuery.limit,
-                    page: this.listQuery.page
+                    type:this.form.type,// 技术方案，1=wifi, 2=zigbee, 3=蓝牙
                 };
                 getSdkList(params).then(response => {
-                    this.list = response.data;
-                    if(this.list.length<1){
-                        this.showAdd = true;
-                    }
-                    //this.total = response.total;
+                    this.list = response.ret;
                     this.listLoading = false
                 })
             },
-            // 获取产品品类
-            getProductType() {
-                getProductType().then(response => {
-                    this.productTypeList = response.list;
-                });
-            },
-            getAgreementList(type_id){
-                this.showTypeKey = true;
-                getAgreementList({type_id:type_id,agreement_type:this.form.technology_type}).then(response =>{
+            getAgreementList(type){
+                getAgreementList({technology_type:type}).then(response =>{
                     this.agreementList = response.list;
                 });
             },
@@ -201,7 +171,6 @@
                 this.$refs['uploadForm'].resetFields();
                 this.$refs.upload.clearFiles();
                 this.isToModify = false;
-                this.showTypeKey = false;
                 done();
             },
             // 关闭弹框
@@ -209,20 +178,20 @@
                 this.$refs['uploadForm'].resetFields();
                 this.$refs.upload.clearFiles();
                 this.isToModify = false;
-                this.showTypeKey = false;
                 this.dialogVisible = false;
             },
             openDialog(row){
                 if(row){
                     this.isToModify = true;
-                    this.form.type_id = row.type_id;
                     this.form.url = row.filename;
-                    this.form.technology_type_key = row.technology_agreement_id;
+                    this.form.type_key = row.type_key;
+                    this.form.package_id = row.package_id;
                 }
                 else{
-                    this.form.type_id = '';
+                    this.isToModify = false;
                     this.form.url = '';
-                    this.form.technology_type_key = '';
+                    this.form.type_key = '';
+                    this.form.package_id = '';
                 }
                 this.dialogVisible = true;
             },
@@ -230,35 +199,51 @@
             uploadSDK() {
                 this.$refs['uploadForm'].validate((valid) => {
                     if (valid) {
-                        this.$refs.upload.submit();
-                    } else {
-                        return false;
+                        let form = Object.assign({},this.form);
+                        delete form.url;
+                        if(!this.isToModify){
+                            delete form.package_id;
+                            fetch({
+                                url:'/admin/sdk/add',
+                                method:'post',
+                                data:form
+                            }).then(res=>{
+                                this.$message.info('添加成功');
+                                this.closeDialog();
+                                this.refresh();
+                        })
+                        }else{
+                            delete form.type;
+                            delete form.type_key;
+                            fetch({
+                                url:'/admin/sdk/edit',
+                                method:'post',
+                                data:form
+                            }).then(res=>{
+                                this.$message.info('修改成功');
+                            this.closeDialog();
+                            this.refresh();
+                        })
+                        }
                     }
                 });
             },
             beforeZipUpload(file){
                 let _file = file.raw;
-                const isZip = _file.type.toLowerCase().indexOf('zip')>=0;
                 const isLt5M = _file.size / 1024 / 1024 < 5;
-                if (!isZip) {
-                    this.$message.error('只能上传zip文件!');
-                }
                 if (!isLt5M) {
                     this.$message.error('zip文件大小不能超过 5MB!');
                 }
-                if(isZip && isLt5M){
+                if(isLt5M){
                     this.form.url = _file.name;
                 }
-                return isZip && isLt5M;
+                return isLt5M;
             },
             // 上传成功的回调
             uploadSuccess(response, file, fileList) {
                 if (response.code === 200) {
                     this.$message.success('上传成功！');
-                    setTimeout(() => {
-                        this.closeDialog();
-                    }, 200);
-                    this.refresh();
+                    this.form.sdk = response.result;
                 } else {
                     this.$message.error(response.msg);
                 }

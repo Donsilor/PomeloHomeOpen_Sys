@@ -1,39 +1,30 @@
 <template>
     <div class="app-container calendar-list-container">
         <div class="filter-container">
-            <el-row style="margin-bottom: 20px;" v-if="showAdd">
+            <el-row style="margin-bottom: 20px;">
                 <el-button type="primary" @click="openDialog('')">新建SDK包</el-button>
             </el-row>
             <el-dialog :before-close="handleClose" center width="700px" class="doc-dialog" title="上传SDK文件" :visible.sync="dialogVisible">
                 <el-form :rules="rules" ref="uploadForm" :model="form" label-width="110px">
-                    <!--<el-form-item label="产品品类" prop="type_id">
-                        <el-select :disabled="isToModify" style="width: 100%;" v-model="form.type_id" placeholder="请选择">
-                            <el-option v-for="item in productTypeList"
-                                       :key="item.id"
-                                       :label="item.name"
-                                       :value="item.id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item v-if="showTypeKey" label="模组/芯片厂家" prop="technology_type_key_map">
-                        <el-cascader :disabled="isToModify||cascaderDisabled" style="width: 100%;" expand-trigger="hover"
+
+                    <el-form-item  label="模组/芯片厂家" prop="technology_type_key_map">
+                        <el-cascader :disabled="isToModify" clearable filterable style="width: 100%;"
                                      v-model="form.technology_type_key_map"
                                      placeholder="请选择"
                                      :options="moduleList"
                                      :props="moduleProps"
                         >
                         </el-cascader>
-                    </el-form-item>-->
+                    </el-form-item>
                     <el-form-item label="SDK文件" prop="upload">
                         <el-input style="width: 75%;" readonly v-model="form.url" placeholder="请选择文件"></el-input>
-                        <el-upload action="/api/index.php/admin/sdk_upload"
+                        <el-upload action="/api/index.php/files/save"
                                    style="display: inline-block;margin-left: 12px;"
-                                   :data="form"
+                                   :data="uploadForm"
                                    ref="upload"
                                    accept=".zip,.gz,.rar"
                                    name="file"
-                                   :auto-upload="false"
+                                   :auto-upload="true"
                                    :multiple="false"
                                    :show-file-list="false"
                                    :on-change="beforeZipUpload"
@@ -55,13 +46,17 @@
         <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" stripe fit highlight-current-row
                   style="width: 100%">
 
-            <el-table-column align="center" label="包名称" prop="filename">
+            <el-table-column align="center" label="模组/芯片厂家" prop="vendor">
+            </el-table-column>
+            <el-table-column align="center" label="型号" prop="model">
             </el-table-column>
 
             <el-table-column align="center" label="包大小" prop="size">
             </el-table-column>
 
-            <el-table-column align="center" label="上传时间" prop="created_at_txt">
+            <el-table-column align="center" label="上传时间" prop="updated_at">
+            </el-table-column>
+            <el-table-column align="center" label="最新更新人" prop="name">
             </el-table-column>
 
             <el-table-column align="center" label="操作" width="150">
@@ -92,7 +87,7 @@
     import { getSdkList, getWifiModuleList } from '@/api/infoUpload';
     import {getProductType} from '@/api/check'
     import { getToken } from '@/utils/auth'
-
+    import fetch from '@/utils/fetch';
     export default {
         name: 'wifi',
         data() {
@@ -108,34 +103,25 @@
                 list: [],
                 total: null,
                 listLoading: false,
-                isToModify: false,
-                cascaderDisabled:false,
-                showTypeKey : false,
-                showAdd:false,
-                productTypeList:[],
+                isToModify:false,
                 moduleList:[],
-                listQuery: {
-                    page: 1,
-                    limit: 15,
+                uploadForm:{
+                    type:13,
+                    token: getToken(),
                 },
                 form:{
-                    type_id:'',
-                    //technology_type_key_map:'',
-                    //technology_type_key:'',
-                    technology_type:1,
-                    token: getToken(),
-                    url:''
+                    technology_type_key_map:[],
+                    type_key:'',
+                    type:1,
+                    url:'',
+                    package_id:'',
+                    sdk:{}
                 },
                 dialogVisible:false,
-                /*moduleProps:{
-                    children: 'modellist',
-                    value:'module_id',
-                    label:'model'
-                },*/
+                moduleProps:{
+                    children: 'model_list',
+                },
                 rules: {
-                    /*type_id: [
-                        { required: true, message: '请选择产品品类'},
-                    ],
                     technology_type_key_map: [
                         { required: true,  validator: function (rule, value, callback) {
                             if(!value[1]){
@@ -144,7 +130,7 @@
                                 callback()
                             }
                         },trigger:'blur' },
-                    ],*/
+                    ],
                     upload: [
                         { required: true, validator: fileNumber,trigger:'change' },
                     ],
@@ -155,19 +141,13 @@
         created() {
         },
         watch:{
-            /*'form.type_id'(curVal,oldVal){
-                this.moduleList = [];
-                if(curVal){
-                    this.getWifiModule(curVal);
-                }
-            },
             'form.technology_type_key_map'(curVal,oldVal){
-                this.form.technology_type_key = curVal[1];
-            }*/
+                this.form.type_key = curVal[1];
+            }
         },
         mounted() {
             this.refresh();
-            //this.getProductType();
+            this.getWifiModule();
         },
         methods: {
             refresh(){
@@ -177,39 +157,26 @@
             getList() {
                 this.listLoading = true;
                 let params = {
-                    technology_type:this.form.technology_type,// 技术方案，1=wifi, 2=zigbee, 3=蓝牙
-                    limit: this.listQuery.limit,
-                    page: this.listQuery.page
+                    type:this.form.type,// 技术方案，1=wifi, 2=zigbee, 3=蓝牙
                 };
                 getSdkList(params).then(response => {
-                    this.list = response.data;
-                    if(this.list.length<1){
-                        this.showAdd = true;
-                    }
-                    //this.total = response.total;
+                    this.list = response.ret;
                     this.listLoading = false
                 })
             },
-            // 获取产品品类
-            getProductType() {
-                getProductType().then(response => {
-                    this.productTypeList = response.list;
-                });
-            },
-            getWifiModule(type_id){
-                this.showTypeKey = true;
-                getWifiModuleList({type_id:type_id}).then(response =>{
-                    this.moduleList = response.list;
-                    let _this = this;
-                    if(response.list.length){
-                        this.cascaderDisabled = false;
-                    }
-                    else{
-                        this.cascaderDisabled = true;
-                    }
-                    this.moduleList.forEach(function (item) {
-                        _this.$set(item,'module_id',item.vendor);
-                        _this.$set(item,'model',item.vendor);
+            getWifiModule(){
+                getWifiModuleList().then(response =>{
+                    this.moduleList = response.wifi_list;
+                    this.moduleList.forEach(item=>{
+                        this.$set(item,'value',item.vendor);
+                        this.$set(item,'label',item.vendor);
+                        item.model_list.forEach(v=>{
+                            this.$set(v,'value',v.id);
+                            this.$set(v,'label',v.name);
+                            //this.$delete(v,'id');
+                            //this.$delete(v,'name');
+                        })
+                        //this.$delete(item,'vendor');
                     });
                 });
             },
@@ -241,14 +208,15 @@
             openDialog(row){
                 if(row){
                     this.isToModify = true;
-                    this.form.type_id = row.type_id;
                     this.form.url = row.filename;
-                    this.form.technology_type_key_map = [row.technology_module_vendor,row.technology_module_id];
+                    this.form.technology_type_key_map = [row.vendor,row.type_key];
+                    this.form.package_id = row.package_id;
                 }
                 else{
-                    this.form.type_id = '';
+                    this.isToModify = false;
                     this.form.url = '';
                     this.form.technology_type_key_map = [];
+                    this.form.package_id = '';
                 }
                 this.dialogVisible = true;
             },
@@ -256,19 +224,39 @@
             uploadSDK() {
                 this.$refs['uploadForm'].validate((valid) => {
                     if (valid) {
-                        this.$refs.upload.submit();
-                    } else {
-                        return false;
+                        let form = Object.assign({},this.form);
+                        delete form.technology_type_key_map;
+                        delete form.url;
+                        if(!this.isToModify){
+                            delete form.package_id;
+                            fetch({
+                                url:'/admin/sdk/add',
+                                method:'post',
+                                data:form
+                            }).then(res=>{
+                                this.$message.info('添加成功');
+                                this.closeDialog();
+                                this.refresh();
+                            })
+                        }else{
+                            delete form.type;
+                            delete form.type_key;
+                            fetch({
+                                url:'/admin/sdk/edit',
+                                method:'post',
+                                data:form
+                            }).then(res=>{
+                                this.$message.info('修改成功');
+                                this.closeDialog();
+                                this.refresh();
+                            })
+                        }
                     }
                 });
             },
             beforeZipUpload(file){
                 let _file = file.raw;
-                //const isZip = _file.type.toLowerCase().indexOf('zip')>=0;
                 const isLt5M = _file.size / 1024 / 1024 < 5;
-                /*if (!isZip) {
-                    this.$message.error('只能上传zip文件!');
-                }*/
                 if (!isLt5M) {
                     this.$message.error('文件大小不能超过 5MB!');
                 }
@@ -281,10 +269,7 @@
             uploadSuccess(response, file, fileList) {
                 if (response.code === 200) {
                     this.$message.success('上传成功！');
-                    setTimeout(() => {
-                        this.closeDialog();
-                    }, 200);
-                    this.refresh();
+                    this.form.sdk = response.result;
                 } else {
                     this.$message.error(response.msg);
                 }

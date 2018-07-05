@@ -11,7 +11,7 @@
             </div>
             <div v-if="status==2 ">
                 <p style="color: #F56C6C;font-weight: bold" >审核不通过</p>
-                <p v-for="(item,index) in checkDetail.approved_reason">{{index+1}}、{{item}}</p>
+                <p v-for="(item,index) in checkDetail.approved_reason" :key="index">{{index+1}}、{{item}}</p>
             </div>
         </el-card>
         <el-card class="box-card">
@@ -246,7 +246,7 @@
                     <p style="color: #E6A23C;" v-if="unapproved_list.length">未审核：</p>
                 </el-col>
             </el-row>
-            <el-row v-for="(item, index) in unapproved_list">
+            <el-row v-for="(item, index) in unapproved_list" :key="index">
                 <el-col :offset="4">
                     <p>{{index + 1}}、{{item.prefix}}{{item.description}}还未审核；</p>
                 </el-col>
@@ -256,7 +256,7 @@
                     <p style="color: #F56C6C;" v-if="reject_reason_list.length">审核不通过：</p>
                 </el-col>
             </el-row>
-            <el-row v-for="(item, index) in reject_reason_list">
+            <el-row v-for="(item, index) in reject_reason_list" :key="index">
                 <el-col :offset="4">
                     <p>{{index + 1}}、{{item.prefix}}{{item.description}}未审核通过——{{item.unapproved_reason}}；</p>
                 </el-col>

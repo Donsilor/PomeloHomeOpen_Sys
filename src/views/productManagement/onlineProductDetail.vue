@@ -253,35 +253,91 @@
             </el-tab-pane>
             <el-tab-pane label="功能点设置" name="fps">
                 <h5>必选功能点</h5>
-                <el-table :data="must_fps" :span-method="spanMethod"
+                <el-table class="attr-table" :data="must_fps" :span-method="spanMethod"
                           highlight-current-row border stripe fit style="width:100%;">
                     <el-table-column align="center" label="node_ID" prop="nodeid">
                     </el-table-column>
                     <el-table-column align="center" label="参数名称" prop="remark">
                     </el-table-column>
-                    <el-table-column align="center" :formatter="arrayToString" label="value" prop="value_list">
+                    <el-table-column align="center" label="value" prop="origin_value_string">
+                        <template slot-scope="scope">
+                            <div v-if="scope.row.key_type=='1'">
+                                <div class="gavin-attr" v-for="item in scope.row.origin_value_list" :key="item">
+                                    {{item}}
+                                </div>
+                            </div>
+                            <div v-else>
+                                {{scope.row.origin_value_string}}
+                            </div>
+
+                        </template>
                     </el-table-column>
                     <el-table-column align="center" label="是否开启">
                         <template slot-scope="scope">
-                            <el-switch :active-value="1" :inactive-value="0"
-                                       v-model="scope.row.is_enable" disabled>
-                            </el-switch>
+                            <div v-if="scope.row.key_type=='1'">
+                                <div class="gavin-attr" v-for="item in scope.row.origin_value_list" :key="item">
+                                    <el-switch :value="scope.row.value_list.indexOf(item)>=0?true:false" disabled>
+                                    </el-switch>
+                                </div>
+
+                            </div>
+                            <div v-else>
+                                <el-switch :value="scope.row.value_list.length?true:false" disabled>
+                                </el-switch>
+                            </div>
+
                         </template>
                     </el-table-column>
                 </el-table>
                 <h5>可选功能点</h5>
-                <el-table :data="opt_fps" :span-method="spanMethod"
+                <el-table class="attr-table" :data="opt_fps" :span-method="spanMethod"
                           highlight-current-row border stripe fit style="width:100%;">
                     <el-table-column align="center" label="node_ID" prop="nodeid">
                     </el-table-column>
                     <el-table-column align="center" label="参数名称" prop="remark">
                     </el-table-column>
-                    <el-table-column align="center" :formatter="arrayToString" label="value" prop="value_list">
+                    <el-table-column align="center" class="gavin-attr-box"  label="value" prop="origin_value_string">
+                        <template slot-scope="scope">
+                            <div v-if="scope.row.key_type=='1'">
+                                <div class="gavin-attr" v-for="item in scope.row.origin_value_list" :key="item">
+                                    {{item}}
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div v-if="edit">
+                                    <div v-if="scope.row.key_type=='2'">
+                                        <el-input v-model="scope.row.origin_value_list[1]" style="width: 35%;"></el-input>
+                                        <span style="margin: 0 5px;">-</span>
+                                        <el-input v-model="scope.row.origin_value_list[2]" style="width: 35%;"></el-input>
+                                        <span>{{scope.row.unit}}</span>
+                                    </div>
+                                    <div v-if="scope.row.key_type=='4'">
+                                        <el-input v-model="scope.row.origin_value_list[0]" style="width: 70%;"></el-input>
+                                        <span>{{scope.row.unit}}</span>
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    {{scope.row.origin_value_string}}
+                                </div>
+                            </div>
+
+                        </template>
                     </el-table-column>
                     <el-table-column align="center" label="是否开启" prop="is_enable">
                         <template slot-scope="scope">
-                            <el-switch :active-value="1" :inactive-value="0" @change="setEnable(scope.row)"
-                                       v-model="scope.row.is_enable" :disabled="!edit"></el-switch>
+                            <div v-if="scope.row.key_type=='1'">
+                                <div class="gavin-attr" v-for="item in scope.row.origin_value_list" :key="item">
+                                    <el-switch   @change="setEnable(scope.row,item)"
+                                                 :value="scope.row.value_list.indexOf(item)>=0?true:false" :disabled="!edit">
+                                    </el-switch>
+                                </div>
+
+                            </div>
+                            <div v-else>
+                                <el-switch  @change="setEnable(scope.row)" :value="scope.row.value_list.length?true:false" :disabled="!edit">
+                                </el-switch>
+                            </div>
+
                         </template>
                     </el-table-column>
                 </el-table>
@@ -383,7 +439,7 @@
                     response.attr_list.forEach(function (item) {
                         let key = item.is_default ? 'must_fps' : 'opt_fps';
                         if(item.list){
-                            utils.spanAnalyseData(item,_this[key],_this.spanMap);
+                            utils.spanAnalyseDataElse(item,_this[key],_this.spanMap);
                         }
                         else{
                             _this[key].push(item);
@@ -621,10 +677,8 @@
                         this.modifyData.agreement_id = this.productDetail.type_key;
                     }
                 }
-                let _map = this.attr_map;
-                this.modifyData.attr_list = Object.keys(_map).map(function(el){
-                    return _map[el];
-                });
+                this.modifyData.attr_list = this.calAttr();
+                //console.log(this.modifyData.attr_list);
                 this.modifyData.id = this.productDetail.id;
                 let formData = JSON.parse(JSON.stringify(this.modifyData));
                 if(formData.icon){
@@ -653,12 +707,26 @@
                     this.$message.error(e.msg);
                 })
             },
-            setEnable(row){
-                if(this.attr_map[row.attr_id]){
-                    delete this.attr_map[row.attr_id];
-                    return;
+            setEnable(row,attr){
+                if(row.key_type=='1'){
+                    let index= row.value_list.indexOf(attr);
+                    if(index>=0){
+                        row.value_list.splice(index,1);
+                    }
+                    else{
+                        if(row.is_checkbox){
+                            row.value_list.push(attr);
+                        }
+                        else{
+                            row.value_list.length = 0;
+                            row.value_list.push(attr);
+                        }
+                    }
                 }
-                this.attr_map[row.attr_id] = {attr_id:row.attr_id};
+                else{
+                    item.value_list = item.value_list.length > 0 ? [] : item.origin_value_list;
+                }
+
             },
             validCompat(rule, value, callback){
                 if(value){
@@ -667,7 +735,69 @@
                     }
                 }
                 callback();
-            }
+            },
+            calAttr(){
+                let arry = [];
+                let map = {};
+                this.opt_fps.forEach(item=>{
+                    if(!map[item.attr_id]){
+                        map[item.attr_id] = [];
+                    }
+                    if(item.level==1){
+                        if(item.key_type=='4'){
+                            if(item.value_list[0]){
+                                map[item.attr_id][item.index] = {
+                                    value_list:item.value_list,
+                                    key:item.key,
+                                    key_type:item.key_type,
+                                    is_checkbox:item.is_checkbox||'0',
+                                    value_string:item.value_string
+                                }
+                            }
+                        }
+                        else{
+                            if(item.value_list.length){
+                                map[item.attr_id][item.index] = {
+                                    value_list:item.value_list,
+                                    key:item.key,
+                                    key_type:item.key_type,
+                                    is_checkbox:item.is_checkbox||'0',
+                                    value_string:item.value_string
+                                }
+                            }
+                        }
+
+                    }
+                    else if(item.level==2){
+                        if((item.key_type=='4'&&item.value_list[0])||(item.key_type!='4'&&item.value_list.length)){
+                            if(!map[item.attr_id][item.index]){
+                                map[item.attr_id][item.index] = {
+                                    value_list:[],
+                                    key:item.p_key,
+                                    key_type:item.p_key_type
+                                };
+                            }
+                            map[item.attr_id][item.index].value_list.push({
+                                value_list:item.value_list,
+                                key:item.key,
+                                key_type:item.key_type,
+                                is_checkbox:item.is_checkbox||'0',
+                                value_string:item.value_string
+                            })
+                        }
+                    }
+                })
+                for(let k in map){
+                    if(map[k].length){
+                        arry.push({
+                            attr_id:k,
+                            is_default:0,
+                            list:map[k]
+                        });
+                    }
+                }
+                return arry;
+            },
         },
         deactivated() {
             this.$destroy();
@@ -769,5 +899,19 @@
         margin-right: 15px;
     }
     }
+    }
+    .gavin-attr{
+        padding: 12px 0;
+        border-bottom: 1px solid #e6ebf5;
+    }
+    .attr-table.el-table .cell{
+        padding: 0;
+    }
+    .attr-table .gavin-attr:last-child{
+        border-bottom:none;
+        padding-bottom: 0;
+    }
+    .attr-table .gavin-attr:first-child{
+        padding-top: 0;
     }
 </style>

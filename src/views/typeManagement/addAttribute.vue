@@ -83,7 +83,7 @@
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item v-if="paramKey.type=='otc'" label="参数值" class="w100p pl8">
-                                <el-input style="width: 50%;" v-model="paramKey.value_list[0].value" placeholder="数据说明"></el-input>
+                                <el-input style="width: 50%;" v-model="paramKey.value_list[0].value_des" placeholder="数据说明"></el-input>
                                 <span>数据由厂商端输入</span>
                             </el-form-item>
                             <template v-if="paramKey.key_type==1">
@@ -205,7 +205,7 @@
                                     </el-form-item>
 
                                     <el-form-item v-if="em.type=='otc'" label="参数值" class="w100p pl8">
-                                        <el-input style="width: 50%;" v-model="em.value_list[0].value"></el-input>
+                                        <el-input style="width: 50%;" v-model="em.value_list[0].value_des"></el-input>
                                         <span>数据由厂商端输入</span>
                                     </el-form-item>
 

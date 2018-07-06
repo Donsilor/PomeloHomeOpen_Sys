@@ -197,15 +197,14 @@
           </el-table-column>
           <el-table-column align="center" label="value" prop="value_list">
             <template slot-scope="scope">
-              {{scope.row.origin_value_string}}
+              {{scope.row.key_type=='1'?scope.row.value:scope.row.origin_value_string}}
             </template>
           </el-table-column>
           <el-table-column align="center" label="开启状态" prop="is_enable">
             <template slot-scope="scope">
-              <el-switch v-if="scope.row.key_type!='1'" v-model="scope.row.is_enable" disabled>
+              <el-switch  v-model="scope.row.is_enable" disabled>
 
               </el-switch>
-              <div v-else>{{scope.row.value_string?scope.row.value_string:'未开启任何状态'}}</div>
             </template>
           </el-table-column>
         </el-table>
@@ -254,13 +253,12 @@
         </el-table-column>
         <el-table-column align="center" label="value" prop="value_list">
           <template slot-scope="scope">
-            {{scope.row.origin_value_string}}
+            {{scope.row.key_type=='1'?scope.row.value:scope.row.origin_value_string}}
           </template>
         </el-table-column>
         <el-table-column align="center" label="开启状态" prop="is_enable">
           <template slot-scope="scope">
-            <el-switch v-if="scope.row.key_type!='1'" v-model="scope.row.is_enable" disabled></el-switch>
-            <div v-else>{{scope.row.value_string?scope.row.value_string:'未开启任何状态'}}</div>
+            <el-switch v-model="scope.row.is_enable" disabled></el-switch>
           </template>
         </el-table-column>
       </el-table>
@@ -503,6 +501,7 @@
                 return utils.spanMethod(pt,columnIndex,rowIndex);
             }
         },
+
         deactivated() {
             this.$destroy();
         }

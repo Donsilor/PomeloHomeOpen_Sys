@@ -139,19 +139,93 @@ export default {
             children:{}
         }
         item.list.forEach(function (v) {
-            let thirdCount=0;
+            if(v.key_type!='3'){
+                if(v.key_type=='1'){
+                    v.origin_value_list.forEach(em=>{
+                        secCount++;
+                        targetList.push(Object.assign({
+                            nodeid:item.nodeid,
+                            attr_id:item.attr_id,
+                            value:em,
+                            is_enable:v.value_list.indexOf(em)>=0?true:false
+                        },v));
+                    })
+                }
+                else{
+                    secCount++;
+                    targetList.push(Object.assign({
+                        nodeid:item.nodeid,
+                        attr_id:item.attr_id,
+                        is_enable:v.value_list.length?true:false
+                    },v));
+                }
+            }
+            else{
+                v.value_list.forEach(function (em,idx) {
+                    if(em.key_type=='1'){
+                        em.origin_value_list.forEach(obj=>{
+                            secCount++;
+                            targetList.push({
+                                nodeid:item.nodeid,
+                                attr_id:item.attr_id,
+                                method_string:em.method_string,
+                                key:em.key,
+                                type:em.type,
+                                key_type:em.key_type,
+                                value_list:em.value_list,
+                                remark:em.remark,
+                                origin_value_list:em.origin_value_list||[],
+                                origin_value_list_des:em.value_des||[],
+                                value_string:em.value_string||'',
+                                value:obj,
+                                is_checkbox:em.is_checkbox,
+                                is_enable:em.value_list.indexOf(obj)>=0?true:false
+                            });
+                        })
+                    }
+                    else{
+                        secCount++;
+                        targetList.push({
+                            nodeid:item.nodeid,
+                            attr_id:item.attr_id,
+                            method_string:em.method_string,
+                            key:em.key,
+                            type:em.type,
+                            key_type:em.key_type,
+                            value_list:em.value_list,
+                            remark:em.remark,
+                            unit:em.unit,
+                            origin_value_list:em.origin_value_list||[],
+                            origin_value_list_des:em.value_des||[],
+                            value_string:em.value_string||'',
+                            is_enable:em.value_list.length?true:false
+                        });
+                    }
+                })
+            }
+        })
+        targetMap[item.nodeid].len = secCount;
+    },
+
+    spanAnalyseDataElse(item,targetList,targetMap){
+        let secCount=0;
+        targetMap[item.nodeid]={
+            index:targetList.length,
+            children:{}
+        }
+        item.list.forEach(function (v,index) {
             if(v.key_type!='3'){
                 secCount++;
                 targetList.push(Object.assign({
                     nodeid:item.nodeid,
                     attr_id:item.attr_id,
-                    is_enable:v.value_list.length?true:false
+                    level:1,
+                    index:index
                 },v));
             }
             else{
                 v.value_list.forEach(function (em,idx) {
                     secCount++;
-                    thirdCount++;
                     targetList.push({
                         nodeid:item.nodeid,
                         attr_id:item.attr_id,
@@ -161,10 +235,15 @@ export default {
                         key_type:em.key_type,
                         value_list:em.value_list,
                         remark:em.remark,
+                        unit:em.unit,
                         origin_value_list:em.origin_value_list||[],
                         origin_value_list_des:em.value_des||[],
                         value_string:em.value_string||'',
-                        is_enable:em.value_list.length?true:false
+                        level:2,
+                        index:idx,
+                        p_key:v.key,
+                        p_key_type:v.key_type,
+                        is_checkbox:em.is_checkbox,
                     });
                 })
             }

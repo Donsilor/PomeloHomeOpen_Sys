@@ -155,7 +155,7 @@
                                                      width="100" prop="type">
                                     </el-table-column>
                                     <el-table-column label="value" align="center"
-                                                     width="250" prop="value_string">
+                                                     width="250" prop="origin_value_string">
                                     </el-table-column>
                                     <el-table-column label="Remark" prop="remark" align="center" >
                                     </el-table-column>

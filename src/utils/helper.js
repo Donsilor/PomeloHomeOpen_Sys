@@ -145,22 +145,26 @@ export default {
                 targetList.push(Object.assign({
                     nodeid:item.nodeid,
                     attr_id:item.attr_id,
-                    is_enable:item.is_enable
+                    is_enable:v.value_list.length?true:false
                 },v));
             }
             else{
-                v.remark.forEach(function (em,idx) {
+                v.value_list.forEach(function (em,idx) {
                     secCount++;
                     thirdCount++;
                     targetList.push({
                         nodeid:item.nodeid,
                         attr_id:item.attr_id,
-                        is_enable:item.is_enable,
-                        method_string:v.method_string,
-                        key:v.key,
-                        type:v.type,
-                        value_list:v.value_list[idx].value_list,
-                        remark:em.remark
+                        method_string:em.method_string,
+                        key:em.key,
+                        type:em.type,
+                        key_type:em.key_type,
+                        value_list:em.value_list,
+                        remark:em.remark,
+                        origin_value_list:em.origin_value_list||[],
+                        origin_value_list_des:em.value_des||[],
+                        value_string:em.value_string||'',
+                        is_enable:em.value_list.length?true:false
                     });
                 })
             }
@@ -172,7 +176,7 @@ export default {
      * 合并行方法
      */
     spanMethod(pt,columnIndex,rowIndex){
-        if(columnIndex==0||columnIndex==3){
+        if(columnIndex==0){
             if(pt){
                 if(pt.index==rowIndex){
                     return [pt.len,1]

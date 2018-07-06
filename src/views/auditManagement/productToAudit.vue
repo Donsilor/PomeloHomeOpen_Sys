@@ -197,12 +197,15 @@
           </el-table-column>
           <el-table-column align="center" label="value" prop="value_list">
             <template slot-scope="scope">
-              {{scope.row.value_list|arrayToString}}
+              {{scope.row.origin_value_string}}
             </template>
           </el-table-column>
-          <el-table-column align="center" label="是否开启" prop="is_enable">
+          <el-table-column align="center" label="开启状态" prop="is_enable">
             <template slot-scope="scope">
-              <el-switch :active-value="1" :inactive-value="0" v-model="scope.row.is_enable" disabled></el-switch>
+              <el-switch v-if="scope.row.key_type!='1'" v-model="scope.row.is_enable" disabled>
+
+              </el-switch>
+              <div v-else>{{scope.row.value_string?scope.row.value_string:'未开启任何状态'}}</div>
             </template>
           </el-table-column>
         </el-table>
@@ -251,12 +254,13 @@
         </el-table-column>
         <el-table-column align="center" label="value" prop="value_list">
           <template slot-scope="scope">
-            {{scope.row.value_list|arrayToString}}
+            {{scope.row.origin_value_string}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="是否开启" prop="is_enable">
+        <el-table-column align="center" label="开启状态" prop="is_enable">
           <template slot-scope="scope">
-            <el-switch :active-value="1" :inactive-value="0" v-model="scope.row.is_enable" disabled></el-switch>
+            <el-switch v-if="scope.row.key_type!='1'" v-model="scope.row.is_enable" disabled></el-switch>
+            <div v-else>{{scope.row.value_string?scope.row.value_string:'未开启任何状态'}}</div>
           </template>
         </el-table-column>
       </el-table>
@@ -437,6 +441,7 @@
                             _this[key].push(item);
                         }
                     })
+                    console.log(this.opt_fps);
                 })
             },
 

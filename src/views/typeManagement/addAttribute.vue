@@ -83,7 +83,8 @@
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item v-if="paramKey.type=='otc'" label="参数值" class="w100p pl8">
-                                <el-input v-model="paramKey.origin_value_string"></el-input>
+                                <el-input style="width: 50%;" v-model="paramKey.value_list[0].value" placeholder="数据说明"></el-input>
+                                <span>数据由厂商端输入</span>
                             </el-form-item>
                             <template v-if="paramKey.key_type==1">
                                 <el-form-item label="枚举参数值" class="w100p mt0 pl8">
@@ -204,7 +205,8 @@
                                     </el-form-item>
 
                                     <el-form-item v-if="em.type=='otc'" label="参数值" class="w100p pl8">
-                                        <el-input v-model="em.origin_value_string"></el-input>
+                                        <el-input style="width: 50%;" v-model="em.value_list[0].value"></el-input>
+                                        <span>数据由厂商端输入</span>
                                     </el-form-item>
 
                                     <template v-if="em.key_type==1">
@@ -305,7 +307,6 @@
         "key_type":1,
         "unit":"",
         "is_checkbox":'1',
-        "origin_value_string":"",
         "value_list" : [{
             'value' : '',
             'value_des' : ''
@@ -321,7 +322,6 @@
         "remark":"",
         "unit":"",
         "is_checkbox":'1',
-        "origin_value_string":"",
         "value_list" : [{
             'value' : '',
             'value_des' : ''
@@ -435,6 +435,7 @@
                 }
                 else if(val=='otc'){
                     item.key_type =4;
+                    item.value_list = [{value:'',value_des:''}];
                 }
                 else{
                     item.key_type = 1;
@@ -464,9 +465,18 @@
                         params.value_list.forEach(function (item) {
                             if(item.key_type=='3'){
                                 delete item.value_list;
+                                delete item.is_checkbox;
+                                item.list.forEach(v=>{
+                                    if(v.key_type!='1'){
+                                    delete v.is_checkbox;
+                                   }
+                                })
                             }
                             else{
                                 delete item.list;
+                                if(item.key_type!='1'){
+                                    delete item.is_checkbox;
+                                }
                             }
                         });
                         if(this.attrid){

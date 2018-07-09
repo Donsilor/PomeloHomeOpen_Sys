@@ -534,16 +534,17 @@
                                 _this.spanMap[item.nodeid].children[v.key] = {
                                     index:_this.attr_list.length,
                                 }
-                                v.remark.forEach(function (em,idx) {
+                                v.value_list.forEach(function (em,idx) {
                                     secCount++;
                                     thirdCount++;
                                     _this.attr_list.push({
                                         nodeid:item.nodeid,
                                         attr_id:item.attr_id,
-                                        method_string:v.method_string,
-                                        key:v.key,
-                                        type:v.type,
-                                        value_string:v.value_list[idx].value_string,
+                                        method_string:em.method_string,
+                                        key:em.key,
+                                        type:em.type,
+                                        value_string:em.value_string,
+                                        origin_value_string:em.origin_value_string,
                                         remark:em.remark
                                     });
                                 })

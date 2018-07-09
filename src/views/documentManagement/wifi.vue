@@ -8,7 +8,7 @@
                 <el-form :rules="rules" ref="uploadForm" :model="form" label-width="110px">
 
                     <el-form-item  label="模组/芯片厂家" prop="technology_type_key_map">
-                        <el-cascader :disabled="isToModify" clearable filterable style="width: 100%;"
+                        <el-cascader :disabled="isToModify" :clearable="!isToModify" filterable style="width: 100%;"
                                      v-model="form.technology_type_key_map"
                                      placeholder="请选择"
                                      :options="moduleList"
@@ -80,7 +80,7 @@
 </template>
 <style lang="scss">
     .el-cascader-menu{
-        height: auto;
+        height: 400px;
     }
 </style>
 <script>

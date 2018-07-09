@@ -714,7 +714,7 @@
                         row.value_list.splice(index,1);
                     }
                     else{
-                        if(row.is_checkbox){
+                        if(row.is_checkbox+''=='1'){
                             row.value_list.push(attr);
                         }
                         else{
@@ -724,7 +724,7 @@
                     }
                 }
                 else{
-                    item.value_list = item.value_list.length > 0 ? [] : item.origin_value_list;
+                    row.value_list = row.value_list.length > 0 ? [] : row.origin_value_list;
                 }
 
             },
@@ -744,32 +744,19 @@
                         map[item.attr_id] = [];
                     }
                     if(item.level==1){
-                        if(item.key_type=='4'){
-                            if(item.value_list[0]){
-                                map[item.attr_id][item.index] = {
-                                    value_list:item.value_list,
-                                    key:item.key,
-                                    key_type:item.key_type,
-                                    is_checkbox:item.is_checkbox||'0',
-                                    value_string:item.value_string
-                                }
-                            }
-                        }
-                        else{
-                            if(item.value_list.length){
-                                map[item.attr_id][item.index] = {
-                                    value_list:item.value_list,
-                                    key:item.key,
-                                    key_type:item.key_type,
-                                    is_checkbox:item.is_checkbox||'0',
-                                    value_string:item.value_string
-                                }
+                        if(item.value_list.length){
+                            map[item.attr_id][item.index] = {
+                                value_list:item.key_type=='1'?item.value_list:item.origin_value_list,
+                                key:item.key,
+                                key_type:item.key_type,
+                                is_checkbox:item.is_checkbox,
+                                value_string:item.value_string
                             }
                         }
 
                     }
                     else if(item.level==2){
-                        if((item.key_type=='4'&&item.value_list[0])||(item.key_type!='4'&&item.value_list.length)){
+                        if(item.value_list.length){
                             if(!map[item.attr_id][item.index]){
                                 map[item.attr_id][item.index] = {
                                     value_list:[],
@@ -778,10 +765,10 @@
                                 };
                             }
                             map[item.attr_id][item.index].value_list.push({
-                                value_list:item.value_list,
+                                value_list:item.key_type=='1'?item.value_list:item.origin_value_list,
                                 key:item.key,
                                 key_type:item.key_type,
-                                is_checkbox:item.is_checkbox||'0',
+                                is_checkbox:item.is_checkbox,
                                 value_string:item.value_string
                             })
                         }

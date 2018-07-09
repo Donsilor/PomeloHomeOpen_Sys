@@ -112,6 +112,10 @@
     .cell-column-no-padding .cell {
         padding: 0px !important;
     }
+    .el-icon-delete{
+        cursor: pointer;
+        color: #409eff;
+    }
 </style>
 <script>
     import fetch from '@/utils/fetch';

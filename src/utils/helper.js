@@ -198,6 +198,7 @@ export default {
                             origin_value_list:em.origin_value_list||[],
                             origin_value_list_des:em.value_des||[],
                             value_string:em.value_string||'',
+                            origin_value_string:em.origin_value_string,
                             is_enable:em.value_list.length?true:false
                         });
                     }
@@ -239,11 +240,12 @@ export default {
                         origin_value_list:em.origin_value_list||[],
                         origin_value_list_des:em.value_des||[],
                         value_string:em.value_string||'',
+                        origin_value_string:em.origin_value_string,
                         level:2,
                         index:idx,
                         p_key:v.key,
                         p_key_type:v.key_type,
-                        is_checkbox:em.is_checkbox,
+                        is_checkbox:em.is_checkbox||'0',
                     });
                 })
             }

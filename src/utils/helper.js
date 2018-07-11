@@ -221,6 +221,7 @@ export default {
                     nodeid:item.nodeid,
                     attr_id:item.attr_id,
                     level:1,
+                    is_checkbox:v.is_checkbox||'0',
                     index:index
                 },v));
             }

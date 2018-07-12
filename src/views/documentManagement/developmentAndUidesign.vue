@@ -17,22 +17,29 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="labelText" prop="upload">
-            <el-input style="width: 75%;" readonly v-model="form.url" placeholder="请选择文件"></el-input>
-            <el-upload action="/api/index.php/admin/productdoc_upload"
-                       style="display: inline-block;margin-left: 12px;"
-                       :data="form"
-                       ref="upload"
-                       accept=".pdf,.doc,.docx,.ppt"
-                       name="file"
-                       :auto-upload="false"
-                       :multiple="false"
-                       :show-file-list="false"
-                       :on-change="beforeZipUpload"
-                       :on-error="uploadError"
-                       :on-success="uploadSuccess"
-            >
-              <el-button type="primary">选择文件...</el-button>
-            </el-upload>
+            <el-row>
+              <el-col :span="18">
+                <el-input style="width: 100%;" readonly v-model="form.url" placeholder="请选择文件"></el-input>
+              </el-col>
+              <el-col :span="6">
+                <el-upload action="/api/index.php/admin/productdoc_upload"
+                           style="display: inline-block;margin-left: 12px;"
+                           :data="form"
+                           ref="upload"
+                           accept=".pdf,.doc,.docx,.ppt"
+                           name="file"
+                           :auto-upload="false"
+                           :multiple="false"
+                           :show-file-list="false"
+                           :on-change="beforeZipUpload"
+                           :on-error="uploadError"
+                           :on-success="uploadSuccess"
+                >
+                  <el-button type="primary">选择文件...</el-button>
+                </el-upload>
+              </el-col>
+            </el-row>
+
           </el-form-item>
           <div class="upload-tips" style="padding-left: 110px;bottom: -35px;">文件不大于50MB，支持文档格式PDF、DOC、DOCX、PPT等</div>
         </el-form>

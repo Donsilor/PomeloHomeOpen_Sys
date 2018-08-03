@@ -202,7 +202,7 @@
           </el-table-column>
           <el-table-column align="center" label="开启状态" prop="is_enable">
             <template slot-scope="scope">
-              <el-switch  v-model="scope.row.is_enable" disabled>
+              <el-switch  :value="true" disabled>
 
               </el-switch>
             </template>

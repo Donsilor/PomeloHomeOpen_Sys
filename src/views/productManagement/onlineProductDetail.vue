@@ -276,13 +276,13 @@
                         <template slot-scope="scope">
                             <div v-if="scope.row.key_type=='1'">
                                 <div class="gavin-attr" v-for="item in scope.row.origin_value_list" :key="item">
-                                    <el-switch :value="scope.row.value_list.indexOf(item)>=0?true:false" disabled>
+                                    <el-switch :value="true" disabled>
                                     </el-switch>
                                 </div>
 
                             </div>
                             <div v-else>
-                                <el-switch :value="scope.row.value_list.length?true:false" disabled>
+                                <el-switch :value="true" disabled>
                                 </el-switch>
                             </div>
 

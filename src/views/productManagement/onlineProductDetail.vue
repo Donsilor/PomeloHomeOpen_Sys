@@ -143,7 +143,7 @@
                         <el-col :span="3" class="card-span-left" style="line-height: 32px;">产品规格书</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">
                             <a class="is-link" :href="productDetail.spec_url" target="_blank" download>{{productDetail.spec_name}}</a>
-                            <a style="margin-left: 30px"  target="_blank" v-if="!edit" :href="productDetail.spec_url" download>
+                            <a style="margin-left: 30px"  target="_blank" v-if="!edit&&productDetail.spec_url" :href="productDetail.spec_url" download>
                                 <el-button type="primary" size="small">下载</el-button>
                             </a>
                             <el-upload v-if="edit" class="p30"
@@ -162,7 +162,7 @@
                         <el-col :span="3" class="card-span-left" style="line-height: 32px;">产品使用说明书</el-col>
                         <el-col :span="16" :offset="1" class="card-span-right">
                             <a class="is-link" :href="productDetail.instruct_url" target="_blank" download>{{productDetail.instruct_name}}</a>
-                            <a style="margin-left: 30px" v-if="!edit" target="_blank" :href="productDetail.instruct_url" download>
+                            <a style="margin-left: 30px" v-if="!edit&&productDetail.instruct_url" target="_blank" :href="productDetail.instruct_url" download>
                                 <el-button type="primary" size="small">下载</el-button>
                             </a>
                             <el-upload v-if="edit" class="p30"

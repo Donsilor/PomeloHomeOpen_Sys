@@ -4,7 +4,7 @@
             <el-col :span="24">
                 <el-button type="primary" @click="addDevice">新增引导页</el-button>
                 <el-button type="ghost" @click="addFucSetModal=true">客户端添加设备设置</el-button>
-                <el-button class="frt" @click="search" type="primary">查找</el-button>
+                <el-button class="frt" @click="handleCurrentChange(1)" type="primary">查找</el-button>
                 <el-select class="frt" v-model="business_id" clearable placeholder="全部厂商">
                     <el-option v-for="(item,index) in businessList" :key="index" :label="item.name" :value="item.business_id">
 
@@ -47,12 +47,10 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination
-                        layout="prev, pager, next"
-                        :total="total"
-                        :page-size="limit"
-                        @current-change="handleCurrentChange"
-                >
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                               :current-page.sync="listQuery.page"
+                               :page-sizes="[15,20,30, 50]" :page-size="listQuery.limit"
+                               layout="total, sizes, prev, pager, next, jumper" :total="total">
                 </el-pagination>
             </template>
 
@@ -80,7 +78,7 @@
     }
     .frt{
         float: right;
-        margin-left: 20px;
+        margin-left: 12px;
     }
 </style>
 <script>
@@ -113,22 +111,29 @@
               type_id:'',
               child_id:'',
               business_id:'',
-              currentPage:1,
+              listQuery: {
+                  page: 1,
+                  limit: 15,
+              },
           }
       },
       methods: {
-          handleCurrentChange(val){
-              this.currentPage = val;
-              this.getList();
+          handleSizeChange(val) {
+              this.listQuery.limit = val;
+              this.getList()
+          },
+          handleCurrentChange(val) {
+              this.listQuery.page = val;
+              this.getList()
           },
           getList(){
               fetch({
                   url: '/device/deviceList',
                   method: 'post',
                   data: {
-                      'page' :this.currentPage,
+                      'page' :this.listQuery.page,
                       'token' : getToken(),
-                      'limit' : 15,
+                      'limit' : this.listQuery.limit,
                       'type_id':this.child_id,
                       'parent_type_id':this.type_id,
                       'business_id':this.business_id

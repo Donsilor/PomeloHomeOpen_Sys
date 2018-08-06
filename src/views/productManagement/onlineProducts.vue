@@ -16,7 +16,7 @@
 
                 </el-option>
             </el-select>
-            <el-button type="primary" @click="getList">查找</el-button>
+            <el-button type="primary" @click="handleCurrentChange(1)">查找</el-button>
         </el-row>
         <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" stripe fit highlight-current-row
                   style="width: 100%">

@@ -9,13 +9,17 @@ module.exports = {
         node: true,
         es6: true,
     },
-    extends: 'eslint:recommended',
+    //'eslint:recommended',
+    //["plugin:prettier/recommended"],
+    extends: ["plugin:prettier/recommended"],
     // required to lint *.vue files
     plugins: [
-        'html'
+        'html',
+        'prettier'
     ],
     // auditManagement if imports actually resolve
     'settings': {
+        // "html/html-extensions": [".html", ".vue"],
         'import/resolver': {
             'webpack': {
                 'config': 'build/webpack.base.conf.js'

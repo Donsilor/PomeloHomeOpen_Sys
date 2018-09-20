@@ -32,7 +32,7 @@
                         type:'deviceAlert'
                     },
                     {
-                        name:'路由器事件方案配置',
+                        name:'路由器事件配置',
                         url:'/configManagement/eventMsg',
                         type:'eventMsg'
                     }

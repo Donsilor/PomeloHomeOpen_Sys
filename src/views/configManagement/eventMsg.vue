@@ -1,13 +1,16 @@
 <template>
   <div class="app-container calendar-list-container">
     <el-row style="margin-bottom: 10px;">
-      <el-button @click="addLicence" size="medium" type="primary">
-        add event msg
+      <el-button @click="addEventMsg" size="medium" type="primary">
+        新增事件
       </el-button>
     </el-row>
 
     <el-table :data="list" v-loading="listLoading" element-loading-text="给我一点时间" stripe fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="事件名称" prop="event_name">
+      </el-table-column>
+      <el-table-column align="center" label="品类">
+        <template slot-scope="scope">{{ getTypeTextById(scope.row.cid) }}</template>
       </el-table-column>
       <el-table-column align="center" label="push_rights">
         <template slot-scope="scope">{{getPushRightsText(scope.row.push_rights)}}</template>
@@ -16,15 +19,12 @@
       </el-table-column>
       <el-table-column align="center" label="push_type" prop="push_type">
       </el-table-column>
-      <el-table-column align="center" label="品类ID">
-        <template slot-scope="scope">{{ getTypeTextById(scope.row.cid) }}</template>
-      </el-table-column>
       <el-table-column align="center" label="des" prop="des">
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="editLicence(scope.row, true)" size="small" type="primary">
+          <el-button @click="editEventMsg(scope.row, true)" size="small" type="primary">
             编辑
           </el-button>
         </template>
@@ -37,8 +37,8 @@
     </div>
 
     <el-dialog :visible.sync="formVisible" :title="dialogTitle">
-      <el-form label-width="80px">
-        <el-form-item label="品类ID">
+      <el-form label-width="120px">
+        <el-form-item label="品类">
           <el-select v-model="formItem.cid" :disabled="isEdit">
             <el-option v-for="item in typeList" :key="item.id" :value="item.id" :label="item.name"></el-option>
           </el-select>
@@ -102,8 +102,7 @@ export default {
         push_time: [],
         push_type: '',
         des: ''
-      },
-      timeSelectOption: {}
+      }
     }
   },
   computed: {
@@ -153,14 +152,14 @@ export default {
       this.listQuery.page = val
       this.getList()
     },
-    addLicence() {
+    addEventMsg() {
       this.isEdit = false
       this.formVisible = true
       this.formItem = {
         push_time: [[]]
       }
     },
-    editLicence(row, isEdit) {
+    editEventMsg(row, isEdit) {
       this.isEdit = true
       this.formVisible = true
       console.log(row.push_time)

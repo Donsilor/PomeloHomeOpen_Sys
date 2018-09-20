@@ -2,7 +2,7 @@
   <div class="app-container calendar-list-container">
     <el-row style="margin-bottom: 10px;">
       <el-button @click="addLicence" size="medium" type="primary">
-        add licence
+        新增licence
       </el-button>
     </el-row>
 
@@ -29,7 +29,7 @@
     </div>
 
     <el-dialog :visible.sync="formVisible" :title="dialogTitle">
-      <el-form label-width="80px">
+      <el-form label-width="120px">
         <el-form-item label="品牌名称">
           <el-select v-model="formItem.manufacturer_name" :disabled="isEdit">
             <el-option v-for="(item, index) in manufacturerList" :key="index" :label="item" :value="item"></el-option>

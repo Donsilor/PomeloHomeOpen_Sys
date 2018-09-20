@@ -67,6 +67,11 @@
                         url: '/typeManagement/technology',
                         type:'technology'
                     },
+                     {
+                        name: '品牌licence管理',
+                        url: '/typeManagement/manufacturer',
+                        type:'manufacturer'
+                    },
                 ]
             }
         },

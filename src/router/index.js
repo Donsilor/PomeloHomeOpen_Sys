@@ -16,10 +16,10 @@ Vue.use(Router)
  * meta : `{ role: ['admin'] }`  will control the page role
  **/
 export const constantRouterMap = [
-    {path: '/login', component: _import('login/index'), hidden: true},
-    {path: '/404', component: _import('404'), hidden: true},
-    {path: '/resetpsw', component: _import('login/resetpsw'), hidden: true},
-    /*{
+  { path: '/login', component: _import('login/index'), hidden: true },
+  { path: '/404', component: _import('404'), hidden: true },
+  { path: '/resetpsw', component: _import('login/resetpsw'), hidden: true },
+  /* {
      path: '/',
      component: Layout,
      redirect: '/auditManagement',
@@ -30,295 +30,318 @@ export const constantRouterMap = [
      ]
      },*/
 
-    {
-        path: '/',
-        component: Layout,
-        redirect: '/auditManagement',
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/auditManagement',
+    children: [
+      {
+        path: 'auditManagement',
+        name: '审核管理',
+        component: _import('auditManagement/index'),
+        redirect: '/auditManagement/enterprisePending',
         children: [
-            {
-                path: 'auditManagement',
-                name: '审核管理',
-                component: _import('auditManagement/index'),
-                redirect: '/auditManagement/enterprisePending',
-                children: [
-                    /*{
+          /* {
                         path: '',
                         name: 'enterprisePending',//待审核企业
                         component: _import('auditManagement/enterprisePending')
                     },*/
-                    {
-                        path: 'enterprisePending',
-                        name: 'enterprisePending',//待审核企业
-                        component: _import('auditManagement/enterprisePending')
-                    },
-                    {
-                        path: 'enterpriseAudited',
-                        name: 'enterpriseAudited',//已审核企业
-                        component: _import('auditManagement/enterpriseAudited')
-                    },
-                    {
-                        path: 'productPending',
-                        name: 'productPending',//待审核产品
-                        component: _import('auditManagement/productPending')
-                    },
-                    {
-                        path: 'productAudited',
-                        name: 'productAudited',//已审核产品
-                        component: _import('auditManagement/productAudited')
-                    },
-                    {
-                        path: 'goLivePending',
-                        name: 'goLivePending',//待审核H5控制页申请
-                        component: _import('auditManagement/goLivePending')
-                    },
-                    {
-                        path: 'goLiveAudited',
-                        name: 'goLiveAudited',//已审核H5控制页申请
-                        component: _import('auditManagement/goLiveAudited')
-                    },
-                    {
-                        path: 'firmwarePending',
-                        name: 'firmwarePending',//待审核固件申请
-                        component: _import('auditManagement/firmwarePending')
-                    },
-                    {
-                        path: 'firmwareAudited',
-                        name: 'firmwareAudited',//已审核固件申请
-                        component: _import('auditManagement/firmwareAudited')
-                    },
-                    {
-                        path: 'firmwareToAudit',
-                        name: '固件上线申请页面',
-                        component: _import('auditManagement/firmwareToAudit'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key:'firmwarePending'}
-                    },
-                    {
-                        path: 'enterpriseToAudit',
-                        name: '企业审核页面',
-                        component: _import('auditManagement/enterpriseToAudit'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key:'enterprisePending'}
-                    },
-                    {
-                        path: 'productToAudit',
-                        name: '产品审核页面',
-                        component: _import('auditManagement/productToAudit'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key:'productPending'}
-                    },
-                    {
-                        path: 'goLiveToAudit',
-                        name: 'H5上线申请审核页面',
-                        component: _import('auditManagement/goLiveToAudit'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key:'goLivePending'}
-                    }
-                ]
-            },
-            {
-                path: 'productManagement',
-                name: '产品管理',
-                component: _import('productManagement/index'),
-                redirect: '/productManagement/onlineProducts',
-                children: [
-                    /*{
+          {
+            path: 'enterprisePending',
+            name: 'enterprisePending', // 待审核企业
+            component: _import('auditManagement/enterprisePending')
+          },
+          {
+            path: 'enterpriseAudited',
+            name: 'enterpriseAudited', // 已审核企业
+            component: _import('auditManagement/enterpriseAudited')
+          },
+          {
+            path: 'productPending',
+            name: 'productPending', // 待审核产品
+            component: _import('auditManagement/productPending')
+          },
+          {
+            path: 'productAudited',
+            name: 'productAudited', // 已审核产品
+            component: _import('auditManagement/productAudited')
+          },
+          {
+            path: 'goLivePending',
+            name: 'goLivePending', // 待审核H5控制页申请
+            component: _import('auditManagement/goLivePending')
+          },
+          {
+            path: 'goLiveAudited',
+            name: 'goLiveAudited', // 已审核H5控制页申请
+            component: _import('auditManagement/goLiveAudited')
+          },
+          {
+            path: 'firmwarePending',
+            name: 'firmwarePending', // 待审核固件申请
+            component: _import('auditManagement/firmwarePending')
+          },
+          {
+            path: 'firmwareAudited',
+            name: 'firmwareAudited', // 已审核固件申请
+            component: _import('auditManagement/firmwareAudited')
+          },
+          {
+            path: 'firmwareToAudit',
+            name: '固件上线申请页面',
+            component: _import('auditManagement/firmwareToAudit'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'firmwarePending' }
+          },
+          {
+            path: 'enterpriseToAudit',
+            name: '企业审核页面',
+            component: _import('auditManagement/enterpriseToAudit'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'enterprisePending' }
+          },
+          {
+            path: 'productToAudit',
+            name: '产品审核页面',
+            component: _import('auditManagement/productToAudit'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'productPending' }
+          },
+          {
+            path: 'goLiveToAudit',
+            name: 'H5上线申请审核页面',
+            component: _import('auditManagement/goLiveToAudit'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'goLivePending' }
+          }
+        ]
+      },
+      {
+        path: 'productManagement',
+        name: '产品管理',
+        component: _import('productManagement/index'),
+        redirect: '/productManagement/onlineProducts',
+        children: [
+          /* {
                         path: '',
                         name: 'onlineProducts',
                         component: _import('productManagement/onlineProducts'),
                     },*/
-                    {
-                        path: 'onlineProducts',
-                        name: 'onlineProducts',
-                        component: _import('productManagement/onlineProducts'),
-                    },
-                    {
-                        path: 'onlineProductDetail',
-                        name: 'onlineProductDetail',
-                        component: _import('productManagement/onlineProductDetail'),
-                        meta: {key:'onlineProducts'}
-                    }
-                ]
-            },
-            {
-                path: 'typeManagement',
-                name: '品类管理',
-                component: _import('typeManagement/index'),
-                redirect: '/typeManagement/existedCategory',
-                children: [
-                    /*{
+          {
+            path: 'onlineProducts',
+            name: 'onlineProducts',
+            component: _import('productManagement/onlineProducts')
+          },
+          {
+            path: 'onlineProductDetail',
+            name: 'onlineProductDetail',
+            component: _import('productManagement/onlineProductDetail'),
+            meta: { key: 'onlineProducts' }
+          }
+        ]
+      },
+      {
+        path: 'typeManagement',
+        name: '品类管理',
+        component: _import('typeManagement/index'),
+        redirect: '/typeManagement/existedCategory',
+        children: [
+          /* {
                         path: '',
                         name: 'existedCategory',
                         component: _import('typeManagement/existedCategory'),
                         meta: {breadNumber: 1, notKeepAlive: true}
                     },*/
-                    {
-                        path: 'existedCategory',
-                        name: 'existedCategory',
-                        component: _import('typeManagement/existedCategory'),
-                        meta: {breadNumber: 1, notKeepAlive: true}
-                    },
-                    {
-                        path: 'bigCategory',
-                        name: 'bigCategory',
-                        component: _import('typeManagement/bigCategory'),
-                        meta: {breadNumber: 1, notKeepAlive: true}
-                    },
-                    {
-                        path: 'deviceManager',
-                        name: 'deviceManager',
-                        component: _import('typeManagement/deviceManager'),
-                        meta: {breadNumber: 1, notKeepAlive: true}
-                    },
-                    {
-                        path: 'channelManager',
-                        name: 'channelManager',
-                        component: _import('typeManagement/channelManager'),
-                    },
-                    {
-                        path: 'networkManager',
-                        name: 'networkManager',
-                        component: _import('typeManagement/networkManager'),
-                    },
-                    {
-                        path: 'channelDetail',
-                        name: 'channelDetail',
-                        component: _import('typeManagement/channelDetail'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key : 'channelManager'}
-                    },
-                    {
-                        path: 'voicePlatform',
-                        name: 'voicePlatform',
-                        component: _import('typeManagement/voicePlatform'),
-                    },
-                    {
-                        path: 'technology',
-                        name: 'technology',
-                        component: _import('typeManagement/technology'),
-                    },
-                    {
-                        path: 'addNetwork',
-                        name: 'addNetwork',
-                        component: _import('typeManagement/addNetwork'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key : 'networkManager'}
-                    },
-                    {
-                        path: 'addVoicePlatform',
-                        name: 'addVoicePlatform',
-                        component: _import('typeManagement/addVoicePlatform'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key : 'voicePlatform'}
-                    },
-                    {
-                        path: 'categoryDetail',
-                        name: 'categoryDetail',
-                        component: _import('typeManagement/categoryDetail'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key : 'existedCategory'}
-                    },
-                    {
-                        path: 'addCategoryDetail',
-                        name: 'addCategoryDetail',
-                        component: _import('typeManagement/addCategoryDetail'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key : 'existedCategory'}
-                    },
-                    {
-                        path: 'deviceDetail',
-                        name: 'deviceDetail',
-                        component: _import('typeManagement/deviceDetail'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key : 'deviceManager'}
-                    },
-                    {
-                        path: 'addDevice',
-                        name: 'addDevice',
-                        component: _import('typeManagement/addDevice'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key : 'deviceManager'}
-                    },
-                    {
-                        path: 'addBigCategory',
-                        name: 'addBigCategory',
-                        component: _import('typeManagement/addBigCategory'),
-                        meta: {breadNumber: 1, notKeepAlive: true,key : 'bigCategory'}
-                    },
-                ]
-            },
-            {
-                path: 'documentManagement',
-                name: '资料管理',
-                component: _import('documentManagement/index'),
-                redirect: '/documentManagement/wifi',
-                children: [
-                    /*{
+          {
+            path: 'existedCategory',
+            name: 'existedCategory',
+            component: _import('typeManagement/existedCategory'),
+            meta: { breadNumber: 1, notKeepAlive: true }
+          },
+          {
+            path: 'bigCategory',
+            name: 'bigCategory',
+            component: _import('typeManagement/bigCategory'),
+            meta: { breadNumber: 1, notKeepAlive: true }
+          },
+          {
+            path: 'deviceManager',
+            name: 'deviceManager',
+            component: _import('typeManagement/deviceManager'),
+            meta: { breadNumber: 1, notKeepAlive: true }
+          },
+          {
+            path: 'channelManager',
+            name: 'channelManager',
+            component: _import('typeManagement/channelManager')
+          },
+          {
+            path: 'networkManager',
+            name: 'networkManager',
+            component: _import('typeManagement/networkManager')
+          },
+          {
+            path: 'channelDetail',
+            name: 'channelDetail',
+            component: _import('typeManagement/channelDetail'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'channelManager' }
+          },
+          {
+            path: 'voicePlatform',
+            name: 'voicePlatform',
+            component: _import('typeManagement/voicePlatform')
+          },
+          {
+            path: 'technology',
+            name: 'technology',
+            component: _import('typeManagement/technology')
+          },
+          {
+            path: 'addNetwork',
+            name: 'addNetwork',
+            component: _import('typeManagement/addNetwork'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'networkManager' }
+          },
+          {
+            path: 'addVoicePlatform',
+            name: 'addVoicePlatform',
+            component: _import('typeManagement/addVoicePlatform'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'voicePlatform' }
+          },
+          {
+            path: 'categoryDetail',
+            name: 'categoryDetail',
+            component: _import('typeManagement/categoryDetail'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'existedCategory' }
+          },
+          {
+            path: 'addCategoryDetail',
+            name: 'addCategoryDetail',
+            component: _import('typeManagement/addCategoryDetail'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'existedCategory' }
+          },
+          {
+            path: 'deviceDetail',
+            name: 'deviceDetail',
+            component: _import('typeManagement/deviceDetail'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'deviceManager' }
+          },
+          {
+            path: 'addDevice',
+            name: 'addDevice',
+            component: _import('typeManagement/addDevice'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'deviceManager' }
+          },
+          {
+            path: 'addBigCategory',
+            name: 'addBigCategory',
+            component: _import('typeManagement/addBigCategory'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'bigCategory' }
+          },
+          {
+            path: 'manufacturer',
+            name: 'manufacturer',
+            component: _import('typeManagement/manufacturer')
+          }
+        ]
+      },
+      {
+        path: 'documentManagement',
+        name: '资料管理',
+        component: _import('documentManagement/index'),
+        redirect: '/documentManagement/wifi',
+        children: [
+          /* {
                         path:'',
                         name:'wifi',
                         component:_import('documentManagement/wifi')
                     },*/
-                    {
-                        path:'wifi',
-                        name:'wifi',
-                        component:_import('documentManagement/wifi')
-                    },
-                    {
-                        path:'zigbee',
-                        name:'zigbee',
-                        component:_import('documentManagement/zigbeeAndBluetooth'),
-                    },
-                    {
-                        path:'bluetooth',
-                        name:'bluetooth',
-                        component:_import('documentManagement/zigbeeAndBluetooth'),
-                    },
-                    {
-                        path:'development',
-                        name:'development',
-                        component:_import('documentManagement/developmentAndUidesign')
-                    },
-                    {
-                        path:'enterprise',
-                        name:'enterprise',
-                        component:_import('documentManagement/enterpriseDoc')
-                    }
-                ]
-            },
-            {
-                path:'enterpriseManagement',
-                name:'企业管理',
-                component:_import('enterpriseManagement/index'),
-                redirect: '/enterpriseManagement/list',
-                children:[
-                    {
-                        path:'list',
-                        name:'list',
-                        component:_import('enterpriseManagement/list')
-                    },
-                    {
-                        path:'enterpriseInfo',
-                        name:'enterpriseInfo',
-                        component:_import('enterpriseManagement/enterpriseInfo')
-                    },
-                    {
-                        path:'enterpriseProducts',
-                        name:'enterpriseProducts',
-                        component:_import('enterpriseManagement/enterpriseProducts')
-                    }
-                ]
-            },
-            {
-                path:'authorityManagement',
-                name:'权限管理',
-                component:_import('authorityManagement/index'),
-                redirect:'/authorityManagement/authority/0',
-                children:[
-                    {
-                        path:'authority/:id',
-                        name:'authority',
-                        component:_import('authorityManagement/authorityList')
-                    },
-                ]
-            }
+          {
+            path: 'wifi',
+            name: 'wifi',
+            component: _import('documentManagement/wifi')
+          },
+          {
+            path: 'zigbee',
+            name: 'zigbee',
+            component: _import('documentManagement/zigbeeAndBluetooth')
+          },
+          {
+            path: 'bluetooth',
+            name: 'bluetooth',
+            component: _import('documentManagement/zigbeeAndBluetooth')
+          },
+          {
+            path: 'development',
+            name: 'development',
+            component: _import('documentManagement/developmentAndUidesign')
+          },
+          {
+            path: 'enterprise',
+            name: 'enterprise',
+            component: _import('documentManagement/enterpriseDoc')
+          }
         ]
-    },
+      },
+      {
+        path: 'enterpriseManagement',
+        name: '企业管理',
+        component: _import('enterpriseManagement/index'),
+        redirect: '/enterpriseManagement/list',
+        children: [
+          {
+            path: 'list',
+            name: 'list',
+            component: _import('enterpriseManagement/list')
+          },
+          {
+            path: 'enterpriseInfo',
+            name: 'enterpriseInfo',
+            component: _import('enterpriseManagement/enterpriseInfo')
+          },
+          {
+            path: 'enterpriseProducts',
+            name: 'enterpriseProducts',
+            component: _import('enterpriseManagement/enterpriseProducts')
+          }
+        ]
+      },
+      {
+        path: 'authorityManagement',
+        name: '权限管理',
+        component: _import('authorityManagement/index'),
+        redirect: '/authorityManagement/authority/0',
+        children: [
+          {
+            path: 'authority/:id',
+            name: 'authority',
+            component: _import('authorityManagement/authorityList')
+          }
+        ]
+      },
+      {
+        path: 'configManagement',
+        name: '配置管理',
+        component: _import('configManagement/index'),
+        redirect: '/configManagement/deviceAlert',
+        children: [
+          {
+            path: 'deviceAlert',
+            name: 'deviceAlert',
+            component: _import('configManagement/deviceAlert')
+          },
+          {
+            path: 'eventMsg',
+            name: 'eventMsg',
+            component: _import('configManagement/eventMsg')
+          }
+        ]
+      }
+    ]
+  },
 
-    {path: '*', redirect: '/404', hidden: true}
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 export default new Router({
-    // mode: 'history', //后端支持可开
-    scrollBehavior: () => ({y: 0}),
-    routes: constantRouterMap
+  // mode: 'history', //后端支持可开
+  scrollBehavior: () => ({ y: 0 }),
+  routes: constantRouterMap
 })
 

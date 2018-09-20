@@ -48,6 +48,11 @@
                         name:'权限管理',
                         url:'/authorityManagement',
                         icon:'el-icon-view'
+                    },
+                    {
+                        name:'配置管理',
+                        url:'/configManagement',
+                        icon:'el-icon-view'
                     }
                 ]
             }

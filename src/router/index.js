@@ -319,12 +319,12 @@ export const constantRouterMap = [
         path: 'configManagement',
         name: '配置管理',
         component: _import('configManagement/index'),
-        redirect: '/configManagement/deviceAlert',
+        redirect: '/configManagement/deviceFault',
         children: [
           {
-            path: 'deviceAlert',
-            name: 'deviceAlert',
-            component: _import('configManagement/deviceAlert')
+            path: 'deviceFault',
+            name: 'deviceFault',
+            component: _import('configManagement/deviceFault')
           },
           {
             path: 'eventMsg',

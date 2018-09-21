@@ -1,0 +1,2 @@
+webpackJsonp([70],{BsuA:function(e,n,t){"use strict";n.a={name:"enterpriseManagementIndex"}},Umhe:function(e,n,t){"use strict";var r=function(){var e=this,n=e.$createElement;return(e._self._c||n)("router-view")},u=[],s={render:r,staticRenderFns:u};n.a=s},Uylf:function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var r=t("BsuA"),u=t("Umhe"),s=t("VU/8"),a=s(r.a,u.a,!1,null,null,null);n.default=a.exports}});
+//# sourceMappingURL=70.8ff7f9b6c4928f27bfd7.js.map

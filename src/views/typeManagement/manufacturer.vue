@@ -36,10 +36,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="licence">
-          <el-input v-model="formItem.licence"></el-input>
+          <el-input v-model="formItem.licence" type="textarea"></el-input>
         </el-form-item>
         <el-form-item label="public_key">
-          <el-input v-model="formItem.public_key"></el-input>
+          <el-input v-model="formItem.public_key" type="textarea"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

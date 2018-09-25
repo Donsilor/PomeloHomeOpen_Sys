@@ -330,6 +330,11 @@ export const constantRouterMap = [
             path: 'eventMsg',
             name: 'eventMsg',
             component: _import('configManagement/eventMsg')
+          },
+          {
+            path: 'appConfig',
+            name: 'appConfig',
+            component: _import('configManagement/appConfig')
           }
         ]
       }

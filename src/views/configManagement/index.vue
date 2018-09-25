@@ -33,6 +33,11 @@ export default {
           name: '路由器事件配置',
           url: '/configManagement/eventMsg',
           type: 'eventMsg'
+        },
+        {
+          name: 'APP配置下发',
+          url: '/configManagement/appConfig',
+          type: 'appConfig'
         }
       ]
     }

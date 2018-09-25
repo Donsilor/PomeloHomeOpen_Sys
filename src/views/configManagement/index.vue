@@ -35,7 +35,7 @@ export default {
           type: 'eventMsg'
         },
         {
-          name: 'APP配置下发',
+          name: 'APP配置',
           url: '/configManagement/appConfig',
           type: 'appConfig'
         }

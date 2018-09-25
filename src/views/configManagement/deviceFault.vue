@@ -114,6 +114,9 @@
                 <el-form-item label="push_type">
                     <el-input v-model="formItem.push_type"></el-input>
                 </el-form-item>
+                <el-form-item label="title">
+                    <el-input v-model="formItem.title"></el-input>
+                </el-form-item>
                 <el-form-item label="des">
                     <el-input v-model="formItem.des" type="textarea" rows="2"></el-input>
                     <span>支持标签：${family_name},${room_name},${device_name}</span>

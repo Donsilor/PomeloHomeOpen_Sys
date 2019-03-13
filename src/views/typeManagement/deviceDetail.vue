@@ -13,6 +13,8 @@
                             <el-col :span="24">
                                 <el-form-item label-width="120px">
                                     <el-col :span="12">
+                                        <el-checkbox disabled v-model="is_mixapp" :true-label="1" :false-label="0">是否是融合版APP</el-checkbox>
+                                        <br>
                                         <el-checkbox disabled v-model="is_evergrande" :true-label="1" :false-label="0">属于{{COLTD}}快联产品设备</el-checkbox>
                                     </el-col>
                                 </el-form-item>
@@ -230,391 +232,393 @@
 </style>
 
 <script>
-    import { Loading } from 'element-ui';
-    import fetch from '@/utils/fetch';
-    import helper from '@/utils/helper';
-    import {getToken} from '@/utils/auth';
-    import {COLTD} from '@/utils/config';
-    import addTechnical from './addTechnical.vue';
-    import addAttribute from './addAttribute.vue';
-    export default {
-        name: 'existedCategory',
-        computed: {
-        },
-        created() {
-        },
-        mounted() {
-            this.getDeviceInfo();
-//            this.getDeviceSelectAddtype();
-//            this.getDeviceSelect();
-        },
-        data() {
-            return {
-                isEdit : false,
-                typeid : this.$route.query.id,
-                token : getToken(),
-                isLoadData : false,
-                isEdit : false, //判断是否是编辑
-                editText : '编辑引导页',
-                product : {},
-                type : {},
-                business:{},
-                brand : {},
-                model : {},
-                is_evergrande:0,
-                COLTD:COLTD,
-                form:{
-                },
-                addType : '',
-                deviceAddTypeList : [],
-                rules: {
-                    type: [
-                        { required: true, message: '请选择产品品类', trigger: 'change' }
-                    ],
-                    add_type: [
-                        { required: true, message: '请选择产品添加方式', trigger: 'change' }
-                    ],
-//                  'add1_img.filename': [
-//                        {validator(rule, value, callback, source, options) {
-//                            var errors = [];
-//                            if (!value) {
-//                                callback('添加方式的图片不能为空');
-//                            }
-//                            callback(errors);
-//                        }}
-//                    ],
-                    add1_tips: [
-                        { required: true, message: '请输入提示文字', trigger: 'blur' },
-                        { max: 255, message: '提示文字不能超过255个字符', trigger: 'blur' },
-                    ],
-                    add1_button: [
-                        { required: true, message: '请输入按钮文字', trigger: 'blur' },
-                        { max: 8, message: '按钮文字不能超过8个字符', trigger: 'blur' },
-                    ],
-//                    'add2_img.filename': [
-//                        {validator(rule, value, callback, source, options) {
-//                            var errors = [];
-//                            if (!value) {
-//                                callback('添加方式的图片不能为空');
-//                            }
-//                            callback(errors);
-//                        }}
-//                    ],
-                    add2_tips: [
-                        { required: true, message: '请输入提示文字', trigger: 'blur' },
-                        { max: 255, message: '提示文字不能超过255个字符', trigger: 'blur' },
-                    ],
-//                    'reset_img.filename': [
-//                        {validator(rule, value, callback, source, options) {
-//                            var errors = [];
-//                            if (!value) {
-//                                callback('添加方式的图片不能为空');
-//                            }
-//                            callback(errors);
-//                        }}
-//                    ],
-                    reset_tips: [
-                        { required: true, message: '请输入重置提示文字', trigger: 'blur' },
-                        { max: 255, message: '重置提示文字不能超过255个字符', trigger: 'blur' },
-                    ],
-                    /*offline_hint:[
+    import { Loading } from 'element-ui'
+import fetch from '@/utils/fetch'
+import helper from '@/utils/helper'
+import { getToken } from '@/utils/auth'
+import { COLTD } from '@/utils/config'
+import addTechnical from './addTechnical.vue'
+import addAttribute from './addAttribute.vue'
+export default {
+      name: 'existedCategory',
+      computed: {
+      },
+      created() {
+      },
+      mounted() {
+        this.getDeviceInfo()
+    //            this.getDeviceSelectAddtype();
+    //            this.getDeviceSelect();
+  },
+      data() {
+        return {
+          isEdit: false,
+          typeid: this.$route.query.id,
+          token: getToken(),
+          isLoadData: false,
+          isEdit: false, // 判断是否是编辑
+          editText: '编辑引导页',
+          product: {},
+          type: {},
+          business: {},
+          brand: {},
+          model: {},
+          is_evergrande: 0,
+          is_mixapp: 0,
+          COLTD: COLTD,
+          form: {
+          },
+          addType: '',
+          deviceAddTypeList: [],
+          rules: {
+            type: [
+              { required: true, message: '请选择产品品类', trigger: 'change' }
+            ],
+            add_type: [
+              { required: true, message: '请选择产品添加方式', trigger: 'change' }
+            ],
+            //                  'add1_img.filename': [
+            //                        {validator(rule, value, callback, source, options) {
+            //                            var errors = [];
+            //                            if (!value) {
+            //                                callback('添加方式的图片不能为空');
+            //                            }
+            //                            callback(errors);
+            //                        }}
+            //                    ],
+            add1_tips: [
+              { required: true, message: '请输入提示文字', trigger: 'blur' },
+              { max: 255, message: '提示文字不能超过255个字符', trigger: 'blur' }
+            ],
+            add1_button: [
+              { required: true, message: '请输入按钮文字', trigger: 'blur' },
+              { max: 8, message: '按钮文字不能超过8个字符', trigger: 'blur' }
+            ],
+            //                    'add2_img.filename': [
+            //                        {validator(rule, value, callback, source, options) {
+            //                            var errors = [];
+            //                            if (!value) {
+            //                                callback('添加方式的图片不能为空');
+            //                            }
+            //                            callback(errors);
+            //                        }}
+            //                    ],
+            add2_tips: [
+              { required: true, message: '请输入提示文字', trigger: 'blur' },
+              { max: 255, message: '提示文字不能超过255个字符', trigger: 'blur' }
+            ],
+            //                    'reset_img.filename': [
+            //                        {validator(rule, value, callback, source, options) {
+            //                            var errors = [];
+            //                            if (!value) {
+            //                                callback('添加方式的图片不能为空');
+            //                            }
+            //                            callback(errors);
+            //                        }}
+            //                    ],
+            reset_tips: [
+              { required: true, message: '请输入重置提示文字', trigger: 'blur' },
+              { max: 255, message: '重置提示文字不能超过255个字符', trigger: 'blur' }
+            ]
+            /* offline_hint:[
                         {required:true,message:'请输入离线提示语',trigger: 'blur' }
                     ]*/
-                }
-            }
-        },
-        methods: {
-            //获取设备添加方式
-            getDeviceSelectAddtype(){
-                fetch({
-                    url: '/device/deviceAddtype',
-                    method: 'post',
-                    data: {
-                        'token' :  this.token
-                    }
-                }).then(res=>{
-                    this.deviceAddTypeList = res;
-                })
-            },
-            // 获取品类详情信息
-            getDeviceInfo(){
-                fetch({
-                    url: '/device/deviceInfo',
-                    method: 'post',
-                    data: {
-                        'id' : this.typeid
-                    }
-                }).then(res=>{
-                    this.form = res;
-                    if(this.form.type==3){
-                        this.is_evergrande = 1;
-                    }
-                    this.form.add_type = this.form.add_type == '0' ? '': Number(this.form.add_type);
-                    if(!this.form.offline_hint){
-                        this.form.offline_hint = '';
-                    }
-                    this.isLoadData = true;
-                    this.handleImgAddToken();
-                    this.getDeviceSelectAddtype();
-                })
-            },
-
-            handleImgAddToken(){
-                this.form.base_img.token = this.token;
-                this.form.reset_img.token = this.token;
-                this.form.add1_img.token = this.token;
-                this.form.add2_img.token = this.token;
-            },
-
-            handleAvatarSuccess(res, file) {
-                let data = res.result;
-                switch (data.type){
-                    case 23 : this.form.base_img = data;this.form.base_img.token = this.token;break;
-                    case 25 : this.form.reset_img = data;this.form.reset_img.token = this.token;
-                }
-                this.$message({
-                    type: 'success',
-                    message: '上传成功！'
-                });
-            },
-
-            handleAddImg1Success(res,file){
-                this.form.add1_img = res.result;
-                this.form.add1_img.token = this.token;
-                this.$message({
-                    type: 'success',
-                    message: '上传成功！'
-                });
-            },
-            handleAddImg2Success(res,file){
-                this.form.add2_img = res.result;
-                this.form.add2_img.token = this.token;
-                this.$message({
-                    type: 'success',
-                    message: '上传成功！'
-                });
-            },
-            beforeAvatarUpload(file) {
-                console.log(file);
-                const filter = file.type === 'image/png';
-                const isLt5M = file.size / 1024 / 1024 < 5;
-
-                if (!filter) {
-                    this.$message.error('请上传5M大小内PNG格式的文件');
-                }
-                if (!isLt5M) {
-                    this.$message.error('请上传5M大小内PNG格式的文件');
-                }
-                return filter && isLt5M;
-            },
-
-            //删除设备
-            delectDevice(){
-                fetch({
-                    url: '/device/deviceDel',
-                    method: 'post',
-                    data: {
-                        'id' : this.$route.query.id
-                    }
-                }).then(res=>{
-                    this.$message({
-                        showClose: true,
-                        message: '删除成功！',
-                        type: 'success'
-                    });
-                    setTimeout(()=>{
-                        this.$router.push({path: '/typeManagement/deviceManager'});
-                    },2000);
-                })
-            },
-            //编辑设备信息
-            editDevice(){
-                if(!this.isEdit){
-                    this.isEdit = true;
-                    this.editText = '确定并提交修改';
-                }else{
-                    this.$confirm('是否确认保存修改后引导页信息？', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        this.saveDeviceInfo();
-                    }).catch(() => {
-                        this.isEdit = false;
-                        this.editText = '编辑引导页';
-                    });
-                }
-            },
-
-            //保存品类信息事件处理
-            saveDeviceInfo(){
-                this.$refs['ruleForm'].validate((valid) => {
-                    if(valid){
-                        this.editText = '编辑引导页';
-                        this.form.token = this.token;
-                        fetch({
-                            url: '/device/deviceEdit',
-                            method: 'post',
-                            data: this.form,
-                        }).then(res=>{
-                            this.isEdit = false;
-                            this.$message({
-                                type: 'success',
-                                message: '编辑引导页成功!'
-                            });
-                            /*setTimeout(()=>{
-                                this.$router.push({path: '/typeManagement/deviceManager'});
-                            },2000);*/
-                        }).catch(res=>{
-                            this.$message({
-                                type: 'error',
-                                message: res.msg
-                            });
-                        })
-                    }else{
-                        this.$message({
-                            type: 'error',
-                            message:'请把表单填写完整再提交修改！'
-                        });
-                    }
-                });
-
-            },
-
-            //处理删除事件
-            handleDelEvent(){
-                this.$confirm('是否确认删除此引导页，删除不能恢复。', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.delectDevice();
-                }).catch(() => {
-                });
-            },
-
-            //处理返回事件
-            handleBackEvent(){
-                if(!this.isEdit){
-                    this.$router.push({path: '/typeManagement/deviceManager'});
-                }else {
-                    this.$confirm('是否确认返回? 所修改的信息将不会被保存!', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        this.$router.push({path: '/typeManagement/deviceManager'});
-                    }).catch(() => {
-
-                    });
-
-                }
-            },
-
-            //添加技术方案
-            addTechnical(){
-
-            },
-
-            //获取子组件传回来的功能属性方案数据
-            getAttr(){
-
-            },
-
-            //获取子组件传回来的技术方案数据
-            getTech(val){
-                console.log(val);
-                fetch({
-                    url: 'producttype/technologyadd',
-                    method: 'post',
-                    data: val,
-                }).then(res=>{
-                    this.$message({
-                        type: 'success',
-                        message: '添加方案成功！'
-                    });
-                    this.getTechList(1);
-                    this.getTechList(2);
-                    this.getTechList(3);
-                }).catch(res=>{
-                    this.$message({
-                        type: 'error',
-                        message: res.msg
-                    });
-                })
-            },
-            getTechList(technology_type){
-                fetch({
-                    url: 'producttype/technologylists',
-                    method: 'post',
-                    data: {
-                        'token' : getToken(),
-                        'type_id' : this.typeid,
-                        'technology_type' : technology_type
-                    },
-                }).then(res=>{
-                    switch (technology_type){
-                        case 1 : this.technical_wifi = res.list; break;
-                        case 2 : this.technical_zigbee = res.list; break;
-                        case 3 : this.technical_bluetooth = res.list; break;
-                    }
-                }).catch(res=>{
-                    this.$message({
-                        type: 'error',
-                        message: res.msg
-                    });
-                })
-            },
-            //当前行row、当前列column、当前行号rowIndex、当前列号columnIndex
-            arrayWifiSpanMethod({ row, column, rowIndex, columnIndex }) {
-                if (columnIndex === 0) {
-                    if (rowIndex === 0) {
-                        return {
-                            rowspan: this.technical_wifi.length,
-                            colspan: 1
-                        };
-                    } else {
-                        return {
-                            rowspan: 0,
-                            colspan: 0
-                        };
-                    }
-                }
-            },
-            arrayBlueToothSpanMethod({ row, column, rowIndex, columnIndex }) {
-                if (columnIndex === 0) {
-                    if (rowIndex === 0) {
-                        return {
-                            rowspan: this.technical_bluetooth.length,
-                            colspan: 1
-                        };
-                    } else {
-                        return {
-                            rowspan: 0,
-                            colspan: 0
-                        };
-                    }
-                }
-            },
-            arrayZigbeeSpanMethod({ row, column, rowIndex, columnIndex }) {
-                if (columnIndex === 0) {
-                    if (rowIndex === 0) {
-                        return {
-                            rowspan: this.technical_zigbee.length,
-                            colspan: 1
-                        };
-                    } else {
-                        return {
-                            rowspan: 0,
-                            colspan: 0
-                        };
-                    }
-                }
-            },
-        },
-        components:{
-            addTechnical,
-            addAttribute
+          }
         }
+      },
+      methods: {
+        // 获取设备添加方式
+        getDeviceSelectAddtype() {
+          fetch({
+            url: '/device/deviceAddtype',
+            method: 'post',
+            data: {
+              'token': this.token
+            }
+          }).then(res => {
+            this.deviceAddTypeList = res
+          })
+        },
+        // 获取品类详情信息
+        getDeviceInfo() {
+          fetch({
+            url: '/device/deviceInfo',
+            method: 'post',
+            data: {
+              'id': this.typeid
+            }
+          }).then(res => {
+            this.form = res
+            if (this.form.type == 3) {
+              this.is_evergrande = 1
+            }
+            this.form.add_type = this.form.add_type == '0' ? '' : Number(this.form.add_type)
+            if (!this.form.offline_hint) {
+              this.form.offline_hint = ''
+            }
+            if (this.form.app_id === '100001') {
+              this.is_mixapp = 1
+            }
+            this.isLoadData = true
+            this.handleImgAddToken()
+            this.getDeviceSelectAddtype()
+          })
+        },
+
+        handleImgAddToken() {
+          this.form.base_img.token = this.token
+          this.form.reset_img.token = this.token
+          this.form.add1_img.token = this.token
+          this.form.add2_img.token = this.token
+        },
+
+        handleAvatarSuccess(res, file) {
+          const data = res.result
+          switch (data.type) {
+            case 23 : this.form.base_img = data; this.form.base_img.token = this.token; break
+            case 25 : this.form.reset_img = data; this.form.reset_img.token = this.token
+          }
+          this.$message({
+            type: 'success',
+            message: '上传成功！'
+          })
+        },
+
+        handleAddImg1Success(res, file) {
+          this.form.add1_img = res.result
+          this.form.add1_img.token = this.token
+          this.$message({
+            type: 'success',
+            message: '上传成功！'
+          })
+        },
+        handleAddImg2Success(res, file) {
+          this.form.add2_img = res.result
+          this.form.add2_img.token = this.token
+          this.$message({
+            type: 'success',
+            message: '上传成功！'
+          })
+        },
+        beforeAvatarUpload(file) {
+          console.log(file)
+          const filter = file.type === 'image/png'
+          const isLt5M = file.size / 1024 / 1024 < 5
+
+          if (!filter) {
+            this.$message.error('请上传5M大小内PNG格式的文件')
+          }
+          if (!isLt5M) {
+            this.$message.error('请上传5M大小内PNG格式的文件')
+          }
+          return filter && isLt5M
+        },
+
+        // 删除设备
+        delectDevice() {
+          fetch({
+            url: '/device/deviceDel',
+            method: 'post',
+            data: {
+              'id': this.$route.query.id
+            }
+          }).then(res => {
+            this.$message({
+              showClose: true,
+              message: '删除成功！',
+              type: 'success'
+            })
+            setTimeout(() => {
+              this.$router.push({ path: '/typeManagement/deviceManager' })
+            }, 2000)
+          })
+        },
+        // 编辑设备信息
+        editDevice() {
+          if (!this.isEdit) {
+            this.isEdit = true
+            this.editText = '确定并提交修改'
+          } else {
+            this.$confirm('是否确认保存修改后引导页信息？', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.saveDeviceInfo()
+            }).catch(() => {
+              this.isEdit = false
+              this.editText = '编辑引导页'
+            })
+          }
+        },
+
+        // 保存品类信息事件处理
+        saveDeviceInfo() {
+          this.$refs['ruleForm'].validate((valid) => {
+            if (valid) {
+              this.editText = '编辑引导页'
+              this.form.token = this.token
+              fetch({
+                url: '/device/deviceEdit',
+                method: 'post',
+                data: this.form
+              }).then(res => {
+                this.isEdit = false
+                this.$message({
+                  type: 'success',
+                  message: '编辑引导页成功!'
+                })
+                /* setTimeout(()=>{
+                            this.$router.push({path: '/typeManagement/deviceManager'});
+                        },2000);*/
+              }).catch(res => {
+                this.$message({
+                  type: 'error',
+                  message: res.msg
+                })
+              })
+            } else {
+              this.$message({
+                type: 'error',
+                message: '请把表单填写完整再提交修改！'
+              })
+            }
+          })
+        },
+
+        // 处理删除事件
+        handleDelEvent() {
+          this.$confirm('是否确认删除此引导页，删除不能恢复。', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.delectDevice()
+          }).catch(() => {
+          })
+        },
+
+        // 处理返回事件
+        handleBackEvent() {
+          if (!this.isEdit) {
+            this.$router.push({ path: '/typeManagement/deviceManager' })
+          } else {
+            this.$confirm('是否确认返回? 所修改的信息将不会被保存!', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.$router.push({ path: '/typeManagement/deviceManager' })
+            }).catch(() => {
+
+            })
+          }
+        },
+
+        // 添加技术方案
+        addTechnical() {
+
+        },
+
+        // 获取子组件传回来的功能属性方案数据
+        getAttr() {
+
+        },
+
+        // 获取子组件传回来的技术方案数据
+        getTech(val) {
+          console.log(val)
+          fetch({
+            url: 'producttype/technologyadd',
+            method: 'post',
+            data: val
+          }).then(res => {
+            this.$message({
+              type: 'success',
+              message: '添加方案成功！'
+            })
+            this.getTechList(1)
+            this.getTechList(2)
+            this.getTechList(3)
+          }).catch(res => {
+            this.$message({
+              type: 'error',
+              message: res.msg
+            })
+          })
+        },
+        getTechList(technology_type) {
+          fetch({
+            url: 'producttype/technologylists',
+            method: 'post',
+            data: {
+              'token': getToken(),
+              'type_id': this.typeid,
+              'technology_type': technology_type
+            }
+          }).then(res => {
+            switch (technology_type) {
+              case 1 : this.technical_wifi = res.list; break
+              case 2 : this.technical_zigbee = res.list; break
+              case 3 : this.technical_bluetooth = res.list; break
+            }
+          }).catch(res => {
+            this.$message({
+              type: 'error',
+              message: res.msg
+            })
+          })
+        },
+        // 当前行row、当前列column、当前行号rowIndex、当前列号columnIndex
+        arrayWifiSpanMethod({ row, column, rowIndex, columnIndex }) {
+          if (columnIndex === 0) {
+            if (rowIndex === 0) {
+              return {
+                rowspan: this.technical_wifi.length,
+                colspan: 1
+              }
+            } else {
+              return {
+                rowspan: 0,
+                colspan: 0
+              }
+            }
+          }
+        },
+        arrayBlueToothSpanMethod({ row, column, rowIndex, columnIndex }) {
+          if (columnIndex === 0) {
+            if (rowIndex === 0) {
+              return {
+                rowspan: this.technical_bluetooth.length,
+                colspan: 1
+              }
+            } else {
+              return {
+                rowspan: 0,
+                colspan: 0
+              }
+            }
+          }
+        },
+        arrayZigbeeSpanMethod({ row, column, rowIndex, columnIndex }) {
+          if (columnIndex === 0) {
+            if (rowIndex === 0) {
+              return {
+                rowspan: this.technical_zigbee.length,
+                colspan: 1
+              }
+            } else {
+              return {
+                rowspan: 0,
+                colspan: 0
+              }
+            }
+          }
+        }
+      },
+      components: {
+        addTechnical,
+        addAttribute
+      }
     }
 </script>

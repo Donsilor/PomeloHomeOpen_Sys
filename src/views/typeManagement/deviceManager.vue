@@ -30,6 +30,12 @@
                     <el-table-column  prop="parent_type_name" label="所属大品类" width="220"></el-table-column>
                     <el-table-column prop="model" label="产品型号" width="150"></el-table-column>
                     <el-table-column prop="business_name" label="厂商"></el-table-column>
+                    <el-table-column prop="business_name" label="是否融合版" align="center">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.app_id=='100001'">是</span>
+                            <span v-else>否</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="business_name" label="是否默认产品" align="center">
                         <template slot-scope="scope">
                             <span v-if="scope.row.is_default">是</span>
@@ -82,155 +88,155 @@
     }
 </style>
 <script>
-    import fetch from '@/utils/fetch';
-    import helper from '@/utils/helper';
-    import {getToken} from '@/utils/auth';
-  export default {
+    import fetch from '@/utils/fetch'
+import helper from '@/utils/helper'
+import { getToken } from '@/utils/auth'
+export default {
       name: 'existedCategory',
       computed: {
       },
       created() {
       },
       mounted() {
-          this.getList();
-          this.getAddType();
-          this.getTypeTree();
-          this.getBusinessList();
-      },
+        this.getList()
+        this.getAddType()
+        this.getTypeTree()
+        this.getBusinessList()
+  },
       data() {
-          return {
-              tableData: [],
-              addFucSetModal : false,
-              addFucForm:[],
-              total : 0,
-              limit : 0,
-              token : getToken(),
-              typeTree:[],
-              childType:[],
-              businessList:[],
-              type_id:'',
-              child_id:'',
-              business_id:'',
-              listQuery: {
-                  page: 1,
-                  limit: 15,
-              },
+        return {
+          tableData: [],
+          addFucSetModal: false,
+          addFucForm: [],
+          total: 0,
+          limit: 0,
+          token: getToken(),
+          typeTree: [],
+          childType: [],
+          businessList: [],
+          type_id: '',
+          child_id: '',
+          business_id: '',
+          listQuery: {
+            page: 1,
+            limit: 15
           }
+        }
       },
       methods: {
-          handleSizeChange(val) {
-              this.listQuery.limit = val;
-              this.getList()
-          },
-          handleCurrentChange(val) {
-              this.listQuery.page = val;
-              this.getList()
-          },
-          getList(){
-              fetch({
-                  url: '/device/deviceList',
-                  method: 'post',
-                  data: {
-                      'page' :this.listQuery.page,
-                      'token' : getToken(),
-                      'limit' : this.listQuery.limit,
-                      'type_id':this.child_id,
-                      'parent_type_id':this.type_id,
-                      'business_id':this.business_id
-                  }
-              }).then(res=>{
-                  this.tableData = res.data;
-                  this.total = Number(res.total);
-                  this.limit = Number(res.per_page);
-              }).catch(res=>{
-                  this.$message({
-                      type: 'error',
-                      message: res.msg
-                  });
-              })
-          },
-          getTypeTree(){
-              fetch({
-                  url:'/producttype/tree',
-                  method:'get',
-                  data:{}
-              }).then(res=>{
-                  this.typeTree = res;
-              })
-          },
-          getBusinessList(){
-              fetch({
-                  url:'/user/select',
-                  method:'get',
-                  data:{}
-              }).then(res=>{
-                  this.businessList = res;
-              })
-          },
-          changeType(val){
-              let tmp = this.typeTree.find(item=>{
-                  return item.type_id == parseInt(val);
-              });
-              this.childType = tmp ? tmp.children : [];
-              this.child_id = '';
-          },
-          handleEnterPage(row){
-              this.$router.push({path: '/typeManagement/deviceDetail', query: {'id' : row.id}});
-          },
-          //添加设备
-          addDevice(){
-              this.$router.push({path: '/typeManagement/addDevice'});
-          },
-          //获取添加方式设置
-          getAddType(){
-              fetch({
-                  url: '/device/getAddtype',
-                  method: 'post',
-                  data: {
-                  }
-              }).then(res=>{
-                  this.addFucForm = res;
-                  this.addFucForm.forEach((val,index)=>{
-                      val.status = val.status ? true : false;
-                  });
-              }).catch(res=>{
-                  this.$message({
-                      type: 'error',
-                      message: res.msg
-                  });
-              })
-          },
-          //添加方式设置
-          addFuc(){
-              this.addFucForm.forEach((val,index)=>{
-                  val.status = val.status ? 1 : 0;
-              });
-              fetch({
-                  url: '/device/setAddtype',
-                  method: 'post',
-                  data:{
-                      'token' : this.token,
-                      'settings' : this.addFucForm
-                  },
-              }).then(res=>{
-                  this.$message({
-                      type: 'success',
-                      message: '修改设置成功'
-                  });
-                  this.addFucSetModal = false;
-                    this.addFucForm.forEach((val,index)=>{
-                      val.status = val.status ? true :  false;
-                  });
-              }).catch(res=>{
-                  this.$message({
-                      type: 'error',
-                      message: res.msg
-                  });
-              })
-          },
-          search(){
-              this.getList();
-          }
+        handleSizeChange(val) {
+          this.listQuery.limit = val
+          this.getList()
+        },
+        handleCurrentChange(val) {
+          this.listQuery.page = val
+          this.getList()
+        },
+        getList() {
+          fetch({
+            url: '/device/deviceList',
+            method: 'post',
+            data: {
+              'page': this.listQuery.page,
+              'token': getToken(),
+              'limit': this.listQuery.limit,
+              'type_id': this.child_id,
+              'parent_type_id': this.type_id,
+              'business_id': this.business_id
+            }
+          }).then(res => {
+            this.tableData = res.data
+            this.total = Number(res.total)
+            this.limit = Number(res.per_page)
+          }).catch(res => {
+            this.$message({
+              type: 'error',
+              message: res.msg
+            })
+          })
+        },
+        getTypeTree() {
+          fetch({
+            url: '/producttype/tree',
+            method: 'get',
+            data: {}
+          }).then(res => {
+            this.typeTree = res
+          })
+        },
+        getBusinessList() {
+          fetch({
+            url: '/user/select',
+            method: 'get',
+            data: {}
+          }).then(res => {
+            this.businessList = res
+          })
+        },
+        changeType(val) {
+          const tmp = this.typeTree.find(item => {
+            return item.type_id == parseInt(val)
+          })
+          this.childType = tmp ? tmp.children : []
+          this.child_id = ''
+        },
+        handleEnterPage(row) {
+          this.$router.push({ path: '/typeManagement/deviceDetail', query: { 'id': row.id }})
+        },
+        // 添加设备
+        addDevice() {
+          this.$router.push({ path: '/typeManagement/addDevice' })
+        },
+        // 获取添加方式设置
+        getAddType() {
+          fetch({
+            url: '/device/getAddtype',
+            method: 'post',
+            data: {
+            }
+          }).then(res => {
+            this.addFucForm = res
+            this.addFucForm.forEach((val, index) => {
+              val.status = !!val.status
+            })
+          }).catch(res => {
+            this.$message({
+              type: 'error',
+              message: res.msg
+            })
+          })
+        },
+        // 添加方式设置
+        addFuc() {
+          this.addFucForm.forEach((val, index) => {
+            val.status = val.status ? 1 : 0
+          })
+          fetch({
+            url: '/device/setAddtype',
+            method: 'post',
+            data: {
+              'token': this.token,
+              'settings': this.addFucForm
+            }
+          }).then(res => {
+            this.$message({
+              type: 'success',
+              message: '修改设置成功'
+            })
+            this.addFucSetModal = false
+            this.addFucForm.forEach((val, index) => {
+              val.status = !!val.status
+            })
+          }).catch(res => {
+            this.$message({
+              type: 'error',
+              message: res.msg
+            })
+          })
+        },
+        search() {
+          this.getList()
+        }
       }
-  }
+}
 </script>

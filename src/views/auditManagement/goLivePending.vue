@@ -122,106 +122,107 @@
 </template>
 
 <script>
-    import {getReviewList, getProductType} from '@/api/check'
-    import {productTechnologyType} from '@/utils/config';
-    import {parseTime} from '@/utils'
+    import { getReviewList, getProductType } from '@/api/check'
+    import { productTechnologyType } from '@/utils/config'
+import { parseTime } from '@/utils'
 
     export default {
-        name: 'goLiveCheckpending',
+      name: 'goLiveCheckpending',
 
-        data() {
-            return {
-                // ====table===
-                list: null,
-                total: null,
-                listLoading: false,
-                listQuery: {
-                    page: 1,
-                    limit: 15,
-                },
-                // =====查询条件=====
-                queryCondition: {
-                    business_name: '',
-                    brand_name: '',
-                    type_id: '',
-                    model: '',
-                    created_date: '',
-                    created_start: '',
-                    created_end: '',
-                    technology_type: ''
-                },
-                productTypeList: [], // 产品品类
-                productTechnologyType: productTechnologyType, // 产品品类
-
-            }
-        },
-        mounted() {
-            this.$store.dispatch('GetAuditMenus');
-            this.getList();
-            this.getProductType();
-        },
-        activated() {
-//      console.log('配置文件', productTechnologyType);
-            this.getList();
-            this.getProductType();
-        },
-        methods: {
-            getList() {
-                // 时间格式化
-                if (this.queryCondition.created_date) {
-                    this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
-                    this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
-                } else {
-                    this.queryCondition.created_start = '';
-                    this.queryCondition.created_end = '';
-                }
-                this.listLoading = true
-                let params = {
-                    type: 5, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
-                    status: 0, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
-                    limit: this.listQuery.limit,
-                    page: this.listQuery.page
-                };
-                Object.assign(params, this.queryCondition);
-                getReviewList(params).then(response => {
-                    this.list = response.data;
-                    this.total = response.total;
-                    this.listLoading = false
-                })
-            },
-
-            // 获取产品品类
-            getProductType() {
-                getProductType().then(response => {
-                    this.productTypeList = response.list;
-                });
-            },
-
-            handleSizeChange(val) {
-                this.listQuery.limit = val
-                this.getList()
-            },
-            handleCurrentChange(val) {
-                this.listQuery.page = val
-                this.getList()
-            },
-
-            // 查询条件重置
-            resetForm(formName) {
-                this.$refs[formName].resetFields();
-            },
-
-            // 跳转到待审核详情页
-            goCheckDetail(row) {
-                let query = {
-                    record_id:row.record_id,
-                    type:'audit',
-                    business_name:row.business_name,
-                    status:row.status
-                };
-                this.$router.push({path: '/auditManagement/goLiveToAudit', query: query});
-            },
+      data() {
+        return {
+          // ====table===
+          list: null,
+          total: null,
+          listLoading: false,
+          listQuery: {
+            page: 1,
+            limit: 15
+          },
+          // =====查询条件=====
+          queryCondition: {
+            business_name: '',
+            brand_name: '',
+            type_id: '',
+            model: '',
+            created_date: '',
+            created_start: '',
+            created_end: '',
+            technology_type: ''
+          },
+          productTypeList: [], // 产品品类
+          productTechnologyType: productTechnologyType // 产品品类
 
         }
+      },
+      mounted() {
+        this.$store.dispatch('GetAuditMenus')
+        this.getList()
+        this.getProductType()
+  },
+      activated() {
+    //      console.log('配置文件', productTechnologyType);
+        this.getList()
+        this.getProductType()
+  },
+      methods: {
+        getList() {
+          // 时间格式化
+          if (this.queryCondition.created_date) {
+            this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}')
+            this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}')
+          } else {
+            this.queryCondition.created_start = ''
+            this.queryCondition.created_end = ''
+          }
+          this.listLoading = true
+          const params = {
+            type: 5, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
+            status: 0, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
+            limit: this.listQuery.limit,
+            page: this.listQuery.page
+          }
+          Object.assign(params, this.queryCondition)
+          getReviewList(params).then(response => {
+            this.list = response.data
+            this.total = response.total
+            this.listLoading = false
+          })
+        },
+
+        // 获取产品品类
+        getProductType() {
+          getProductType().then(response => {
+            this.productTypeList = response.list
+          })
+        },
+
+        handleSizeChange(val) {
+          this.listQuery.limit = val
+          this.getList()
+        },
+        handleCurrentChange(val) {
+          this.listQuery.page = val
+          this.getList()
+        },
+
+        // 查询条件重置
+        resetForm(formName) {
+          this.$refs[formName].resetFields()
+          this.handleCurrentChange(1)
+        },
+
+        // 跳转到待审核详情页
+        goCheckDetail(row) {
+          const query = {
+            record_id: row.record_id,
+            type: 'audit',
+            business_name: row.business_name,
+            status: row.status
+          }
+          this.$router.push({ path: '/auditManagement/goLiveToAudit', query: query })
+        }
+
+      }
     }
 </script>

@@ -106,8 +106,8 @@
 
 <script>
   import { getReviewList, getProductType } from '@/api/check'
-  import { productTechnologyType } from '@/utils/config';
-  import { parseTime } from '@/utils'
+  import { productTechnologyType } from '@/utils/config'
+import { parseTime } from '@/utils'
 
   export default {
     name: 'productCheckpending',
@@ -119,7 +119,7 @@
         listLoading: false,
         listQuery: {
           page: 1,
-          limit: 10,
+          limit: 10
         },
         // =====查询条件=====
         queryCondition: {
@@ -133,52 +133,52 @@
           technology_type: ''
         },
         productTypeList: [], // 产品品类
-        productTechnologyType: productTechnologyType, // 接入方式
+        productTechnologyType: productTechnologyType // 接入方式
 
       }
     },
-//    mounted() {
-////      console.log('配置文件', productTechnologyType);
-//      this.getList();
-//      this.getProductType();
-//    },
+  //    mounted() {
+  // //      console.log('配置文件', productTechnologyType);
+  //      this.getList();
+  //      this.getProductType();
+  //    },
     activated() {
-//      console.log('配置文件', productTechnologyType);
-      this.getList();
-      this.getProductType();
-    },
+    //      console.log('配置文件', productTechnologyType);
+      this.getList()
+      this.getProductType()
+  },
     methods: {
       getList() {
         // 时间格式化
         if (this.queryCondition.created_date[0]) {
-          this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
-          this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
+          this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}')
+          this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}')
         } else {
-          this.queryCondition.created_start = '';
-          this.queryCondition.created_end = '';
+          this.queryCondition.created_start = ''
+          this.queryCondition.created_end = ''
         }
         this.listLoading = true
-        let params = {
+        const params = {
           type: 3, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
           status: 0, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
           limit: this.listQuery.limit,
           page: this.listQuery.page
-        };
-        Object.assign(params, this.queryCondition);
+        }
+        Object.assign(params, this.queryCondition)
         getReviewList(params).then(response => {
-          console.log('审核产品列表', response);
-          this.list = response.data;
-          this.total = response.total;
+          console.log('审核产品列表', response)
+          this.list = response.data
+          this.total = response.total
           this.listLoading = false
-        });
+        })
       },
 
       // 获取产品品类
       getProductType() {
         getProductType().then(response => {
-          console.log('产品品类', response);
-          this.productTypeList = response.list;
-        });
+          console.log('产品品类', response)
+          this.productTypeList = response.list
+        })
       },
 
       handleSizeChange(val) {
@@ -192,15 +192,16 @@
 
       // 查询条件重置
       resetForm(formName) {
-        this.$refs[formName].resetFields();
+        this.$refs[formName].resetFields()
+        this.handleCurrentChange(1)
       },
 
       // 跳转到待审核详情页
       goCheckDetail(row) {
-        row.approved_user = ''; // 防止为null时报错
+        row.approved_user = '' // 防止为null时报错
 
-        this.$router.push({path: '/productCheck/productCheckDetail', query: row});
-      },
+        this.$router.push({ path: '/productCheck/productCheckDetail', query: row })
+      }
 
     }
   }

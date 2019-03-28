@@ -83,86 +83,86 @@
 </template>
 
 <script>
-    import {getReviewList} from '@/api/check'
-    import {parseTime} from '@/utils'
+    import { getReviewList } from '@/api/check'
+    import { parseTime } from '@/utils'
 
     export default {
-        name: 'enterPriseCheckPengding',
+      name: 'enterPriseCheckPengding',
 
-        data() {
-            return {
-                // ====table===
-                list: null,
-                total: null,
-                listLoading: false,
-                listQuery: {
-                    page: 1,
-                    limit: 15,
-                },
-                // =====查询条件=====
-                queryCondition: {
-                    business_name: '',
-                    contacts: '',
-                    contacts_mobile: '',
-                    created_date: '',
-                    created_start: '',
-                    created_end: ''
-                },
-            }
-        },
-        mounted() {
-            this.getList();
-            this.$store.dispatch('GetAuditMenus');
-        },
-        methods: {
-            getList() {
-                if (this.queryCondition.created_date) {
-                    this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}');
-                    this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}');
-                } else {
-                    this.queryCondition.created_start = '';
-                    this.queryCondition.created_end = '';
-                }
-                this.listLoading = true
-                let params = {
-                    type: 1, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
-                    status: 3, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
-                    limit: this.listQuery.limit,
-                    page: this.listQuery.page
-                };
-                Object.assign(params, this.queryCondition);
-                getReviewList(params).then(response => {
-                    this.list = response.data;
-                    this.total = response.total;
-                    this.listLoading = false
-                })
-            },
-
-            // 查询条件重置
-            resetForm(formName) {
-                this.$refs[formName].resetFields();
-            },
-
-            // 跳转到待审核详情页
-            goCheckDetail(row) {
-                let query = {
-                    record_id:row.record_id,
-                    type:'detail',business_name:row.business_name,
-                    status:row.status
-                };
-                this.$router.push({path: '/auditManagement/enterpriseToAudit', query: query});
-
-            },
-
-            handleSizeChange(val) {
-                this.listQuery.limit = val;
-                this.getList()
-            },
-            handleCurrentChange(val) {
-                this.listQuery.page = val;
-                this.getList()
-            },
-
+      data() {
+        return {
+          // ====table===
+          list: null,
+          total: null,
+          listLoading: false,
+          listQuery: {
+            page: 1,
+            limit: 15
+          },
+          // =====查询条件=====
+          queryCondition: {
+            business_name: '',
+            contacts: '',
+            contacts_mobile: '',
+            created_date: '',
+            created_start: '',
+            created_end: ''
+          }
         }
+      },
+      mounted() {
+        this.getList()
+        this.$store.dispatch('GetAuditMenus')
+  },
+      methods: {
+        getList() {
+          if (this.queryCondition.created_date) {
+            this.queryCondition.created_start = parseTime(this.queryCondition.created_date[0], '{y}-{m}-{d} {h}:{i}:{s}')
+            this.queryCondition.created_end = parseTime(this.queryCondition.created_date[1], '{y}-{m}-{d} {h}:{i}:{s}')
+          } else {
+            this.queryCondition.created_start = ''
+            this.queryCondition.created_end = ''
+          }
+          this.listLoading = true
+          const params = {
+            type: 1, // 1 = 企业审核，2 = 合作产品审核，3 = 产品创建审核， 4 = 产品上线审核
+            status: 3, // 0 = 审批中，1 = 审批通过，2 = 审批不通过
+            limit: this.listQuery.limit,
+            page: this.listQuery.page
+          }
+          Object.assign(params, this.queryCondition)
+          getReviewList(params).then(response => {
+            this.list = response.data
+            this.total = response.total
+            this.listLoading = false
+          })
+        },
+
+        // 查询条件重置
+        resetForm(formName) {
+          this.$refs[formName].resetFields()
+          this.handleCurrentChange(1)
+        },
+
+        // 跳转到待审核详情页
+        goCheckDetail(row) {
+          const query = {
+            record_id: row.record_id,
+            type: 'detail', business_name: row.business_name,
+            status: row.status
+          }
+          this.$router.push({ path: '/auditManagement/enterpriseToAudit', query: query })
+        },
+
+        handleSizeChange(val) {
+          this.listQuery.limit = val
+          this.getList()
+        },
+        handleCurrentChange(val) {
+          this.listQuery.page = val
+          this.getList()
+        }
+
+      }
     }
 </script>

@@ -47,59 +47,61 @@
     }
 </style>
 <script>
-    import fetch from '@/utils/fetch';
-    import { getToken } from '@/utils/auth'
+    import fetch from '@/utils/fetch'
+import { getToken } from '@/utils/auth'
     export default {
-        name: 'voicePlatform',
-        computed: {
-        },
-        created() {
-        },
-        mounted() {
-            this.getList();
-        },
-        data() {
-            return {
-                total: null,
-                listLoading: false,
-                listQuery: {
-                    page: 1,
-                    limit: 15,
-                },
-                tableData: []
-            }
-        },
-        methods: {
-            getList(){
-                this.listLoading = true;
-                let params = {
-                    limit: this.listQuery.limit,
-                    page: this.listQuery.page
-                };
-                fetch({
-                    url: '/admin/voice/list',
-                    method: 'get',
-                    data: params
-                }).then(res=>{
-                    this.tableData = res.data;
-                    this.total = res.total;
-                    this.listLoading = false
-                })
-            },
-            handleSizeChange(val) {
-                this.listQuery.limit = val;
-                this.getList()
-            },
-            handleCurrentChange(val) {
-                this.listQuery.page = val;
-                this.getList()
-            },
-            addVoicePlatform(){
-                this.$router.push({path: '/typeManagement/addVoicePlatform'});
-            },
-            handleEnterPage(row){
-                this.$router.push({path: '/typeManagement/addVoicePlatform', query: {'distributors_id' : row.distributors_id,id:row.voice_id}});
-            }
+      name: 'voicePlatform',
+      computed: {
+      },
+      created() {
+      },
+      mounted() {
+        this.$nextTick(() => {
+          this.getList()
+        })
+      },
+      data() {
+        return {
+          total: null,
+          listLoading: false,
+          listQuery: {
+            page: 1,
+            limit: 15
+          },
+          tableData: []
         }
+      },
+      methods: {
+        getList() {
+          this.listLoading = true
+          const params = {
+            limit: this.listQuery.limit,
+            page: this.listQuery.page
+          }
+          fetch({
+            url: '/admin/voice/list',
+            method: 'get',
+            data: params
+          }).then(res => {
+            this.tableData = res.data
+            this.total = res.total
+            this.listLoading = false
+          })
+        },
+        handleSizeChange(val) {
+          this.listQuery.limit = val
+          this.getList()
+        },
+        handleCurrentChange(val) {
+          this.listQuery.page = val
+          this.getList()
+        },
+        addVoicePlatform() {
+          this.$router.push({ path: '/typeManagement/addVoicePlatform' })
+        },
+        handleEnterPage(row) {
+          this.$router.push({ path: '/typeManagement/addVoicePlatform', query: { 'distributors_id': row.distributors_id, id: row.voice_id }})
+        }
+      }
     }
 </script>

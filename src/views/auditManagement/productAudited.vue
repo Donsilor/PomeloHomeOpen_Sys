@@ -161,7 +161,9 @@ import { parseTime } from '@/utils'
       mounted() {
     //      console.log('配置文件', productTechnologyType);
         this.$store.dispatch('GetAuditMenus')
-        this.getList()
+        this.$nextTick(() => {
+          this.getList()
+        })
         this.getProductType()
   },
       activated() {

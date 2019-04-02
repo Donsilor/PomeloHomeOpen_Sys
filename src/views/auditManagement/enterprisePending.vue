@@ -112,7 +112,9 @@
         // console.log(transDictValue('企业审核', 'checkType'));
       },
       mounted() {
-        this.getList()
+        this.$nextTick(() => {
+          this.getList()
+        })
         this.$store.dispatch('GetAuditMenus')
   },
       activated() {

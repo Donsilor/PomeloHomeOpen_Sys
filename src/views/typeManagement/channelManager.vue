@@ -56,70 +56,72 @@
     }
 </style>
 <script>
-    import fetch from '@/utils/fetch';
-    export default {
-        name: 'channelManager',
-        computed: {
-        },
-        created() {
-        },
-        mounted() {
-            this.getList();
-        },
-        data() {
-            return {
-                total: null,
-                listLoading: false,
-                listQuery: {
-                    page: 1,
-                    limit: 15,
-                },
-                tableData: []
-            }
-        },
-        methods: {
-            getList(){
-                this.listLoading = true;
-                let params = {
-                    limit: this.listQuery.limit,
-                    page: this.listQuery.page,
-                    type:0
-                };
-                fetch({
-                    url: '/admin/distributor/lists',
-                    method: 'post',
-                    data: params
-                }).then(res=>{
-                    this.tableData = res.list;
-                    this.total = res.total;
-                    this.listLoading = false
-                })
-            },
-            setOpen(row){
-                fetch({
-                    url: '/distributor/setopen',
-                    method: 'post',
-                    data: {id:row.id,is_open:row.is_open}
-                }).then(res=>{
-                }).catch(()=>{
-                    //失败还原状态，按位非运算符完成0、1互转
-                    row.is_open = ~row.is_open+2;
-                })
-            },
-            handleSizeChange(val) {
-                this.listQuery.limit = val;
-                this.getList()
-            },
-            handleCurrentChange(val) {
-                this.listQuery.page = val;
-                this.getList()
-            },
-            handleEnterPage(row){
-                this.$router.push({path: '/typeManagement/channelDetail', query: {'id' : row.id}});
-            },
-            handelAddChannel(){
-                this.$router.push({path: '/typeManagement/channelDetail'});
-            }
+    import fetch from '@/utils/fetch'
+export default {
+      name: 'channelManager',
+      computed: {
+      },
+      created() {
+      },
+      mounted() {
+        this.$nextTick(() => {
+          this.getList()
+      })
+      },
+      data() {
+        return {
+          total: null,
+          listLoading: false,
+          listQuery: {
+            page: 1,
+            limit: 15
+          },
+          tableData: []
         }
+      },
+      methods: {
+        getList() {
+          this.listLoading = true
+            let params = {
+            limit: this.listQuery.limit,
+            page: this.listQuery.page,
+            type: 0
+          }
+            fetch({
+            url: '/admin/distributor/lists',
+            method: 'post',
+            data: params
+          }).then(res => {
+            this.tableData = res.list
+                this.total = res.total
+                this.listLoading = false
+          })
+        },
+        setOpen(row) {
+          fetch({
+            url: '/distributor/setopen',
+            method: 'post',
+            data: { id: row.id, is_open: row.is_open }
+          }).then(res => {
+          }).catch(() => {
+            // 失败还原状态，按位非运算符完成0、1互转
+            row.is_open = ~row.is_open + 2
+            })
+        },
+        handleSizeChange(val) {
+          this.listQuery.limit = val
+            this.getList()
+        },
+        handleCurrentChange(val) {
+          this.listQuery.page = val
+            this.getList()
+        },
+        handleEnterPage(row) {
+          this.$router.push({ path: '/typeManagement/channelDetail', query: { 'id': row.id }})
+        },
+        handelAddChannel() {
+          this.$router.push({ path: '/typeManagement/channelDetail' })
+        }
+      }
     }
 </script>

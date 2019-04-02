@@ -87,7 +87,10 @@ export default {
   },
   methods: {
     refresh() {
-      this.getList()
+      this.$nextTick(() => {
+        this.getList()
+      })
+
       this.getManufacturerList()
     },
     getManufacturerList() {

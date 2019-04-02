@@ -111,9 +111,11 @@
         }
       },
       mounted() {
-        this.getList()
+        this.$nextTick(() => {
+          this.getList()
+        })
         this.$store.dispatch('GetAuditMenus')
-  },
+      },
       methods: {
         getList() {
           if (this.queryCondition.created_date) {
@@ -131,6 +133,7 @@
             page: this.listQuery.page
           }
           Object.assign(params, this.queryCondition)
+
           getReviewList(params).then(response => {
             this.list = response.data
             this.total = response.total

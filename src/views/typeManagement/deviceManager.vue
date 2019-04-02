@@ -54,12 +54,12 @@
                     </el-table-column>
                 </el-table>
                 <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                               :current-page.sync="listQuery.page"
-                               :page-sizes="[15,20,30, 50]" :page-size="listQuery.limit"
-                               layout="total, sizes, prev, pager, next, jumper" :total="total">
-                </el-pagination>
+                                   :current-page.sync="listQuery.page"
+                                   :page-sizes="[15,20,30, 50]" :page-size="listQuery.limit"
+                                   ref="pagination"
+                                   layout="total, sizes, prev, pager, next, jumper" :total="total">
+                    </el-pagination>
             </template>
-
         </div>
         <el-dialog
                 title="客户端添加设备设置"
@@ -98,18 +98,17 @@ export default {
       created() {
       },
       mounted() {
-        this.getList()
-        this.getAddType()
-        this.getTypeTree()
-        this.getBusinessList()
+        this.$nextTick(() => {
+          this.getList()
+          this.getAddType()
+          this.getTypeTree()
+          this.getBusinessList()
+        })
   },
       data() {
         return {
-          tableData: [],
           addFucSetModal: false,
           addFucForm: [],
-          total: 0,
-          limit: 0,
           token: getToken(),
           typeTree: [],
           childType: [],
@@ -120,12 +119,16 @@ export default {
           listQuery: {
             page: 1,
             limit: 15
-          }
+          },
+          tableData: [],
+          total: 0,
+          listLoading: false
         }
       },
       methods: {
         handleSizeChange(val) {
           this.listQuery.limit = val
+          this.listQuery.page = 1
           this.getList()
         },
         handleCurrentChange(val) {
@@ -133,6 +136,7 @@ export default {
           this.getList()
         },
         getList() {
+          this.listLoading = true
           fetch({
             url: '/device/deviceList',
             method: 'post',
@@ -145,9 +149,12 @@ export default {
               'business_id': this.business_id
             }
           }).then(res => {
+            this.listLoading = false
             this.tableData = res.data
-            this.total = Number(res.total)
-            this.limit = Number(res.per_page)
+            this.total = res.total
+            this.$nextTick(() => {
+              this.$refs.pagination.internalCurrentPage = res.current_page
+            })
           }).catch(res => {
             this.$message({
               type: 'error',

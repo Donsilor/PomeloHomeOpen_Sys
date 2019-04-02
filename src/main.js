@@ -12,9 +12,35 @@ import VueImg from 'v-img'
 Vue.use(ElementUI, {})
 
 Vue.use(VueImg)
-import * as filters from '@/utils/filter'; // 过滤工具
+import * as filters from '@/utils/filter' // 过滤工具
 
-Object.keys(filters).forEach(k => Vue.filter(k, filters[k])); // 注册过滤器
+Object.keys(filters).forEach(k => Vue.filter(k, filters[k])) // 注册过滤器
+
+// 创建构建
+Vue.mixin({
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      const enter_path = sessionStorage.getItem('enter_path', from.path)
+      if (from.meta.isdetail && to.path === enter_path) {
+        try {
+          vm.queryCondition = JSON.parse(sessionStorage.getItem('query_params') || '')
+          vm.listQuery = JSON.parse(sessionStorage.getItem('page_params'))
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    })
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.meta.isdetail) {
+      sessionStorage.setItem('query_params', JSON.stringify(this.queryCondition || ''))
+      sessionStorage.setItem('page_params', JSON.stringify(this.listQuery))
+      sessionStorage.setItem('enter_path', from.path)
+    }
+    next()
+  }
+})
+
 Vue.config.productionTip = false
 
 new Vue({

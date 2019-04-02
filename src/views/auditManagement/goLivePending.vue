@@ -157,7 +157,9 @@ import { parseTime } from '@/utils'
       },
       mounted() {
         this.$store.dispatch('GetAuditMenus')
-        this.getList()
+        this.$nextTick(() => {
+          this.getList()
+        })
         this.getProductType()
   },
       activated() {

@@ -52,58 +52,60 @@
     }
 </style>
 <script>
-    import fetch from '@/utils/fetch';
-    export default {
-        name: 'bigCategory',
-        computed: {
-        },
-        created() {
-        },
-        mounted() {
-            this.getList();
-        },
-        data() {
-            return {
-                total: null,
-                listLoading: false,
-                listQuery: {
-                    page: 1,
-                    limit: 15,
-                },
-                tableData: []
-            }
-        },
-        methods: {
-            getList(){
-                this.listLoading = true;
-                let params = {
-                    limit: this.listQuery.limit,
-                    page: this.listQuery.page
-                };
-                fetch({
-                    url: '/product/parenttype_lists',
-                    method: 'post',
-                    data: params
-                }).then(res=>{
-                    this.tableData = res.list;
-                    this.total = res.total;
-                    this.listLoading = false
-                })
-            },
-            handleSizeChange(val) {
-                this.listQuery.limit = val;
-                this.getList()
-            },
-            handleCurrentChange(val) {
-                this.listQuery.page = val;
-                this.getList()
-            },
-            handleEnterPage(row){
-                this.$router.push({path: '/typeManagement/addBigCategory', query: {'id' : row.id}});
-            },
-            handelAddCateGory(){
-                this.$router.push({path: '/typeManagement/addBigCategory'});
-            }
+    import fetch from '@/utils/fetch'
+export default {
+      name: 'bigCategory',
+      computed: {
+      },
+      created() {
+      },
+      mounted() {
+        this.$nextTick(() => {
+          this.getList()
+        })
+      },
+      data() {
+        return {
+          total: null,
+          listLoading: false,
+          listQuery: {
+            page: 1,
+            limit: 15
+          },
+          tableData: []
         }
+      },
+      methods: {
+        getList() {
+          this.listLoading = true
+          const params = {
+            limit: this.listQuery.limit,
+            page: this.listQuery.page
+          }
+          fetch({
+            url: '/product/parenttype_lists',
+            method: 'post',
+            data: params
+          }).then(res => {
+            this.tableData = res.list
+            this.total = res.total
+            this.listLoading = false
+          })
+        },
+        handleSizeChange(val) {
+          this.listQuery.limit = val
+          this.getList()
+        },
+        handleCurrentChange(val) {
+          this.listQuery.page = val
+          this.getList()
+        },
+        handleEnterPage(row) {
+          this.$router.push({ path: '/typeManagement/addBigCategory', query: { 'id': row.id }})
+        },
+        handelAddCateGory() {
+          this.$router.push({ path: '/typeManagement/addBigCategory' })
+        }
+      }
     }
 </script>

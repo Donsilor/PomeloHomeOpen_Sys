@@ -90,25 +90,25 @@ export const constantRouterMap = [
             path: 'firmwareToAudit',
             name: '固件上线申请页面',
             component: _import('auditManagement/firmwareToAudit'),
-            meta: { breadNumber: 1, notKeepAlive: true, key: 'firmwarePending' }
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'firmwarePending', isdetail: true }
           },
           {
             path: 'enterpriseToAudit',
             name: '企业审核页面',
             component: _import('auditManagement/enterpriseToAudit'),
-            meta: { breadNumber: 1, notKeepAlive: true, key: 'enterprisePending' }
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'enterprisePending', isdetail: true }
           },
           {
             path: 'productToAudit',
             name: '产品审核页面',
             component: _import('auditManagement/productToAudit'),
-            meta: { breadNumber: 1, notKeepAlive: true, key: 'productPending' }
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'productPending', isdetail: true }
           },
           {
             path: 'goLiveToAudit',
             name: 'H5上线申请审核页面',
             component: _import('auditManagement/goLiveToAudit'),
-            meta: { breadNumber: 1, notKeepAlive: true, key: 'goLivePending' }
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'goLivePending', isdetail: true }
           }
         ]
       },
@@ -132,7 +132,7 @@ export const constantRouterMap = [
             path: 'onlineProductDetail',
             name: 'onlineProductDetail',
             component: _import('productManagement/onlineProductDetail'),
-            meta: { key: 'onlineProducts' }
+            meta: { key: 'onlineProducts', isdetail: true }
           }
         ]
       },
@@ -180,7 +180,7 @@ export const constantRouterMap = [
             path: 'channelDetail',
             name: 'channelDetail',
             component: _import('typeManagement/channelDetail'),
-            meta: { breadNumber: 1, notKeepAlive: true, key: 'channelManager' }
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'channelManager', isdetail: true }
           },
           {
             path: 'voicePlatform',
@@ -196,19 +196,19 @@ export const constantRouterMap = [
             path: 'addNetwork',
             name: 'addNetwork',
             component: _import('typeManagement/addNetwork'),
-            meta: { breadNumber: 1, notKeepAlive: true, key: 'networkManager' }
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'networkManager', isdetail: true }
           },
           {
             path: 'addVoicePlatform',
             name: 'addVoicePlatform',
             component: _import('typeManagement/addVoicePlatform'),
-            meta: { breadNumber: 1, notKeepAlive: true, key: 'voicePlatform' }
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'voicePlatform', isdetail: true }
           },
           {
             path: 'categoryDetail',
             name: 'categoryDetail',
             component: _import('typeManagement/categoryDetail'),
-            meta: { breadNumber: 1, notKeepAlive: true, key: 'existedCategory' }
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'existedCategory', isdetail: true }
           },
           {
             path: 'addCategoryDetail',
@@ -220,7 +220,7 @@ export const constantRouterMap = [
             path: 'deviceDetail',
             name: 'deviceDetail',
             component: _import('typeManagement/deviceDetail'),
-            meta: { breadNumber: 1, notKeepAlive: true, key: 'deviceManager' }
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'deviceManager', isdetail: true }
           },
           {
             path: 'addDevice',
@@ -232,7 +232,7 @@ export const constantRouterMap = [
             path: 'addBigCategory',
             name: 'addBigCategory',
             component: _import('typeManagement/addBigCategory'),
-            meta: { breadNumber: 1, notKeepAlive: true, key: 'bigCategory' }
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'bigCategory', isdetail: true }
           },
           {
             path: 'manufacturer',

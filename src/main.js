@@ -5,6 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import App from './App'
 import router from './router'
 import store from './store'
+import { getToken } from './utils/auth'
 import '@/icons' // icon
 import '@/permission' // 权限
 import VueImg from 'v-img'
@@ -37,6 +38,15 @@ Vue.mixin({
       sessionStorage.setItem('page_params', JSON.stringify(this.listQuery))
       sessionStorage.setItem('enter_path', from.path)
     }
+    next()
+  }
+})
+
+// 登录拦截
+router.beforeEach((to, from, next) => {
+  if (to.path !== '/login' && !getToken()) {
+    next('/login')
+  } else {
     next()
   }
 })

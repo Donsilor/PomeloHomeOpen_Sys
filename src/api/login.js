@@ -1,4 +1,4 @@
-import fetch from '@/utils/fetch';
+import fetch from '@/utils/fetch'
 
 export function login(mail, password) {
   // console.log('登录信息', mail, password);
@@ -21,25 +21,25 @@ export function logout() {
 }
 
 export function getAuditMenus() {
-    return fetch({
-        url: '/admin/apprmenu',
-        method: 'post',
-        data: {}
-    })
+  return fetch({
+    url: '/admin/apprmenu',
+    method: 'post',
+    data: {}
+  })
 }
 
 export function getDocumentMenus() {
-    return fetch({
-        url: '/admin/documentMenu',
-        method: 'post',
-        data: {}
-    })
+  return fetch({
+    url: '/admin/documentMenu',
+    method: 'post',
+    data: {}
+  })
 }
 
 export function getAuthorityMenus() {
-    return fetch({
-        url: '/admin/menu',
-        method: 'post',
-        data: {}
-    })
+  return fetch({
+    url: '/admin/menu',
+    method: 'post',
+    data: {}
+  })
 }

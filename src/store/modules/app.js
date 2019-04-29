@@ -4,7 +4,7 @@ const app = {
   state: {
     sidebar: {
       opened: !+Cookies.get('sidebarStatus')
-    },
+    }
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -15,9 +15,9 @@ const app = {
       }
       state.sidebar.opened = !state.sidebar.opened
     },
-    breadListMutations(getters,list){
-      getters.breadListState=list;
-      sessionStorage.setItem('breadListStorage',list);
+    breadListMutations(getters, list) {
+      getters.breadListState = list
+      sessionStorage.setItem('breadListStorage', list)
     }
   },
   actions: {
@@ -25,9 +25,9 @@ const app = {
       commit('TOGGLE_SIDEBAR')
     }
   },
-  getters:{
-    breadListState(){
-      return JSON.parse(sessionStorage.getItem('breadListStorage')) || [];
+  getters: {
+    breadListState() {
+      return JSON.parse(sessionStorage.getItem('breadListStorage')) || []
     }
   }
 }

@@ -706,6 +706,7 @@ export default {
           .then(res => {
             this.config.visible = false
             console.log(res)
+            this.getHelpList()
           })
       }
       if (this.config.type === '2') {
@@ -722,6 +723,7 @@ export default {
           .then(res => {
             this.config.visible = false
             console.log(res)
+            this.getHelpList()
           })
           .catch(err => {
             console.log(err)

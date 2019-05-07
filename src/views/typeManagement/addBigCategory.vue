@@ -348,6 +348,7 @@ export default {
     if (this.isEdit) {
       this.getCategoryInfo()
     }
+    this.getHelpList()
   },
   mounted() { },
   data() {
@@ -438,6 +439,17 @@ export default {
     }
   },
   methods: {
+    getHelpList() {
+      fetch({
+        url: '/producttypehelp/lists',
+        method: 'post',
+        data: {
+          type_id: this.$route.query.id
+        }
+      }).then(res => {
+        console.log('getHelpList: ' + res)
+      })
+    },
     getCategoryInfo() {
       fetch({
         url: '/product/type_info',

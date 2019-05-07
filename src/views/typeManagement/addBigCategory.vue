@@ -229,6 +229,7 @@
               <el-table-column label="是否发布">
                 <template slot-scope="scope">
                   <el-switch v-model="scope.row.status"
+                            @change="open('2',scope.row)"
                              active-value="1"
                              inactive-value="0"></el-switch>
                 </template>
@@ -440,6 +441,33 @@ export default {
   mounted() { },
 
   methods: {
+    open(type, item) {
+      console.log(type, item.status)
+      // this.$confirm('是否发布?', '提示', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      //   type: 'warning'
+      // }).then(() => {
+      //   this.$message({
+      //     type: 'success',
+      //     message: '发布成功!'
+      //   })
+      // }).catch(() => {
+      //   this.$message({
+      //     type: 'info',
+      //     message: '已取消发布'
+      //   })
+      // })
+      this.config.type = type
+      if (type === '2' && item) {
+        this.config.title = item.title
+        this.config.detail = item.detail
+        this.config.status = item.status
+        this.config.id = item.id
+      }
+      this.submit()
+      console.log(this.config.status)
+    },
     getHelpList() {
       fetch({
         url: '/producttypehelp/lists',
@@ -450,7 +478,7 @@ export default {
       }).then(res => {
         console.log('getHelpList: ' + res)
         // if (res.data.code === '200') {
-        console.log(res.list)
+        // console.log(res.list)
         this.tableData = res.list.map(item => {
           return {
             title: item.title,
@@ -722,7 +750,7 @@ export default {
         })
           .then(res => {
             this.config.visible = false
-            console.log(res)
+            // console.log(res)
             this.getHelpList()
           })
           .catch(err => {

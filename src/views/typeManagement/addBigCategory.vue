@@ -344,13 +344,6 @@ import { getToken } from '@/utils/auth'
 export default {
   name: 'addBigCategory',
   computed: {},
-  created() {
-    if (this.isEdit) {
-      this.getCategoryInfo()
-    }
-    this.getHelpList()
-  },
-  mounted() { },
   data() {
     return {
       isEdit: !!this.$route.query.id,
@@ -430,14 +423,22 @@ export default {
         title: '',
         detail: ''
       }, // 使用帮助弹框
-      tableData: [{
+      tableData: [/* {
         title: 'test title',
         updateTime: '2019-02-12 00:00:00',
         status: '1',
         detail: 'test detailtest detailtest detailtest detailtest detailtest detailtest detailtest detailtest detail'
-      }] // 使用帮助
+      } */] // 使用帮助
     }
   },
+  created() {
+    if (this.isEdit) {
+      this.getCategoryInfo()
+    }
+    this.getHelpList()
+  },
+  mounted() { },
+
   methods: {
     getHelpList() {
       fetch({
@@ -448,6 +449,18 @@ export default {
         }
       }).then(res => {
         console.log('getHelpList: ' + res)
+        // if (res.data.code === '200') {
+        console.log(res.list)
+        this.tableData = res.list.map(item => {
+          return {
+            title: item.title,
+            detail: item.content,
+            updateTime: item.created_at,
+            status: item.valid,
+            id: item.id
+          }
+        })
+        // }
       })
     },
     getCategoryInfo() {
@@ -634,6 +647,7 @@ export default {
     },
     // 新增和编辑 帮助
     newItem(type, header, item) {
+      console.log(item)
       this.config.type = type
       this.config.header = header
       this.config.visible = true
@@ -641,6 +655,8 @@ export default {
       if (type === '2' && item) {
         this.config.title = item.title
         this.config.detail = item.detail
+        this.config.status = item.status
+        this.config.id = item.id
       } else {
         this.config.title = ''
         this.config.detail = ''
@@ -674,15 +690,43 @@ export default {
     },
     // 保存修改或者新增
     submit() {
+      console.log('当前弹窗的类型' + this.config.type)
+      console.log('点击数据的id' + this.config.id)
       this.config.visible = false
-      fetch({
-        url: '/saveItem',
-        method: 'post',
-        data: this.config
-      })
-        .then(res => {
-          this.config.visible = false
+      if (this.config.type === '1') {
+        fetch({
+          url: '/producttypehelp/add',
+          method: 'post',
+          data: {
+            type_id: this.$route.query.id,
+            title: this.config.title,
+            content: this.config.detail
+          }
         })
+          .then(res => {
+            this.config.visible = false
+            console.log(res)
+          })
+      }
+      if (this.config.type === '2') {
+        fetch({
+          url: '/producttypehelp/edit',
+          method: 'post',
+          data: {
+            title: this.config.title,
+            content: this.config.detail,
+            valid: this.config.status,
+            id: this.config.id
+          }
+        })
+          .then(res => {
+            this.config.visible = false
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     }
   },
 

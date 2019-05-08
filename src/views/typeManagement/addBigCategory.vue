@@ -230,8 +230,8 @@
                 <template slot-scope="scope">
                   <el-switch v-model="scope.row.status"
                             @change="open('2',scope.row)"
-                             active-value="1"
-                             inactive-value="0"></el-switch>
+                             :active-value='1'
+                             :inactive-value='0'></el-switch>
                 </template>
               </el-table-column>
               <el-table-column label="操作"
@@ -347,6 +347,8 @@ export default {
   computed: {},
   data() {
     return {
+      // activeValue: '',
+      // inactiveValue: '',
       isEdit: !!this.$route.query.id,
       token: getToken(),
       isLoadData: false,
@@ -441,33 +443,46 @@ export default {
   mounted() { },
 
   methods: {
+    // 是否发布
     open(type, item) {
       console.log(type, item.status)
-      // this.$confirm('是否发布?', '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   type: 'warning'
-      // }).then(() => {
-      //   this.$message({
-      //     type: 'success',
-      //     message: '发布成功!'
-      //   })
-      // }).catch(() => {
-      //   this.$message({
-      //     type: 'info',
-      //     message: '已取消发布'
-      //   })
-      // })
-      this.config.type = type
-      if (type === '2' && item) {
-        this.config.title = item.title
-        this.config.detail = item.detail
-        this.config.status = item.status
-        this.config.id = item.id
-      }
-      this.submit()
-      console.log(this.config.status)
+      this.$confirm('是否发布?', '提示', {
+        confirmButtonText: '确认发布',
+        cancelButtonText: '取消发布',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '发布成功!'
+        })
+        // this.activeValue = '1'
+        this.config.type = type
+        if (type === '2' && item) {
+          this.config.title = item.title
+          this.config.detail = item.detail
+          this.config.status = '1'
+          this.config.id = item.id
+        }
+        this.submit()
+        console.log(this.config.status)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消发布'
+        })
+        // this.inactiveValue = '0'
+        this.config.type = type
+        if (type === '2' && item) {
+          this.config.title = item.title
+          this.config.detail = item.detail
+          this.config.status = '0'
+          this.config.id = item.id
+        }
+        this.submit()
+        console.log(this.config.status)
+      })
     },
+    // 获取大品类数据列表
     getHelpList() {
       fetch({
         url: '/producttypehelp/lists',

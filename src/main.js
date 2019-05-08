@@ -9,9 +9,10 @@ import { getToken } from './utils/auth'
 import '@/icons' // icon
 import '@/permission' // 权限
 import VueImg from 'v-img'
+import moment from 'vue-moment'
 
 Vue.use(ElementUI, {})
-
+Vue.use(moment)
 Vue.use(VueImg)
 import * as filters from '@/utils/filter' // 过滤工具
 

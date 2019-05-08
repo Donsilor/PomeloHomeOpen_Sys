@@ -204,7 +204,7 @@
                   <el-input type="textarea"
                             :rows="6"
                             placeholder="请输入内容"
-                            v-model="config.detail"></el-input>
+                            v-model="config.content"></el-input>
                 </el-form-item>
               </el-form>
               <div slot="footer"
@@ -224,14 +224,19 @@
                                width="80"></el-table-column>
               <el-table-column prop="title"
                                label="标题"></el-table-column>
-              <el-table-column prop="updateTime"
-                               label="创建时间"></el-table-column>
+              <el-table-column label="创建时间">
+                                <template slot-scope="scope">
+                                  {{scope.row.created_at | moment("YYYY-MM-DD HH:mm:ss")}}
+                                </template>
+                              </el-table-column>
               <el-table-column label="是否发布">
                 <template slot-scope="scope">
-                  <el-switch v-model="scope.row.status"
-                            @change="open('2',scope.row)"
+                  <el-switch v-model="scope.row.valid"
                              :active-value='1'
-                             :inactive-value='0'></el-switch>
+                             :inactive-value='0'
+                              disabled
+                              @click.native="showConfirm('2',scope.row)"
+                             ></el-switch>
                 </template>
               </el-table-column>
               <el-table-column label="操作"
@@ -251,6 +256,9 @@
   </div>
 </template>
 <style lang="scss">
+.el-switch.is-disabled .el-switch__core, .el-switch.is-disabled .el-switch__label{
+  cursor: pointer;
+}
 .addCategoryPage {
   .el-form-item__error {
     padding: 5px 15px !important;
@@ -347,8 +355,6 @@ export default {
   computed: {},
   data() {
     return {
-      // activeValue: '',
-      // inactiveValue: '',
       isEdit: !!this.$route.query.id,
       token: getToken(),
       isLoadData: false,
@@ -424,14 +430,9 @@ export default {
         visible: false,
         header: '新增帮助',
         title: '',
-        detail: ''
+        content: ''
       }, // 使用帮助弹框
-      tableData: [/* {
-        title: 'test title',
-        updateTime: '2019-02-12 00:00:00',
-        status: '1',
-        detail: 'test detailtest detailtest detailtest detailtest detailtest detailtest detailtest detailtest detail'
-      } */] // 使用帮助
+      tableData: [] // 使用帮助
     }
   },
   created() {
@@ -444,43 +445,33 @@ export default {
 
   methods: {
     // 是否发布
-    open(type, item) {
-      console.log(type, item.status)
-      this.$confirm('是否发布?', '提示', {
-        confirmButtonText: '确认发布',
-        cancelButtonText: '取消发布',
+    showConfirm(type, item) {
+      this.$confirm('是否改变发布状态?', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '发布成功!'
-        })
-        // this.activeValue = '1'
         this.config.type = type
         if (type === '2' && item) {
           this.config.title = item.title
           this.config.detail = item.detail
-          this.config.status = '1'
+          this.config.valid = +!item.valid
           this.config.id = item.id
+          this.submit()
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功!'
+              })
+            })
         }
-        this.submit()
-        console.log(this.config.status)
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消发布'
-        })
-        // this.inactiveValue = '0'
-        this.config.type = type
-        if (type === '2' && item) {
-          this.config.title = item.title
-          this.config.detail = item.detail
-          this.config.status = '0'
-          this.config.id = item.id
-        }
-        this.submit()
-        console.log(this.config.status)
       })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消!'
+          })
+        })
     },
     // 获取大品类数据列表
     getHelpList() {
@@ -491,19 +482,7 @@ export default {
           type_id: this.$route.query.id
         }
       }).then(res => {
-        console.log('getHelpList: ' + res)
-        // if (res.data.code === '200') {
-        // console.log(res.list)
-        this.tableData = res.list.map(item => {
-          return {
-            title: item.title,
-            detail: item.content,
-            updateTime: item.created_at,
-            status: item.valid,
-            id: item.id
-          }
-        })
-        // }
+        this.tableData = res.list
       })
     },
     getCategoryInfo() {
@@ -690,24 +669,22 @@ export default {
     },
     // 新增和编辑 帮助
     newItem(type, header, item) {
-      console.log(item)
       this.config.type = type
       this.config.header = header
       this.config.visible = true
       // 编辑
       if (type === '2' && item) {
         this.config.title = item.title
-        this.config.detail = item.detail
-        this.config.status = item.status
+        this.config.content = item.content
+        this.config.valid = item.valid
         this.config.id = item.id
       } else {
         this.config.title = ''
-        this.config.detail = ''
+        this.config.content = ''
       }
     },
     // 删除帮助
     deleteItem(item) {
-      console.log('deleteItem')
       this.$confirm('删除后，该帮助指引将不在帮助中显示，确认请继续', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -733,11 +710,9 @@ export default {
     },
     // 保存修改或者新增
     submit() {
-      console.log('当前弹窗的类型' + this.config.type)
-      console.log('点击数据的id' + this.config.id)
       this.config.visible = false
       if (this.config.type === '1') {
-        fetch({
+        return fetch({
           url: '/producttypehelp/add',
           method: 'post',
           data: {
@@ -748,24 +723,22 @@ export default {
         })
           .then(res => {
             this.config.visible = false
-            console.log(res)
             this.getHelpList()
           })
       }
       if (this.config.type === '2') {
-        fetch({
+        return fetch({
           url: '/producttypehelp/edit',
           method: 'post',
           data: {
             title: this.config.title,
-            content: this.config.detail,
-            valid: this.config.status,
+            content: this.config.content,
+            valid: this.config.valid,
             id: this.config.id
           }
         })
           .then(res => {
             this.config.visible = false
-            // console.log(res)
             this.getHelpList()
           })
           .catch(err => {

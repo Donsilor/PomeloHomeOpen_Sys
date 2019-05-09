@@ -1,0 +1,2 @@
+webpackJsonp([70],{Uylf:function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var r=t("lk9y"),a=t("qRw0"),u=t("C7Lr"),l=u(r.a,a.a,!1,null,null,null);n.default=l.exports},lk9y:function(e,n,t){"use strict";n.a={name:"enterpriseManagementIndex"}},qRw0:function(e,n,t){"use strict";var r=function(){var e=this,n=e.$createElement;return(e._self._c||n)("router-view")},a=[],u={render:r,staticRenderFns:a};n.a=u}});
+//# sourceMappingURL=70.a6fb442e2f2d7db766d9.js.map

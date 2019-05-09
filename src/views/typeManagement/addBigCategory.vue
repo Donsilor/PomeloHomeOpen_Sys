@@ -185,7 +185,7 @@
               </el-form>
             </el-col>
           </el-tab-pane>
-          <el-tab-pane label="使用帮助">
+          <el-tab-pane v-if="isEdit" label="使用帮助">
             <div class="btns">
               <el-button @click="newItem('1', '新增帮助')">新增帮助</el-button>
             </div>
@@ -437,8 +437,8 @@ export default {
   created() {
     if (this.isEdit) {
       this.getCategoryInfo()
+      this.getHelpList()
     }
-    this.getHelpList()
   },
   components: {},
   mounted() { },

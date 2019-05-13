@@ -269,7 +269,7 @@
 
           <el-row class="card-row">
             <el-col :span="3"
-                    class="card-span-left edit-label"><span class="red">*</span>厂商电话</el-col>
+                    class="card-span-left edit-label"><span class="red">*</span>客服电话</el-col>
             <el-col :span="16"
                     :offset="1"
                     class="card-span-right">
@@ -619,9 +619,9 @@ export default {
       h5version_list: [],
 
       rules: {
-        // 厂商电话验证规则
+        // 客服电话验证规则
         vendor_phone: [
-          { required: true, message: '请输入厂商电话', trigger: 'blur' }
+          { required: true, message: '请输入客服电话', trigger: 'blur' }
         ]
       }
     }
@@ -855,7 +855,7 @@ export default {
         return this.$message.error('产品名称不能为空！')
       }
       if (!this.productDetail.vendor_phone) {
-        return this.$message.error('厂商电话不能为空！')
+        return this.$message.error('客服电话不能为空！')
       }
       if (this.productDetail.name != this.copyProductDetail.name) {
         this.modifyData.name = this.productDetail.name

@@ -597,6 +597,15 @@ export default {
   name: 'onlineProductDetail',
 
   data() {
+    var checkPhone = (rule, value, callback) => {
+      const reg = /^1\d{10}$/
+      if (reg.test(value)) {
+        callback()
+      } else {
+        return callback(new Error('请输入正确的手机号'))
+      }
+    }
+
     return {
       token: getToken(),
       product_id: '', // 产品id
@@ -621,7 +630,8 @@ export default {
       rules: {
         // 客服电话验证规则
         vendor_phone: [
-          { required: true, message: '请输入客服电话', trigger: 'blur' }
+          { required: true, message: '请输入客服电话', trigger: 'blur' },
+          { validator: checkPhone }
         ]
       }
     }

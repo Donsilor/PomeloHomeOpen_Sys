@@ -232,423 +232,415 @@
 </template>
 
 <script>
-    import fetch from '@/utils/fetch';
-    import {getToken} from '@/utils/auth';
-    import {Message} from 'element-ui';
+    import fetch from '@/utils/fetch'
+import { getToken } from '@/utils/auth'
+import { Message } from 'element-ui'
 
-    export default {
-        name: 'enterpriseInfo',
+export default {
+      name: 'enterpriseInfo',
 
-        data() {
-            return {
-                token:getToken(),
-                checkDetail: {},
-                business_name: '',
-                activeName:'enterpriseInfo',
-                edit:false,
-                rules:{
-                    contacts:[ { required: true, message: '联系人姓名不能为空', trigger: 'blur' }],
-                    mail:[
-                        { required: true, message: '邮箱不能为空'},
-                        {validator(rule, value, callback) {
-                            if (!/^[\w\.-]+@\w+\.\w{2,}$/.test(value)) {
-                                callback('请输入正确的邮箱地址');
-                                return;
-                            }
-                            callback();
-                        }}
-                    ],
-                    contacts_mobile:[
-                        { required: true, message: '联系人手机不能为空' },
-                        {validator(rule, value, callback) {
-                            if (!/^1\d{10}$/.test(value)) {
-                                callback('请填写11位正确的手机号码');
-                                return;
-                            }
-                            callback();
-                        }}
-                    ],
-                    contacts_duty : [
-                        { required: true, message: '职位不能为空', trigger: 'blur' }
-                    ],
-                    name: [
-                        { required: true, message: '公司名称不能为空', trigger: 'blur' }
-                    ],
-                    address : [
-                        { required: true, message: '公司地址不能为空', trigger: 'blur' }
-                    ],
-                    customer_num:[
-                        { required: true, message: '客服电话不能为空', trigger: 'blur' }
-                    ],
-                    registration_No : [
-                        { required: true, message: '营业执照号不能为空'},
-                        {validator(rule, value, callback) {
-                            if (!/(?!^\d+$)(?!^[a-zA-Z]+$)[0-9a-zA-Z]{18}/.test(value)) {
-                                callback('请填写18位正确的营业执照号');
-                                return;
-                            }
-                            callback();
-                        }}
-                    ],
-                    type : [
-                        {required: true,message:'合作产品不能为空'},
-                        {validator(rule, value, callback, source, options) {
-                            if (value.length <=0) {
-                                callback('合作产品不能为空！');
-                            }
-                            callback();
-                        }}
-                    ],
-                    brands : [
-                        {required: true,message:'合作品牌不能为空'},
-                        {validator(rule, value, callback, source, options) {
-                            if (value.length <=0) {
-                                callback('合作品牌不能为空！');
-                            }
-                            callback();
-                        }}
-                    ],
+      data() {
+        return {
+          token: getToken(),
+          checkDetail: {},
+          business_name: '',
+          activeName: 'enterpriseInfo',
+          edit: false,
+          rules: {
+            contacts: [{ required: true, message: '联系人姓名不能为空', trigger: 'blur' }],
+            mail: [
+              { required: true, message: '邮箱不能为空' },
+              { validator(rule, value, callback) {
+                if (!/^[\w\.-]+@\w+\.\w{2,}$/.test(value)) {
+                  callback('请输入正确的邮箱地址')
+                  return
+                }
+                callback()
+              } }
+            ],
+            contacts_mobile: [
+              { required: true, message: '联系人手机不能为空' },
+              { validator(rule, value, callback) {
+                if (!/^1\d{10}$/.test(value)) {
+                  callback('请填写11位正确的手机号码')
+                  return
+                }
+                callback()
+              } }
+            ],
+            contacts_duty: [
+              { required: true, message: '职位不能为空', trigger: 'blur' }
+            ],
+            name: [
+              { required: true, message: '公司名称不能为空', trigger: 'blur' }
+            ],
+            address: [
+              { required: true, message: '公司地址不能为空', trigger: 'blur' }
+            ],
+            customer_num: [
+              { required: true, message: '客服电话不能为空', trigger: 'blur' }
+            ],
+            registration_No: [
+              { required: true, message: '营业执照号不能为空' },
+              { validator(rule, value, callback) {
+                if (!/(?!^\d+$)(?!^[a-zA-Z]+$)[0-9a-zA-Z]{18}/.test(value)) {
+                  callback('请填写18位正确的营业执照号')
+                  return
+                }
+                callback()
+              } }
+            ],
+            type: [
+              { required: true, message: '合作产品不能为空' },
+              { validator(rule, value, callback, source, options) {
+                if (value.length <= 0) {
+                  callback('合作产品不能为空！')
+                }
+                callback()
+              } }
+            ],
+            brands: [
+              { required: true, message: '合作品牌不能为空' },
+              { validator(rule, value, callback, source, options) {
+                if (value.length <= 0) {
+                  callback('合作品牌不能为空！')
+                }
+                callback()
+              } }
+            ]
 
-                },
-                uploadForm:{
-                    file_name:'',
-                    url:'',
-                    url_s:'',
-                    fileData:null
-                },
-                brandForm:{
-                    name:'',
-                    name_e:'',
-                    logo:'',
-                    logo_s:'',
-                    cert:'',
-                    cert_s:'',
-                    logoData:null,
-                    certData:null
-                },
-                otherRules:{
-                    file_name:[
-                        { required: true, message: '文件名称不能为空'},
-                    ],
-                    url:[
-                        {required: true,message:'请上传文件'},
-                    ]
-                },
-                brandRules:{
-                    name:[
-                        { required: true, message: '品牌名称不能为空'},
-                    ],
-                    name_e:[
-                        { required: true, message: '品牌英文不能为空'},
-                    ],
-                    logo:[
-                        { required: true, message: '请上传品牌logo'},
-                    ],
-                    cert:[
-                        { required: true, message: '请上传品牌资质'},
-                    ],
-                },
-                typeList:[],
-                typeDialogVisible:false,
-                otherImageVisible:false,
-                brandDialogVisible:false,
-                navs:[
-                    {
-                        name: '厂商信息',
-                        url: '/enterpriseManagement/enterpriseInfo',
-                        type: 'enterpriseInfo',
-                    },
-                    {
-                        name: '产品列表',
-                        url: '/enterpriseManagement/enterpriseProducts',
-                        type:'enterpriseProducts',
-                    }
-                ]
+          },
+          uploadForm: {
+            file_name: '',
+            url: '',
+            url_s: '',
+            fileData: null
+          },
+          brandForm: {
+            name: '',
+            name_e: '',
+            logo: '',
+            logo_s: '',
+            cert: '',
+            cert_s: '',
+            logoData: null,
+            certData: null
+          },
+          otherRules: {
+            file_name: [
+              { required: true, message: '文件名称不能为空' }
+            ],
+            url: [
+              { required: true, message: '请上传文件' }
+            ]
+          },
+          brandRules: {
+            name: [
+              { required: true, message: '品牌名称不能为空' }
+            ],
+            name_e: [
+              { required: true, message: '品牌英文不能为空' }
+            ],
+            logo: [
+              { required: true, message: '请上传品牌logo' }
+            ],
+            cert: [
+              { required: true, message: '请上传品牌资质' }
+            ]
+          },
+          typeList: [],
+          typeDialogVisible: false,
+          otherImageVisible: false,
+          brandDialogVisible: false,
+          navs: [
+            {
+              name: '厂商信息',
+              url: '/enterpriseManagement/enterpriseInfo',
+              type: 'enterpriseInfo'
+            },
+            {
+              name: '产品列表',
+              url: '/enterpriseManagement/enterpriseProducts',
+              type: 'enterpriseProducts'
             }
+          ]
+        }
+      },
+      created() {
+        this.business_id = this.$route.query.business_id
+  },
+      mounted() {
+        this.getReviewInfo()
+  },
+      methods: {
+        // 获取审核详情
+        getReviewInfo() {
+          const _this = this
+          const params = {
+            business_id: _this.business_id
+          }
+          fetch({
+            url: '/user/detail',
+            method: 'post',
+            data: params
+          }).then(response => {
+            this.checkDetail = response
+          })
         },
-        created() {
-            this.business_id = this.$route.query.business_id;
+        doEdit() {
+          if (this.edit) {
+            this.modify()
+            return
+          }
+          this.edit = true
+          this.getTypeList()
         },
-        mounted() {
-            this.getReviewInfo();
-        },
-        methods: {
-            // 获取审核详情
-            getReviewInfo() {
-                let _this = this;
-                let params = {
-                    business_id: _this.business_id
-                };
-                fetch({
-                    url:'/user/detail',
-                    method:'post',
-                    data:params
-                }).then(response => {
-                    this.checkDetail = response;
-                });
-            },
-            doEdit(){
-                if(this.edit){
-                    this.modify();
-                    return;
+        modify() {
+          this.$refs.form.validate(valid => {
+            if (valid) {
+              const types = this.checkDetail.type.map(function(v) {
+                return v.type_id
+              })
+              const brands = this.checkDetail.brands.map(function(v) {
+                return {
+                  brand_id: v.brand_id ? v.brand_id : 0,
+                  brand_name: v.brand_name ? v.brand_name : '',
+                  manufacturer_name: v.manufacturer_name ? v.manufacturer_name : '',
+                  logo: v.logoData ? v.logoData : {
+                    file_id: v.logo_id,
+                    type: 3,
+                    file_url: v.logo
+                  },
+                  certs: [v.certsData ? v.certsData : {
+                    file_id: v.cert_ids,
+                    type: 9,
+                    file_url: v.certs
+                  }]
                 }
-                this.edit = true;
-                this.getTypeList();
-            },
-            modify(){
-                this.$refs.form.validate(valid=>{
-                    if(valid){
-                        let types = this.checkDetail.type.map(function (v) {
-                            return v.type_id;
-                        });
-                        let brands = this.checkDetail.brands.map(function (v) {
-
-                            return {
-                                brand_id:v.brand_id?v.brand_id:0,
-                                brand_name:v.brand_name?v.brand_name:'',
-                                manufacturer_name:v.manufacturer_name?v.manufacturer_name:'',
-                                logo:v.logoData?v.logoData:{
-                                    file_id:v.logo_id,
-                                    type:3,
-                                    file_url:v.logo
-                                },
-                                certs:[v.certsData?v.certsData:{
-                                    file_id:v.cert_ids,
-                                    type:9,
-                                    file_url:v.certs
-                                }]
-                            };
-                        });
-                        let licenses = this.checkDetail.licenses.map(function (v) {
-                            return v.fileData ? Object.assign({},v.fileData,{filename:v.filename}) : {
-                                    file_id:v.file_id,
-                                    type:v.type,
-                                    filename:v.filename
-                                }
-                        });
-                        let formData = JSON.parse(JSON.stringify(this.checkDetail));
-                        formData.business_id = this.business_id;
-                        formData.types = types;
-                        formData.brands = brands;
-                        formData.licenses = licenses;
-                        delete formData.type;
-                        fetch({
-                            url:'/user/edit_by_admin',
-                            method:'post',
-                            data:formData
-                        }).then(res=>{
-                            this.$message.info('保存成功');
-                            this.$router.go(-1);
-                        }).catch(e=>{
-                            this.$message.error(e.msg);
-                        })
-                    }
-                })
-            },
-            beforeImgUpload(file){
-                const isLt5M = file.size / 1024 / 1024 < 5;
-                if (!isLt5M) {
-                    this.$message.error('请上传5M大小内图片文件');
+              })
+              const licenses = this.checkDetail.licenses.map(function(v) {
+                return v.fileData ? Object.assign({}, v.fileData, { filename: v.filename }) : {
+                  file_id: v.file_id,
+                  type: v.type,
+                  filename: v.filename
                 }
-                return isLt5M;
-            },
-            handleImgSuccess(index){
-                let _this = this;
-                return function g(res, file,fileList,ind=index){
-                    if(res.code!==200){
-                        _this.$message.error('上传出错，请重新上传');
-                        return;
-                    }
-                    /*let arry = [].concat(_this.checkDetail.licenses);
+              })
+              const formData = JSON.parse(JSON.stringify(this.checkDetail))
+              formData.business_id = this.business_id
+              formData.types = types
+              formData.brands = brands
+              formData.licenses = licenses
+              delete formData.type
+              fetch({
+                url: '/user/edit_by_admin',
+                method: 'post',
+                data: formData
+              }).then(res => {
+                this.$message.info('保存成功')
+                this.$router.go(-1)
+              }).catch(e => {
+                this.$message.error(e.msg)
+              })
+            }
+          })
+        },
+        beforeImgUpload(file) {
+          const isLt5M = file.size / 1024 / 1024 < 5
+          if (!isLt5M) {
+            this.$message.error('请上传5M大小内图片文件')
+          }
+          return isLt5M
+        },
+        handleImgSuccess(index) {
+          const _this = this
+          return function g(res, file, fileList, ind = index) {
+            if (res.code !== 200) {
+              _this.$message.error('上传出错，请重新上传')
+              return
+            }
+            /* let arry = [].concat(_this.checkDetail.licenses);
                     arry[ind].file_url = res.result.file_url;
                     _this.checkDetail.licenses = arry;*/
-                    _this.checkDetail.licenses[ind].file_url = res.result.file_url;
-                    _this.checkDetail.licenses[ind].fileData = res.result;
-                }
-
-            },
-            handeler(res, file,fileList){
-                if(res.code!==200){
-                    this.$message.error('上传出错，请重新上传');
-                    return;
-                }
-                if(res.result.type==8){
-                    this.uploadForm.url= res.result.filename;
-                    this.uploadForm.url_s= res.result.file_url;
-                    this.uploadForm.fileData= res.result;
-                }
-                else if(res.result.type==3){
-                    this.brandForm.logo= res.result.filename;
-                    this.brandForm.logo_s= res.result.file_url;
-                    this.brandForm.logoData= res.result;
-                }
-                else if(res.result.type==9){
-                    this.brandForm.cert= res.result.filename;
-                    this.brandForm.cert_s= res.result.file_url;
-                    this.brandForm.certData= res.result;
-                }
-
-            },
-            handleImgElseSuccess(index){
-                let _this = this;
-                return function g(res, file,fileList,ind=index){
-                    if(res.code!==200){
-                        _this.$message.error('上传出错，请重新上传');
-                        return;
-                    }
-                    if(res.result.type==3){
-                        _this.checkDetail.brands[ind].logo = res.result.file_url;
-                        _this.checkDetail.brands[ind].logoData = res.result;
-                    }
-                    else if(res.result.type==9){
-                        _this.checkDetail.brands[ind].certs = res.result.file_url;
-                        _this.checkDetail.brands[ind].certsData = res.result;
-                    }
-                }
-            },
-            removeType(index,item){
-                fetch({
-                    url:'/admin/check_has_product',
-                    method:'post',
-                    data:{type_id:item.type_id,business_id:this.business_id}
-                }).then(res=>{
-                    if(res.ret==0){
-                        this.checkDetail.type.splice(index,1);
-                    }else{
-                        this.$message.warning('该产品下有关联设备，不可删除！');
-                    }
-                }).catch(e=>{
-                    this.$message.error(e.msg);
-                });
-            },
-            addType(){
-                let arry = [];
-                for(let item of this.typeList){
-                    if(item.status){
-                        arry.push({
-                            type_id:item.id,
-                            name:item.name
-                        })
-                    }
-                }
-                this.checkDetail.type = arry;
-                this.typeDialogVisible = false;
-            },
-            addLicense(){
-                this.$refs.uploadForm.validate(valid=>{
-                    if(valid){
-                        this.checkDetail.licenses.push({
-                            type:8,
-                            filename:this.uploadForm.file_name,
-                            file_url:this.uploadForm.url_s,
-                            fileData:this.uploadForm.fileData,
-                        });
-                        this.$refs.uploadForm.resetFields();
-                        this.otherImageVisible = false;
-                    }
-                });
-            },
-            removeLicense(index){
-                this.checkDetail.licenses.splice(index,1);
-            },
-            addBrand(){
-                this.$refs.brandForm.validate(valid=>{
-                    if(valid){
-                        this.checkDetail.brands.push({
-                            brand_name:this.brandForm.name,
-                            manufacturer_name:this.brandForm.name_e,
-                            logo:this.brandForm.logo_s,
-                            certs:this.brandForm.cert_s,
-                            logoData:this.brandForm.logoData,
-                            certsData:this.brandForm.certData,
-                        });
-                        this.$refs.brandForm.resetFields();
-                        this.brandDialogVisible = false;
-                    }
-                });
-            },
-            removeBrand(index,item){
-                if(!item.brand_id){//新增的直接删除
-                    this.checkDetail.brands.splice(index,1);
-                    return;
-                }
-                fetch({
-                    url:'/admin/check_has_product',
-                    method:'post',
-                    data:{brand_id:item.brand_id,business_id:this.business_id}
-                }).then(res=>{
-                    if(res.ret==0){
-                        this.checkDetail.brands.splice(index,1);
-                    }else{
-                        this.$message.warning('该品牌下有关联设备，不可删除！');
-                    }
-                }).catch(e=>{
-                    this.$message.error(e.msg);
-                })
-
-            },
-            getTypeList(){
-                fetch({
-                    url:'/admin/product/type_lists',
-                    method:'post',
-                    data:{}
-                }).then(res=>{
-                    let addLabelList = res.list;
-                    for(let i of addLabelList){
-                        i.status = false;
-                    }
-                    function campare(a,b) {
-                        return a.id-b.id
-                    }
-                    addLabelList.sort(campare);
-                    this.typeList = addLabelList;
-                }).catch(e=>{
-                    this.$message.error(e.msg);
-                })
-            },
-            checkTypeList(){
-                this.typeDialogVisible = true;
-                let checkedTypes = this.checkDetail.type.map(function(el){
-                    return el.type_id;
-                });
-                for(let item of this.typeList){
-                    if(checkedTypes.indexOf(item.id)>=0){
-                        item.status = true;
-                    }
-                    else{
-                        item.status = false;
-                    }
-                }
-            },
-            setCheck(item){
-                if(!item.status){
-                    item.status = true;
-                }else{
-                    fetch({
-                        url:'/admin/check_has_product',
-                        method:'post',
-                        data:{type_id:item.id,business_id:this.business_id}
-                    }).then(res=>{
-                        if(res.ret==0){
-                            item.status = false;
-                        }else{
-                            this.$message.warning('该产品下有关联设备，不可删除！');
-                        }
-                    }).catch(e=>{
-                        this.$message.error(e.msg);
-                    });
-                }
-            },
-            handleClose(formName){
-                return (done,form = formName )=> {
-                    this.$refs[form].resetFields();
-                    done();
-                }
-            }
+            _this.checkDetail.licenses[ind].file_url = res.result.file_url
+            _this.checkDetail.licenses[ind].fileData = res.result
+          }
         },
-        deactivated() {
-            this.$destroy();
+        handeler(res, file, fileList) {
+          if (res.code !== 200) {
+            this.$message.error('上传出错，请重新上传')
+            return
+          }
+          if (res.result.type == 8) {
+            this.uploadForm.url = res.result.filename
+            this.uploadForm.url_s = res.result.file_url
+            this.uploadForm.fileData = res.result
+          } else if (res.result.type == 3) {
+            this.brandForm.logo = res.result.filename
+            this.brandForm.logo_s = res.result.file_url
+            this.brandForm.logoData = res.result
+          } else if (res.result.type == 9) {
+            this.brandForm.cert = res.result.filename
+            this.brandForm.cert_s = res.result.file_url
+            this.brandForm.certData = res.result
+          }
+        },
+        handleImgElseSuccess(index) {
+          const _this = this
+          return function g(res, file, fileList, ind = index) {
+            if (res.code !== 200) {
+              _this.$message.error('上传出错，请重新上传')
+              return
+            }
+            if (res.result.type == 3) {
+              _this.checkDetail.brands[ind].logo = res.result.file_url
+              _this.checkDetail.brands[ind].logoData = res.result
+            } else if (res.result.type == 9) {
+              _this.checkDetail.brands[ind].certs = res.result.file_url
+              _this.checkDetail.brands[ind].certsData = res.result
+            }
+          }
+        },
+        removeType(index, item) {
+          fetch({
+            url: '/admin/check_has_product',
+            method: 'post',
+            data: { type_id: item.type_id, business_id: this.business_id }
+          }).then(res => {
+            if (res.ret == 0) {
+              this.checkDetail.type.splice(index, 1)
+            } else {
+              this.$message.warning('该产品下有关联设备，不可删除！')
+            }
+          }).catch(e => {
+            this.$message.error(e.msg)
+          })
+        },
+        addType() {
+          const arry = []
+          for (const item of this.typeList) {
+            if (item.status) {
+              arry.push({
+                type_id: item.id,
+                name: item.name
+              })
+            }
+          }
+          this.checkDetail.type = arry
+          this.typeDialogVisible = false
+        },
+        addLicense() {
+          this.$refs.uploadForm.validate(valid => {
+            if (valid) {
+              this.checkDetail.licenses.push({
+                type: 8,
+                filename: this.uploadForm.file_name,
+                file_url: this.uploadForm.url_s,
+                fileData: this.uploadForm.fileData
+              })
+              this.$refs.uploadForm.resetFields()
+              this.otherImageVisible = false
+            }
+          })
+        },
+        removeLicense(index) {
+          this.checkDetail.licenses.splice(index, 1)
+        },
+        addBrand() {
+          this.$refs.brandForm.validate(valid => {
+            if (valid) {
+              this.checkDetail.brands.push({
+                brand_name: this.brandForm.name,
+                manufacturer_name: this.brandForm.name_e,
+                logo: this.brandForm.logo_s,
+                certs: this.brandForm.cert_s,
+                logoData: this.brandForm.logoData,
+                certsData: this.brandForm.certData
+              })
+              this.$refs.brandForm.resetFields()
+              this.brandDialogVisible = false
+            }
+          })
+        },
+        removeBrand(index, item) {
+          if (!item.brand_id) { // 新增的直接删除
+            this.checkDetail.brands.splice(index, 1)
+            return
+          }
+          fetch({
+            url: '/admin/check_has_product',
+            method: 'post',
+            data: { brand_id: item.brand_id, business_id: this.business_id }
+          }).then(res => {
+            if (res.ret == 0) {
+              this.checkDetail.brands.splice(index, 1)
+            } else {
+              this.$message.warning('该品牌下有关联设备，不可删除！')
+            }
+          }).catch(e => {
+            this.$message.error(e.msg)
+          })
+        },
+        getTypeList() {
+          fetch({
+            url: '/admin/product/type_lists',
+            method: 'post',
+            data: {}
+          }).then(res => {
+            const addLabelList = res.list
+            for (const i of addLabelList) {
+              i.status = false
+            }
+            function campare(a, b) {
+              return a.id - b.id
+            }
+            addLabelList.sort(campare)
+            this.typeList = addLabelList
+          }).catch(e => {
+            this.$message.error(e.msg)
+          })
+        },
+        checkTypeList() {
+          this.typeDialogVisible = true
+          const checkedTypes = this.checkDetail.type.map(function(el) {
+            return el.type_id
+          })
+          for (const item of this.typeList) {
+            if (checkedTypes.indexOf(item.id) >= 0) {
+              item.status = true
+            } else {
+              item.status = false
+            }
+          }
+        },
+        setCheck(item) {
+          if (!item.status) {
+            item.status = true
+          } else {
+            fetch({
+              url: '/admin/check_has_product',
+              method: 'post',
+              data: { type_id: item.id, business_id: this.business_id }
+            }).then(res => {
+              if (res.ret == 0) {
+                item.status = false
+              } else {
+                this.$message.warning('该产品下有关联设备，不可删除！')
+              }
+            }).catch(e => {
+              this.$message.error(e.msg)
+            })
+          }
+        },
+        handleClose(formName) {
+          return (done, form = formName) => {
+            this.$refs[form].resetFields()
+            done()
+          }
         }
+      },
+      deactivated() {
+        this.$destroy()
+  }
     }
 </script>
 

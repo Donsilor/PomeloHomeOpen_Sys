@@ -2,7 +2,8 @@
   <div class="app-container calendar-list-container addCategoryPage">
     <el-row :gutter="30">
       <el-col :span="24">
-        <el-button type="ghost" @click="handleBackEvent">返回</el-button>
+        <el-button type="ghost"
+                   @click="handleBackEvent">返回</el-button>
         <el-button v-if="!isEdit"
                    type="primary"
                    @click="addGory">确定并添加该品类</el-button>
@@ -185,24 +186,30 @@
               </el-form>
             </el-col>
           </el-tab-pane>
-          <el-tab-pane v-if="isEdit" label="使用帮助">
+          <el-tab-pane v-if="isEdit"
+                       label="使用帮助">
             <div class="btns">
               <el-button @click="newItem('1', '新增帮助')">新增帮助</el-button>
             </div>
             <el-dialog width="570px"
                        :title="config.header"
                        :visible.sync="config.visible">
-              <el-form :model="config">
-                <el-form-item label="标题"
+              <el-form :rules="helpRules"
+                       ref="helpForm"
+                       :model="config">
+                <el-form-item prop="title"
+                              label="标题"
                               label-width="150">
                   <el-input v-model="config.title"
+                            placeholder="请输入标题"
                             auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="详情"
+                <el-form-item prop="content"
+                              label="详情"
                               label-width="150">
                   <el-input type="textarea"
                             :rows="6"
-                            placeholder="请输入内容"
+                            placeholder="请输入详情"
                             v-model="config.content"></el-input>
                 </el-form-item>
               </el-form>
@@ -403,6 +410,16 @@ export default {
         ],
         offline_hint: [{ required: true, message: '请输入离线提示语', trigger: 'blur' }]
       },
+
+      helpRules: {
+        title: [
+          { required: true, message: '请输入标题', trigger: 'blur' }
+        ],
+        content: [
+          { required: true, message: '请输入详情', trigger: 'blur' }
+        ]
+      },
+
       high_light_data: {
         token: getToken(),
         file_id: '',
@@ -432,6 +449,17 @@ export default {
         content: ''
       }, // 使用帮助弹框
       tableData: [] // 使用帮助
+    }
+  },
+  watch: {
+    'config.visible'(val) {
+      this.$nextTick(() => {
+        if (this.config.type === '1') {
+          this.$refs['helpForm'].resetFields()
+        } else {
+          this.$refs['helpForm'].clearValidate()
+        }
+      })
     }
   },
   created() {
@@ -715,41 +743,45 @@ export default {
     },
     // 保存修改或者新增
     submit() {
-      this.config.visible = false
-      if (this.config.type === '1') {
-        return fetch({
-          url: '/producttypehelp/add',
-          method: 'post',
-          data: {
-            type_id: this.$route.query.id,
-            title: this.config.title,
-            content: this.config.content
+      this.$refs['helpForm'].validate(valid => {
+        if (valid) {
+          this.config.visible = false
+          if (this.config.type === '1') {
+            return fetch({
+              url: '/producttypehelp/add',
+              method: 'post',
+              data: {
+                type_id: this.$route.query.id,
+                title: this.config.title,
+                content: this.config.content
+              }
+            })
+              .then(res => {
+                this.config.visible = false
+                this.getHelpList()
+              })
           }
-        })
-          .then(res => {
-            this.config.visible = false
-            this.getHelpList()
-          })
-      }
-      if (this.config.type === '2') {
-        return fetch({
-          url: '/producttypehelp/edit',
-          method: 'post',
-          data: {
-            title: this.config.title,
-            content: this.config.content,
-            valid: this.config.valid,
-            id: this.config.id
+          if (this.config.type === '2') {
+            return fetch({
+              url: '/producttypehelp/edit',
+              method: 'post',
+              data: {
+                title: this.config.title,
+                content: this.config.content,
+                valid: this.config.valid,
+                id: this.config.id
+              }
+            })
+              .then(res => {
+                this.config.visible = false
+                this.getHelpList()
+              })
+              .catch(err => {
+                console.log(err)
+              })
           }
-        })
-          .then(res => {
-            this.config.visible = false
-            this.getHelpList()
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
+        }
+      })
     }
   }
 }

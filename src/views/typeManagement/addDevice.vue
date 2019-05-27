@@ -187,6 +187,15 @@
                             </div>
                         </el-col>
                     </el-form-item>
+                    <div class="title">连接方式</div>
+                    <el-form-item label="连接时间" label-width="120px" prop="add_time">
+                        <el-col :span="12">
+                            <el-input
+                                    placeholder="请输入整数，限制两位"
+                                    v-model="form.add_time" :maxlength="2">
+                            </el-input>
+                        </el-col>
+                    </el-form-item>
                     <div class="title">重置方式</div>
                     <el-form-item label="上传图片" label-width="120px">
                         <el-col :span="12">
@@ -279,6 +288,16 @@ export default {
         this.getBigCategory()
   },
       data() {
+        var checkTime = (rule, value, callback) => {
+          if (!value) {
+            return callback(new Error('请输入提示文字'))
+          }
+          if (!Number.isInteger(+value)) {
+            callback(new Error('请输入数字值'))
+          } else {
+            callback()
+          }
+        }
         return {
           lists: '',
           typeid: this.$route.query.id,
@@ -321,8 +340,8 @@ export default {
               'token': getToken(),
               'filename': ''
             },
-            reset_tips: ''
-
+            reset_tips: '',
+            add_time: ''
           },
           rules: {
             type: [
@@ -373,6 +392,9 @@ export default {
             reset_tips: [
               { required: true, message: '请输入重置提示文字', trigger: 'blur' },
               { max: 255, message: '重置提示文字不能超过255个字符', trigger: 'blur' }
+            ],
+            add_time: [
+              { required: true, validator: checkTime, trigger: 'blur' }
             ]
             /* offline_hint:[
                         { required:true,message:'请输入离线提示语',trigger: 'blur' }

@@ -299,6 +299,25 @@
                 </el-form-item>
               </el-col>
             </el-tab-pane>
+            <el-tab-pane label="连接方式">
+              <el-col :span="24">
+                <el-form-item
+                  label="连接时间"
+                  label-width="120px"
+                  prop="add_time"
+                >
+                  <el-col :span="13">
+                    <el-input
+                      placeholder="请输入连接时间"
+                      v-model="form.add_time"
+                      :disabled="!isEdit"
+                      :maxlength="2"
+                    >
+                    </el-input>
+                  </el-col>
+                </el-form-item>
+              </el-col>
+            </el-tab-pane>
             <el-tab-pane label="重置方式">
               <el-col :span="24">
                 <el-form-item
@@ -403,6 +422,16 @@ export default {
     //            this.getDeviceSelect();
   },
   data() {
+    var checkTime = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请输入提示文字'))
+      }
+      if (!Number.isInteger(+value)) {
+        callback(new Error('请输入数字值'))
+      } else {
+        callback()
+      }
+    }
     return {
       isEdit: false,
       typeid: this.$route.query.id,
@@ -471,6 +500,9 @@ export default {
         reset_tips: [
           { required: true, message: '请输入重置提示文字', trigger: 'blur' },
           { max: 255, message: '重置提示文字不能超过255个字符', trigger: 'blur' }
+        ],
+        add_time: [
+          { required: true, validator: checkTime, trigger: 'blur' }
         ]
         /* offline_hint:[
                     {required:true,message:'请输入离线提示语',trigger: 'blur' }

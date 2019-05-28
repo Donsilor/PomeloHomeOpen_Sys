@@ -24,7 +24,7 @@ module.exports = {
 	rules: {
 		'arrow-parens': 0,
 		'no-console': 0,
-		semi: [2, 'never'],
+		'semi': [2, 'never'],
 		'space-before-function-paren': [2, 'never'],
 		'no-new': 0,
 		'no-undef': 0,
@@ -33,7 +33,7 @@ module.exports = {
 		'space-in-parens': 0,
 		'spaced-comment': 0,
 		'no-tabs': 0,
-		indent: [2, 2],
+		'indent': [2, 2],
 		'operator-linebreak': 0,
 		'space-before-blocks': 0,
 		'comma-dangle': 0,

@@ -9,11 +9,11 @@
         <el-button
           type="primary"
           @click="editDevice"
-        >{{editText}}</el-button>
+        >{{ editText }}</el-button>
         <el-button
+          v-show="!isEdit"
           type="danger"
           @click="handleDelEvent"
-          v-show="!isEdit"
         >删除该引导页</el-button>
       </el-col>
       <el-col
@@ -34,18 +34,18 @@
                 <el-form-item label-width="120px">
                   <el-col :span="12">
                     <el-checkbox
-                      disabled
                       v-model="is_mixapp"
                       :true-label="1"
                       :false-label="0"
+                      disabled
                     >是否是融合版APP</el-checkbox>
                     <br>
                     <el-checkbox
-                      disabled
                       v-model="is_evergrande"
                       :true-label="1"
                       :false-label="0"
-                    >属于{{COLTD}}快联产品设备</el-checkbox>
+                      disabled
+                    >属于{{ COLTD }}快联产品设备</el-checkbox>
                   </el-col>
                 </el-form-item>
                 <el-form-item
@@ -56,7 +56,7 @@
                     <el-input
                       v-model="form.type_name"
                       disabled
-                    ></el-input>
+                    />
                   </el-col>
                 </el-form-item>
                 <el-form-item
@@ -68,7 +68,7 @@
                     <el-input
                       v-model="form.business_name"
                       disabled
-                    ></el-input>
+                    />
                   </el-col>
                 </el-form-item>
                 <el-form-item
@@ -80,7 +80,7 @@
                     <el-input
                       v-model="form.brand_name"
                       disabled
-                    ></el-input>
+                    />
                   </el-col>
                 </el-form-item>
                 <el-form-item
@@ -92,7 +92,7 @@
                     <el-input
                       v-model="form.model"
                       disabled
-                    ></el-input>
+                    />
                   </el-col>
                 </el-form-item>
                 <el-form-item
@@ -103,25 +103,25 @@
                   <el-col :span="12">
                     <div class="flex">
                       <el-input
-                        v-model="form.base_img.filename"
-                        readonly
                         v-if="form.base_img"
+                        v-model="form.base_img.filename"
                         :disabled="!isEdit"
-                      ></el-input>
+                        readonly
+                      />
                       <el-upload
-                        class="upload-container"
-                        action="/api/index.php/files/save"
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess"
                         :before-upload="beforeAvatarUpload"
-                        accept="image/png"
                         :data="form.base_img"
                         :disabled="!isEdit"
+                        class="upload-container"
+                        action="/api/index.php/files/save"
+                        accept="image/png"
                       >
                         <el-button
+                          :disabled="!isEdit"
                           size="middle"
                           type="primary"
-                          :disabled="!isEdit"
                         >选择文件</el-button>
                       </el-upload>
                     </div>
@@ -151,17 +151,16 @@
                   <el-col :span="13">
                     <el-select
                       v-model="form.add_type"
+                      :disabled="!isEdit"
                       placeholder="请选择添加方式"
                       style="width: 100%;"
-                      :disabled="!isEdit"
                     >
                       <el-option
                         v-for="item in deviceAddTypeList"
                         :key="item.type_id"
                         :label="item.type_name"
                         :value="item.type_id"
-                      >
-                      </el-option>
+                      />
                     </el-select>
                   </el-col>
                 </el-form-item>
@@ -171,31 +170,31 @@
                 >
                   <el-col :span="13">
                     <el-form-item
+                      v-if="form.add1_img"
                       label="上传图片"
                       label-width="80px"
-                      v-if="form.add1_img"
                     >
                       <div class="flex">
                         <!--<div class="desTitle">上传图片</div>-->
                         <el-input
                           v-model="form.add1_img.filename"
-                          readonly
                           :disabled="!isEdit"
-                        ></el-input>
+                          readonly
+                        />
                         <el-upload
-                          class="upload-container"
-                          action="/api/index.php/files/save"
                           :show-file-list="false"
                           :on-success="handleAddImg1Success"
                           :before-upload="beforeAvatarUpload"
-                          accept="image/png"
                           :data="form.add1_img"
                           :disabled="!isEdit"
+                          class="upload-container"
+                          action="/api/index.php/files/save"
+                          accept="image/png"
                         >
                           <el-button
+                            :disabled="!isEdit"
                             size="middle"
                             type="primary"
-                            :disabled="!isEdit"
                           >选择文件</el-button>
                         </el-upload>
                       </div>
@@ -210,15 +209,14 @@
                       >
                         <!--<div class="desTitle" style="vertical-align: top;">提示文字</div>-->
                         <el-input
-                          type="textarea"
                           :autosize="{ minRows: 3, maxRows: 3}"
-                          placeholder="文字限制255个字符内"
                           v-model="form.add1_tips"
-                          class="add1TextArea"
                           :disabled="!isEdit"
                           :maxlength="255"
-                        >
-                        </el-input>
+                          type="textarea"
+                          placeholder="文字限制255个字符内"
+                          class="add1TextArea"
+                        />
                       </el-form-item>
                     </div>
                   </el-col>
@@ -234,7 +232,7 @@
                           v-model="form.add1_button"
                           :disabled="!isEdit"
                           :maxlength="8"
-                        ></el-input>
+                        />
                       </el-form-item>
                     </div>
                   </el-col>
@@ -245,31 +243,31 @@
                 >
                   <el-col :span="13">
                     <el-form-item
+                      v-if="form.add2_img"
                       label="上传图片"
                       label-width="80px"
-                      v-if="form.add2_img"
                     >
                       <div class="flex">
                         <!--<div class="desTitle">上传图片</div>-->
                         <el-input
                           v-model="form.add2_img.filename"
-                          readonly
                           :disabled="!isEdit"
-                        ></el-input>
+                          readonly
+                        />
                         <el-upload
-                          class="upload-container"
-                          action="/api/index.php/files/save"
                           :show-file-list="false"
                           :on-success="handleAddImg2Success"
                           :before-upload="beforeAvatarUpload"
-                          accept="image/png"
                           :data="form.add2_img"
                           :disabled="!isEdit"
+                          class="upload-container"
+                          action="/api/index.php/files/save"
+                          accept="image/png"
                         >
                           <el-button
+                            :disabled="!isEdit"
                             size="middle"
                             type="primary"
-                            :disabled="!isEdit"
                           >选择文件</el-button>
                         </el-upload>
                       </div>
@@ -284,15 +282,14 @@
                         prop="add2_tips"
                       >
                         <el-input
-                          type="textarea"
                           :autosize="{ minRows: 3, maxRows: 3}"
-                          placeholder="文字限制255个字符内"
                           v-model="form.add2_tips"
-                          class="add1TextArea"
                           :disabled="!isEdit"
                           :maxlength="255"
-                        >
-                        </el-input>
+                          type="textarea"
+                          placeholder="文字限制255个字符内"
+                          class="add1TextArea"
+                        />
                       </el-form-item>
                     </div>
                   </el-col>
@@ -308,12 +305,11 @@
                 >
                   <el-col :span="13">
                     <el-input
-                      placeholder="请输入连接时间"
                       v-model="form.add_time"
                       :disabled="!isEdit"
                       :maxlength="2"
-                    >
-                    </el-input>
+                      placeholder="请输入连接时间"
+                    />
                   </el-col>
                 </el-form-item>
               </el-col>
@@ -321,31 +317,31 @@
             <el-tab-pane label="重置方式">
               <el-col :span="24">
                 <el-form-item
+                  v-if="form.reset_img"
                   label="上传图片"
                   label-width="120px"
-                  v-if="form.reset_img"
                 >
                   <el-col :span="13">
                     <div class="flex">
                       <el-input
                         v-model="form.reset_img.filename"
-                        readonly
                         :disabled="!isEdit"
-                      ></el-input>
+                        readonly
+                      />
                       <el-upload
-                        class="upload-container"
-                        action="/api/index.php/files/save"
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess"
                         :before-upload="beforeAvatarUpload"
-                        accept="image/png"
                         :data="form.reset_img"
                         :disabled="!isEdit"
+                        class="upload-container"
+                        action="/api/index.php/files/save"
+                        accept="image/png"
                       >
                         <el-button
+                          :disabled="!isEdit"
                           size="middle"
                           type="primary"
-                          :disabled="!isEdit"
                         >选择文件</el-button>
                       </el-upload>
                     </div>
@@ -358,14 +354,13 @@
                 >
                   <el-col :span="13">
                     <el-input
-                      type="textarea"
                       :autosize="{ minRows: 3, maxRows: 3}"
-                      placeholder="请输入其他说明"
                       v-model="form.reset_tips"
                       :disabled="!isEdit"
                       :maxlength="255"
-                    >
-                    </el-input>
+                      type="textarea"
+                      placeholder="请输入其他说明"
+                    />
                   </el-col>
                 </el-form-item>
               </el-col>
@@ -411,15 +406,10 @@ import { COLTD } from '@/utils/config'
 import addTechnical from './addTechnical.vue'
 import addAttribute from './addAttribute.vue'
 export default {
-  name: 'existedCategory',
-  computed: {
-  },
-  created() {
-  },
-  mounted() {
-    this.getDeviceInfo()
-    //            this.getDeviceSelectAddtype();
-    //            this.getDeviceSelect();
+  name: 'ExistedCategory',
+  components: {
+    addTechnical,
+    addAttribute
   },
   data() {
     var checkTime = (rule, value, callback) => {
@@ -433,7 +423,6 @@ export default {
       }
     }
     return {
-      isEdit: false,
       typeid: this.$route.query.id,
       token: getToken(),
       isLoadData: false,
@@ -510,6 +499,15 @@ export default {
       }
     }
   },
+  computed: {
+  },
+  created() {
+  },
+  mounted() {
+    this.getDeviceInfo()
+    //            this.getDeviceSelectAddtype();
+    //            this.getDeviceSelect();
+  },
   methods: {
     // 获取设备添加方式
     getDeviceSelectAddtype() {
@@ -559,8 +557,8 @@ export default {
     handleAvatarSuccess(res, file) {
       const data = res.result
       switch (data.type) {
-        case 23: this.form.base_img = data; this.form.base_img.token = this.token; break
-        case 25: this.form.reset_img = data; this.form.reset_img.token = this.token
+      case 23: this.form.base_img = data; this.form.base_img.token = this.token; break
+      case 25: this.form.reset_img = data; this.form.reset_img.token = this.token
       }
       this.$message({
         type: 'success',
@@ -742,9 +740,9 @@ export default {
         }
       }).then(res => {
         switch (technology_type) {
-          case 1: this.technical_wifi = res.list; break
-          case 2: this.technical_zigbee = res.list; break
-          case 3: this.technical_bluetooth = res.list; break
+        case 1: this.technical_wifi = res.list; break
+        case 2: this.technical_zigbee = res.list; break
+        case 3: this.technical_bluetooth = res.list; break
         }
       }).catch(res => {
         this.$message({
@@ -800,9 +798,5 @@ export default {
       }
     }
   },
-  components: {
-    addTechnical,
-    addAttribute
-  }
 }
 </script>

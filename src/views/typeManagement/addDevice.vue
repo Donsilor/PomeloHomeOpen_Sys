@@ -188,11 +188,11 @@
                         </el-col>
                     </el-form-item>
                     <div class="title">连接方式</div>
-                    <el-form-item label="连接时间" label-width="120px" prop="add_time">
+                    <el-form-item label="超时时间" label-width="120px" prop="add_time">
                         <el-col :span="12">
                             <el-input
-                                    placeholder="请输入整数，数字限制11位内"
-                                    v-model="form.add_time" :maxlength="11">
+                                    placeholder="请输入整数，限制三位，单位为秒"
+                                    v-model="form.add_time" :maxlength="3">
                             </el-input>
                         </el-col>
                     </el-form-item>

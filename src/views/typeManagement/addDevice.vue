@@ -191,8 +191,8 @@
                     <el-form-item label="连接时间" label-width="120px" prop="add_time">
                         <el-col :span="12">
                             <el-input
-                                    placeholder="请输入整数，限制两位"
-                                    v-model="form.add_time" :maxlength="2">
+                                    placeholder="请输入整数，数字限制11位内"
+                                    v-model="form.add_time" :maxlength="11">
                             </el-input>
                         </el-col>
                     </el-form-item>

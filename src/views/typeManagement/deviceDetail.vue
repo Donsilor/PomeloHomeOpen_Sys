@@ -311,7 +311,7 @@
                       placeholder="请输入连接时间"
                       v-model="form.add_time"
                       :disabled="!isEdit"
-                      :maxlength="2"
+                      :maxlength="11"
                     >
                     </el-input>
                   </el-col>

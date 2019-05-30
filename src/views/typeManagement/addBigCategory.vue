@@ -2,65 +2,65 @@
   <div class="app-container calendar-list-container addCategoryPage">
     <el-row :gutter="30">
       <el-col :span="24">
-        <el-button 
+        <el-button
           type="ghost"
           @click="handleBackEvent">返回</el-button>
-        <el-button 
+        <el-button
           v-if="!isEdit"
           type="primary"
           @click="addGory">确定并添加该品类</el-button>
-        <el-button 
+        <el-button
           v-if="isEdit"
           type="primary"
           @click="editGory">{{
             editText
           }}</el-button>
-        <el-button 
+        <el-button
           v-if="isEdit && disabled"
           type="danger"
           @click="handleDelEvent">删除该品类</el-button>
       </el-col>
-      <el-col 
+      <el-col
         :span="24"
         style="margin: 20px 0px;padding-bottom: 40px;">
         <el-tabs type="border-card">
           <el-tab-pane label="基本信息">
             <el-col :span="24">
-              <el-form 
+              <el-form
                 ref="ruleForm"
                 :rules="rules"
                 :model="form"
                 label-width="120px"
                 style="margin-top: 20px;"
                 size="large">
-                <el-form-item 
+                <el-form-item
                   label="大品类名称"
                   prop="name">
                   <el-col :span="12">
-                    <el-input 
+                    <el-input
                       v-model="form.name"
                       :span="6"
                       :disabled="disabled"
                       placeholder="请输入大品类名称"/>
                   </el-col>
                 </el-form-item>
-                <el-form-item 
+                <el-form-item
                   label="大品类英文名"
                   prop="name_e">
                   <el-col :span="12">
-                    <el-input 
+                    <el-input
                       v-model="form.name_e"
                       :disabled="disabled"
                       :span="6"
                       placeholder="请输入大品类英文"/>
                   </el-col>
                 </el-form-item>
-                <el-form-item 
+                <el-form-item
                   label="品类图标"
                   style="padding-bottom: 30px;">
                   <el-col :span="12">
                     <div class="fileuploadItem bigCategory">
-                      <el-upload 
+                      <el-upload
                         :class="disabled ? 'disabled' : ''"
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess"
@@ -70,18 +70,18 @@
                         class="avatar-uploader"
                         action="/api/index.php/producttype/iconupload"
                         accept="image/png">
-                        <img 
+                        <img
                           v-if="high_light_data.file_id != ''"
                           :src="form.icon_list.high_light.file_url"
                           class="avatar" >
-                        <i 
+                        <i
                           v-else
                           class="el-icon-plus avatar-uploader-icon"/>
                       </el-upload>
                       <span class="file_upload_img_des">高亮状态</span>
                     </div>
                     <div class="fileuploadItem bigCategory">
-                      <el-upload 
+                      <el-upload
                         :class="disabled ? 'disabled' : ''"
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess"
@@ -91,18 +91,18 @@
                         class="avatar-uploader"
                         action="/api/index.php/producttype/iconupload"
                         accept="image/png">
-                        <img 
+                        <img
                           v-if="normal_s_data.file_id != ''"
                           :src="form.icon_list.normal_s.file_url"
                           class="avatar" >
-                        <i 
+                        <i
                           v-else
                           class="el-icon-plus avatar-uploader-icon"/>
                       </el-upload>
                       <span class="file_upload_img_des">默认状态小尺寸</span>
                     </div>
                     <div class="fileuploadItem bigCategory">
-                      <el-upload 
+                      <el-upload
                         :class="disabled ? 'disabled' : ''"
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess"
@@ -112,18 +112,18 @@
                         class="avatar-uploader"
                         action="/api/index.php/producttype/iconupload"
                         accept="image/png">
-                        <img 
+                        <img
                           v-if="normal_data.file_id != ''"
                           :src="form.icon_list.normal.file_url"
                           class="avatar" >
-                        <i 
+                        <i
                           v-else
                           class="el-icon-plus avatar-uploader-icon"/>
                       </el-upload>
                       <span class="file_upload_img_des">默认状态大尺寸</span>
                     </div>
                     <div class="fileuploadItem bigCategory">
-                      <el-upload 
+                      <el-upload
                         :class="disabled ? 'disabled' : ''"
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess"
@@ -133,11 +133,11 @@
                         class="avatar-uploader"
                         action="/api/index.php/producttype/iconupload"
                         accept="image/png">
-                        <img 
+                        <img
                           v-if="disabled_data.file_id != ''"
                           :src="form.icon_list.disabled.file_url"
                           class="avatar" >
-                        <i 
+                        <i
                           v-else
                           class="el-icon-plus avatar-uploader-icon"/>
                       </el-upload>
@@ -145,11 +145,11 @@
                     </div>
                   </el-col>
                 </el-form-item>
-                <el-form-item 
+                <el-form-item
                   label="品类离线提示语"
                   prop="offline_hint">
                   <el-col :span="12">
-                    <el-input 
+                    <el-input
                       :rows="4"
                       :maxlength="1000"
                       v-model="form.offline_hint"
@@ -159,11 +159,11 @@
                       placeholder="请输入离线提示语"/>
                   </el-col>
                 </el-form-item>
-                <el-form-item 
+                <el-form-item
                   label="大品类是否在设备选择列表显示"
                   class="line25">
                   <el-col :span="12">
-                    <el-radio-group 
+                    <el-radio-group
                       :disabled="disabled"
                       v-model="form.show_in_select_list">
                       <el-radio :label="1">是</el-radio>
@@ -172,11 +172,11 @@
                   </el-col>
                 </el-form-item>
 
-                <el-form-item 
+                <el-form-item
                   label="大品类是否在设备选择列表显示（融合版APP）"
                   class="line25">
                   <el-col :span="12">
-                    <el-radio-group 
+                    <el-radio-group
                       :disabled="disabled"
                       v-model="form.app_show_in_select_list">
                       <el-radio :label="1">是</el-radio>
@@ -187,7 +187,7 @@
 
                 <el-form-item label="是否高频使用">
                   <el-col :span="12">
-                    <el-checkbox 
+                    <el-checkbox
                       :disabled="disabled"
                       :true-label="1"
                       :false-label="0"
@@ -195,11 +195,11 @@
                   </el-col>
                 </el-form-item>
 
-                <el-form-item 
+                <el-form-item
                   label="是否为智能开关关联设备品类"
                   class="line25">
                   <el-col :span="12">
-                    <el-checkbox 
+                    <el-checkbox
                       :disabled="disabled"
                       :true-label="1"
                       :false-label="0"
@@ -209,7 +209,7 @@
 
                 <el-form-item label="是否依赖路由器">
                   <el-col :span="12">
-                    <el-checkbox 
+                    <el-checkbox
                       :disabled="disabled"
                       :true-label="1"
                       :false-label="0"
@@ -219,60 +219,60 @@
               </el-form>
             </el-col>
           </el-tab-pane>
-          <el-tab-pane 
+          <el-tab-pane
             v-if="isEdit"
             label="使用帮助">
             <div class="btns">
               <el-button @click="newItem('1', '新增帮助')">新增帮助</el-button>
             </div>
-            <el-dialog 
+            <el-dialog
               :title="config.header"
               :visible.sync="config.visible"
               width="570px">
-              <el-form 
+              <el-form
                 ref="helpForm"
                 :rules="helpRules"
                 :model="config">
-                <el-form-item 
+                <el-form-item
                   prop="title"
                   label="标题"
                   label-width="150">
-                  <el-input 
+                  <el-input
                     v-model="config.title"
                     placeholder="请输入标题"
                     auto-complete="off"/>
                 </el-form-item>
-                <el-form-item 
+                <el-form-item
                   prop="content"
                   label="详情"
                   label-width="150">
-                  <el-input 
+                  <el-input
                     :rows="6"
                     v-model="config.content"
                     type="textarea"
                     placeholder="请输入详情"/>
                 </el-form-item>
               </el-form>
-              <div 
+              <div
                 slot="footer"
                 class="dialog-footer">
                 <el-button @click="config.visible = false">取 消</el-button>
-                <el-button 
+                <el-button
                   type="primary"
                   @click="submit">确 定</el-button>
               </div>
             </el-dialog>
 
-            <el-table 
+            <el-table
               :data="tableData"
               border
               stripe
               style="width: 100%">
-              <el-table-column 
+              <el-table-column
                 type="index"
                 label="序号"
                 width="80"/>
-              <el-table-column 
+              <el-table-column
                 prop="title"
                 label="标题"/>
               <el-table-column label="创建时间">
@@ -282,7 +282,7 @@
               </el-table-column>
               <el-table-column label="是否发布">
                 <template slot-scope="scope">
-                  <el-switch 
+                  <el-switch
                     v-model="scope.row.valid"
                     :active-value="1"
                     :inactive-value="0"
@@ -290,14 +290,14 @@
                     @click.native="showConfirm('2',scope.row)"/>
                 </template>
               </el-table-column>
-              <el-table-column 
+              <el-table-column
                 label="操作"
                 align="center">
                 <template slot-scope="scope">
-                  <el-button 
+                  <el-button
                     type="text"
                     @click="newItem('2', '编辑帮助', scope.row)">编辑</el-button>
-                  <el-button 
+                  <el-button
                     type="text"
                     @click="deleteItem(scope.row.id)">删除</el-button>
                 </template>
@@ -532,13 +532,11 @@ export default {
           this.config.content = item.content
           this.config.valid = +!item.valid
           this.config.id = item.id
-          this.submit()
-            .then(() => {
-              this.$message({
-                type: 'success',
-                message: '操作成功!'
-              })
-            })
+          this.submitPost()
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
         }
       })
         .catch(() => {
@@ -790,44 +788,48 @@ export default {
         })
     },
     // 保存修改或者新增
+    submitPost() {
+      if (this.config.type === '1') {
+        return fetch({
+          url: '/producttypehelp/add',
+          method: 'post',
+          data: {
+            type_id: this.$route.query.id,
+            title: this.config.title,
+            content: this.config.content
+          }
+        })
+          .then(res => {
+            this.config.visible = false
+            this.getHelpList()
+          })
+      }
+      if (this.config.type === '2') {
+        return fetch({
+          url: '/producttypehelp/edit',
+          method: 'post',
+          data: {
+            title: this.config.title,
+            content: this.config.content,
+            valid: this.config.valid,
+            id: this.config.id
+          }
+        })
+          .then(res => {
+            this.config.visible = false
+            this.getHelpList()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+    // 保存修改或者新增
     submit() {
       this.$refs['helpForm'].validate(valid => {
         if (valid) {
           this.config.visible = false
-          if (this.config.type === '1') {
-            return fetch({
-              url: '/producttypehelp/add',
-              method: 'post',
-              data: {
-                type_id: this.$route.query.id,
-                title: this.config.title,
-                content: this.config.content
-              }
-            })
-              .then(res => {
-                this.config.visible = false
-                this.getHelpList()
-              })
-          }
-          if (this.config.type === '2') {
-            return fetch({
-              url: '/producttypehelp/edit',
-              method: 'post',
-              data: {
-                title: this.config.title,
-                content: this.config.content,
-                valid: this.config.valid,
-                id: this.config.id
-              }
-            })
-              .then(res => {
-                this.config.visible = false
-                this.getHelpList()
-              })
-              .catch(err => {
-                console.log(err)
-              })
-          }
+          this.submitPost()
         }
       })
     }

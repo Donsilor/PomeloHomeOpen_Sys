@@ -226,6 +226,7 @@
               <el-button @click="newItem('1', '新增帮助')">新增帮助</el-button>
             </div>
             <el-dialog
+              :close-on-click-modal="false"
               :title="config.header"
               :visible.sync="config.visible"
               width="570px">

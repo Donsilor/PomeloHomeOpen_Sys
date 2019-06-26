@@ -706,10 +706,11 @@
               <el-input 
                 v-model="uploadName"
                 :span="6" 
-                readonly="true" 
+                :readonly ="true" 
                 style="width: 325px"/>
               <el-upload
                 :disabled="!edit"
+                :before-upload="beforeAvatarUpload"
                 :on-success="handleUploadSuccess"
                 :show-file-list="false"
                 :data="{type:33,token:token}"
@@ -717,7 +718,7 @@
                 class="upload-demo"
                 action="/api/index.php/files/save"
                 accept=".lua">
-                <el-button :disabled="!edit">预览</el-button>
+                <el-button :disabled="!edit">选择文件</el-button>
               </el-upload>
             </el-col>
           </el-col>
@@ -799,6 +800,19 @@ export default {
     this.$destroy()
   },
   methods: {
+    beforeAvatarUpload(file) {
+      console.log(file.type)
+      const filter = file.name.indexOf('.lua') > -1
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!filter) {
+        this.$message.error('请上传2M大小内lua格式的文件')
+      }
+      if (!isLt2M) {
+        this.$message.error('请上传2M大小内lua格式的文件')
+      }
+      return filter && isLt2M
+    },
     // 配置文件 upload上传
     handleUploadSuccess(file, fileList) {
       if(file.code!==200){
@@ -837,6 +851,8 @@ export default {
         product_id: this.product_id
       }
       getProductInfo(params).then(response => {
+        this.uploadName = response.agreement_file_name
+
         this.productDetail = response
         const arry = []
         for (const k in response.images_new) {

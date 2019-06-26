@@ -1105,9 +1105,7 @@ export default {
       if (formData.attr_list) {
         formData.attr_list = JSON.stringify(formData.attr_list)
       }
-      if (formData.attr_list) {
-        formData.attr_list = JSON.stringify(formData.attr_list)
-      }
+
       // 配置协议
       if (this.configFile && this.configFile.file_url) {
         formData.agreement_file = JSON.stringify(this.configFile)

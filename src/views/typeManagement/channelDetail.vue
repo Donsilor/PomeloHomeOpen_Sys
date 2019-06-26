@@ -7,7 +7,7 @@
                 <el-button v-if="isEdit" type="primary" @click="editChannel">{{editText}}</el-button>
                 <el-button type="danger" @click="handleDelEvent" v-if="isEdit&&!hasProduct">删除该渠道商</el-button>
             </el-col>
-            <el-col :span="24" style="margin: 20px 0px 0px;">
+            <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
                 <div class="desTitleTop">基本信息</div>
                 <el-col :span="24">
                     <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
@@ -65,105 +65,9 @@
                 </el-col>
 
             </el-col>
-            <el-col :span="24" style="margin: 0px 0px;padding-bottom: 40px;">
-                <div class="desTitleTop">配置文件</div>
-                  <el-col>
-                    <div class="configure">
-                      相关品类
-                      <input style="margin-left: 20px" type="text">
-                    </div>
-                    <el-button>查询</el-button>
-                    <el-button @click="handleClick('add')" type="primary" style="float: right;margin-top: 10px">添加文件</el-button>
-                  </el-col>
-                  <el-col>
-                    <el-table
-                      :data="tableData"
-                      stripe
-                      style="width: 100%">
-                      <el-table-column
-                        prop="name"
-                        label="文件名称"
-                        width="280"
-                        align="center">
-                      </el-table-column>
-                      <el-table-column
-                        prop="address"
-                        label="相关品类"
-                        width="280"
-                        align="center">
-                      </el-table-column>
-                      <el-table-column
-                        prop="address"
-                        label="文件说明"
-                        width="280"
-                        align="center">
-                      </el-table-column>
-                      <el-table-column
-                        prop="date"
-                        label="上传时间"
-                        width="280"
-                        align="center">
-                      </el-table-column>
-                      <el-table-column
-                        label="操作"
-                        align="center">
-                        <template slot-scope="scope">
-                          <el-button @click="handleClick('look', scope.row)" type="text" size="small">查看</el-button>
-                          <el-button @click="handleClick('modify',scope.row)" type="text" size="small">编辑</el-button>
-                          <el-button @click="removeClick(scope.row)" type="text" size="small">删除</el-button>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                  </el-col>
-            </el-col>
         </el-row>
-        <!-- 配置文件弹框 -->
-        <el-dialog
-          title="添加配置文件"
-          :visible.sync="dialogFormVisible"
-          width="600">
-          <el-form
-            ref="dialogForm"
-            :rules="dialogRules"
-            :model="dialogData"
-            :disabled="dialogType === 'look'">
-            <el-form-item label="文件名称" label-width="120px" prop="name">
-              <el-col :span="12">
-                  <el-input v-model="dialogData.name" :span="6"></el-input>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="相关品类" label-width="120px" prop="date">
-              <el-col :span="12">
-                  <el-input v-model="dialogData.date" :span="6"></el-input>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="文件说明" label-width="120px" prop="address">
-              <el-col :span="12">
-                  <el-input type="textarea" v-model="dialogData.address" :span="6"></el-input>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="配置文件" label-width="120px" prop="uploadName">
-              <el-col :span="12">
-                  <el-input style="width: 325px" v-model="uploadName" :span="6"></el-input>
-                  <el-upload
-                    style="display: inline-block"
-                    class="upload-demo"
-                    action="/api/index.php/files/save"
-                    :on-success="handleUploadSuccess"
-                    :show-file-list='false'
-                    accept=".lua"
-                    :data="{type:33,token:token}">
-                    <el-button>预览</el-button>
-                  </el-upload>
-              </el-col>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="uoloadFiles">确 定</el-button>
-          </div>
-        </el-dialog>
     </div>
+
 </template>
 <style lang="scss">
     .addCategoryPage{
@@ -172,11 +76,6 @@
         line-height: 30px;
         height: 30px;
         width: 100%;
-    }
-    .configure {
-      width: 300px;
-      display: inline-block;
-      margin: 20px 0 20px 200px;
     }
 
     .channel .el-upload{
@@ -323,126 +222,9 @@
                     'token' : getToken(),
                     'type' : 28,
                 },
-                tableData: [{
-                  date: '2016-05-02',
-                  name: '王小虎',
-                  address: '上海市'
-                }, {
-                  date: '2016-05-04',
-                  name: '王小虎1',
-                  address: '深圳市'
-                }, {
-                  date: '2016-05-01',
-                  name: '王小虎2',
-                  address: '广州市'
-                }, {
-                  date: '2016-05-03',
-                  name: '王小虎3',
-                  address: '北京市'
-                }],
-                dialogRules: {
-                  name: [
-                    { required: true, message: '请输入文件名称', trigger: 'blur' },
-                  ],
-                  date: [
-                    { required: true, message: '请输入相关品类', trigger: 'blur' },
-                  ],
-                  address: [
-                    { required: true, message: '请输入文件说明', trigger: 'blur' },
-                  ],
-                  // uploadName: [
-                  //   { required: true, message: '请选择配置文件', trigger: 'blur' },
-                  // ]
-                },
-                dialogFormVisible: false,
-                uploadName: '',
-                dialogType: '',
-                dialogData: {},
             }
-        },
-        watch: {
-          'dialogFormVisible'(val) {
-            this.$nextTick(() => {
-              this.$refs['dialogForm'].clearValidate()
-            })
-          }
         },
         methods: {
-          // 配置文件 添加、查看、编辑
-          handleClick(type, item) {
-            this.dialogFormVisible = true
-            this.dialogType = type
-            if(item) {
-              this.dialogData = item
-            } else {
-              this.dialogData = {}
-              this.uploadName = ''
-            }
-          },
-          // 配置文件 删除
-          removeClick() {
-            const h = this.$createElement;
-            this.$msgbox({
-              title: '删除配置文件',
-              message: h('p', null, [
-                h('p', null, '您确定删除配置此文件吗？ '),
-                h('p', null, '删除后可能会导致部分设备配置出错')
-              ]),
-              showCancelButton: true,
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning',
-              beforeClose: (action, instance, done) => {
-                // if (action === 'confirm') {
-                  // instance.confirmButtonLoading = true;
-                  // instance.confirmButtonText = '执行中...';
-                  // done();
-                  // instance.confirmButtonLoading = false;
-                // } else {
-                  done();
-                // }
-              }
-            }).then(action => {
-              this.$message({
-                type: 'success',
-                message: 'action: ' + action
-              });
-            });
-          },
-          // 配置文件 upload上传
-          handleUploadSuccess(file, fileList) {
-            console.log(file, fileList);
-            if(file.code!==200){
-              this.$message.error(file.msg);
-                return;
-            }
-            this.uploadName = file.result.filename
-            let tmp = Object.assign({},file.result);
-            console.log(tmp)
-            tmp.url = tmp.file_url;
-            this.dialogData = tmp;
-          },
-          // 上传配置文件
-          uoloadFiles() {
-
-            this.$refs['dialogForm'].validate((valid) => {
-              if(valid) {
-                fetch({
-                  url: '/admin/product_edit',
-                  method: 'post',
-                  data: {
-                    'id': this.$route.query.id,
-                    'agreement_file': this.dialogData
-                  }
-                }).then(res=>{
-                  console.log(res)
-                })
-                this.dialogFormVisible = false
-              } else {
-                return false
-              }
-            })
-          },
             getChannelInfo(){
                 fetch({
                     url: '/distributor/info',

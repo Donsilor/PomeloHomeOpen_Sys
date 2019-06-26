@@ -1,86 +1,105 @@
 <template>
   <div class="app-container">
     <!--====================-->
-    <el-button @click="$router.go(-1)"
-               size="medium">返回</el-button>
-    <el-button type="primary"
-               @click="productUnshelve"
-               size="medium">下架该产品</el-button>
-    <el-button type="primary"
-               @click="toEdit"
-               size="medium">{{edit?'保存':'编辑'}}产品信息</el-button>
-    <h3>{{productDetail.brand_name+productDetail.type_name+productDetail.model}}</h3>
-    <el-tabs v-model="activeName"
-             type="card"
-             style="padding-bottom: 30px;">
-      <el-tab-pane label="基本信息"
-                   name="basic">
+    <el-button 
+      size="medium"
+      @click="$router.go(-1)">返回</el-button>
+    <el-button 
+      type="primary"
+      size="medium"
+      @click="productUnshelve">下架该产品</el-button>
+    <el-button 
+      type="primary"
+      size="medium"
+      @click="toEdit">{{ edit?'保存':'编辑' }}产品信息</el-button>
+    <h3>{{ productDetail.brand_name+productDetail.type_name+productDetail.model }}</h3>
+    <el-tabs 
+      v-model="activeName"
+      type="card"
+      style="padding-bottom: 30px;">
+      <el-tab-pane 
+        label="基本信息"
+        name="basic">
         <el-row class="">
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left">产品品类</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">{{productDetail.type_name}}</el-col>
+            <el-col 
+              :span="3"
+              class="card-span-left">产品品类</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">{{ productDetail.type_name }}</el-col>
           </el-row>
           <el-row class="card-row gg">
-            <el-col :span="3"
-                    class="card-span-left">合作品牌
+            <el-col 
+              :span="3"
+              class="card-span-left">合作品牌
             </el-col>
-            <el-col :span="20"
-                    :offset="1"
-                    class="card-span-right">
+            <el-col 
+              :span="20"
+              :offset="1"
+              class="card-span-right">
               <div class="brand-box">
                 <el-row>
-                  <span>品牌中文：{{productDetail.brand_name}}</span>
+                  <span>品牌中文：{{ productDetail.brand_name }}</span>
                 </el-row>
                 <el-row style="margin: 10px auto">
-                  <span>品牌英文：{{productDetail.manufacturer_name}}</span>
+                  <span>品牌英文：{{ productDetail.manufacturer_name }}</span>
                 </el-row>
                 <el-row>
-                  <img :src="productDetail.brand_logo"
-                       v-img:name
-                       v-if="productDetail.brand_logo"
-                       alt="品牌logo">
-                  <img :src="productDetail.brand_certs"
-                       v-img:name
-                       v-if="productDetail.brand_certs"
-                       alt="资格证书">
+                  <img 
+                    v-img:name
+                    v-if="productDetail.brand_logo"
+                    :src="productDetail.brand_logo"
+                    alt="品牌logo">
+                  <img 
+                    v-img:name
+                    v-if="productDetail.brand_certs"
+                    :src="productDetail.brand_certs"
+                    alt="资格证书">
                 </el-row>
               </div>
             </el-col>
           </el-row>
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left edit-label">产品名称</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">
-              <el-input :readonly="!edit"
-                        :class="{'no-border':!edit}"
-                        v-model="productDetail.name"></el-input>
+            <el-col 
+              :span="3"
+              class="card-span-left edit-label">产品名称</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <el-input 
+                :readonly="!edit"
+                :class="{'no-border':!edit}"
+                v-model="productDetail.name"/>
             </el-col>
           </el-row>
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left">产品型号</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">{{productDetail.model}}</el-col>
+            <el-col 
+              :span="3"
+              class="card-span-left">产品型号</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">{{ productDetail.model }}</el-col>
           </el-row>
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left edit-label">兼容机型</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">
+            <el-col 
+              :span="3"
+              class="card-span-left edit-label">兼容机型</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">
               <el-form :model="productDetail">
-                <el-form-item prop="compat"
-                              :rules="[{validator:validCompat}]">
-                  <el-input :readonly="!edit"
-                            :class="{'no-border':!edit}"
-                            v-model="productDetail.compat">
-                  </el-input>
+                <el-form-item 
+                  :rules="[{validator:validCompat}]"
+                  prop="compat">
+                  <el-input 
+                    :readonly="!edit"
+                    :class="{'no-border':!edit}"
+                    v-model="productDetail.compat"/>
                 </el-form-item>
               </el-form>
 
@@ -88,197 +107,240 @@
           </el-row>
 
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left">渠道商</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">{{productDetail.distributor}}</el-col>
+            <el-col 
+              :span="3"
+              class="card-span-left">渠道商</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">{{ productDetail.distributor }}</el-col>
           </el-row>
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left">渠道商ID</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">{{productDetail.distributor_pid}}</el-col>
+            <el-col 
+              :span="3"
+              class="card-span-left">渠道商ID</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">{{ productDetail.distributor_pid }}</el-col>
           </el-row>
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left"
-                    :class="{'edit-label':edit}">配网方式</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">
-              <span v-if="!edit">{{productDetail.network_name}}</span>
-              <el-select v-if="edit&&productDetail.distributor_id"
-                         clearable
-                         v-model="productDetail.network_id"
-                         placeholder="请选择"
-                         style="width: 100%">
-                <el-option v-for="item in networkList"
-                           :key="item.id"
-                           :label="item.network_name"
-                           :value="item.id">
-                </el-option>
+            <el-col 
+              :span="3"
+              :class="{'edit-label':edit}"
+              class="card-span-left">配网方式</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <span v-if="!edit">{{ productDetail.network_name }}</span>
+              <el-select 
+                v-if="edit&&productDetail.distributor_id"
+                v-model="productDetail.network_id"
+                clearable
+                placeholder="请选择"
+                style="width: 100%">
+                <el-option 
+                  v-for="item in networkList"
+                  :key="item.id"
+                  :label="item.network_name"
+                  :value="item.id"/>
               </el-select>
             </el-col>
           </el-row>
-          <el-row class="card-row"
-                  v-if="!edit">
-            <el-col :span="3"
-                    class="card-span-left">配网方式描述</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">{{productDetail.network_des}}</el-col>
+          <el-row 
+            v-if="!edit"
+            class="card-row">
+            <el-col 
+              :span="3"
+              class="card-span-left">配网方式描述</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">{{ productDetail.network_des }}</el-col>
           </el-row>
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left">产品小图</el-col>
-            <el-col :span="20"
-                    :offset="1"
-                    class="card-span-right">
+            <el-col 
+              :span="3"
+              class="card-span-left">产品小图</el-col>
+            <el-col 
+              :span="20"
+              :offset="1"
+              class="card-span-right">
               <p style="margin-top: 5px;font-size: 13px;color: darkgrey;">用户添加设备时看到的列表图片，支持JPEG、JPG、PNG、BMP、GIF格式，大小5M以内</p>
-              <img v-if="productDetail.icon"
-                   style="max-height: 120px"
-                   :src="productDetail.icon"
-                   v-img:name
-                   alt="图片加载失败">
-              <el-upload v-if="edit&&productDetail.icon"
-                         action="/api/index.php/files/save"
-                         accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
-                         :show-file-list="false"
-                         :on-success="handleImgSuccess"
-                         :before-upload="beforeImgUpload"
-                         :data="{type:26,token:token}">
-                <el-button size="small"
-                           type="primary">上传图片</el-button>
+              <img 
+                v-img:name
+                v-if="productDetail.icon"
+                :src="productDetail.icon"
+                style="max-height: 120px"
+                alt="图片加载失败">
+              <el-upload 
+                v-if="edit&&productDetail.icon"
+                :show-file-list="false"
+                :on-success="handleImgSuccess"
+                :before-upload="beforeImgUpload"
+                :data="{type:26,token:token}"
+                action="/api/index.php/files/save"
+                accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp">
+                <el-button 
+                  size="small"
+                  type="primary">上传图片</el-button>
               </el-upload>
-              <el-upload v-if="edit&&!productDetail.icon"
-                         action="/api/index.php/files/save"
-                         style="display: inline-block;border: 1px solid #d8dce5;padding: 20px;"
-                         accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
-                         :show-file-list="false"
-                         :on-success="handleImgSuccess"
-                         :before-upload="beforeImgUpload"
-                         :data="{type:26,token:token}">
-                <i class="el-icon-plus"
-                   style="font-size: 60px;color: #d8dce5;"></i>
+              <el-upload 
+                v-if="edit&&!productDetail.icon"
+                :show-file-list="false"
+                :on-success="handleImgSuccess"
+                :before-upload="beforeImgUpload"
+                :data="{type:26,token:token}"
+                action="/api/index.php/files/save"
+                style="display: inline-block;border: 1px solid #d8dce5;padding: 20px;"
+                accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp">
+                <i 
+                  class="el-icon-plus"
+                  style="font-size: 60px;color: #d8dce5;"/>
               </el-upload>
             </el-col>
           </el-row>
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left">产品图片（六观图）</el-col>
-            <el-col :span="20"
-                    :offset="1"
-                    class="card-span-right">
+            <el-col 
+              :span="3"
+              class="card-span-left">产品图片（六观图）</el-col>
+            <el-col 
+              :span="20"
+              :offset="1"
+              class="card-span-right">
               <p style="margin-top: 5px;font-size: 13px;color: darkgrey;">支持JPEG、JPG、PNG、BMP、GIF格式，大小5M以内</p>
-              <div class="six-img"
-                   v-for="(item,index) in productDetail.images"
-                   :key="index">
-                <img :src="item.file_url"
-                     v-img:name
-                     alt="图片加载失败">
-                <el-upload v-if="edit"
-                           action="/api/index.php/files/save"
-                           accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
-                           :show-file-list="false"
-                           :on-success="handleImgElseSuccess(item.id,index)"
-                           :before-upload="beforeImgUpload"
-                           :data="{type:12,token:token}">
-                  <el-button size="small"
-                             type="primary">上传图片</el-button>
+              <div 
+                v-for="(item,index) in productDetail.images"
+                :key="index"
+                class="six-img">
+                <img 
+                  v-img:name
+                  :src="item.file_url"
+                  alt="图片加载失败">
+                <el-upload 
+                  v-if="edit"
+                  :show-file-list="false"
+                  :on-success="handleImgElseSuccess(item.id,index)"
+                  :before-upload="beforeImgUpload"
+                  :data="{type:12,token:token}"
+                  action="/api/index.php/files/save"
+                  accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp">
+                  <el-button 
+                    size="small"
+                    type="primary">上传图片</el-button>
                 </el-upload>
               </div>
-              <el-upload v-if="edit&&productDetail.images.length<6"
-                         action="/api/index.php/files/save"
-                         style="display: inline-block;border: 1px solid #d8dce5;padding: 20px;"
-                         accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
-                         :show-file-list="false"
-                         :on-success="addSixImg"
-                         :before-upload="beforeImgUpload"
-                         :data="{type:12,token:token}">
-                <i class="el-icon-plus"
-                   style="font-size: 60px;color: #d8dce5;"></i>
+              <el-upload 
+                v-if="edit&&productDetail.images.length<6"
+                :show-file-list="false"
+                :on-success="addSixImg"
+                :before-upload="beforeImgUpload"
+                :data="{type:12,token:token}"
+                action="/api/index.php/files/save"
+                style="display: inline-block;border: 1px solid #d8dce5;padding: 20px;"
+                accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp">
+                <i 
+                  class="el-icon-plus"
+                  style="font-size: 60px;color: #d8dce5;"/>
               </el-upload>
             </el-col>
           </el-row>
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left"
-                    style="line-height: 32px;">产品规格书</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">
-              <a class="is-link"
-                 :href="productDetail.spec_url"
-                 target="_blank"
-                 download>{{productDetail.spec_name}}</a>
-              <a style="margin-left: 30px"
-                 target="_blank"
-                 v-if="!edit&&productDetail.spec_url"
-                 :href="productDetail.spec_url"
-                 download>
-                <el-button type="primary"
-                           size="small">下载</el-button>
+            <el-col 
+              :span="3"
+              class="card-span-left"
+              style="line-height: 32px;">产品规格书</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <a 
+                :href="productDetail.spec_url"
+                class="is-link"
+                target="_blank"
+                download>{{ productDetail.spec_name }}</a>
+              <a 
+                v-if="!edit&&productDetail.spec_url"
+                :href="productDetail.spec_url"
+                style="margin-left: 30px"
+                target="_blank"
+                download>
+                <el-button 
+                  type="primary"
+                  size="small">下载</el-button>
               </a>
-              <el-upload v-if="edit"
-                         class="p30"
-                         action="/api/index.php/files/save"
-                         accept=".doc,.docx,.pdf,.rar"
-                         :show-file-list="false"
-                         :on-success="handleImgSuccess"
-                         :before-upload="beforeDocUpload"
-                         :data="{type:10,token:token}">
-                <el-button size="small"
-                           type="primary">更换文档</el-button>
+              <el-upload 
+                v-if="edit"
+                :show-file-list="false"
+                :on-success="handleImgSuccess"
+                :before-upload="beforeDocUpload"
+                :data="{type:10,token:token}"
+                class="p30"
+                action="/api/index.php/files/save"
+                accept=".doc,.docx,.pdf,.rar">
+                <el-button 
+                  size="small"
+                  type="primary">更换文档</el-button>
               </el-upload>
             </el-col>
           </el-row>
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left"
-                    style="line-height: 32px;">产品使用说明书</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">
-              <a class="is-link"
-                 :href="productDetail.instruct_url"
-                 target="_blank"
-                 download>{{productDetail.instruct_name}}</a>
-              <a style="margin-left: 30px"
-                 v-if="!edit&&productDetail.instruct_url"
-                 target="_blank"
-                 :href="productDetail.instruct_url"
-                 download>
-                <el-button type="primary"
-                           size="small">下载</el-button>
+            <el-col 
+              :span="3"
+              class="card-span-left"
+              style="line-height: 32px;">产品使用说明书</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <a 
+                :href="productDetail.instruct_url"
+                class="is-link"
+                target="_blank"
+                download>{{ productDetail.instruct_name }}</a>
+              <a 
+                v-if="!edit&&productDetail.instruct_url"
+                :href="productDetail.instruct_url"
+                style="margin-left: 30px"
+                target="_blank"
+                download>
+                <el-button 
+                  type="primary"
+                  size="small">下载</el-button>
               </a>
-              <el-upload v-if="edit"
-                         class="p30"
-                         action="/api/index.php/files/save"
-                         accept=".doc,.docx,.pdf,.rar"
-                         :show-file-list="false"
-                         :on-success="handleImgSuccess"
-                         :before-upload="beforeDocUpload"
-                         :data="{type:11,token:token}">
-                <el-button size="small"
-                           type="primary">更换文档</el-button>
+              <el-upload 
+                v-if="edit"
+                :show-file-list="false"
+                :on-success="handleImgSuccess"
+                :before-upload="beforeDocUpload"
+                :data="{type:11,token:token}"
+                class="p30"
+                action="/api/index.php/files/save"
+                accept=".doc,.docx,.pdf,.rar">
+                <el-button 
+                  size="small"
+                  type="primary">更换文档</el-button>
               </el-upload>
             </el-col>
           </el-row>
 
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left edit-label"><span class="red">*</span>客服电话</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">
-              <el-form :model="productDetail" :rules="rules">
+            <el-col 
+              :span="3"
+              class="card-span-left edit-label"><span class="red">*</span>客服电话</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <el-form 
+                :model="productDetail" 
+                :rules="rules">
                 <el-form-item prop="vendor_phone">
-                  <el-input :readonly="!edit"
-                            :class="{'no-border':!edit}"
-                            v-model="productDetail.vendor_phone">
-                  </el-input>
+                  <el-input 
+                    :readonly="!edit"
+                    :class="{'no-border':!edit}"
+                    v-model="productDetail.vendor_phone"/>
                 </el-form-item>
               </el-form>
 
@@ -286,301 +348,387 @@
           </el-row>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="技术方案"
-                   name="tech">
+      <el-tab-pane 
+        label="技术方案"
+        name="tech">
         <el-row class="">
           <el-row class="card-row">
-            <el-col :span="3"
-                    class="card-span-left">选择技术方案</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">
-              <div class="accessProgram"
-                   :class="{'active':productDetail.type==1,'dis':!edit}"
-                   @click="chooseAccess(1)">
-                <i class="el-icon-circle-check"></i>
-                <div class="c-icon wifi"></div>
+            <el-col 
+              :span="3"
+              class="card-span-left">选择技术方案</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <div 
+                :class="{'active':productDetail.type==1,'dis':!edit}"
+                class="accessProgram"
+                @click="chooseAccess(1)">
+                <i class="el-icon-circle-check"/>
+                <div class="c-icon wifi"/>
                 <p class="cname">Wi-Fi方案</p>
                 <p class="cdes">适合空调、空气净化器、洗衣机等</p>
               </div>
-              <div class="accessProgram"
-                   :class="{'active':productDetail.type==3,'dis':!edit}"
-                   @click="chooseAccess(3)">
-                <div class="c-icon bluetooth"></div>
-                <i class="el-icon-circle-check"></i>
+              <div 
+                :class="{'active':productDetail.type==3,'dis':!edit}"
+                class="accessProgram"
+                @click="chooseAccess(3)">
+                <div class="c-icon bluetooth"/>
+                <i class="el-icon-circle-check"/>
                 <p class="cname">蓝牙方案</p>
                 <p class="cdes">适合音箱、健康监护设备等…</p>
               </div>
-              <div class="accessProgram"
-                   :class="{'active':productDetail.type==2,'dis':!edit}"
-                   @click="chooseAccess(2)">
-                <div class="c-icon zigbee"></div>
-                <i class="el-icon-circle-check"></i>
+              <div 
+                :class="{'active':productDetail.type==2,'dis':!edit}"
+                class="accessProgram"
+                @click="chooseAccess(2)">
+                <div class="c-icon zigbee"/>
+                <i class="el-icon-circle-check"/>
                 <p class="cname">ZigBee方案</p>
                 <p class="cdes">适合门锁、报警器等…</p>
               </div>
             </el-col>
           </el-row>
-          <el-row class="card-row"
-                  v-show="productDetail.type==1">
-            <el-col :span="3"
-                    class="card-span-left"
-                    :class="{'edit-label':edit}">模组/芯片信息</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">
-              <span v-if="!edit">{{productDetail.type_vendor}}</span>
-              <el-select v-if="edit"
-                         v-model="productDetail.type_vendor"
-                         @change="changeModel"
-                         placeholder="请选择"
-                         style="width: 100%">
-                <el-option v-for="item in module_list"
-                           :key="item.vendor"
-                           :label="item.vendor"
-                           :value="item.vendor">
-                </el-option>
+          <el-row 
+            v-show="productDetail.type==1"
+            class="card-row">
+            <el-col 
+              :span="3"
+              :class="{'edit-label':edit}"
+              class="card-span-left">模组/芯片信息</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <span v-if="!edit">{{ productDetail.type_vendor }}</span>
+              <el-select 
+                v-if="edit"
+                v-model="productDetail.type_vendor"
+                placeholder="请选择"
+                style="width: 100%"
+                @change="changeModel">
+                <el-option 
+                  v-for="item in module_list"
+                  :key="item.vendor"
+                  :label="item.vendor"
+                  :value="item.vendor"/>
               </el-select>
             </el-col>
           </el-row>
-          <el-row class="card-row"
-                  v-show="productDetail.type==1">
-            <el-col :span="3"
-                    class="card-span-left"
-                    :class="{'edit-label':edit}">型号</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">
-              <span v-if="!edit">{{productDetail.type_model}}</span>
-              <el-select v-if="edit"
-                         v-model="productDetail.type_key"
-                         placeholder="请选择"
-                         style="width: 100%">
-                <el-option v-for="item in model_list"
-                           :key="item.module_id"
-                           :label="item.model"
-                           :value="item.module_id">
-                </el-option>
+          <el-row 
+            v-show="productDetail.type==1"
+            class="card-row">
+            <el-col 
+              :span="3"
+              :class="{'edit-label':edit}"
+              class="card-span-left">型号</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <span v-if="!edit">{{ productDetail.type_model }}</span>
+              <el-select 
+                v-if="edit"
+                v-model="productDetail.type_key"
+                placeholder="请选择"
+                style="width: 100%">
+                <el-option 
+                  v-for="item in model_list"
+                  :key="item.module_id"
+                  :label="item.model"
+                  :value="item.module_id"/>
               </el-select>
             </el-col>
           </el-row>
-          <el-row class="card-row"
-                  v-show="productDetail.type==2 || productDetail.type==3">
-            <el-col :span="3"
-                    class="card-span-left"
-                    :class="{'edit-label':edit}">协议</el-col>
-            <el-col :span="16"
-                    :offset="1"
-                    class="card-span-right">
-              <span v-if="!edit">{{productDetail.agreement}}</span>
-              <el-select v-if="edit"
-                         v-model="productDetail.type_key"
-                         placeholder="请选择"
-                         style="width: 100%">
-                <el-option v-for="item in agreement_list"
-                           :key="item.agreement_id"
-                           :label="item.agreement"
-                           :value="item.agreement_id">
-                </el-option>
+          <el-row 
+            v-show="productDetail.type==2 || productDetail.type==3"
+            class="card-row">
+            <el-col 
+              :span="3"
+              :class="{'edit-label':edit}"
+              class="card-span-left">协议</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <span v-if="!edit">{{ productDetail.agreement }}</span>
+              <el-select 
+                v-if="edit"
+                v-model="productDetail.type_key"
+                placeholder="请选择"
+                style="width: 100%">
+                <el-option 
+                  v-for="item in agreement_list"
+                  :key="item.agreement_id"
+                  :label="item.agreement"
+                  :value="item.agreement_id"/>
               </el-select>
             </el-col>
           </el-row>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="功能点设置"
-                   name="fps">
+      <el-tab-pane 
+        label="功能点设置"
+        name="fps">
         <h5>必选功能点</h5>
-        <el-table class="attr-table"
-                  :data="must_fps"
-                  :span-method="spanMethod"
-                  highlight-current-row
-                  border
-                  stripe
-                  fit
-                  style="width:100%;">
-          <el-table-column align="center"
-                           label="node_ID"
-                           prop="nodeid">
-          </el-table-column>
-          <el-table-column align="center"
-                           label="参数名称"
-                           prop="remark">
-          </el-table-column>
-          <el-table-column align="center"
-                           label="value"
-                           prop="origin_value_string">
+        <el-table 
+          :data="must_fps"
+          :span-method="spanMethod"
+          class="attr-table"
+          highlight-current-row
+          border
+          stripe
+          fit
+          style="width:100%;">
+          <el-table-column 
+            align="center"
+            label="node_ID"
+            prop="nodeid"/>
+          <el-table-column 
+            align="center"
+            label="参数名称"
+            prop="remark"/>
+          <el-table-column 
+            align="center"
+            label="value"
+            prop="origin_value_string">
             <template slot-scope="scope">
               <div v-if="scope.row.key_type=='1'">
-                <div class="gavin-attr"
-                     v-for="item in scope.row.origin_value_list"
-                     :key="item">
-                  {{item}}
+                <div 
+                  v-for="item in scope.row.origin_value_list"
+                  :key="item"
+                  class="gavin-attr">
+                  {{ item }}
                 </div>
               </div>
               <div v-else>
-                {{scope.row.origin_value_string}}
+                {{ scope.row.origin_value_string }}
               </div>
 
             </template>
           </el-table-column>
-          <el-table-column align="center"
-                           label="是否开启">
+          <el-table-column 
+            align="center"
+            label="是否开启">
             <template slot-scope="scope">
               <div v-if="scope.row.key_type=='1'">
-                <div class="gavin-attr"
-                     v-for="item in scope.row.origin_value_list"
-                     :key="item">
-                  <el-switch :value="true"
-                             disabled>
-                  </el-switch>
+                <div 
+                  v-for="item in scope.row.origin_value_list"
+                  :key="item"
+                  class="gavin-attr">
+                  <el-switch 
+                    :value="true"
+                    disabled/>
                 </div>
 
               </div>
               <div v-else>
-                <el-switch :value="true"
-                           disabled>
-                </el-switch>
+                <el-switch 
+                  :value="true"
+                  disabled/>
               </div>
 
             </template>
           </el-table-column>
         </el-table>
         <h5>可选功能点</h5>
-        <el-table class="attr-table"
-                  :data="opt_fps"
-                  :span-method="spanMethod"
-                  highlight-current-row
-                  border
-                  stripe
-                  fit
-                  style="width:100%;">
-          <el-table-column align="center"
-                           label="node_ID"
-                           prop="nodeid">
-          </el-table-column>
-          <el-table-column align="center"
-                           label="参数名称"
-                           prop="remark">
-          </el-table-column>
-          <el-table-column align="center"
-                           class="gavin-attr-box"
-                           label="value"
-                           prop="origin_value_string">
+        <el-table 
+          :data="opt_fps"
+          :span-method="spanMethod"
+          class="attr-table"
+          highlight-current-row
+          border
+          stripe
+          fit
+          style="width:100%;">
+          <el-table-column 
+            align="center"
+            label="node_ID"
+            prop="nodeid"/>
+          <el-table-column 
+            align="center"
+            label="参数名称"
+            prop="remark"/>
+          <el-table-column 
+            align="center"
+            class="gavin-attr-box"
+            label="value"
+            prop="origin_value_string">
             <template slot-scope="scope">
               <div v-if="scope.row.key_type=='1'">
-                <div class="gavin-attr"
-                     v-for="item in scope.row.origin_value_list"
-                     :key="item">
-                  {{item}}
+                <div 
+                  v-for="item in scope.row.origin_value_list"
+                  :key="item"
+                  class="gavin-attr">
+                  {{ item }}
                 </div>
               </div>
               <div v-else>
                 <div v-if="edit">
                   <div v-if="scope.row.key_type=='2'">
-                    <el-input v-model="scope.row.origin_value_list[1]"
-                              style="width: 35%;"></el-input>
+                    <el-input 
+                      v-model="scope.row.origin_value_list[1]"
+                      style="width: 35%;"/>
                     <span style="margin: 0 5px;">-</span>
-                    <el-input v-model="scope.row.origin_value_list[2]"
-                              style="width: 35%;"></el-input>
-                    <span>{{scope.row.unit}}</span>
+                    <el-input 
+                      v-model="scope.row.origin_value_list[2]"
+                      style="width: 35%;"/>
+                    <span>{{ scope.row.unit }}</span>
                   </div>
                   <div v-if="scope.row.key_type=='4'">
-                    <el-input v-model="scope.row.origin_value_list[0]"
-                              style="width: 70%;"></el-input>
-                    <span>{{scope.row.unit}}</span>
+                    <el-input 
+                      v-model="scope.row.origin_value_list[0]"
+                      style="width: 70%;"/>
+                    <span>{{ scope.row.unit }}</span>
                   </div>
                 </div>
                 <div v-else>
-                  {{scope.row.origin_value_string}}
+                  {{ scope.row.origin_value_string }}
                 </div>
               </div>
 
             </template>
           </el-table-column>
-          <el-table-column align="center"
-                           label="是否开启"
-                           prop="is_enable">
+          <el-table-column 
+            align="center"
+            label="是否开启"
+            prop="is_enable">
             <template slot-scope="scope">
               <div v-if="scope.row.key_type=='1'">
-                <div class="gavin-attr"
-                     v-for="item in scope.row.origin_value_list"
-                     :key="item">
-                  <el-switch @change="setEnable(scope.row,item)"
-                             :value="scope.row.value_list.indexOf(item)>=0?true:false"
-                             :disabled="!edit">
-                  </el-switch>
+                <div 
+                  v-for="item in scope.row.origin_value_list"
+                  :key="item"
+                  class="gavin-attr">
+                  <el-switch 
+                    :value="scope.row.value_list.indexOf(item)>=0?true:false"
+                    :disabled="!edit"
+                    @change="setEnable(scope.row,item)"/>
                 </div>
 
               </div>
               <div v-else>
-                <el-switch @change="setEnable(scope.row)"
-                           :value="scope.row.value_list.length?true:false"
-                           :disabled="!edit">
-                </el-switch>
+                <el-switch 
+                  :value="scope.row.value_list.length?true:false"
+                  :disabled="!edit"
+                  @change="setEnable(scope.row)"/>
               </div>
 
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="版本信息"
-                   name="version">
+      <el-tab-pane 
+        label="版本信息"
+        name="version">
         <h5>客户端H5控制页</h5>
-        <el-table :data="h5version_list"
-                  highlight-current-row
-                  border
-                  stripe
-                  fit
-                  style="width:100%;">
-          <el-table-column label="版本号"
-                           prop="version_no"></el-table-column>
-          <el-table-column label="版本描述"
-                           prop="des"></el-table-column>
-          <el-table-column label="状态"
-                           :formatter="statusMap"
-                           prop="status"></el-table-column>
-          <el-table-column label="创建时间"
-                           prop="created_at_txt"></el-table-column>
+        <el-table 
+          :data="h5version_list"
+          highlight-current-row
+          border
+          stripe
+          fit
+          style="width:100%;">
+          <el-table-column 
+            label="版本号"
+            prop="version_no"/>
+          <el-table-column 
+            label="版本描述"
+            prop="des"/>
+          <el-table-column 
+            :formatter="statusMap"
+            label="状态"
+            prop="status"/>
+          <el-table-column 
+            label="创建时间"
+            prop="created_at_txt"/>
         </el-table>
         <h5>固件</h5>
-        <el-table :data="version_list"
-                  highlight-current-row
-                  border
-                  stripe
-                  fit
-                  style="width:100%;">
-          <el-table-column label="版本号"
-                           prop="version_no"></el-table-column>
-          <el-table-column label="版本描述"
-                           prop="des"></el-table-column>
-          <el-table-column label="状态"
-                           :formatter="statusMap"
-                           prop="status"></el-table-column>
-          <el-table-column label="创建时间"
-                           prop="created_at_txt"></el-table-column>
+        <el-table 
+          :data="version_list"
+          highlight-current-row
+          border
+          stripe
+          fit
+          style="width:100%;">
+          <el-table-column 
+            label="版本号"
+            prop="version_no"/>
+          <el-table-column 
+            label="版本描述"
+            prop="des"/>
+          <el-table-column 
+            :formatter="statusMap"
+            label="状态"
+            prop="status"/>
+          <el-table-column 
+            label="创建时间"
+            prop="created_at_txt"/>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="离线提示语"
-                   name="offline_hint">
+      <el-tab-pane 
+        label="离线提示语"
+        name="offline_hint">
         <el-row class="card-row">
-          <el-col :span="3"
-                  class="card-span-left edit-label">离线提示语</el-col>
-          <el-col :span="16"
-                  :offset="1"
-                  class="card-span-right">
+          <el-col 
+            :span="3"
+            class="card-span-left edit-label">离线提示语</el-col>
+          <el-col 
+            :span="16"
+            :offset="1"
+            class="card-span-right">
             <el-form :model="productDetail">
               <el-form-item prop="offline_hint">
-                <el-input :readonly="!edit"
-                          type="textarea"
-                          :class="{'no-border':!edit}"
-                          :rows="5"
-                          v-model="productDetail.offline_hint"
-                          :maxlength="1000">
-                </el-input>
+                <el-input 
+                  :readonly="!edit"
+                  :class="{'no-border':!edit}"
+                  :rows="5"
+                  v-model="productDetail.offline_hint"
+                  :maxlength="1000"
+                  type="textarea"/>
               </el-form-item>
             </el-form>
           </el-col>
         </el-row>
+      </el-tab-pane>
+
+      <el-tab-pane 
+        label="配置文件"
+        name="config_file">
+        <el-row class="card-row">
+          <el-col 
+            :span="3"
+            class="card-span-left edit-label">配置文件</el-col>
+          <el-col 
+            :span="16"
+            :offset="1"
+            class="card-span-right">
+            <el-col :span="12">
+              <el-input 
+                v-model="uploadName"
+                :span="6" 
+                readonly="true" 
+                style="width: 325px"/>
+              <el-upload
+                :disabled="!edit"
+                :on-success="handleUploadSuccess"
+                :show-file-list="false"
+                :data="{type:33,token:token}"
+                style="display: inline-block"
+                class="upload-demo"
+                action="/api/index.php/files/save"
+                accept=".lua">
+                <el-button :disabled="!edit">预览</el-button>
+              </el-upload>
+            </el-col>
+          </el-col>
+        </el-row>
+        <!-- <el-row>
+          <el-col 
+            :span="3" 
+            class="card-span-left"><el-button 
+              type="primary" 
+              @click="uploadFiles">确定上传</el-button></el-col>
+        </el-row> -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -594,7 +742,7 @@ import fetch from '@/utils/fetch'
 import { Message } from 'element-ui'
 
 export default {
-  name: 'onlineProductDetail',
+  name: 'OnlineProductDetail',
 
   data() {
     var checkPhone = (rule, value, callback) => {
@@ -634,7 +782,11 @@ export default {
           { required: true, message: '请输入客服电话', trigger: 'blur' },
           { validator: checkPhone }
         ]
-      }
+      },
+
+      // 配置文件
+      uploadName: '',
+      configFile: {},
     }
   },
   created() {
@@ -643,7 +795,41 @@ export default {
   mounted() {
     this.getReviewInfo()
   },
+  deactivated() {
+    this.$destroy()
+  },
   methods: {
+    // 配置文件 upload上传
+    handleUploadSuccess(file, fileList) {
+      if(file.code!==200){
+        this.$message.error(file.msg)
+        return
+      }
+      this.uploadName = file.result.filename
+      let tmp = Object.assign({},file.result)
+      tmp.url = tmp.file_url
+      this.configFile = tmp
+    },
+    // 上传配置文件
+    uploadFiles() {
+      console.log(this.configFile)
+      if(this.configFile){
+        fetch({
+          url: '/admin/product_edit',
+          method: 'post',
+          data: {
+            'id': this.product_id,
+            'agreement_file': this.configFile
+          }
+        }).then(res=>{
+          console.log(res)
+        })
+      } else {
+        this.$message.error('请先选择配置文件')
+      }
+    },
+
+
     // 获取详情
     getReviewInfo() {
       const _this = this
@@ -919,6 +1105,14 @@ export default {
       if (formData.attr_list) {
         formData.attr_list = JSON.stringify(formData.attr_list)
       }
+      if (formData.attr_list) {
+        formData.attr_list = JSON.stringify(formData.attr_list)
+      }
+      // 配置协议
+      if (this.configFile && this.configFile.file_url) {
+        formData.agreement_file = JSON.stringify(this.configFile)
+      }
+
       fetch({
         url: '/admin/product_edit',
         method: 'post',
@@ -1003,9 +1197,6 @@ export default {
       return arry
     }
   },
-  deactivated() {
-    this.$destroy()
-  }
 }
 </script>
 

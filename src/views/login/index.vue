@@ -1,6 +1,12 @@
 <template>
   <div class="login-container">
-    <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
+    <el-form 
+      ref="loginForm" 
+      :model="loginForm" 
+      :rules="loginRules" 
+      auto-complete="on" 
+      label-position="left" 
+      label-width="0px"
       class="card-box login-form">
       <h3 class="title">登录</h3>
 
@@ -8,37 +14,55 @@
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="email" />
         </span>
-        <el-input name="mail" type="text" v-model="loginForm.mail" autoComplete="on" placeholder="登录邮箱" />
+        <el-input 
+          v-model="loginForm.mail" 
+          name="mail" 
+          type="text" 
+          auto-complete="on" 
+          placeholder="登录邮箱" />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password"></svg-icon>
+          <svg-icon icon-class="password"/>
         </span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-          placeholder="登录密码"/>
-        <span class='show-pwd' @click='showPwd'><svg-icon icon-class="eye" /></span>
+        <el-input 
+          :type="pwdType" 
+          v-model="loginForm.password" 
+          name="password" 
+          auto-complete="on" 
+          placeholder="登录密码"
+          @keyup.enter.native="handleLogin"/>
+        <span 
+          class="show-pwd" 
+          @click="showPwd"><svg-icon icon-class="eye" /></span>
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
+        <el-button 
+          :loading="loading" 
+          type="primary" 
+          style="width:100%;" 
+          @click.native.prevent="handleLogin">
           登录
         </el-button>
       </el-form-item>
 
       <!--<div class='tips'>-->
-        <!--<span style="margin-right:20px;">username: admin</span>-->
-        <!--</span> password: admin</span>-->
+      <!--<span style="margin-right:20px;">username: admin</span>-->
+      <!--</span> password: admin</span>-->
       <!--</div>-->
     </el-form>
   </div>
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate';
+import { isvalidUsername } from '@/utils/validate'
+
+const md5 = require('js-md5')
 
 export default {
-  name: 'login',
+  name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
@@ -47,13 +71,13 @@ export default {
         callback()
       }
     }
-//    const validatePass = (rule, value, callback) => {
-//      if (value.length < 1) {
-//        callback(new Error('密码不能小于5位'))
-//      } else {
-//        callback()
-//      }
-//    }
+    //    const validatePass = (rule, value, callback) => {
+    //      if (value.length < 1) {
+    //        callback(new Error('密码不能小于5位'))
+    //      } else {
+    //        callback()
+    //      }
+    //    }
     return {
       loginForm: {
         mail: '',
@@ -76,14 +100,19 @@ export default {
       }
     },
     handleLogin() {
-      console.log('登录');
+      console.log('登录')
 
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('Login', this.loginForm).then(() => {
+          let md5Password = md5(this.loginForm.password)
+          console.log(md5Password)
+          this.$store.dispatch('Login',{
+            mail: this.loginForm.mail,
+            password: md5Password
+          }).then(() => {
             this.loading = false
-            console.log('登录');
+            console.log('登录')
             this.$router.push({ path: '/auditManagement' })
           }).catch(() => {
             this.loading = false

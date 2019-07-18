@@ -694,7 +694,7 @@
       <el-tab-pane 
         label="配置文件"
         name="config_file">
-        <el-row class="card-row">
+        <!-- <el-row class="card-row">
           <el-col 
             :span="3"
             class="card-span-left edit-label">配置文件</el-col>
@@ -722,14 +722,58 @@
               </el-upload>
             </el-col>
           </el-col>
+        </el-row> -->
+        <el-row>
+          <el-col :span="16" class="filebd"></el-col>
         </el-row>
         <!-- <el-row>
-          <el-col 
-            :span="3" 
-            class="card-span-left"><el-button 
-              type="primary" 
-              @click="uploadFiles">确定上传</el-button></el-col>
+          <el-col :span="3" :offset="1">版本号</el-col>
+          <el-col :span="6">版本简介</el-col>
+          <el-col :span="4">状态</el-col>
+          <el-col :span="4">创建时间</el-col>
+          <el-col :span="6">操作</el-col>
         </el-row> -->
+        <el-table :data="tableData" style="width: 100%" id="my-table">
+          <el-table-column prop="versionNumber" label="版本号">无配置文件</el-table-column>
+          <el-table-column prop="introduce" label="版本简介"></el-table-column>
+          <el-table-column prop="status" label="状态"></el-table-column>
+          <el-table-column prop="time" label="创建时间"></el-table-column>
+          <el-table-column label="操  作">
+            <template slot-scope="scope">
+              <el-button id="my-btn"  type="text" @click="handleAdd(scope.$index, scope.row)">添加配置文件</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 添加文件 -->
+        <el-dialog title="添加配置文件" :visible.sync="dialogFormVisible">
+          <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="版本号" prop="versionNumber">
+              <el-input v-model="ruleForm.versionNumber"></el-input>
+            </el-form-item>
+            <el-form-item label="版本说明" prop="introduce">
+              <el-input v-model="ruleForm.introduce" class="introduce"></el-input>
+            </el-form-item>
+            <el-form-item label="配置文件" prop="uploadName" class="formfile">
+              <el-input v-model="uploadName" class="uploadName"></el-input>
+              <!-- 预览 -->
+              <el-upload
+                :before-upload="beforeAvatarUpload"
+                :on-success="handleUploadSuccess"
+                :show-file-list="false"
+                :data="{type:33,token:token}"
+                style="display: inline-block"
+                class="upload-demo"
+                action="/api/index.php/files/save"
+                accept=".lua">
+                <el-button>预览</el-button>
+              </el-upload>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm('ruleForm')" class="submitForm">提交</el-button>
+              <el-button @click="cancelForm('ruleForm')" class="cancelForm">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -740,7 +784,7 @@ import { getProductInfo, productUnshelve } from '@/api/check'
 import utils from '@/utils/helper'
 import { getToken } from '@/utils/auth'
 import fetch from '@/utils/fetch'
-import { Message } from 'element-ui'
+import { Message, Dialog } from 'element-ui'
 
 export default {
   name: 'OnlineProductDetail',
@@ -788,6 +832,20 @@ export default {
       // 配置文件
       uploadName: '',
       configFile: {},
+       tableData: [
+        {
+          versionNumber: "无配置文件",
+          introduce: "",
+          status: "",
+          time: ""
+        },
+      ],
+      dialogFormVisible:false,
+      ruleForm: {
+          versionNumber: '',
+          introduce: '',
+          uploadName: ''
+        },
     }
   },
   created() {
@@ -800,6 +858,25 @@ export default {
     this.$destroy()
   },
   methods: {
+    // 添加配置文件
+    handleAdd(index, row){
+      this.dialogFormVisible = true
+      console.log(index, row);
+      // this.tableData = this.ruleForm
+      for (let i = 0; i < this.tableData.length; i++) {
+        this.tableData[i] = this.ruleForm
+      }
+    },
+    submitForm(){
+      this.dialogFormVisible = false
+      // console.log(this.ruleForm.versionNumber);
+      // console.log(this.ruleForm.introduce);
+      // console.log(this.ruleForm.uploadName);
+      
+    },
+    cancelForm(){
+      this.dialogFormVisible = false
+    },
     beforeAvatarUpload(file) {
       console.log(file.type)
       const filter = file.name.indexOf('.lua') > -1
@@ -1328,5 +1405,43 @@ export default {
 }
 .red {
   color: red;
+}
+.filebd {
+  height: 1px;
+  width: 100%;
+  background-color: #ccc;
+  margin: 30px 0;
+}
+.el-dialog{
+  width: 610px;
+  height: 450px;
+  padding-right: 80px;
+  .el-form-item__label{
+    text-align: left;
+    padding-left: 15px;
+  }
+  .uploadName{
+    width: 80%;
+    margin-right: 4px;
+  }
+  .introduce .el-input__inner{
+    height: 75px;
+  }
+  .formfile{
+    margin-bottom: 60px;
+  }
+  .submitForm{
+    margin-right: 100px;
+  }
+  .submitForm{
+    width: 135px;
+    margin-right: 105px;
+  }
+  .cancelForm{
+    width: 135px;
+  }
+  .el-icon-close{
+    font-size: 24px;
+  }
 }
 </style>

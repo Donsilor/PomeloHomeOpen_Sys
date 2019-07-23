@@ -697,14 +697,15 @@
         <el-row>
           <el-col :span="16" class="filebd"></el-col>
         </el-row>
-        <el-table :data="tableData" style="width: 100%" id="my-table">
+        <el-table :data="tableData" style="width: 100%" border stripe>
           <el-table-column prop="versionNumber" label="版本号">无配置文件</el-table-column>
           <el-table-column prop="introduce" label="版本简介"></el-table-column>
           <el-table-column prop="status" label="状态"></el-table-column>
           <el-table-column prop="time" label="创建时间"></el-table-column>
           <el-table-column label="操  作">
             <template  slot="header" slot-scope="scope">
-              <el-button id="my-btn" type="primary" size="small"  @click="handleAdd(scope.$index, scope.row)">添加配置文件</el-button>
+              <span class="handle">操作</span>
+              <el-button class="addbtn" type="primary" size="small"  @click="addFormVisiable=true">添加配置文件</el-button>
             </template>
             <template slot-scope="scope">
               <el-button type="text" @click="handleCheck(scope.$index, scope.row)">查看</el-button>
@@ -714,13 +715,13 @@
           </el-table-column>
         </el-table>
         <!-- 添加文件弹框 -->
-        <el-dialog title="添加配置文件" :visible.sync="dialogFormVisible">
-          <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-dialog title="添加配置文件" :visible.sync="addFormVisiable">
+          <el-form :model="addForm" status-icon :rules="rules" ref="addForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="版本号" prop="versionNumber">
-              <el-input v-model="ruleForm.versionNumber"></el-input>
+              <el-input v-model="addForm.versionNumber"></el-input>
             </el-form-item>
             <el-form-item label="版本说明" prop="introduce">
-              <el-input v-model="ruleForm.introduce" class="introduce"></el-input>
+              <el-input v-model="addForm.introduce" class="introduce"></el-input>
             </el-form-item>
             <el-form-item label="配置文件" prop="uploadName" class="formfile">
               <el-input v-model="uploadName" class="uploadName"></el-input>
@@ -738,40 +739,41 @@
               </el-upload>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')" class="submitForm">提交</el-button>
-              <el-button @click="cancelForm('ruleForm')" class="cancelForm">取消</el-button>
+              <el-button type="primary" @click="submitForm('addForm')" class="submitForm">提交</el-button>
+              <el-button @click="addFormVisiable = false" class="cancelForm">取消</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
         <!-- 查看文件弹框 -->
         <el-dialog title="查看配置文件" :visible.sync="checkDialog">
-          <el-form :model="ruleForm" status-icon :rules="rules" label-width="100px" class="check-dialog">
+          <el-form :model="checkForm" status-icon :rules="rules" label-width="100px" class="check-dialog">
             <el-form-item label="版本号" prop="versionNumber">
-              <span>{{ruleForm.versionNumber}}</span>
+              <span>{{checkForm.versionNumber}}</span>
             </el-form-item>
             <el-form-item label="版本说明" prop="introduce">
-              <span>{{ruleForm.introduce}}</span>
+              <span>{{checkForm.introduce}}</span>
             </el-form-item>
             <el-form-item label="创建时间" prop="time">
-              <span>{{ruleForm.time}}</span>
+              <span>{{checkForm.time}}</span>
             </el-form-item>
             <el-form-item label="配置文件" prop="uploadName">
-              <span>{{ruleForm.status}}</span>
-              <el-button type="text" class="download">点击可下载</el-button>
+              <span>{{uploadName}}</span>
+              <!-- <el-button type="text" class="download">点击可下载</el-button> -->
+              <a href="#" download="">点击可下载</a>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="closeForm" class="closeForm">关闭</el-button>
+              <el-button type="primary" @click="checkDialog = false" class="closeForm">关闭</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
         <!-- 编辑文件弹框 -->
         <el-dialog title="添加配置文件" :visible.sync="editDialog">
-          <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+          <el-form :model="editForm" status-icon :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="版本号" prop="versionNumber">
-              <el-input v-model="ruleForm.versionNumber"></el-input>
+              <el-input v-model="editForm.versionNumber"></el-input>
             </el-form-item>
             <el-form-item label="版本说明" prop="introduce">
-              <el-input v-model="ruleForm.introduce" class="introduce"></el-input>
+              <el-input v-model="editForm.introduce" class="introduce"></el-input>
             </el-form-item>
             <el-form-item label="配置文件" prop="uploadName" class="formfile">
               <el-input v-model="uploadName" class="uploadName"></el-input>
@@ -789,7 +791,7 @@
               </el-upload>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="editDialog=false" class="submitForm">提交</el-button>
+              <el-button type="primary" @click="submitForm(editForm)" class="submitForm">提交</el-button>
               <el-button @click="editDialog=false" class="cancelForm">取消</el-button>
             </el-form-item>
           </el-form>
@@ -806,10 +808,11 @@
             <p>删除后可能回导致部分设备配置出错</p>
           </div>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="delectDialog = false">确 定</el-button>
+            <el-button @click="submitForm">确 定</el-button>
             <el-button @click="delectDialog = false">取 消</el-button>
           </span>
         </el-dialog>
+        
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -869,34 +872,48 @@ export default {
       configFile: {},
       tableData: [
           {
-            versionNumber: '1',
+            versionNumber: '1.0.0',
             time: '2016-05-02',
             introduce: '王小虎',
             status: '上海市普陀区金沙江路 1518 弄'
           }, 
           {
-            versionNumber: '2',
+            versionNumber: '1.0.1',
             time: '2016-05-04',
             introduce: '王小虎',
             status: '上海市普陀区金沙江路 1517 弄'
           }, 
           {
-            versionNumber: '3',
+            versionNumber: '1.0.2',
             time: '2016-05-01',
             introduce: '王小虎',
             status: '上海市普陀区金沙江路 1519 弄'
           }, 
           {
-            versionNumber: '4',
+            versionNumber: '1.0.3',
             time: '2016-05-03',
             introduce: '王小虎',
             status: '上海市普陀区金沙江路 1516 弄'
           }
       ],
-      dialogFormVisible:false,
+      addFormVisiable:false,
       checkDialog:false,
       editDialog:false,
       delectDialog:false,
+      addForm:{
+        versionNumber: "",
+        introduce: ""
+      },
+      checkForm:{
+        versionNumber: "",
+        introduce: "",
+        time:"",
+        uploadName:""
+      },
+      editForm:{
+        versionNumber: "",
+        introduce: ""
+      },
       ruleForm: {},
     }
   },
@@ -911,33 +928,51 @@ export default {
   },
   methods: {
     // 添加配置文件
-    handleAdd(index, row){
-      this.dialogFormVisible = true
-      // console.log(index, row);
-    },
     submitForm(){
-      this.dialogFormVisible = false
-    },
-    cancelForm(){
       this.dialogFormVisible = false
     },
     // 查看
     handleCheck(index, row){
       console.log(index, row);
-      this.ruleForm = row
+      this.checkForm = row
       this.checkDialog = true
     },
     // 编辑
     handleEdit(index, row){
       this.editDialog = true
-      this.ruleForm = row
+      this.editForm = row
     },
     // 删除
-    handleDelect(index, row){
-      this.delectDialog = true
-    },
-    closeForm(){
-      this.checkDialog = false
+    // handleDelect(index, row){
+    //   this.delectDialog = true
+    // },
+    // 删除数据
+    handleDelect(index,item) {
+      this.$confirm("你确定删除配置此文件吗？ 删除后可能会导致部分设备配置出错", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          // 确认
+          // console.log(item);
+          // let res = await this.$http.delete(`users/${item.id}`);
+          // console.log(res)
+          // if (res.data.meta.status == 200) {
+          //   this.search();
+          // }
+          this.tableData.splice(index,1)
+          this.$message({
+            type: "success",
+            message: "删除成功"
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消成功"
+          });
+        });
     },
     beforeAvatarUpload(file) {
       console.log(file.type)
@@ -990,6 +1025,8 @@ export default {
         product_id: this.product_id
       }
       getProductInfo(params).then(response => {
+        console.log(response);
+        
         this.uploadName = response.agreement_file_name
 
         this.productDetail = response
@@ -1473,6 +1510,12 @@ export default {
   width: 100%;
   background-color: #ccc;
   margin: 30px 0;
+}
+.handle{
+  margin-right: 4px;
+}
+.addbtn{
+  padding: 8px 4px;
 }
 .el-dialog{
   width: 610px;

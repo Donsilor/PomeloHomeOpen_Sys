@@ -1085,8 +1085,8 @@ export default {
               }
             }).then(res=>{
               this.getConfigList()
-              this.addFormVisiable = false
-              this.$refs.addForm.resetFields()
+              this.editDialog = false
+              this.$refs.editForm.resetFields()
             })
           } else if (formName == "addForm") {
             // 新增

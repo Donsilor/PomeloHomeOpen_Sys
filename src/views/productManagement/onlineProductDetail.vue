@@ -698,9 +698,8 @@
           <el-col :span="16" class="filebd"></el-col>
         </el-row>
         <el-table :data="tableData" style="width: 100%" border stripe>
-          <el-table-column prop="versionNumber" label="版本号">无配置文件</el-table-column>
-          <el-table-column prop="introduce" label="版本简介"></el-table-column>
-          <el-table-column prop="status" label="状态"></el-table-column>
+          <el-table-column prop="version_no" label="版本号"></el-table-column>
+          <el-table-column prop="desc" label="版本简介"></el-table-column>
           <el-table-column prop="time" label="创建时间"></el-table-column>
           <el-table-column label="操  作">
             <template  slot="header" slot-scope="scope">
@@ -717,11 +716,11 @@
         <!-- 添加文件弹框 -->
         <el-dialog title="添加配置文件" :visible.sync="addFormVisiable">
           <el-form :model="addForm" status-icon :rules="rules" ref="addForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="版本号" prop="versionNumber">
-              <el-input v-model="addForm.versionNumber"></el-input>
+            <el-form-item label="版本号" prop="version_no">
+              <el-input v-model="addForm.version_no"></el-input>
             </el-form-item>
-            <el-form-item label="版本说明" prop="introduce">
-              <el-input v-model="addForm.introduce" class="introduce"></el-input>
+            <el-form-item label="版本说明" prop="desc">
+              <el-input v-model="addForm.desc" class="introduce"></el-input>
             </el-form-item>
             <el-form-item label="配置文件" prop="uploadName" class="formfile">
               <el-input v-model="uploadName" class="uploadName"></el-input>
@@ -747,11 +746,11 @@
         <!-- 查看文件弹框 -->
         <el-dialog title="查看配置文件" :visible.sync="checkDialog">
           <el-form :model="checkForm" status-icon :rules="rules" label-width="100px" class="check-dialog">
-            <el-form-item label="版本号" prop="versionNumber">
-              <span>{{checkForm.versionNumber}}</span>
+            <el-form-item label="版本号" prop="version_no">
+              <span>{{checkForm.version_no}}</span>
             </el-form-item>
-            <el-form-item label="版本说明" prop="introduce">
-              <span>{{checkForm.introduce}}</span>
+            <el-form-item label="版本说明" prop="desc">
+              <span>{{checkForm.desc}}</span>
             </el-form-item>
             <el-form-item label="创建时间" prop="time">
               <span>{{checkForm.time}}</span>
@@ -769,11 +768,11 @@
         <!-- 编辑文件弹框 -->
         <el-dialog title="添加配置文件" :visible.sync="editDialog">
           <el-form :model="editForm" status-icon :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="版本号" prop="versionNumber">
-              <el-input v-model="editForm.versionNumber"></el-input>
+            <el-form-item label="版本号" prop="version_no">
+              <el-input v-model="editForm.version_no"></el-input>
             </el-form-item>
-            <el-form-item label="版本说明" prop="introduce">
-              <el-input v-model="editForm.introduce" class="introduce"></el-input>
+            <el-form-item label="版本说明" prop="desc">
+              <el-input v-model="editForm.desc" class="introduce"></el-input>
             </el-form-item>
             <el-form-item label="配置文件" prop="uploadName" class="formfile">
               <el-input v-model="uploadName" class="uploadName"></el-input>
@@ -864,7 +863,16 @@ export default {
         vendor_phone: [
           { required: true, message: '请输入客服电话', trigger: 'blur' },
           { validator: checkPhone }
-        ]
+        ],
+         version_no: [
+          { required: true, message: '请输入0.0.0格式版本号', trigger: 'blur' },
+        ],
+        desc: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+        ],
+        // uploadName: [
+        //   { required: true, message: '请选择文件', trigger: 'blur' },
+        // ],
       },
 
       // 配置文件
@@ -872,28 +880,28 @@ export default {
       configFile: {},
       tableData: [
           {
-            versionNumber: '1.0.0',
+            version_no: '1.0.0',
             time: '2016-05-02',
-            introduce: '王小虎',
-            status: '上海市普陀区金沙江路 1518 弄'
+            desc: '王小虎',
+            file:""
           }, 
           {
-            versionNumber: '1.0.1',
+            version_no: '1.0.1',
             time: '2016-05-04',
-            introduce: '王小虎',
-            status: '上海市普陀区金沙江路 1517 弄'
+            desc: '王小虎',
+            file:""
           }, 
           {
-            versionNumber: '1.0.2',
+            version_no: '1.0.2',
             time: '2016-05-01',
-            introduce: '王小虎',
-            status: '上海市普陀区金沙江路 1519 弄'
+            desc: '王小虎',
+            file:""
           }, 
           {
-            versionNumber: '1.0.3',
+            version_no: '1.0.3',
             time: '2016-05-03',
-            introduce: '王小虎',
-            status: '上海市普陀区金沙江路 1516 弄'
+            desc: '王小虎',
+            file:""
           }
       ],
       addFormVisiable:false,
@@ -901,18 +909,19 @@ export default {
       editDialog:false,
       delectDialog:false,
       addForm:{
-        versionNumber: "",
-        introduce: ""
+        version_no: "",
+        desc: "",
+        uploadName:""
       },
       checkForm:{
-        versionNumber: "",
-        introduce: "",
+        version_no: "",
+        desc: "",
         time:"",
         uploadName:""
       },
       editForm:{
-        versionNumber: "",
-        introduce: ""
+        version_no: "",
+        desc: ""
       },
       ruleForm: {},
     }
@@ -928,8 +937,37 @@ export default {
   },
   methods: {
     // 添加配置文件
-    submitForm(){
-      this.dialogFormVisible = false
+    // submitForm(){
+    //   this.dialogFormVisible = false
+    // },
+    submitForm(formName) {
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          let res;
+          if (formName == "editForm") {
+            // console.log("编辑");
+          } else if (formName == "addForm") {
+            fetch({
+              url: '/product_agreement/versionadd',
+              method: 'post',
+              data:{
+                product_id:this.product_id,
+                version_no:this.addForm.version_no,
+                desc:this.addForm.desc,
+                file: JSON.stringify(this.configFile) 
+              }
+            }).then(res=>{
+              console.log(res)
+              this.addFormVisiable = false
+              this.$refs.addForm.resetFields();
+            })     
+          } 
+        } else {
+          // 数据错误
+          this.$message.warning("请正确输入数据");
+          return false;
+        }
+      });
     },
     // 查看
     handleCheck(index, row){
@@ -1025,7 +1063,7 @@ export default {
         product_id: this.product_id
       }
       getProductInfo(params).then(response => {
-        console.log(response);
+        // console.log(response);
         
         this.uploadName = response.agreement_file_name
 

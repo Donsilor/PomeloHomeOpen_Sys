@@ -84,6 +84,7 @@
               :offset="1"
               class="card-span-right">{{ productDetail.model }}</el-col>
           </el-row>
+
           <el-row class="card-row">
             <el-col 
               :span="3"
@@ -102,8 +103,58 @@
                     v-model="productDetail.compat"/>
                 </el-form-item>
               </el-form>
-
             </el-col>
+          </el-row>
+
+          <el-row 
+            v-for="(it, idx) in productDetail.compat_ext"
+            :key="idx" 
+            class="card-row">
+            <el-col
+              :span="3"
+              class="card-span-left edit-label">{{ '兼容机型' + (idx + 2) }}</el-col>
+            <el-col 
+              :span="6"
+              :offset="1"
+              class="card-span-right">
+              <el-form :model="productDetail">
+                <el-form-item 
+                  :rules="[{validator:validCompat}]"
+                  prop="compat">
+                  <el-input 
+                    :readonly="!edit"
+                    :class="{'no-border':!edit}"
+                    v-model="it.brand"/>
+                </el-form-item>
+              </el-form>
+            </el-col>
+            <el-col 
+              :span="10"
+              :offset="1"
+              class="card-span-right">
+              <el-form :model="productDetail">
+                <el-form-item 
+                  :rules="[{validator:validCompat}]"
+                  prop="compat">
+                  <el-input 
+                    :readonly="!edit"
+                    :class="{'no-border':!edit}"
+                    v-model="it.compat"/>
+                </el-form-item>
+              </el-form>
+            </el-col>
+            <el-button 
+              v-if="idx == 0"
+              :disabled ="!edit"
+              type="primary" 
+              icon="el-icon-plus"
+              @click="addCompat">添加</el-button>
+            <el-button 
+              v-else
+              :disabled ="!edit"
+              type="primary" 
+              icon="el-icon-minus"
+              @click="removeCompat(idx)">删除</el-button>
           </el-row>
 
           <el-row class="card-row">
@@ -1010,10 +1061,6 @@ export default {
     this.$destroy()
   },
   methods: {
-    // 添加配置文件
-    // submitForm(){
-    //   this.dialogFormVisible = false
-    // },
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
@@ -1030,7 +1077,7 @@ export default {
               url: '/product_agreement/versionedit',
               method: 'post',
               data:{
-                id: this.addForm.id,
+                id: this.editForm.id,
                 product_id: this.product_id,
                 version_no: this.editForm.version_no,
                 desc: this.editForm.des,
@@ -1073,10 +1120,6 @@ export default {
       this.editDialog = true
       this.editForm = row
     },
-    // 删除
-    // handleDelect(index, row){
-    //   this.delectDialog = true
-    // },
     // 删除数据
     handleDelect(index,item) {
       this.$confirm("你确定删除配置此文件吗？ 删除后可能会导致部分设备配置出错", "提示", {
@@ -1160,7 +1203,6 @@ export default {
         this.$message.error('请先选择配置文件')
       }
     },
-
 
     // 获取详情
     getReviewInfo() {
@@ -1409,6 +1451,11 @@ export default {
       if (this.productDetail.compat != this.copyProductDetail.compat) {
         this.modifyData.compat = this.productDetail.compat
       }
+      // 兼容机型2
+      if (this.productDetail.compat_ext != this.copyProductDetail.compat_ext) {
+        this.modifyData.compat_ext = this.productDetail.compat_ext
+      }
+
       if (this.productDetail.offline_hint.replace(/\s/g, '') == '') {
         this.$message.error('离线提示语不能为空')
         return
@@ -1456,6 +1503,7 @@ export default {
       // if (this.configFile && this.configFile.file_url) {
       //   formData.agreement_file = JSON.stringify(this.configFile)
       // }
+
 
       fetch({
         url: '/admin/product_edit',
@@ -1539,6 +1587,18 @@ export default {
         }
       }
       return arry
+    },
+
+    // 添加兼容机型
+    addCompat(){
+      this.productDetail.compat_ext.push({
+        "brand": '',
+        "compat": ''
+      })
+    },
+    // 移除兼容机型
+    removeCompat(idx) {
+      this.productDetail.compat_ext.splice(idx, 1)
     }
   },
 }

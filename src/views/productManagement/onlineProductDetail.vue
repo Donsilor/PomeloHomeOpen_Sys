@@ -695,35 +695,79 @@
         label="配置文件"
         name="config_file">
         <el-row>
-          <el-col :span="16" class="filebd"></el-col>
+          <el-col 
+            :span="16" 
+            class="filebd"/>
         </el-row>
-        <el-table :data="tableData" style="width: 100%" border stripe>
-          <el-table-column prop="version_no" label="版本号"></el-table-column>
-          <el-table-column prop="desc" label="版本简介"></el-table-column>
-          <el-table-column prop="time" label="创建时间"></el-table-column>
+        <el-table 
+          :data="configList" 
+          style="width: 100%" 
+          border 
+          stripe>
+          <el-table-column 
+            prop="version_no" 
+            label="版本号"/>
+          <el-table-column 
+            prop="des" 
+            label="版本说明"/>
+          <el-table-column 
+            prop="created_at_txt" 
+            label="创建时间"/>
           <el-table-column label="操  作">
-            <template  slot="header" slot-scope="scope">
+            <template 
+              slot="header" 
+              slot-scope="scope">
               <span class="handle">操作</span>
-              <el-button class="addbtn" type="primary" size="small"  @click="addFormVisiable=true">添加配置文件</el-button>
+              <el-button 
+                class="addbtn" 
+                type="primary" 
+                size="small" 
+                @click="addFormVisiable=true">添加配置文件</el-button>
             </template>
             <template slot-scope="scope">
-              <el-button type="text" @click="handleCheck(scope.$index, scope.row)">查看</el-button>
-              <el-button type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button type="text" @click="handleDelect(scope.$index, scope.row)">删除</el-button>
+              <el-button 
+                type="text" 
+                @click="handleCheck(scope.$index, scope.row)">查看</el-button>
+              <el-button 
+                type="text" 
+                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <!-- <el-button 
+                type="text" 
+                @click="handleDelect(scope.$index, scope.row)">删除</el-button> -->
             </template>
           </el-table-column>
         </el-table>
         <!-- 添加文件弹框 -->
-        <el-dialog title="添加配置文件" :visible.sync="addFormVisiable">
-          <el-form :model="addForm" status-icon :rules="rules" ref="addForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="版本号" prop="version_no">
-              <el-input v-model="addForm.version_no"></el-input>
+        <el-dialog 
+          :visible.sync="addFormVisiable" 
+          title="添加配置文件">
+          <el-form 
+            ref="addForm" 
+            :model="addForm" 
+            :rules="rules" 
+            status-icon 
+            label-width="100px" 
+            class="demo-ruleForm">
+            <el-form-item 
+              label="版本号" 
+              prop="version_no">
+              <el-input v-model="addForm.version_no"/>
             </el-form-item>
-            <el-form-item label="版本说明" prop="desc">
-              <el-input v-model="addForm.desc" class="introduce"></el-input>
+            <el-form-item 
+              label="版本说明" 
+              prop="des">
+              <el-input 
+                v-model="addForm.des" 
+                class="introduce"/>
             </el-form-item>
-            <el-form-item label="配置文件" prop="uploadName" class="formfile">
-              <el-input v-model="uploadName" class="uploadName"></el-input>
+            <el-form-item 
+              label="配置文件" 
+              prop="file_list.filename" 
+              class="formfile">
+              <el-input 
+                v-model="addForm.file_list.filename"
+                :readonly="true" 
+                class="uploadName"/>
               <!-- 预览 -->
               <el-upload
                 :before-upload="beforeAvatarUpload"
@@ -738,44 +782,90 @@
               </el-upload>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('addForm')" class="submitForm">提交</el-button>
-              <el-button @click="addFormVisiable = false" class="cancelForm">取消</el-button>
+              <el-button 
+                type="primary" 
+                class="submitForm" 
+                @click="submitForm('addForm')">提交</el-button>
+              <el-button 
+                class="cancelForm" 
+                @click="addFormVisiable = false">取消</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
         <!-- 查看文件弹框 -->
-        <el-dialog title="查看配置文件" :visible.sync="checkDialog">
-          <el-form :model="checkForm" status-icon :rules="rules" label-width="100px" class="check-dialog">
-            <el-form-item label="版本号" prop="version_no">
-              <span>{{checkForm.version_no}}</span>
+        <el-dialog 
+          :visible.sync="checkDialog" 
+          title="查看配置文件">
+          <el-form 
+            :model="checkForm" 
+            :rules="rules" 
+            status-icon 
+            label-width="100px" 
+            class="check-dialog">
+            <el-form-item 
+              label="版本号" 
+              prop="version_no">
+              <span>{{ checkForm.version_no }}</span>
             </el-form-item>
-            <el-form-item label="版本说明" prop="desc">
-              <span>{{checkForm.desc}}</span>
+            <el-form-item 
+              label="版本说明" 
+              prop="des">
+              <span>{{ checkForm.des }}</span>
             </el-form-item>
-            <el-form-item label="创建时间" prop="time">
-              <span>{{checkForm.time}}</span>
+            <el-form-item 
+              label="创建时间" 
+              prop="time">
+              <span>{{ checkForm.created_at_txt }}</span>
             </el-form-item>
-            <el-form-item label="配置文件" prop="uploadName">
-              <span>{{uploadName}}</span>
+            <el-form-item 
+              label="配置文件"
+              prop="file_list.filename">
+              <span>{{ checkForm.file_list.filename }}</span>
               <!-- <el-button type="text" class="download">点击可下载</el-button> -->
-              <a href="#" download="">点击可下载</a>
+              <a 
+                :href="checkForm.file_list.file_url"
+                target="_blank" 
+                download="">点击可下载</a>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="checkDialog = false" class="closeForm">关闭</el-button>
+              <el-button 
+                type="primary" 
+                class="closeForm" 
+                @click="checkDialog = false">关闭</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
         <!-- 编辑文件弹框 -->
-        <el-dialog title="添加配置文件" :visible.sync="editDialog">
-          <el-form :model="editForm" status-icon :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="版本号" prop="version_no">
-              <el-input v-model="editForm.version_no"></el-input>
+        <el-dialog 
+          :visible.sync="editDialog" 
+          title="编辑配置文件">
+          <el-form 
+            ref="editForm" 
+            :model="editForm" 
+            :rules="rules"
+            status-icon 
+            label-width="100px" 
+            class="demo-ruleForm">
+            <el-form-item 
+              label="版本号" 
+              prop="version_no">
+              <el-input v-model="editForm.version_no"/>
             </el-form-item>
-            <el-form-item label="版本说明" prop="desc">
-              <el-input v-model="editForm.desc" class="introduce"></el-input>
+            <el-form-item 
+              label="版本说明" 
+              prop="des">
+              <el-input 
+                v-model="editForm.des" 
+                class="introduce"/>
             </el-form-item>
-            <el-form-item label="配置文件" prop="uploadName" class="formfile">
-              <el-input v-model="uploadName" class="uploadName"></el-input>
+            <el-form-item 
+              label="配置文件" 
+              prop="file_list.filename" 
+              class="formfile">
+              <el-input 
+                v-model="editForm.file_list.filename"
+                :readonly="true"
+                class="uploadName"/>
               <!-- 预览 -->
               <el-upload
                 :before-upload="beforeAvatarUpload"
@@ -790,23 +880,30 @@
               </el-upload>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm(editForm)" class="submitForm">提交</el-button>
-              <el-button @click="editDialog=false" class="cancelForm">取消</el-button>
+              <el-button 
+                type="primary" 
+                class="submitForm" 
+                @click="submitForm('editForm')">提交</el-button>
+              <el-button 
+                class="cancelForm" 
+                @click="editDialog=false">取消</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
         <!-- 删除配置弹框 -->
         <el-dialog
-          title="删除配置文件"
           :visible.sync="delectDialog"
+          title="删除配置文件"
           width="25%"
           class="delect">
-          <i class="el-icon-info"></i>
+          <i class="el-icon-info"/>
           <div>
             <span>你确定删除配置此文件吗？</span>
             <p>删除后可能回导致部分设备配置出错</p>
           </div>
-          <span slot="footer" class="dialog-footer">
+          <span 
+            slot="footer" 
+            class="dialog-footer">
             <el-button @click="submitForm">确 定</el-button>
             <el-button @click="delectDialog = false">取 消</el-button>
           </span>
@@ -864,11 +961,11 @@ export default {
           { required: true, message: '请输入客服电话', trigger: 'blur' },
           { validator: checkPhone }
         ],
-         version_no: [
+        version_no: [
           { required: true, message: '请输入0.0.0格式版本号', trigger: 'blur' },
         ],
-        desc: [
-          { required: true, message: '不能为空', trigger: 'blur' },
+        'file_list.filename': [
+          { required: true, message: '请选择配置文件', trigger: 'change' }
         ],
         // uploadName: [
         //   { required: true, message: '请选择文件', trigger: 'blur' },
@@ -876,52 +973,28 @@ export default {
       },
 
       // 配置文件
-      uploadName: '',
       configFile: {},
-      tableData: [
-          {
-            version_no: '1.0.0',
-            time: '2016-05-02',
-            desc: '王小虎',
-            file:""
-          }, 
-          {
-            version_no: '1.0.1',
-            time: '2016-05-04',
-            desc: '王小虎',
-            file:""
-          }, 
-          {
-            version_no: '1.0.2',
-            time: '2016-05-01',
-            desc: '王小虎',
-            file:""
-          }, 
-          {
-            version_no: '1.0.3',
-            time: '2016-05-03',
-            desc: '王小虎',
-            file:""
-          }
-      ],
+      configList: [],
+
       addFormVisiable:false,
       checkDialog:false,
       editDialog:false,
       delectDialog:false,
       addForm:{
         version_no: "",
-        desc: "",
-        uploadName:""
+        des: "",
+        file_list: {}
       },
       checkForm:{
         version_no: "",
-        desc: "",
-        time:"",
-        uploadName:""
+        des: "",
+        created_at_txt:"",
+        file_list: {}
       },
       editForm:{
         version_no: "",
-        desc: ""
+        des: "",
+        file_list: {}
       },
       ruleForm: {},
     }
@@ -931,6 +1004,7 @@ export default {
   },
   mounted() {
     this.getReviewInfo()
+    this.getConfigList()
   },
   deactivated() {
     this.$destroy()
@@ -943,40 +1017,59 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          let res;
           if (formName == "editForm") {
-            // console.log("编辑");
+            // 修改
+            let editFile = ''
+            if(this.configFile.filename){ // 选择了新文件
+              editFile = JSON.stringify(this.configFile)
+            } else {
+              editFile = JSON.stringify(this.editForm.file_list)
+            }
+
+            fetch({
+              url: '/product_agreement/versionedit',
+              method: 'post',
+              data:{
+                id: this.addForm.id,
+                product_id: this.product_id,
+                version_no: this.editForm.version_no,
+                desc: this.editForm.des,
+                file: editFile
+              }
+            }).then(res=>{
+              this.getConfigList()
+              this.addFormVisiable = false
+              this.$refs.addForm.resetFields()
+            })
           } else if (formName == "addForm") {
+            // 新增
             fetch({
               url: '/product_agreement/versionadd',
               method: 'post',
               data:{
                 product_id:this.product_id,
                 version_no:this.addForm.version_no,
-                desc:this.addForm.desc,
+                des: this.addForm.des,
                 file: JSON.stringify(this.configFile) 
               }
             }).then(res=>{
-              console.log(res)
+              this.getConfigList()
               this.addFormVisiable = false
-              this.$refs.addForm.resetFields();
-            })     
+              this.$refs.addForm.resetFields()
+            })
           } 
-        } else {
-          // 数据错误
-          this.$message.warning("请正确输入数据");
-          return false;
         }
-      });
+      })
     },
     // 查看
     handleCheck(index, row){
-      console.log(index, row);
+      console.log(index, row)
       this.checkForm = row
       this.checkDialog = true
     },
     // 编辑
     handleEdit(index, row){
+      this.configFile = {}
       this.editDialog = true
       this.editForm = row
     },
@@ -991,7 +1084,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       })
-        .then(async () => {
+        .then(async() => {
           // 确认
           // console.log(item);
           // let res = await this.$http.delete(`users/${item.id}`);
@@ -1003,14 +1096,14 @@ export default {
           this.$message({
             type: "success",
             message: "删除成功"
-          });
+          })
         })
         .catch(() => {
           this.$message({
             type: "info",
             message: "取消成功"
-          });
-        });
+          })
+        })
     },
     beforeAvatarUpload(file) {
       console.log(file.type)
@@ -1031,7 +1124,20 @@ export default {
         this.$message.error(file.msg)
         return
       }
-      this.uploadName = file.result.filename
+      if(this.editDialog){
+        this.editForm = Object.assign(this.editForm, {
+          file_list: {
+            filename: file.result.filename
+          }
+        })
+      } else if(this.addFormVisiable) {
+        this.addForm = Object.assign(this.addForm, {
+          file_list: {
+            filename: file.result.filename
+          }
+        })
+      }
+
       let tmp = Object.assign({},file.result)
       tmp.url = tmp.file_url
       this.configFile = tmp
@@ -1064,8 +1170,7 @@ export default {
       }
       getProductInfo(params).then(response => {
         // console.log(response);
-        
-        this.uploadName = response.agreement_file_name
+        // this.uploadName = response.agreement_file_name
 
         this.productDetail = response
         const arry = []
@@ -1097,7 +1202,18 @@ export default {
         })
       })
     },
-
+    getConfigList() {
+      fetch({
+        url: '/product_agreement/versionlists',
+        method: 'post',
+        data: {
+          'product_id': this.product_id
+        }
+      }).then(res=>{
+        console.log(res.list)
+        this.configList = res.list
+      })
+    },
     // 图片预览
     imgPreview(e) {
       fancyBox(e.target, this.productDetail.images)
@@ -1336,10 +1452,10 @@ export default {
         formData.attr_list = JSON.stringify(formData.attr_list)
       }
 
-      // 配置协议
-      if (this.configFile && this.configFile.file_url) {
-        formData.agreement_file = JSON.stringify(this.configFile)
-      }
+      // // 配置协议
+      // if (this.configFile && this.configFile.file_url) {
+      //   formData.agreement_file = JSON.stringify(this.configFile)
+      // }
 
       fetch({
         url: '/admin/product_edit',

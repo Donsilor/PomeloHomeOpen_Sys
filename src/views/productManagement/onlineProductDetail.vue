@@ -106,7 +106,7 @@
             </el-col>
           </el-row>
 
-          <el-row 
+          <el-row
             v-for="(it, idx) in productDetail.compat_ext"
             :key="idx" 
             class="card-row">
@@ -156,6 +156,8 @@
               icon="el-icon-minus"
               @click="removeCompat(idx)">删除</el-button>
           </el-row>
+
+
 
           <el-row class="card-row">
             <el-col 
@@ -1226,6 +1228,11 @@ export default {
         if (this.productDetail.network_id == 0) {
           this.productDetail.network_id = ''
         }
+        if (!this.productDetail.compat_ext || this.productDetail.compat_ext.length == 0) {
+          this.productDetail.compat_ext = []
+          this.addCompat()
+        }
+
         this.copyProductDetail = JSON.parse(JSON.stringify(response))
         response.attr_list.forEach(function(item) {
           const key = item.is_default ? 'must_fps' : 'opt_fps'

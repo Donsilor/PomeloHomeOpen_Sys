@@ -1,54 +1,74 @@
 <template>
-    <div class="reset-container">
-        <el-form v-if="showReset" autoComplete="off" :model="resetForm" :rules="rules" ref="resetForm" label-position="left" label-width="0px"
-                 class="card-box login-form">
-            <h3 class="title">设置密码</h3>
+  <div class="reset-container">
+    <el-form 
+      v-if="showReset" 
+      ref="resetForm" 
+      :model="resetForm" 
+      :rules="rules" 
+      auto-complete="off" 
+      label-position="left" 
+      label-width="0px"
+      class="card-box login-form">
+      <h3 class="title">设置密码</h3>
 
-            <el-form-item prop="password">
-                <el-input name="password" :type="flags[0].show?'text':'password'" v-model="resetForm.password" placeholder="设置密码" >
-                    <i slot="suffix" :class="{active:flags[0].show}" class="el-input__icon el-icon-view" @click="switchInput(flags[0])"></i>
-                </el-input>
-            </el-form-item>
+      <el-form-item prop="password">
+        <el-input 
+          :type="flags[0].show?'text':'password'" 
+          v-model="resetForm.password" 
+          name="password" 
+          placeholder="设置密码" >
+          <i 
+            slot="suffix" 
+            :class="{active:flags[0].show}" 
+            class="el-input__icon el-icon-view" 
+            @click="switchInput(flags[0])"/>
+        </el-input>
+      </el-form-item>
 
-            <el-form-item>
-                <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
-                    确定
-                </el-button>
-            </el-form-item>
-        </el-form>
-    </div>
+      <el-form-item>
+        <el-button 
+          :loading="loading" 
+          type="primary" 
+          style="width:100%;" 
+          @click.native.prevent="handleLogin">
+          确定
+        </el-button>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script>
-    import fetch from '@/utils/fetch';
-    export default {
-        name: 'reset',
-        data() {
-            return {
-                resetForm: {
-                    type:1,
-                    password: '',
-                    token:'',
-                    auth_mail:this.$route.query.auth_mail,
-                    mail:this.$route.query.mail
-                },
-                rules: {
-                    password: [{ required: true,message:'密码不能为空', trigger: 'blur' }],
-                },
-                flags: [
-                    {show:false}
-                ],
-                form:{
-                    auth_mail:this.$route.query.auth_mail,
-                    mail:this.$route.query.mail
-                },
-                loading: false,
-                showReset:true
-            }
-        },
-        created(){
-            if(this.form.auth_mail){
-                /*fetch({
+import fetch from '@/utils/fetch'
+const md5 = require('js-md5')
+export default {
+  name: 'Reset',
+  data() {
+    return {
+      resetForm: {
+        type:1,
+        password: '',
+        token:'',
+        auth_mail:this.$route.query.auth_mail,
+        mail:this.$route.query.mail
+      },
+      rules: {
+        password: [{ required: true,message:'密码不能为空', trigger: 'blur' }],
+      },
+      flags: [
+        {show:false}
+      ],
+      form:{
+        auth_mail:this.$route.query.auth_mail,
+        mail:this.$route.query.mail
+      },
+      loading: false,
+      showReset:true
+    }
+  },
+  created(){
+    if(this.form.auth_mail){
+      /*fetch({
                     url:'/admin/activate',
                     method:'post',
                     data:this.form
@@ -60,34 +80,35 @@
                     this.$message.error('激活失败！');
                     this.$router.push({path:'/login'});
                 })*/
-            }else{
-                this.$router.push({path:'/login'});
-            }
-        },
-        methods: {
-            switchInput(item) {
-                item.show = !item.show;
-            },
-            handleLogin() {
-                this.$refs.resetForm.validate(valid => {
-                    if (valid) {
-                        fetch({
-                            url:'/admin/setpwd',
-                            method:'post',
-                            data:this.resetForm
-                        }).then(res=>{
-                            if(res){
-                                this.$router.push({path:'/login'});
-                            }
-                            else{
-                                this.$message.error('设置失败！');
-                            }
-                        })
-                    }
-                });
-            }
-        }
+    }else{
+      this.$router.push({path:'/login'})
     }
+  },
+  methods: {
+    switchInput(item) {
+      item.show = !item.show
+    },
+    handleLogin() {
+      this.$refs.resetForm.validate(valid => {
+        if (valid) {
+          this.resetForm.password = md5(this.resetForm.password)
+          fetch({
+            url:'/admin/setpwd',
+            method:'post',
+            data:this.resetForm
+          }).then(res=>{
+            if(res){
+              this.$router.push({path:'/login'})
+            }
+            else{
+              this.$message.error('设置失败！')
+            }
+          })
+        }
+      })
+    }
+  }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">

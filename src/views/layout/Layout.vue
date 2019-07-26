@@ -106,7 +106,7 @@
 import { mapGetters } from 'vuex'
 import { Navbar, Sidebar, AppMain } from '@/views/layout'
 import fetch from '@/utils/fetch'
-
+const md5 = require('js-md5')
 export default {
   name: 'Layout',
   components: {
@@ -171,6 +171,9 @@ export default {
     modify(){
       this.$refs.pswForm.validate(valid=>{
         if(valid){
+          this.form.old_password = md5(this.form.old_password)
+          this.form.password = md5(this.form.password)
+          this.form.confirm_password = md5(this.form.confirm_password)
           fetch({
             url:'/admin/setpwd',
             method:'post',

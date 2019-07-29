@@ -45,11 +45,16 @@ Vue.mixin({
 
 // 登录拦截
 router.beforeEach((to, from, next) => {
-  if (to.path !== '/login' && !getToken()) {
-    next('/login')
-  } else {
-    next()
-  }
+
+  if (to.path === '/resetpsw') return next()
+  if (to.path !== '/login' && !getToken()) return next('/login')
+  next()
+
+  // if (to.path !== '/login' && !getToken()) {
+  //   next('/login')
+  // } else {
+  //   next()
+  // }
 })
 
 Vue.config.productionTip = false
@@ -58,6 +63,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  components: { App },
   template: '<App/>',
-  components: { App }
 })

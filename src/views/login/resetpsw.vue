@@ -1,35 +1,35 @@
 <template>
   <div class="reset-container">
-    <el-form 
-      v-if="showReset" 
-      ref="resetForm" 
-      :model="resetForm" 
-      :rules="rules" 
-      auto-complete="off" 
-      label-position="left" 
+    <el-form
+      v-if="showReset"
+      ref="resetForm"
+      :model="resetForm"
+      :rules="rules"
+      auto-complete="off"
+      label-position="left"
       label-width="0px"
       class="card-box login-form">
       <h3 class="title">设置密码</h3>
 
       <el-form-item prop="password">
-        <el-input 
-          :type="flags[0].show?'text':'password'" 
-          v-model="resetForm.password" 
-          name="password" 
+        <el-input
+          :type="flags[0].show?'text':'password'"
+          v-model="resetForm.password"
+          name="password"
           placeholder="设置密码" >
-          <i 
-            slot="suffix" 
-            :class="{active:flags[0].show}" 
-            class="el-input__icon el-icon-view" 
+          <i
+            slot="suffix"
+            :class="{active:flags[0].show}"
+            class="el-input__icon el-icon-view"
             @click="switchInput(flags[0])"/>
         </el-input>
       </el-form-item>
 
       <el-form-item>
-        <el-button 
-          :loading="loading" 
-          type="primary" 
-          style="width:100%;" 
+        <el-button
+          :loading="loading"
+          type="primary"
+          style="width:100%;"
           @click.native.prevent="handleLogin">
           确定
         </el-button>
@@ -50,7 +50,7 @@ export default {
         password: '',
         token:'',
         auth_mail:this.$route.query.auth_mail,
-        mail:this.$route.query.mail
+        mail:this.$route.query.mail,
       },
       rules: {
         password: [{ required: true,message:'密码不能为空', trigger: 'blur' }],
@@ -91,11 +91,12 @@ export default {
     handleLogin() {
       this.$refs.resetForm.validate(valid => {
         if (valid) {
-          this.resetForm.password = md5(this.resetForm.password)
+          const resetData = JSON.parse(JSON.stringify(this.resetForm))
+          resetData.password = md5(resetData.password)
           fetch({
             url:'/admin/setpwd',
             method:'post',
-            data:this.resetForm
+            data:resetData
           }).then(res=>{
             if(res){
               this.$router.push({path:'/login'})

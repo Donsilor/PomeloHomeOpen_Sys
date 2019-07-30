@@ -1740,7 +1740,6 @@ export default {
 }
 .el-dialog{
   width: 610px;
-  height: 450px;
   padding-right: 80px;
   .el-form-item__label{
     text-align: left;

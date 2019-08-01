@@ -714,6 +714,12 @@ export default {
       getReviewInfo(params)
         .then(response => {
           this.checkDetail = response
+          // 接口放回 compat_ext 可能是json字符串不是对象
+          try {
+            this.checkDetail.compat_ext = JSON.parse(this.checkDetail.compat_ext)
+          } catch (e) {
+            this.checkDetail.compat_ext = this.checkDetail.compat_ext
+          }
           if (!this.checkDetail.compat_ext || this.checkDetail.compat_ext.length == 0) {
             this.checkDetail.compat_ext = []
             this.checkDetail.compat_ext.push({

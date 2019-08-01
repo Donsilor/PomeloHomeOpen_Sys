@@ -157,8 +157,6 @@
               @click="removeCompat(idx)">删除</el-button>
           </el-row>
 
-
-
           <el-row class="card-row">
             <el-col 
               :span="3"

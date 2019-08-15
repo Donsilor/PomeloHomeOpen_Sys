@@ -30,6 +30,24 @@
               :offset="1"
               class="card-span-right">{{ productDetail.type_name }}</el-col>
           </el-row>
+          <el-row class="card-row" style="line-height: 40px;">
+            <el-col 
+              :span="3"
+              class="card-span-left">接入类型</el-col>
+            <el-col 
+              :span="16"
+              :offset="1"
+              class="card-span-right"> 
+              <el-select v-model="value" placeholder="请选择">
+                <el-option
+                  v-for="item in accessType"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
           <el-row class="card-row gg">
             <el-col 
               :span="3"
@@ -986,6 +1004,22 @@ export default {
       }
     }
     return {
+      accessType:[
+        {
+          value: 0,
+          label: '中控接入'
+        }, {
+          value: 1,
+          label: '云云对接'
+        }, {
+          value: 2,
+          label: 'APP对接'
+        }, {
+          value: 3,
+          label: '云中控接入'
+        }, 
+      ],
+      value: '',
       token: getToken(),
       product_id: '', // 产品id
       productDetail: {},
@@ -1215,6 +1249,7 @@ export default {
         // this.uploadName = response.agreement_file_name
 
         this.productDetail = response
+        this.value = this.productDetail.device_access_type
         const arry = []
         for (const k in response.images_new) {
           arry.push({ id: k, file_url: response.images_new[k] })

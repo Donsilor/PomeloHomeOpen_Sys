@@ -1,0 +1,9 @@
+diff a/src/views/productManagement/onlineProductDetail.vue b/src/views/productManagement/onlineProductDetail.vue	(rejected hunks)
+@@ -1255,6 +1255,7 @@
+         })
+       })
+     },
++    // 获取配置文件列表
+     getConfigList() {
+       fetch({
+         url: '/product_agreement/versionlists',

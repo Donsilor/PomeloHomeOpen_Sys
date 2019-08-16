@@ -34,6 +34,17 @@
                 style="margin-top: 20px;"
                 size="large">
                 <el-form-item
+                  label="品类ID"
+                  prop="type_id">
+                  <el-col :span="12">
+                    <el-input
+                      v-model="form.type_id"
+                      :span="6"
+                      :disabled="disabled"
+                      placeholder="请输入大品类ID"/>
+                  </el-col>
+                </el-form-item>
+                <el-form-item
                   label="大品类名称"
                   prop="name">
                   <el-col :span="12">
@@ -417,6 +428,7 @@ export default {
       disabled: !!this.$route.query.id,
       form: {
         id: this.$route.query.id,
+        type_id:"",
         name: '',
         name_e: '',
         offline_hint: '',
@@ -449,6 +461,7 @@ export default {
         }
       },
       rules: {
+        type_id: [{ required: true, message: '请输入大品类ID', trigger: 'blur' }],
         name: [
           { required: true, message: '请输入大品类名称', trigger: 'blur' },
           { max: 32, message: '大品类名称不能超过32个字符', trigger: 'blur' }
@@ -567,8 +580,11 @@ export default {
           id: this.$route.query.id
         }
       }).then(res => {
+        console.log(res);
+        
         this.form.name = res.name
         this.form.name_e = res.name_e
+        this.form.type_id = res.id
         this.form.icon_list = res.icon_list
         this.form.offline_hint = res.offline_hint
         if (res.show_in_select_list !== undefined) {

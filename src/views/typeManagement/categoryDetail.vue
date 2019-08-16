@@ -11,6 +11,11 @@
                     <el-tab-pane label="基本信息">
                         <el-col :span="24">
                             <el-form :rules="rules" ref="ruleForm" :model="form" label-width="125px" style="margin-top: 20px;" size="large">
+                              <el-form-item label="子品类ID" prop="id">
+                                    <el-col :span="12">
+                                        <el-input v-model="form.id" :span="6" :disabled="!isEdit"></el-input>
+                                    </el-col>
+                                </el-form-item>
                                 <el-form-item label="子品类名称" prop="name">
                                     <el-col :span="12">
                                         <el-input v-model="form.name" :span="6" :disabled="!isEdit"></el-input>
@@ -409,6 +414,7 @@
                 editText: '编辑品类信息',
                 COLTD:COLTD,
                 form: {
+                    id:'',
                     name: '',
                     name_e: '',
                     dialogImageUrl: '',
@@ -430,6 +436,9 @@
 
                 },
                 rules: {
+                    id: [
+                        { required: true, message: '请输入子品类ID', trigger: 'blur' }
+                    ],
                     name: [
                         { required: true, message: '请输入子品类名称', trigger: 'blur' },
                         { max: 32, message: '子品类名称不能超过32个字符', trigger: 'blur' },
@@ -587,6 +596,8 @@
                     }
                 }).then(res => {
                     this.form = res;
+                    console.log(res);
+                    
                     //this.form.is_high_frequency = this.form.is_high_frequency == 1 ? true : false;
                    // this.form.is_relate_switch = this.form.is_relate_switch == 1 ? true : false;
                     this.handleIconList(this.form.icon_list);

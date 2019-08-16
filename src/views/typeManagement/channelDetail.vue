@@ -11,6 +11,11 @@
                 <div class="desTitleTop">基本信息</div>
                 <el-col :span="24">
                     <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
+                      <el-form-item label="序号" label-width="120px" prop="sort">
+                            <el-col :span="12">
+                                <el-input v-model="form.sort" :span="6" :disabled="disabled||hasProduct" placeholder=" 请输入序号"></el-input>
+                            </el-col>
+                        </el-form-item>
                         <el-form-item label="渠道商名称" label-width="120px" prop="name">
                             <el-col :span="12">
                                 <el-input v-model="form.name" :span="6" :disabled="disabled||hasProduct" placeholder=" 中文名限中文、字母、32个字符、区分大小写"></el-input>
@@ -180,6 +185,7 @@
                 disabled:this.$route.query.id ? true : false,
                 id:this.$route.query.id ? this.$route.query.id : '',
                 form:{
+                    'sort':'',
                     "id":this.$route.query.id,
                     "name":"",
                     "name_e":"",
@@ -233,6 +239,7 @@
                         'id': this.$route.query.id
                     }
                 }).then(res=>{
+                  console.log(res);
                     this.form.name = res.name;
                     this.form.name_e = res.name_e;
                     this.form.logo = res.logo;
@@ -303,6 +310,8 @@
                                 method: 'post',
                                 data: this.form,
                             }).then(res => {
+                              console.log(res);
+                              
                                 this.disabled = true;
                                 this.editText = '编辑渠道商信息';
                                 this.$message({

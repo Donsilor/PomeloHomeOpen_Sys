@@ -9,6 +9,11 @@
                         <div class="desTitleTop">基本信息</div>
                         <el-col :span="24">
                             <el-form :rules="rules" ref="ruleForm" :model="form" label-width="125px" style="margin-top: 20px;" size="large">
+                              <el-form-item label="子品类ID" prop="id">
+                                    <el-col :span="12">
+                                        <el-input v-model="form.id" :span="6" placeholder="请输入子品类ID"></el-input>
+                                    </el-col>
+                                </el-form-item>
                                 <el-form-item label="子品类名称" prop="name">
                                     <el-col :span="12">
                                         <el-input v-model="form.name" :span="6" placeholder="请输入子品类名称"></el-input>
@@ -214,7 +219,7 @@
                 editText : '编辑品类信息',
                 COLTD:COLTD,
                 form:{
-                    "id":0,
+                    "id":'',
                     "name":"",
                     "name_e":"",
                     "parent_type_id":'',
@@ -269,6 +274,9 @@
                     "show_in_select_list":0,
                 },
                 rules: {
+                    id: [
+                        { required: true, message: '请输入子品类ID', trigger: 'blur' },
+                    ],
                     name: [
                         { required: true, message: '请输入子品类名称', trigger: 'blur' },
                         { max: 32, message: '子品类名称不能超过32个字符', trigger: 'blur' }

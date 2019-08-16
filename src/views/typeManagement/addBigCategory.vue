@@ -41,7 +41,7 @@
                       v-model="form.id"
                       :span="6"
                       :disabled="disabled||isEdit"
-                      placeholder="请输入大品类ID"/>
+                      placeholder="请输入1-5000之内的ID数"/>
                   </el-col>
                 </el-form-item>
                 <el-form-item
@@ -461,7 +461,9 @@ export default {
         }
       },
       rules: {
-        id: [{ required: true, message: '请输入大品类ID', trigger: 'blur' }],
+        id: [
+          { required: true, message: '请输入大品类ID', trigger: 'blur' },
+        ],
         name: [
           { required: true, message: '请输入大品类名称', trigger: 'blur' },
           { max: 32, message: '大品类名称不能超过32个字符', trigger: 'blur' }

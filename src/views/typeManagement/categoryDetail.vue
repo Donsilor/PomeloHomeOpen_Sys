@@ -13,7 +13,7 @@
                             <el-form :rules="rules" ref="ruleForm" :model="form" label-width="125px" style="margin-top: 20px;" size="large">
                               <el-form-item label="子品类ID" prop="id">
                                     <el-col :span="12">
-                                        <el-input v-model="form.id" :span="6" :disabled="!isEdit"></el-input>
+                                        <el-input v-model="form.id" :span="6" :disabled="!isEdit||isEdit"></el-input>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="子品类名称" prop="name">

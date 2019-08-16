@@ -35,12 +35,12 @@
                 size="large">
                 <el-form-item
                   label="品类ID"
-                  prop="type_id">
+                  prop="id">
                   <el-col :span="12">
                     <el-input
-                      v-model="form.type_id"
+                      v-model="form.id"
                       :span="6"
-                      :disabled="disabled"
+                      :disabled="disabled||isEdit"
                       placeholder="请输入大品类ID"/>
                   </el-col>
                 </el-form-item>
@@ -427,8 +427,8 @@ export default {
       editText: '编辑品类信息',
       disabled: !!this.$route.query.id,
       form: {
-        id: this.$route.query.id,
-        type_id:"",
+        // id: this.$route.query.id,
+        id:'',
         name: '',
         name_e: '',
         offline_hint: '',
@@ -461,7 +461,7 @@ export default {
         }
       },
       rules: {
-        type_id: [{ required: true, message: '请输入大品类ID', trigger: 'blur' }],
+        id: [{ required: true, message: '请输入大品类ID', trigger: 'blur' }],
         name: [
           { required: true, message: '请输入大品类名称', trigger: 'blur' },
           { max: 32, message: '大品类名称不能超过32个字符', trigger: 'blur' }
@@ -584,7 +584,7 @@ export default {
         
         this.form.name = res.name
         this.form.name_e = res.name_e
-        this.form.type_id = res.id
+        this.form.id = res.id
         this.form.icon_list = res.icon_list
         this.form.offline_hint = res.offline_hint
         if (res.show_in_select_list !== undefined) {

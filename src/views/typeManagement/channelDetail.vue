@@ -241,12 +241,11 @@
                 }).then(res=>{
                   console.log(res);
                     this.form.name = res.name;
+                    this.form.sort = res.sort;
                     this.form.name_e = res.name_e;
                     this.form.logo = res.logo;
                     this.form.qrcode = res.qrcode;
-                    if(res.has_product){
-                        this.hasProduct = true;
-                    }
+                    this.hasProduct = !!res.has_product;
 
                 });
             },

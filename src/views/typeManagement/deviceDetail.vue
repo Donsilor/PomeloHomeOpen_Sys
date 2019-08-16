@@ -33,13 +33,13 @@
               <el-col :span="24">
                 <el-form-item label-width="120px">
                   <el-col :span="12">
-                    <el-checkbox
+                    <!-- <el-checkbox
                       v-model="is_mixapp"
                       :true-label="1"
                       :false-label="0"
                       disabled
                     >是否是融合版APP</el-checkbox>
-                    <br>
+                    <br> -->
                     <el-checkbox
                       v-model="is_evergrande"
                       :true-label="1"
@@ -434,7 +434,7 @@ export default {
       brand: {},
       model: {},
       is_evergrande: 0,
-      is_mixapp: 0,
+      // is_mixapp: 0,
       COLTD: COLTD,
       form: {
       },
@@ -538,9 +538,9 @@ export default {
         if (!this.form.offline_hint) {
           this.form.offline_hint = ''
         }
-        if (this.form.app_id === '100001') {
-          this.is_mixapp = 1
-        }
+        // if (this.form.app_id === '100001') {
+        //   this.is_mixapp = 1
+        // }
         this.isLoadData = true
         this.handleImgAddToken()
         this.getDeviceSelectAddtype()

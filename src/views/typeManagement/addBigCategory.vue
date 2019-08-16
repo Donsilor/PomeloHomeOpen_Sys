@@ -183,7 +183,7 @@
                   </el-col>
                 </el-form-item>
 
-                <el-form-item
+                <!-- <el-form-item
                   label="大品类是否在设备选择列表显示（融合版APP）"
                   class="line25">
                   <el-col :span="12">
@@ -194,7 +194,7 @@
                       <el-radio :label="0">否</el-radio>
                     </el-radio-group>
                   </el-col>
-                </el-form-item>
+                </el-form-item> -->
 
                 <el-form-item label="是否高频使用">
                   <el-col :span="12">
@@ -433,7 +433,7 @@ export default {
         name_e: '',
         offline_hint: '',
         show_in_select_list: 1,
-        app_show_in_select_list: 1,
+        // app_show_in_select_list: 1,
         is_relate_switch: 0,
         is_high_frequency: 0,
         is_depend_router: 1,
@@ -580,8 +580,8 @@ export default {
           id: this.$route.query.id
         }
       }).then(res => {
-        console.log(res);
-        
+        console.log(res)
+
         this.form.name = res.name
         this.form.name_e = res.name_e
         this.form.type_id = res.id
@@ -590,9 +590,9 @@ export default {
         if (res.show_in_select_list !== undefined) {
           this.form.show_in_select_list = res.show_in_select_list
         }
-        if (res.app_show_in_select_list !== undefined) {
-          this.form.app_show_in_select_list = res.app_show_in_select_list
-        }
+        // if (res.app_show_in_select_list !== undefined) {
+        //   this.form.app_show_in_select_list = res.app_show_in_select_list
+        // }
         if (res.is_high_frequency !== undefined) {
           this.form.is_high_frequency = res.is_high_frequency
         }

@@ -41,7 +41,7 @@
                       v-model="form.id"
                       :span="6"
                       :disabled="disabled||isEdit"
-                      placeholder="请输入1-5000之内的ID数"/>
+                      placeholder="请输入大品类ID"/>
                   </el-col>
                 </el-form-item>
                 <el-form-item
@@ -420,6 +420,18 @@ export default {
   name: 'AddBigCategory',
   components: {},
   data() {
+     var validateId = (rule, value, callback) => {
+              if (!value) {
+                return callback(new Error('请输入大品类ID'));
+              }
+               else {
+                if (value >= 5000 || value < 1) {
+                  callback(new Error('ID必须大于0，小于5000'))
+                }else{
+                  callback();
+                }
+              }
+            };
     return {
       isEdit: !!this.$route.query.id,
       token: getToken(),
@@ -462,7 +474,7 @@ export default {
       },
       rules: {
         id: [
-          { required: true, message: '请输入大品类ID', trigger: 'blur' },
+          { validator:validateId, trigger: 'blur' },
         ],
         name: [
           { required: true, message: '请输入大品类名称', trigger: 'blur' },

@@ -11,7 +11,7 @@
                             <el-form :rules="rules" ref="ruleForm" :model="form" label-width="125px" style="margin-top: 20px;" size="large">
                               <el-form-item label="子品类ID" prop="id">
                                     <el-col :span="12">
-                                        <el-input v-model="form.id" :span="6" placeholder="请输入大于5000的ID"></el-input>
+                                        <el-input v-model="form.id" :span="6" placeholder="请输入子品类ID"></el-input>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="子品类名称" prop="name">
@@ -211,6 +211,18 @@
             this.getParentType();
         },
         data() {
+            var validateId = (rule, value, callback) => {
+              if (!value) {
+                return callback(new Error('请输入子品类ID'));
+              }
+               else {
+                if (value <= 5000) {
+                  callback(new Error('ID必须大于5000'))
+                }else{
+                  callback();
+                }
+              }
+            };
             return {
                 isLoadedTechnical : false,
                 typeid : this.$route.query.id,
@@ -275,7 +287,7 @@
                 },
                 rules: {
                     id: [
-                        { required: true, message: '请输入子品类ID', trigger: 'blur' },
+                        { validator: validateId,trigger: 'blur' },
                     ],
                     name: [
                         { required: true, message: '请输入子品类名称', trigger: 'blur' },

@@ -128,11 +128,6 @@
                                         <el-checkbox :true-label="1" :false-label="0" v-model="form.is_relate_switch" :disabled="!isEdit">是</el-checkbox>
                                     </el-col>
                                 </el-form-item>-->
-                                <el-form-item :label="COLTD+'快联设备'">
-                                    <el-col :span="12">
-                                        <el-checkbox :true-label="1" :false-label="0" v-model="form.show_in_select_list" :disabled="!isEdit">是</el-checkbox>
-                                    </el-col>
-                                </el-form-item>
                             </el-form>
                         </el-col>
                     </el-tab-pane>
@@ -388,7 +383,6 @@
     import fetch from '@/utils/fetch';
     import helper from '@/utils/helper';
     import {getToken} from '@/utils/auth';
-    import {COLTD} from '@/utils/config';
     import addTechnical from './addTechnical.vue';
     import addAttribute from './addAttribute.vue';
     export default {
@@ -412,7 +406,6 @@
                 isLoadData: false,
                 isEdit: false, //判断是否是编辑
                 editText: '编辑品类信息',
-                COLTD:COLTD,
                 form: {
                     id:'',
                     name: '',

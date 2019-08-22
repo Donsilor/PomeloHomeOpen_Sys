@@ -38,7 +38,7 @@
               :span="16"
               :offset="1"
               class="card-span-right"> 
-              <el-select v-model="value" placeholder="请选择">
+              <el-select :readonly="!edit":disabled="!edit" v-model="productDetail.device_access_type" placeholder="请选择">
                 <el-option
                   v-for="item in accessType"
                   :key="item.value"
@@ -1476,6 +1476,8 @@ export default {
       })
     },
     modify() {
+      this.modifyData.device_access_type = this.productDetail.device_access_type
+
       if (!this.productDetail.name) {
         return this.$message.error('产品名称不能为空！')
       }
@@ -1505,9 +1507,6 @@ export default {
       }
       if (this.productDetail.network_id != this.copyProductDetail.network_id) {
         this.modifyData.network_id = this.productDetail.network_id
-        if (!this.modifyData.network_id) {
-          this.modifyData.network_id = 0
-        }
       }
       if (this.productDetail.type != this.copyProductDetail.type) {
         this.modifyData.type = this.productDetail.type
@@ -1520,7 +1519,6 @@ export default {
         }
       }
       this.modifyData.attr_list = this.calAttr()
-      // console.log(this.modifyData.attr_list);
       this.modifyData.id = this.productDetail.id
       const formData = JSON.parse(JSON.stringify(this.modifyData))
       if (formData.icon) {

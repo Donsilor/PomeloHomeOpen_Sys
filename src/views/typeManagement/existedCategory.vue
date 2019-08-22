@@ -14,6 +14,7 @@
         <div class="table-container">
             <template>
                 <el-table :data="tableData"stripe style="width: 100%">
+                    <el-table-column prop="id" label="子品类ID" width="250"></el-table-column>
                     <el-table-column prop="name" label="子品类" width="250"></el-table-column>
                     <el-table-column prop="parent_type_name" label="所属大品类"></el-table-column>
                     <el-table-column  prop="created_user" label="创建人" width="120" align="center"></el-table-column>

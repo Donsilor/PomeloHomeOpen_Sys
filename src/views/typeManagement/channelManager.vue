@@ -8,6 +8,7 @@
         <div class="table-container">
             <template>
                 <el-table :data="tableData"fit stripe style="width: 100%">
+                    <el-table-column prop="sort" label="序号"></el-table-column>
                     <el-table-column prop="logo_url" label="渠道商logo">
                         <template slot-scope="scope">
                             <img width="50" style="display: block" :src="scope.row.logo_url" alt="logo">

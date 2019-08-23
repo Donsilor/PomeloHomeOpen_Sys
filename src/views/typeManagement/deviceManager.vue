@@ -159,11 +159,13 @@ export default {
           'page': this.listQuery.page,
           'token': getToken(),
           'limit': this.listQuery.limit,
-          'type_id': this.child_id,
+          'type_id': this.child_id==null?'':this.child_id,
           'parent_type_id': this.type_id==null?'':this.type_id,
-          'business_id': this.business_id
+          'business_id': this.business_id==null?'':this.business_id
         }
       }).then(res => {
+        console.log(res);
+        
         this.listLoading = false
         this.tableData = res.data
         this.total = res.total

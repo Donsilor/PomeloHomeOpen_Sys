@@ -160,7 +160,7 @@ export default {
           'token': getToken(),
           'limit': this.listQuery.limit,
           'type_id': this.child_id,
-          'parent_type_id': this.type_id,
+          'parent_type_id': this.type_id==null?'':this.type_id,
           'business_id': this.business_id
         }
       }).then(res => {

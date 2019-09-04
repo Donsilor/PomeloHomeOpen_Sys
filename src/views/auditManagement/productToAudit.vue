@@ -1,50 +1,59 @@
 <template>
   <div class="app-container">
     <!--====================-->
-    <el-button 
+    <el-button
       type="primary"
       size="small"
       @click="$router.go(-1)">
       <i class="el-icon-arrow-left"/> 返回
     </el-button>
     <h3>{{ business_name }}</h3>
-    <el-card 
+    <el-card
       v-if="type=='detail' "
       class="box-card">
-      <div 
+      <div
         v-if="status==1 "
         style="color: #67C23A;font-size: 24px;">
         审核通过 <i class="el-icon-circle-check"/>
       </div>
       <div v-if="status==2 ">
         <p style="color: #F56C6C;font-weight: bold">审核不通过</p>
-        <p 
+        <p
           v-for="(item,index) in checkDetail.approved_reason"
           :key="index">{{ index+1 }}、{{ item }}</p>
       </div>
     </el-card>
     <el-card class="box-card">
-      <el-row 
+      <el-row
         slot="header"
         class="card-header">
         <i/>产品基本信息
       </el-row>
       <el-row class="card-body product-audit">
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">产品品类</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">{{ checkDetail.type_name }}</el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
+            :span="3"
+            class="card-span-left">对接方式</el-col>
+          <el-col
+            :span="16"
+            :offset="1"
+            class="card-span-right">{{ device_access_type }}</el-col>
+        </el-row>
+        <el-row class="card-row">
+          <el-col
             :span="3"
             class="card-span-left">合作品牌
           </el-col>
-          <el-col 
+          <el-col
             :span="20"
             :offset="1"
             class="card-span-right">
@@ -56,12 +65,12 @@
                 <span>品牌英文：{{ checkDetail.manufacturer_name }}</span>
               </el-row>
               <el-row>
-                <img 
+                <img
                   v-img:name
                   v-if="checkDetail.brand_logo"
                   :src="checkDetail.brand_logo"
                   alt="品牌logo">
-                <img 
+                <img
                   v-img:name
                   v-if="checkDetail.brand_cert"
                   :src="checkDetail.brand_cert"
@@ -71,104 +80,104 @@
           </el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">产品名称</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">{{ checkDetail.name }}</el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">产品型号</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">{{ checkDetail.model }}</el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">兼容机型</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">{{ checkDetail.compat }}</el-col>
         </el-row>
         <el-row
           v-for="(it, idx) in checkDetail.compat_ext"
-          :key="idx" 
+          :key="idx"
           class="card-row">
           <el-col
             :span="3"
             class="card-span-left edit-label">{{ '兼容机型' + (idx + 2) }}</el-col>
-          <el-col 
+          <el-col
             :span="6"
             :offset="1"
             class="card-span-right">{{ it.brand }}</el-col>
-          <el-col 
+          <el-col
             :span="10"
             :offset="1"
             class="card-span-right">{{ it.compat }}</el-col>
         </el-row>
 
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">渠道商</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">{{ checkDetail.distributor }}</el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">渠道商ID</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">{{ checkDetail.distributor_pid }}</el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">客服电话</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">{{ checkDetail.vendor_phone }}</el-col>
         </el-row>
 
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">配网方式</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">{{ checkDetail.network_name }}</el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">配网方式描述</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">{{ checkDetail.network_des }}</el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">产品小图</el-col>
-          <el-col 
+          <el-col
             :span="20"
             :offset="1"
             class="card-span-right">
-            <img 
+            <img
               v-img:name
               v-if="checkDetail.icon"
               :src="checkDetail.icon"
@@ -177,14 +186,14 @@
           </el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">产品图片（六观图）</el-col>
-          <el-col 
+          <el-col
             :span="20"
             :offset="1"
             class="card-span-right">
-            <img 
+            <img
               v-img:name
               v-for="item in checkDetail.images"
               :key="item"
@@ -194,60 +203,60 @@
           </el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">产品规格书</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">
-            <a 
+            <a
               :href="checkDetail.spec_url"
               target="_blank"
               download>{{ checkDetail.spec_name }}</a>
           </el-col>
         </el-row>
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">产品使用说明书</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">
-            <a 
+            <a
               :href="checkDetail.instruct_url"
               target="_blank"
               download>{{ checkDetail.instruct_name }}</a>
           </el-col>
         </el-row>
       </el-row>
-      <el-row 
+      <el-row
         v-if="type=='audit' "
         class="card-handle">
-        <el-col 
+        <el-col
           :span="6"
           :offset="4">
-          <el-button 
+          <el-button
             type="primary"
             size="small"
             @click="audit_info.basic.action_type=1">
-            <i 
+            <i
               v-show="audit_info.basic.action_type==1"
               class="el-icon-check"/>
             审核通过
           </el-button>
-          <el-button 
+          <el-button
             type="primary"
             size="small"
             @click="audit_info.basic.action_type=2">
-            <i 
+            <i
               v-show="audit_info.basic.action_type==2"
               class="el-icon-check"/>
             审核不通过
           </el-button>
         </el-col>
-        <el-col 
+        <el-col
           v-show="audit_info.basic.action_type !== 0"
           :span="14"
           class="check-reason">
@@ -256,14 +265,14 @@
               <div class="audit-result-label">审核结果：</div>
             </el-col>
             <el-col :span="20">
-              <el-input 
+              <el-input
                 v-show="audit_info.basic.action_type == 2"
                 :maxlength="500"
                 v-model="audit_info.basic.unapproved_reason"
                 type="textarea"
                 autosize
                 placeholder="审核未通过理由"/>
-              <div 
+              <div
                 v-show="audit_info.basic.action_type == 1"
                 class="audit-result-pass"><i class="el-icon-circle-check"/> 审核通过
               </div>
@@ -273,36 +282,36 @@
       </el-row>
     </el-card>
     <el-card class="box-card">
-      <el-row 
+      <el-row
         slot="header"
         class="card-header">
         <i/>技术方案选择
       </el-row>
       <el-row class="card-body">
         <el-row class="card-row">
-          <el-col 
+          <el-col
             :span="3"
             class="card-span-left">选择技术方案</el-col>
-          <el-col 
+          <el-col
             :span="16"
             :offset="1"
             class="card-span-right">{{ checkDetail.type_txt||'无' }}</el-col>
         </el-row>
         <template v-if="checkDetail.type==1">
           <el-row class="card-row">
-            <el-col 
+            <el-col
               :span="3"
               class="card-span-left">模组/芯片信息</el-col>
-            <el-col 
+            <el-col
               :span="16"
               :offset="1"
               class="card-span-right">{{ checkDetail.type_vendor }}</el-col>
           </el-row>
           <el-row class="card-row">
-            <el-col 
+            <el-col
               :span="3"
               class="card-span-left">型号</el-col>
-            <el-col 
+            <el-col
               :span="16"
               :offset="1"
               class="card-span-right">{{ checkDetail.type_model }}</el-col>
@@ -310,10 +319,10 @@
         </template>
         <template v-if="checkDetail.type==2||checkDetail.type==3">
           <el-row class="card-row">
-            <el-col 
+            <el-col
               :span="3"
               class="card-span-left">标准协议</el-col>
-            <el-col 
+            <el-col
               :span="16"
               :offset="1"
               class="card-span-right">{{ checkDetail.agreement }}</el-col>
@@ -321,32 +330,32 @@
         </template>
 
       </el-row>
-      <el-row 
+      <el-row
         v-if="type=='audit' "
         class="card-handle">
-        <el-col 
+        <el-col
           :span="6"
           :offset="4">
-          <el-button 
+          <el-button
             type="primary"
             size="small"
             @click="audit_info.tech.action_type=1">
-            <i 
+            <i
               v-show="audit_info.tech.action_type==1"
               class="el-icon-check"/>
             审核通过
           </el-button>
-          <el-button 
+          <el-button
             type="primary"
             size="small"
             @click="audit_info.tech.action_type=2">
-            <i 
+            <i
               v-show="audit_info.tech.action_type==2"
               class="el-icon-check"/>
             审核不通过
           </el-button>
         </el-col>
-        <el-col 
+        <el-col
           v-show="audit_info.tech.action_type !== 0"
           :span="14"
           class="check-reason">
@@ -355,14 +364,14 @@
               <div class="audit-result-label">审核结果：</div>
             </el-col>
             <el-col :span="20">
-              <el-input 
+              <el-input
                 v-show="audit_info.tech.action_type == 2"
                 :maxlength="500"
                 v-model="audit_info.tech.unapproved_reason"
                 type="textarea"
                 autosize
                 placeholder="审核未通过理由"/>
-              <div 
+              <div
                 v-show="audit_info.tech.action_type == 1"
                 class="audit-result-pass"><i class="el-icon-circle-check"/> 审核通过
               </div>
@@ -373,13 +382,13 @@
     </el-card>
     <!--=========================-->
     <el-card class="box-card">
-      <el-row 
+      <el-row
         slot="header"
         class="card-header">
         <i/>必选功能点
       </el-row>
       <el-row>
-        <el-table 
+        <el-table
           :data="must_fps"
           :span-method="spanMethod"
           highlight-current-row
@@ -387,15 +396,15 @@
           stripe
           fit
           style="width:100%;">
-          <el-table-column 
+          <el-table-column
             align="center"
             label="Stream_ID"
             prop="nodeid"/>
-          <el-table-column 
+          <el-table-column
             align="center"
             label="参数名称"
             prop="remark"/>
-          <el-table-column 
+          <el-table-column
             align="center"
             label="value"
             prop="value_list">
@@ -403,44 +412,44 @@
               {{ scope.row.key_type=='1'?scope.row.value:scope.row.origin_value_string }}
             </template>
           </el-table-column>
-          <el-table-column 
+          <el-table-column
             align="center"
             label="开启状态"
             prop="is_enable">
             <template slot-scope="scope">
-              <el-switch 
+              <el-switch
                 :value="true"
                 disabled/>
             </template>
           </el-table-column>
         </el-table>
       </el-row>
-      <el-row 
+      <el-row
         v-if="type=='audit'&&must_fps.length>0 "
         class="card-handle">
-        <el-col 
+        <el-col
           :span="6"
           :offset="4">
-          <el-button 
+          <el-button
             type="primary"
             size="small"
             @click="audit_info.must_fps.action_type=1">
-            <i 
+            <i
               v-show="audit_info.must_fps.action_type==1"
               class="el-icon-check"/>
             审核通过
           </el-button>
-          <el-button 
+          <el-button
             type="primary"
             size="small"
             @click="audit_info.must_fps.action_type=2">
-            <i 
+            <i
               v-show="audit_info.must_fps.action_type==2"
               class="el-icon-check"/>
             审核不通过
           </el-button>
         </el-col>
-        <el-col 
+        <el-col
           v-show="audit_info.must_fps.action_type !== 0"
           :span="14"
           class="check-reason">
@@ -449,14 +458,14 @@
               <div class="audit-result-label">审核结果：</div>
             </el-col>
             <el-col :span="20">
-              <el-input 
+              <el-input
                 v-show="audit_info.must_fps.action_type == 2"
                 :maxlength="500"
                 v-model="audit_info.must_fps.unapproved_reason"
                 type="textarea"
                 autosize
                 placeholder="审核未通过理由"/>
-              <div 
+              <div
                 v-show="audit_info.must_fps.action_type == 1"
                 class="audit-result-pass"><i class="el-icon-circle-check"/> 审核通过
               </div>
@@ -467,12 +476,12 @@
     </el-card>
 
     <el-card class="box-card">
-      <el-row 
+      <el-row
         slot="header"
         class="card-header">
         <i/>可选功能点
       </el-row>
-      <el-table 
+      <el-table
         :data="opt_fps"
         :span-method="spanMethod"
         highlight-current-row
@@ -480,15 +489,15 @@
         stripe
         fit
         style="width:100%;">
-        <el-table-column 
+        <el-table-column
           align="center"
           label="Stream_ID"
           prop="nodeid"/>
-        <el-table-column 
+        <el-table-column
           align="center"
           label="参数名称"
           prop="remark"/>
-        <el-table-column 
+        <el-table-column
           align="center"
           label="value"
           prop="value_list">
@@ -496,43 +505,43 @@
             {{ scope.row.key_type=='1'?scope.row.value:scope.row.origin_value_string }}
           </template>
         </el-table-column>
-        <el-table-column 
+        <el-table-column
           align="center"
           label="开启状态"
           prop="is_enable">
           <template slot-scope="scope">
-            <el-switch 
+            <el-switch
               v-model="scope.row.is_enable"
               disabled/>
           </template>
         </el-table-column>
       </el-table>
-      <el-row 
+      <el-row
         v-if="type=='audit'&&opt_fps.length>0 "
         class="card-handle">
-        <el-col 
+        <el-col
           :span="6"
           :offset="4">
-          <el-button 
+          <el-button
             type="primary"
             size="small"
             @click="audit_info.opt_fps.action_type=1">
-            <i 
+            <i
               v-show="audit_info.opt_fps.action_type==1"
               class="el-icon-check"/>
             审核通过
           </el-button>
-          <el-button 
+          <el-button
             type="primary"
             size="small"
             @click="audit_info.opt_fps.action_type=2">
-            <i 
+            <i
               v-show="audit_info.opt_fps.action_type==2"
               class="el-icon-check"/>
             审核不通过
           </el-button>
         </el-col>
-        <el-col 
+        <el-col
           v-show="audit_info.opt_fps.action_type !== 0"
           :span="14"
           class="check-reason">
@@ -541,14 +550,14 @@
               <div class="audit-result-label">审核结果：</div>
             </el-col>
             <el-col :span="20">
-              <el-input 
+              <el-input
                 v-show="audit_info.opt_fps.action_type == 2"
                 :maxlength="500"
                 v-model="audit_info.opt_fps.unapproved_reason"
                 type="textarea"
                 autosize
                 placeholder="审核未通过理由"/>
-              <div 
+              <div
                 v-show="audit_info.opt_fps.action_type == 1"
                 class="audit-result-pass"><i class="el-icon-circle-check"/> 审核通过
               </div>
@@ -558,18 +567,18 @@
       </el-row>
     </el-card>
 
-    <el-card 
+    <el-card
       v-if="type=='audit' "
       class="box-card audit-box"
       style="margin-top: 30px">
       <el-row>
         <el-col :offset="4">
-          <p 
+          <p
             v-if="unapproved_list.length"
             style="color: #E6A23C;">未审核：</p>
         </el-col>
       </el-row>
-      <el-row 
+      <el-row
         v-for="(item, index) in unapproved_list"
         :key="index">
         <el-col :offset="4">
@@ -578,12 +587,12 @@
       </el-row>
       <el-row>
         <el-col :offset="4">
-          <p 
+          <p
             v-if="reject_reason_list.length"
             style="color: #F56C6C;">审核不通过：</p>
         </el-col>
       </el-row>
-      <el-row 
+      <el-row
         v-for="(item, index) in reject_reason_list"
         :key="index">
         <el-col :offset="4">
@@ -591,10 +600,10 @@
         </el-col>
       </el-row>
       <el-row style="padding-top: 15px;">
-        <el-col 
+        <el-col
           :span="3"
           :offset="4">
-          <el-button 
+          <el-button
             :disabled="unapproved_list.length>0||reject_reason_list>0"
             type="primary"
             @click="commitCheck">提交
@@ -661,6 +670,25 @@ export default {
     }
   },
   computed: {
+    device_access_type() {
+      /* eslint-disable no-unreachable */
+      switch(this.checkDetail.device_access_type) {
+      case 0:
+        return '中控接入'
+        break
+      case 1:
+        return '云云对接'
+        break
+      case 2:
+        return 'APP对接'
+        break
+      case 3:
+        return '云中控接入'
+        break
+      default: ''
+        break
+      }
+    },
     unapproved_list: function() {
       const arry = []
       for (const k in this.audit_info) {

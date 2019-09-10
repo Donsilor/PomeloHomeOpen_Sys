@@ -165,6 +165,7 @@
                   </el-col>
                 </el-form-item>
                 <el-form-item
+                  v-show="form.add_type!=6"
                   label="第一步"
                   label-width="120px"
                 >
@@ -203,9 +204,9 @@
                   <el-col :span="13">
                     <div class="marT20">
                       <el-form-item
+                        :prop="form.add_type!=6?'add1_tips':'Auth_2_0'"
                         label="提示文字"
                         label-width="80px"
-                        prop="add1_tips"
                       >
                         <!--<div class="desTitle" style="vertical-align: top;">提示文字</div>-->
                         <el-input
@@ -223,9 +224,9 @@
                   <el-col :span="13">
                     <div class="marT20 flex">
                       <el-form-item
+                        :prop="form.add_type!=6?'add1_button':'Auth_2_0'"
                         label="按钮文字"
                         label-width="80px"
-                        prop="add1_button"
                       >
                         <!--<div class="desTitle">按钮文字</div>-->
                         <el-input
@@ -238,6 +239,7 @@
                   </el-col>
                 </el-form-item>
                 <el-form-item
+                  v-show="form.add_type!=6"
                   label="第二步"
                   label-width="120px"
                 >
@@ -277,9 +279,9 @@
                     <div class="marT20">
                       <!--<div class="desTitle" style="vertical-align: top;">提示文字</div>-->
                       <el-form-item
+                        :prop="form.add_type!=6?'add2_tips':'Auth_2_0'"
                         label="提示文字"
                         label-width="80px"
-                        prop="add2_tips"
                       >
                         <el-input
                           :autosize="{ minRows: 3, maxRows: 3}"
@@ -294,14 +296,75 @@
                     </div>
                   </el-col>
                 </el-form-item>
+                <el-form-item
+                  v-show="form.add_type==5"
+                  label="第三步"
+                  label-width="120px"
+                >
+                  <el-col :span="13">
+                    <el-form-item
+                      v-if="form.add3_img"
+                      label="上传图片"
+                      label-width="80px"
+                    >
+                      <div class="flex">
+                        <!--<div class="desTitle">上传图片</div>-->
+                        <el-input
+                          v-model="form.add3_img.filename"
+                          :disabled="!isEdit"
+                          readonly
+                        />
+                        <el-upload
+                          :show-file-list="false"
+                          :on-success="handleAddImg3Success"
+                          :before-upload="beforeAvatarUpload"
+                          :data="form.add3_img"
+                          :disabled="!isEdit"
+                          class="upload-container"
+                          action="/api/index.php/files/save"
+                          accept="image/png"
+                        >
+                          <el-button
+                            :disabled="!isEdit"
+                            size="middle"
+                            type="primary"
+                          >选择文件</el-button>
+                        </el-upload>
+                      </div>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="13">
+                    <div class="marT20">
+                      <!--<div class="desTitle" style="vertical-align: top;">提示文字</div>-->
+                      <el-form-item
+                        :prop="form.add_type==5?'add3_tips':'Auth_2_0'"
+                        label="提示文字"
+                        label-width="80px"
+                      >
+                        <el-input
+                          :autosize="{ minRows: 3, maxRows: 3}"
+                          v-model="form.add3_tips"
+                          :disabled="!isEdit"
+                          :maxlength="255"
+                          type="textarea"
+                          placeholder="文字限制255个字符内"
+                          class="add1TextArea"
+                        />
+                      </el-form-item>
+                    </div>
+                  </el-col>
+                </el-form-item>
               </el-col>
             </el-tab-pane>
-            <el-tab-pane label="连接方式">
+            <el-tab-pane
+              v-if="form.add_type!=6"
+              label="连接方式">
               <el-col :span="24">
                 <el-form-item
+                  v-show="form.add_type!=6"
+                  :prop="form.add_type!=6?'add_time':'Auth_2_0'"
                   label="超时时间"
                   label-width="120px"
-                  prop="add_time"
                 >
                   <el-col :span="13">
                     <el-input
@@ -314,7 +377,9 @@
                 </el-form-item>
               </el-col>
             </el-tab-pane>
-            <el-tab-pane label="重置方式">
+            <el-tab-pane
+              v-if="form.add_type!=6"
+              label="重置方式">
               <el-col :span="24">
                 <el-form-item
                   v-if="form.reset_img"
@@ -348,9 +413,10 @@
                   </el-col>
                 </el-form-item>
                 <el-form-item
+                  v-show="form.add_type!=6"
+                  :prop="form.add_type!=6?'reset_tips':'Auth_2_0'"
                   label="提示文字"
                   label-width="120px"
-                  prop="reset_tips"
                 >
                   <el-col :span="13">
                     <el-input
@@ -361,6 +427,61 @@
                       type="textarea"
                       placeholder="请输入其他说明"
                     />
+                  </el-col>
+                </el-form-item>
+              </el-col>
+            </el-tab-pane>
+            <el-tab-pane
+              v-if="form.add_type==6"
+              label="对接信息">
+              <el-col :span="24">
+                <el-form-item
+                  v-show="form.add_type==6"
+                  :prop="form.add_type==6?'plantform_name':'Auth_2_0'"
+                  label="平台名称"
+                  label-width="120px">
+                  <el-col :span="13">
+                    <el-input
+                      v-model="form.plantform_name"
+                      :maxlength="30"
+                      placeholder="请输入"/>
+                  </el-col>
+                </el-form-item>
+                <el-form-item
+                  v-show="form.add_type==6"
+                  :prop="form.add_type==6?'plantform_service':'Auth_2_0'"
+                  label="服务用语"
+                  label-width="120px">
+                  <el-col :span="13">
+                    <el-input
+                      v-model="form.plantform_service"
+                      :maxlength="30"
+                      placeholder="请输入"/>
+                  </el-col>
+                </el-form-item>
+                <el-form-item
+                  v-show="form.add_type==6"
+                  :prop="form.add_type==6?'plantform_des':'Auth_2_0'"
+                  label="平台介绍"
+                  label-width="120px">
+                  <el-col :span="13">
+                    <el-input
+                      v-model="form.plantform_des"
+                      :maxlength="30"
+                      placeholder="请输入"/>
+                  </el-col>
+                </el-form-item>
+                <el-form-item
+                  v-show="form.add_type==6"
+                  :prop="form.add_type==6?'plantform_connect':'Auth_2_0'"
+                  label="连接步骤"
+                  label-width="120px">
+                  <el-col :span="13">
+                    <el-input
+                      :autosize="{ minRows: 5}"
+                      v-model="form.plantform_connect"
+                      type="textarea"
+                      placeholder="请输入"/>
                   </el-col>
                 </el-form-item>
               </el-col>
@@ -437,6 +558,16 @@ export default {
       // is_mixapp: 0,
       COLTD: COLTD,
       form: {
+        add3_img: {
+          'type': '24',
+          'token': getToken(),
+          'filename': ''
+        },
+        add3_tips: '',
+        plantform_name: '',
+        plantform_service: '',
+        plantform_des: '',
+        plantform_connect: '',
       },
       addType: '',
       deviceAddTypeList: [],
@@ -477,6 +608,10 @@ export default {
           { required: true, message: '请输入提示文字', trigger: 'blur' },
           { max: 255, message: '提示文字不能超过255个字符', trigger: 'blur' }
         ],
+        add3_tips: [
+          { required: true, message: '请输入提示文字', trigger: 'blur' },
+          { max: 255, message: '提示文字不能超过255个字符', trigger: 'blur' }
+        ],
         //                    'reset_img.filename': [
         //                        {validator(rule, value, callback, source, options) {
         //                            var errors = [];
@@ -492,6 +627,24 @@ export default {
         ],
         add_time: [
           { required: true, validator: checkTime, trigger: 'blur' }
+        ],
+        plantform_name: [
+          { required: true, message: '请输入提示文字', trigger: 'blur' },
+          { max: 30, message: '提示文字不能超过30个字符', trigger: 'blur' }
+        ],
+        plantform_service: [
+          { required: true, message: '请输入提示文字', trigger: 'blur' },
+          { max: 30, message: '提示文字不能超过30个字符', trigger: 'blur' }
+        ],
+        plantform_des: [
+          { required: true, message: '请输入提示文字', trigger: 'blur' },
+          { max: 30, message: '提示文字不能超过30个字符', trigger: 'blur' }
+        ],
+        plantform_connect: [
+          { required: true, message: '请输入提示文字', trigger: 'blur' },
+        ],
+        Auth_2_0: [
+          { required: false, trigger: 'blur' }
         ]
         /* offline_hint:[
                     {required:true,message:'请输入离线提示语',trigger: 'blur' }
@@ -552,6 +705,7 @@ export default {
       this.form.reset_img.token = this.token
       this.form.add1_img.token = this.token
       this.form.add2_img.token = this.token
+      this.form.add3_img.token = this.token
     },
 
     handleAvatarSuccess(res, file) {
@@ -577,6 +731,14 @@ export default {
     handleAddImg2Success(res, file) {
       this.form.add2_img = res.result
       this.form.add2_img.token = this.token
+      this.$message({
+        type: 'success',
+        message: '上传成功！'
+      })
+    },
+    handleAddImg3Success(res, file) {
+      this.form.add3_img = res.result
+      this.form.add3_img.token = this.token
       this.$message({
         type: 'success',
         message: '上传成功！'
@@ -638,6 +800,30 @@ export default {
     saveDeviceInfo() {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
+          if(this.form.add_type == 6) {
+            this.form.add1_button = ''
+            this.form.add1_img = {}
+            this.form.add1_tips = ''
+            this.form.add2_img = {}
+            this.form.add2_tips = ''
+            this.form.add3_img = {}
+            this.form.add3_tips = ''
+            this.form.reset_img = {}
+            this.form.reset_tips = ''
+            this.form.add_time = ''
+          } else if(this.form.add_type != 5) {
+            this.form.add3_img = {}
+            this.form.add3_tips = ''
+            this.form.plantform_connect = ''
+            this.form.plantform_des = ''
+            this.form.plantform_name = ''
+            this.form.plantform_service = ''
+          } else {
+            this.form.plantform_connect = ''
+            this.form.plantform_des = ''
+            this.form.plantform_name = ''
+            this.form.plantform_service = ''
+          }
           this.editText = '编辑引导页'
           this.form.token = this.token
           fetch({

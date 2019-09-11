@@ -802,13 +802,29 @@ export default {
         if (valid) {
           if(this.form.add_type == 6) {
             this.form.add1_button = ''
-            this.form.add1_img = {}
+            this.form.add1_img = {
+              'type': '24',
+              'token': getToken(),
+              'filename': ''
+            }
             this.form.add1_tips = ''
-            this.form.add2_img = {}
+            this.form.add2_img = {
+              'type': '24',
+              'token': getToken(),
+              'filename': ''
+            }
             this.form.add2_tips = ''
-            this.form.add3_img = {}
+            this.form.add3_img = {
+              'type': '24',
+              'token': getToken(),
+              'filename': ''
+            }
             this.form.add3_tips = ''
-            this.form.reset_img = {}
+            this.form.reset_img = {
+              'type': '25',
+              'token': getToken(),
+              'filename': ''
+            }
             this.form.reset_tips = ''
             this.form.add_time = ''
           } else if(this.form.add_type != 5) {

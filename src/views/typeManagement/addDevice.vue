@@ -773,50 +773,23 @@ export default {
       this.$router.push({ path: '/typeManagement/deviceManager' })
     },
     confirmDevice() {
-      console.log(this.form.type_id)
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          if(this.form.add_type == 6) {
-            this.form.add1_button = ''
-            this.form.add1_img = {
-              'type': '24',
-              'token': getToken(),
-              'filename': ''
-            }
-            this.form.add1_tips = ''
-            this.form.add2_img = {
-              'type': '24',
-              'token': getToken(),
-              'filename': ''
-            }
-            this.form.add2_tips = ''
-            this.form.add3_img = {
-              'type': '24',
-              'token': getToken(),
-              'filename': ''
-            }
-            this.form.add3_tips = ''
-            this.form.reset_img = {
-              'type': '25',
-              'token': getToken(),
-              'filename': ''
-            }
-            this.form.reset_tips = ''
-            this.form.add_time = ''
-          } else if(this.form.add_type != 5) {
-            this.form.add3_img = {}
-            this.form.add3_tips = ''
-            this.form.plantform_connect = ''
-            this.form.plantform_des = ''
-            this.form.plantform_name = ''
-            this.form.plantform_service = ''
-          } else {
-            this.form.plantform_connect = ''
-            this.form.plantform_des = ''
-            this.form.plantform_name = ''
-            this.form.plantform_service = ''
-          }
           const formData = JSON.parse(JSON.stringify(this.form))
+          if(formData.add_type == 6) {
+            delete formData.add1_button
+            delete formData.add1_img
+            delete formData.add1_tips
+            delete formData.add2_img
+            delete formData.add2_tips
+            delete formData.add3_img
+            delete formData.add3_tips
+            delete formData.reset_img
+            delete formData.reset_tips
+          } else if(formData.add_type != 5) {
+            delete formData.add3_img
+            delete formData.add3_tips
+          }
           if (!this.is_evergrande) {
             formData.id_type = this.form.product_id ? 2 : this.form.brand_id ? 5 : this.form.business_id ? 4 : 1
             formData.id = this.form.product_id ? this.form.product_id : this.form.brand_id ? this.form.brand_id : this.form.business_id ? this.form.business_id : this.form.type_id

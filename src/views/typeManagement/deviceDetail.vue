@@ -442,6 +442,7 @@
                   label-width="120px">
                   <el-col :span="13">
                     <el-input
+                      :disabled="!isEdit"
                       v-model="form.plantform_name"
                       :maxlength="30"
                       placeholder="请输入"/>
@@ -454,6 +455,7 @@
                   label-width="120px">
                   <el-col :span="13">
                     <el-input
+                      :disabled="!isEdit"
                       v-model="form.plantform_service"
                       :maxlength="30"
                       placeholder="请输入"/>
@@ -466,6 +468,7 @@
                   label-width="120px">
                   <el-col :span="13">
                     <el-input
+                      :disabled="!isEdit"
                       v-model="form.plantform_des"
                       :maxlength="30"
                       placeholder="请输入"/>
@@ -478,6 +481,7 @@
                   label-width="120px">
                   <el-col :span="13">
                     <el-input
+                      :disabled="!isEdit"
                       :autosize="{ minRows: 5}"
                       v-model="form.plantform_connect"
                       type="textarea"
@@ -801,44 +805,18 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           if(this.form.add_type == 6) {
-            this.form.add1_button = ''
-            this.form.add1_img = {
-              'type': '24',
-              'token': getToken(),
-              'filename': ''
-            }
-            this.form.add1_tips = ''
-            this.form.add2_img = {
-              'type': '24',
-              'token': getToken(),
-              'filename': ''
-            }
-            this.form.add2_tips = ''
-            this.form.add3_img = {
-              'type': '24',
-              'token': getToken(),
-              'filename': ''
-            }
-            this.form.add3_tips = ''
-            this.form.reset_img = {
-              'type': '25',
-              'token': getToken(),
-              'filename': ''
-            }
-            this.form.reset_tips = ''
-            this.form.add_time = ''
+            delete this.form.add1_button
+            delete this.form.add1_img
+            delete this.form.add1_tips
+            delete this.form.add2_img
+            delete this.form.add2_tips
+            delete this.form.add3_img
+            delete this.form.add3_tips
+            delete this.form.reset_img
+            delete this.form.reset_tips
           } else if(this.form.add_type != 5) {
-            this.form.add3_img = {}
-            this.form.add3_tips = ''
-            this.form.plantform_connect = ''
-            this.form.plantform_des = ''
-            this.form.plantform_name = ''
-            this.form.plantform_service = ''
-          } else {
-            this.form.plantform_connect = ''
-            this.form.plantform_des = ''
-            this.form.plantform_name = ''
-            this.form.plantform_service = ''
+            delete this.form.add3_img
+            delete this.form.add3_tips
           }
           this.editText = '编辑引导页'
           this.form.token = this.token
@@ -848,6 +826,7 @@ export default {
             data: this.form
           }).then(res => {
             this.isEdit = false
+            this.getDeviceInfo()
             this.$message({
               type: 'success',
               message: '编辑引导页成功!'
@@ -856,6 +835,7 @@ export default {
                         this.$router.push({path: '/typeManagement/deviceManager'});
                     },2000);*/
           }).catch(res => {
+            this.getDeviceInfo()
             this.$message({
               type: 'error',
               message: res.msg

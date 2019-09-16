@@ -804,6 +804,9 @@ export default {
     saveDeviceInfo() {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
+          if(!this.form.base_img.filename) {
+            delete this.form.base_img
+          }
           if(this.form.add_type == 6) {
             delete this.form.add1_button
             delete this.form.add1_img

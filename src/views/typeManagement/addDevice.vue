@@ -776,6 +776,9 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(this.form))
+          if(!formData.base_img.filename) {
+            delete formData.base_img
+          }
           if(formData.add_type == 6) {
             delete formData.add1_button
             delete formData.add1_img

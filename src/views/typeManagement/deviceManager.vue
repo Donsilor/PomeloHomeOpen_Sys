@@ -91,13 +91,19 @@
             label="所属大品类"
             width="220"/>
           <el-table-column
+            prop="brand_name"
+            label="品牌"/>
+          <el-table-column
             prop="model"
-            label="产品型号"
-            width="150"/>
+            label="产品型号"/>
           <el-table-column
             prop="business_name"
             label="厂商"/>
           <el-table-column
+            prop="add_type_txt"
+            label="添加方式"
+            width="150"/>
+          <!-- <el-table-column
             prop="business_name"
             label="是否融合版"
             align="center">
@@ -105,8 +111,8 @@
               <span v-if="scope.row.app_id=='100001'">是</span>
               <span v-else>否</span>
             </template>
-          </el-table-column>
-          <el-table-column
+          </el-table-column> -->
+          <!-- <el-table-column
             prop="business_name"
             label="是否默认产品"
             align="center">
@@ -114,7 +120,7 @@
               <span v-if="scope.row.is_default">是</span>
               <span v-else>否</span>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="created_at"
             label="创建时间"

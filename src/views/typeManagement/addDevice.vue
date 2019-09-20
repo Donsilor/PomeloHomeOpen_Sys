@@ -793,6 +793,15 @@ export default {
           } else if(formData.add_type != 5) {
             delete formData.add3_img
             delete formData.add3_tips
+            delete formData.plantform_name
+            delete formData.plantform_service
+            delete formData.plantform_des
+            delete formData.plantform_connect
+          } else {
+            delete formData.plantform_name
+            delete formData.plantform_service
+            delete formData.plantform_des
+            delete formData.plantform_connect
           }
           if (!this.is_evergrande) {
             formData.id_type = this.form.product_id ? 2 : this.form.brand_id ? 5 : this.form.business_id ? 4 : 1

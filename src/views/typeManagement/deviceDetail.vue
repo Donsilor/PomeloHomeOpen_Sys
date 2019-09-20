@@ -820,6 +820,15 @@ export default {
           } else if(this.form.add_type != 5) {
             delete this.form.add3_img
             delete this.form.add3_tips
+            delete this.form.plantform_name
+            delete this.form.plantform_service
+            delete this.form.plantform_des
+            delete this.form.plantform_connect
+          } else {
+            delete this.form.plantform_name
+            delete this.form.plantform_service
+            delete this.form.plantform_des
+            delete this.form.plantform_connect
           }
           this.editText = '编辑引导页'
           this.form.token = this.token
@@ -838,7 +847,7 @@ export default {
                         this.$router.push({path: '/typeManagement/deviceManager'});
                     },2000);*/
           }).catch(res => {
-            this.getDeviceInfo()
+            // this.getDeviceInfo()
             this.$message({
               type: 'error',
               message: res.msg

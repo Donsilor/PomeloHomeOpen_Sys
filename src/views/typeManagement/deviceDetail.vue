@@ -616,15 +616,15 @@ export default {
           { required: true, message: '请输入提示文字', trigger: 'blur' },
           { max: 255, message: '提示文字不能超过255个字符', trigger: 'blur' }
         ],
-        //                    'reset_img.filename': [
-        //                        {validator(rule, value, callback, source, options) {
-        //                            var errors = [];
-        //                            if (!value) {
-        //                                callback('添加方式的图片不能为空');
-        //                            }
-        //                            callback(errors);
-        //                        }}
-        //                    ],
+        // 'reset_img.filename': [
+        //   {validator(rule, value, callback, source, options) {
+        //     var errors = []
+        //     if (!value) {
+        //       callback('添加方式的图片不能为空')
+        //     }
+        //     callback(errors)
+        //   }}
+        // ],
         reset_tips: [
           { required: true, message: '请输入重置提示文字', trigger: 'blur' },
           { max: 255, message: '重置提示文字不能超过255个字符', trigger: 'blur' }
@@ -804,39 +804,40 @@ export default {
     saveDeviceInfo() {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          if(!this.form.base_img.filename) {
-            delete this.form.base_img
+          const formData = JSON.parse(JSON.stringify(this.form))
+          if(!formData.base_img.filename) {
+            delete formData.base_img
           }
-          if(this.form.add_type == 6) {
-            delete this.form.add1_button
-            delete this.form.add1_img
-            delete this.form.add1_tips
-            delete this.form.add2_img
-            delete this.form.add2_tips
-            delete this.form.add3_img
-            delete this.form.add3_tips
-            delete this.form.reset_img
-            delete this.form.reset_tips
-          } else if(this.form.add_type != 5) {
-            delete this.form.add3_img
-            delete this.form.add3_tips
-            delete this.form.plantform_name
-            delete this.form.plantform_service
-            delete this.form.plantform_des
-            delete this.form.plantform_connect
+          if(formData.add_type == 6) {
+            delete formData.add1_button
+            delete formData.add1_img
+            delete formData.add1_tips
+            delete formData.add2_img
+            delete formData.add2_tips
+            delete formData.add3_img
+            delete formData.add3_tips
+            delete formData.reset_img
+            delete formData.reset_tips
+          } else if(formData.add_type != 5) {
+            delete formData.add3_img
+            delete formData.add3_tips
+            delete formData.plantform_name
+            delete formData.plantform_service
+            delete formData.plantform_des
+            delete formData.plantform_connect
           } else {
-            delete this.form.plantform_name
-            delete this.form.plantform_service
-            delete this.form.plantform_des
-            delete this.form.plantform_connect
+            delete formData.plantform_name
+            delete formData.plantform_service
+            delete formData.plantform_des
+            delete formData.plantform_connect
           }
-          this.editText = '编辑引导页'
-          this.form.token = this.token
+          formData.token = this.token
           fetch({
             url: '/device/deviceEdit',
             method: 'post',
-            data: this.form
+            data: formData
           }).then(res => {
+            this.editText = '编辑引导页'
             this.isEdit = false
             this.getDeviceInfo()
             this.$message({
@@ -847,7 +848,8 @@ export default {
                         this.$router.push({path: '/typeManagement/deviceManager'});
                     },2000);*/
           }).catch(res => {
-            // this.getDeviceInfo()
+            this.editText = '确定并提交修改'
+            this.getDeviceInfo()
             this.$message({
               type: 'error',
               message: res.msg

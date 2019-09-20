@@ -512,6 +512,7 @@ export default {
       // is_mixapp: 0,
       COLTD: COLTD,
       form: {
+        type_id: '',
         type: '',
         id_type: '', // 设备类型,1:品牌类型，2：产品类型',3:大品类类型
         business_id: '',

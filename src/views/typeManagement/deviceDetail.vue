@@ -794,8 +794,8 @@ export default {
         }).then(() => {
           this.saveDeviceInfo()
         }).catch(() => {
-          this.isEdit = false
-          this.editText = '编辑引导页'
+          // this.isEdit = false
+          // this.editText = '编辑引导页'
         })
       }
     },
@@ -818,6 +818,7 @@ export default {
             delete formData.add3_tips
             delete formData.reset_img
             delete formData.reset_tips
+            delete formData.add_time
           } else if(formData.add_type != 5) {
             delete formData.add3_img
             delete formData.add3_tips
@@ -849,7 +850,7 @@ export default {
                     },2000);*/
           }).catch(res => {
             this.editText = '确定并提交修改'
-            this.getDeviceInfo()
+            // this.getDeviceInfo()
             this.$message({
               type: 'error',
               message: res.msg

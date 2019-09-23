@@ -790,6 +790,7 @@ export default {
             delete formData.add3_tips
             delete formData.reset_img
             delete formData.reset_tips
+            delete formData.add_time
           } else if(formData.add_type != 5) {
             delete formData.add3_img
             delete formData.add3_tips

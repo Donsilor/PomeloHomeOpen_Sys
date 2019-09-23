@@ -57,7 +57,7 @@
           clearable
           placeholder="添加方式">
           <el-option
-            v-for="(item,index) in addFucForm"
+            v-for="(item,index) in deviceAddTypeList"
             :key="index"
             :label="item.type_name"
             :value="item.type_id"/>
@@ -189,6 +189,7 @@ export default {
   name: 'ExistedCategory',
   data() {
     return {
+      deviceAddTypeList: [],
       addFucSetModal: false,
       addFucForm: [],
       token: getToken(),
@@ -228,6 +229,7 @@ export default {
       this.getAddType()
       this.getTypeTree()
       this.getBusinessList()
+      this.getDeviceAddtype()
     })
   },
   methods: {
@@ -260,8 +262,6 @@ export default {
         method: 'post',
         data: {...dataVal}
       }).then(res => {
-        console.log(res)
-
         this.listLoading = false
         this.tableData = res.data
         this.total = res.total
@@ -310,7 +310,18 @@ export default {
     addDevice() {
       this.$router.push({ path: '/typeManagement/addDevice' })
     },
-    // 获取添加方式设置
+    // 获取添加设备设置
+    getDeviceAddtype() {
+      fetch({
+        url: '/device/deviceAddtype',
+        method: 'post',
+        data: {
+        }
+      }).then(res => {
+        this.deviceAddTypeList = res
+      })
+    },
+    // 获取添加设备设置
     getAddType() {
       fetch({
         url: '/device/getAddtype',
@@ -329,7 +340,7 @@ export default {
         })
       })
     },
-    // 添加方式设置
+    // 添加设备设置
     addFuc() {
       this.addFucForm.forEach((val, index) => {
         val.status = val.status ? 1 : 0

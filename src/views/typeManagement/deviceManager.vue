@@ -91,14 +91,14 @@
             label="所属大品类"
             width="220"/>
           <el-table-column
+            prop="business_name"
+            label="厂商"/>
+          <el-table-column
             prop="brand_name"
             label="品牌"/>
           <el-table-column
             prop="model"
             label="产品型号"/>
-          <el-table-column
-            prop="business_name"
-            label="厂商"/>
           <el-table-column
             prop="add_type_txt"
             label="添加方式"
@@ -301,7 +301,7 @@ export default {
       this.child_id = ''
     },
     changeBrandType(val) {
-      this.brandType = this.businessList.find((x) => x.business_id === val).brand
+      this.brandType = this.businessList.find((x) => x.business_id === val)?this.businessList.find((x) => x.business_id === val).brand:[]
     },
     handleEnterPage(row) {
       this.$router.push({ path: '/typeManagement/deviceDetail', query: { 'id': row.id }})

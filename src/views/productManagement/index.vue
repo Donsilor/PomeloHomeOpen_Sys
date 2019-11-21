@@ -31,6 +31,11 @@
                         url: '/productManagement/onlineProducts',
                         type:'onlineProducts',
                     },
+                    {
+                      name: '已下线产品',
+                      url: '/productManagement/offlineProducts',
+                      type:'offlineProducts',
+                    }
                 ]
             }
         },

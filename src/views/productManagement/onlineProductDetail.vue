@@ -4,7 +4,14 @@
     <el-button
       size="medium"
       @click="$router.go(-1)">返回</el-button>
+    {{isSuperAdmin}}
     <el-button
+      v-if="lineStatus === 'offline' && isSuperAdmin"
+      type="danger"
+      size="medium"
+      @click="removeProduct">删除该产品</el-button>
+    <el-button
+      v-if="lineStatus !== 'offline'"
       type="primary"
       size="medium"
       @click="productUnshelve">下架该产品</el-button>
@@ -12,6 +19,11 @@
       type="primary"
       size="medium"
       @click="toEdit">{{ edit?'保存':'编辑' }}产品信息</el-button>
+    <el-button
+      v-if="lineStatus === 'offline'"
+      type="primary"
+      size="medium"
+      @click="reStocking">重新上架</el-button>
     <h3>{{ productDetail.brand_name+productDetail.type_name+productDetail.model }}</h3>
     <el-tabs
       v-model="activeName"
@@ -999,7 +1011,7 @@ import utils from '@/utils/helper'
 import { getToken } from '@/utils/auth'
 import fetch from '@/utils/fetch'
 import { Message, Dialog } from 'element-ui'
-
+import { mapGetters } from 'vuex'
 export default {
   name: 'OnlineProductDetail',
 
@@ -1092,10 +1104,17 @@ export default {
         file_list: {}
       },
       ruleForm: {},
+      lineStatus: ''
     }
+  },
+  computed: {
+    ...mapGetters([
+      'isSuperAdmin'
+    ])
   },
   created() {
     this.product_id = this.$route.query.product_id
+    this.lineStatus = this.$route.query.lineStatus
   },
   mounted() {
     this.getReviewInfo()
@@ -1653,6 +1672,30 @@ export default {
     // 移除兼容机型
     removeCompat(idx) {
       this.productDetail.compat_ext.splice(idx, 1)
+    },
+    // 删除产品(超级管理员才行)
+    removeProduct() {
+      this.$confirm('确认删除该产品？', '重新上架').then(() => {
+        fetch({
+          url: 'product/admin_del',
+          method: 'post',
+          data: { 'product_id': this.product_id }
+        }).then(data => {
+          this.$router.push('/productManagement/offlineProducts')
+        })
+      })
+    },
+    // 重新上架
+    reStocking() {
+      this.$confirm('确认重新上架该产品？', '重新上架').then(() => {
+        fetch({
+          url: 'admin/product_reschedule',
+          method: 'post',
+          data: { 'product_id': this.product_id }
+        }).then(data => {
+          this.$router.push('/productManagement/offlineProducts')
+        })
+      })
     }
   },
 }

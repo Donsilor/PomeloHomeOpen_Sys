@@ -129,10 +129,21 @@ export const constantRouterMap = [
             component: _import('productManagement/onlineProducts')
           },
           {
+            path: 'offlineProducts',
+            name: 'offlineProducts',
+            component: _import('productManagement/offlineProducts')
+          },
+          {
             path: 'onlineProductDetail',
             name: 'onlineProductDetail',
             component: _import('productManagement/onlineProductDetail'),
             meta: { key: 'onlineProducts', isdetail: true }
+          },
+          {
+            path: 'offlineProductDetail',
+            name: 'offlineProductDetail',
+            component: _import('productManagement/onlineProductDetail'),
+            meta: { key: 'offlineProducts', isdetail: true }
           }
         ]
       },
@@ -158,6 +169,12 @@ export const constantRouterMap = [
             path: 'bigCategory',
             name: 'bigCategory',
             component: _import('typeManagement/bigCategory'),
+            meta: { breadNumber: 1, notKeepAlive: true }
+          },
+          {
+            path: 'appCategory',
+            name: 'appCategory',
+            component: _import('typeManagement/appCategory'),
             meta: { breadNumber: 1, notKeepAlive: true }
           },
           {
@@ -215,6 +232,12 @@ export const constantRouterMap = [
             name: 'addCategoryDetail',
             component: _import('typeManagement/addCategoryDetail'),
             meta: { breadNumber: 1, notKeepAlive: true, key: 'existedCategory' }
+          },
+          {
+            path: 'appCategoryDetail',
+            name: 'appCategoryDetail',
+            component: _import('typeManagement/appCategoryDetail'),
+            meta: { breadNumber: 1, notKeepAlive: true, key: 'appCategory' }
           },
           {
             path: 'deviceDetail',

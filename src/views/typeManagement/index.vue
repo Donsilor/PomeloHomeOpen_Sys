@@ -43,6 +43,11 @@
                         type: 'bigCategory'
                     },
                     {
+                      name: 'APP品类',
+                      url: '/typeManagement/appCategory',
+                      type: 'appCategory'
+                    },
+                    {
                         name: '引导页管理',
                         url: '/typeManagement/deviceManager',
                         type:'deviceManager'

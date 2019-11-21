@@ -4,6 +4,8 @@ const TokenKey = 'Admin-Token'
 
 const UserNameKey = 'USERNAME'
 
+const isSuperAdmin = 'ISSUPERADMIN'
+
 export function getToken() {
   // console.log('Cookies.get(TokenKey)', Cookies.get(TokenKey));
   return Cookies.get(TokenKey)
@@ -28,3 +30,12 @@ export function setUserName(username) {
 export function removeUserName() {
     return Cookies.remove(UserNameKey)
 }
+
+export function getIsSuperAdmin() {
+  return Cookies.get(isSuperAdmin)
+}
+
+export function setIsSuperAdmin(superAdmin) {
+  return Cookies.set(isSuperAdmin, superAdmin)
+}
+

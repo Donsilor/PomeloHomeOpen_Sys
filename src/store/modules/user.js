@@ -11,7 +11,9 @@ import {
   removeToken,
   getUserName,
   setUserName,
-  removeUserName
+  removeUserName,
+  getIsSuperAdmin,
+  setIsSuperAdmin
 } from '@/utils/auth'
 
 const user = {
@@ -22,7 +24,8 @@ const user = {
     roles: [],
     auditMenus: {},
     documentMenus: {},
-    authorityMenus: []
+    authorityMenus: [],
+    isSuperAdmin: getIsSuperAdmin()
   },
 
   mutations: {
@@ -59,6 +62,9 @@ const user = {
             const data = response
             setToken(data.token)
             setUserName(mail)
+            if (response.hasOwnProperty('permissions') && response.permissions.del_product_admin == 1) {
+              setIsSuperAdmin(true)
+            }
             commit('SET_NAME', mail)
             commit('SET_TOKEN', data.token)
             resolve()

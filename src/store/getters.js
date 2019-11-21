@@ -3,6 +3,7 @@ const getters = {
   token: state => state.user.token,
   avatar: state => state.user.avatar,
   name: state => state.user.name,
+  isSuperAdmin: state => state.user.isSuperAdmin,
   roles: state => state.user.roles,
   auditMenus: state => state.user.auditMenus,
   documentMenus: state => state.user.documentMenus,

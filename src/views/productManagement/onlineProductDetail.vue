@@ -4,9 +4,8 @@
     <el-button
       size="medium"
       @click="$router.go(-1)">返回</el-button>
-    {{isSuperAdmin}}
     <el-button
-      v-if="lineStatus === 'offline' && isSuperAdmin"
+      v-if="lineStatus === 'offline' && adminSuper"
       type="danger"
       size="medium"
       @click="removeProduct">删除该产品</el-button>
@@ -1012,6 +1011,7 @@ import { getToken } from '@/utils/auth'
 import fetch from '@/utils/fetch'
 import { Message, Dialog } from 'element-ui'
 import { mapGetters } from 'vuex'
+import Cookies from 'js-cookie'
 export default {
   name: 'OnlineProductDetail',
 
@@ -1104,7 +1104,8 @@ export default {
         file_list: {}
       },
       ruleForm: {},
-      lineStatus: ''
+      lineStatus: '',
+      adminSuper: ''
     }
   },
   computed: {
@@ -1113,6 +1114,8 @@ export default {
     ])
   },
   created() {
+    console.log('cookie=', document.cookie)
+    this.adminSuper = Cookies.get('ISSUPERADMIN')
     this.product_id = this.$route.query.product_id
     this.lineStatus = this.$route.query.lineStatus
   },

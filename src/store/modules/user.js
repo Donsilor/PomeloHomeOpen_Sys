@@ -63,6 +63,7 @@ const user = {
             setToken(data.token)
             setUserName(mail)
             if (response.hasOwnProperty('permissions') && response.permissions.del_product_admin == 1) {
+              console.log('超级管理员')
               setIsSuperAdmin(true)
             }
             commit('SET_NAME', mail)

@@ -13,7 +13,7 @@
           v-if="isEdit"
           type="primary"
           @click="editGory">{{
-          editText
+            editText
           }}</el-button>
         <el-button
           v-if="isEdit && disabled"
@@ -59,29 +59,53 @@
                   label="下属品类"
                   required>
                   <el-col :span="12">
-                    <div v-for="(v,i) in form.belongCategoryList" :key="i" style="padding-bottom: 20px;">
+                    <div
+                      v-for="(v,i) in form.belongCategoryList"
+                      :key="i"
+                      style="padding-bottom: 20px;">
                       <el-row>
                         <el-col :span="4">
-                          <el-form-item :prop="`belongCategoryList.${i}.num`" :rules="sortRule" style="width: 80%">
+                          <el-form-item
+                            :prop="`belongCategoryList.${i}.order`"
+                            :rules="sortRule"
+                            style="width: 80%">
                             <el-input
-                              v-model="v.num"
+                              v-model="v.order"
                               :disabled="disabled"
                               placeholder=""/>
                           </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                          <el-form-item :prop="`belongCategoryList.${i}.value`" :rules="{ required: true, message: '请选择品类', trigger: 'change' }">
-                            <el-select placeholder="请选择" v-model="v.value" style="width: 90%" :disabled="disabled">
-                              <el-option label="1" value="1">
-                              </el-option>
+                          <el-form-item
+                            :prop="`belongCategoryList.${i}.type_id`"
+                            :rules="{ required: true, message: '请选择品类', trigger: 'change' }">
+                            <el-select
+                              v-model="v.type_id"
+                              :disabled="disabled"
+                              @change="vm => categoryIdChange(vm, i)"
+                              placeholder="请选择"
+                              style="width: 90%">
+                              <el-option v-for="v in categorySelectList" :key="v.id" :label="v.name" :value="v.id"/>
                             </el-select>
                           </el-form-item>
                         </el-col>
                         <el-col :span="2">
-                          <el-button icon="el-icon-minus" circle size="small" v-if="form.belongCategoryList.length > 1" @click="removeBelongCategory(i)"></el-button>
+                          <el-button
+                            v-if="form.belongCategoryList.length > 1"
+                            :disabled="disabled"
+                            icon="el-icon-minus"
+                            circle
+                            size="small"
+                            @click="removeBelongCategory(i)"/>
                         </el-col>
                         <el-col :span="2">
-                          <el-button icon="el-icon-plus" circle size="small" @click="addBelongCategory" v-if="form.belongCategoryList.length === i + 1" :disabled="disabled"></el-button>
+                          <el-button
+                            v-if="form.belongCategoryList.length === i + 1"
+                            :disabled="disabled"
+                            icon="el-icon-plus"
+                            circle
+                            size="small"
+                            @click="addBelongCategory"/>
                         </el-col>
                       </el-row>
                     </div>
@@ -184,189 +208,221 @@
   }
 </style>
 <script>
-  import fetch from '@/utils/fetch'
-  import { getToken } from '@/utils/auth'
-  export default {
-    components: {},
-    data() {
-      var validateId = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入品类排序'))
-        }
-        else {
-          if (/^\+?[1-9][0-9]*$/.test(value)) {
-            callback();
-          }else{
-            callback(new Error('请输入大于0的正整数'))
-          }
-        }
-      };
-      return {
-        isEdit: !!this.$route.query.id,
-        token: getToken(),
-        isLoadData: false,
-        editText: '编辑品类信息',
-        disabled: !!this.$route.query.id,
-        form: {
-          sort:'',
-          name: '',
-          belongCategoryList: [{
-            num: 1,
-            value: ''
-          }]
-        },
-        rules: {
-          sort: [
-            { required: true, validator:validateId, trigger: 'blur' },
-          ],
-          name: [
-            { required: true, message: '请输入app品类名称', trigger: 'blur' },
-            { max: 32, message: 'app品类名称不能超过32个字符', trigger: 'blur' }
-          ],
-          belongCategory: [
-            { required: true }
-          ]
-        },
-        sortRule:[{ required: true, message: '输入排序', trigger: 'blur' },{validator:validateId}]
+import fetch from '@/utils/fetch'
+import { getToken } from '@/utils/auth'
+export default {
+  components: {},
+  data() {
+    var validateId = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请输入品类排序'))
       }
-    },
-    computed: {},
-    watch: {
-
-    },
-    created() {
-      if (this.isEdit) {
-        this.getCategoryInfo()
-      }
-    },
-    mounted() { },
-    methods: {
-      getCategoryInfo() {
-        fetch({
-          url: '/product/type_info',
-          method: 'post',
-          data: {
-            id: this.$route.query.id
-          }
-        }).then(res => {
-
-        })
-      },
-      // 编辑品类信息
-      editGory() {
-        if (this.disabled) {
-          this.editText = '确认并提交修改'
-          this.disabled = false
-          return false
+      else {
+        if (/^\+?[1-9][0-9]*$/.test(value)) {
+          callback()
+        }else{
+          callback(new Error('请输入大于0的正整数'))
         }
-        this.$refs['ruleForm'].validate(valid => {
-          if (valid) {
-            this.$confirm('是否确认保存修改后品类信息？', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              fetch({
-                url: '/producttype/edit',
-                method: 'post',
-                data: this.form
-              })
-                .then(res => {
-                  this.disabled = true
-                  this.editText = '编辑品类信息'
-                  this.$message({
-                    type: 'success',
-                    message: '保存成功!'
-                  })
-                })
-                .catch(res => {
-                  this.$message({
-                    type: 'error',
-                    message: res.msg
-                  })
-                })
-            })
-          }
-        })
+      }
+    }
+    return {
+      isEdit: !!this.$route.query.id,
+      token: getToken(),
+      isLoadData: false,
+      editText: '编辑品类信息',
+      disabled: !!this.$route.query.id,
+      form: {
+        sort:'',
+        name: '',
+        belongCategoryList: [{
+          order: 1,
+          type_id: ''
+        }]
       },
-      // 添加品类信息
-      addGory() {
-        this.$refs['ruleForm'].validate(valid => {
-          if (valid) {
-            this.$confirm('是否确定添加该品类？', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              fetch({
-                url: '/producttype/add',
-                method: 'post',
-                data: this.form
-              })
-                .then(res => {
-                  this.$message({
-                    type: 'success',
-                    message: '保存成功!'
-                  })
-                  setTimeout(() => {
-                    this.$router.push({ path: '/typeManagement/appCategory' })
-                  }, 2000)
-                })
-                .catch(res => {
-                  this.$message({
-                    type: 'error',
-                    message: res.msg
-                  })
-                })
-            })
-          }
-        })
+      rules: {
+        sort: [
+          { required: true, validator:validateId, trigger: 'blur' },
+        ],
+        name: [
+          { required: true, message: '请输入app品类名称', trigger: 'blur' },
+          { max: 32, message: 'app品类名称不能超过32个字符', trigger: 'blur' }
+        ],
+        belongCategory: [
+          { required: true }
+        ]
       },
+      sortRule:[{ required: true, message: '输入排序', trigger: 'blur' },{validator:validateId}],
+      categorySelectList: []
+    }
+  },
+  computed: {},
+  watch: {
 
-      // 删除品类
-      delectGroy() {
-        fetch({
-          url: '/producttype/del',
-          method: 'post',
-          data: {
-            id: this.$route.query.id
-          }
-        }).then(res => {
-          this.$message({
-            showClose: true,
-            message: '删除成功！',
-            type: 'success'
+  },
+  created() {
+    this.getCategorySelectList()
+    if (this.isEdit) {
+      this.getCategoryInfo()
+    }
+  },
+  mounted() { },
+  methods: {
+    getCategoryInfo() {
+      fetch({
+        url: 'apptype/info',
+        method: 'post',
+        data: {
+          id: this.$route.query.id
+        }
+      }).then(res => {
+        let { order, child_list, name } = res
+        this.form.sort = order
+        this.form.name = name
+        this.form.belongCategoryList = child_list
+      })
+    },
+    // 编辑品类信息
+    editGory() {
+      if (this.disabled) {
+        this.editText = '确认并提交修改'
+        this.disabled = false
+        return false
+      }
+      this.$refs['ruleForm'].validate(valid => {
+        if (valid) {
+          this.$confirm('是否确认保存修改后品类信息？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            fetch({
+              url: 'apptype/save',
+              method: 'post',
+              data: {
+                name: this.form.name,
+                order: this.form.sort,
+                child_list: this.form.belongCategoryList,
+                id: this.$route.query.id
+              }
+            })
+              .then(res => {
+                this.disabled = true
+                this.editText = '编辑品类信息'
+                this.$message({
+                  type: 'success',
+                  message: '保存成功!'
+                })
+              })
+              .catch(res => {
+                this.$message({
+                  type: 'error',
+                  message: res.msg
+                })
+              })
           })
-          setTimeout(() => {
-            this.$router.push({ path: '/typeManagement/appCategory' })
-          }, 2000)
-        })
-      },
-      // 删除品类
-      handleDelEvent() {
-        this.$confirm('确认删除该品类？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then(() => {
-            this.delectGroy()
+        }
+      })
+    },
+    // 添加品类信息
+    addGory() {
+      this.$refs['ruleForm'].validate(valid => {
+        if (valid) {
+          this.$confirm('是否确定添加该品类？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            fetch({
+              url: 'apptype/save',
+              method: 'post',
+              data: {
+                name: this.form.name,
+                order: this.form.sort,
+                child_list: this.form.belongCategoryList
+              }
+            })
+              .then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '保存成功!'
+                })
+                setTimeout(() => {
+                  this.$router.push({ path: '/typeManagement/appCategory' })
+                }, 2000)
+              })
+              .catch(res => {
+                this.$message({
+                  type: 'error',
+                  message: res.msg
+                })
+              })
           })
-          .catch(() => { })
-      },
-      // 处理返回事件
-      handleBackEvent() {
-        this.$router.push({ path: '/typeManagement/appCategory' })
-      },
-      addBelongCategory() {
-        this.form.belongCategoryList.push({
-          num: Math.floor(this.form.belongCategoryList[this.form.belongCategoryList.length - 1].num) + 1,
-          value: ''
+        }
+      })
+    },
+
+    // 删除品类
+    delectGroy() {
+      fetch({
+        url: 'apptype/del',
+        method: 'post',
+        data: {
+          id: this.$route.query.id
+        }
+      }).then(res => {
+        this.$message({
+          showClose: true,
+          message: '删除成功！',
+          type: 'success'
         })
-      },
-      removeBelongCategory(index) {
-        this.form.belongCategoryList.splice(index, 1)
+        setTimeout(() => {
+          this.$router.push({ path: '/typeManagement/appCategory' })
+        }, 2000)
+      })
+    },
+    // 删除品类
+    handleDelEvent() {
+      this.$confirm('确认删除该品类？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.delectGroy()
+        })
+        .catch(() => { })
+    },
+    // 处理返回事件
+    handleBackEvent() {
+      this.$router.push({ path: '/typeManagement/appCategory' })
+    },
+    addBelongCategory() {
+      this.form.belongCategoryList.push({
+        order: Math.floor(this.form.belongCategoryList[this.form.belongCategoryList.length - 1].order) + 1,
+        type_id: ''
+      })
+    },
+    removeBelongCategory(index) {
+      this.form.belongCategoryList.splice(index, 1)
+    },
+    getCategorySelectList() {
+      fetch({
+        url: '/product/parenttype_lists',
+        method: 'post',
+        data: {limit: 200, page: 1}
+      }).then(res => {
+        this.categorySelectList = res.list
+      })
+    },
+    categoryIdChange(id, index) {
+      // this.form.belongCategoryList[index].type_id = id
+      let ids = this.form.belongCategoryList.map(val => val.type_id)
+      let newarr = Array.from(new Set(ids))
+      if (ids.length !== newarr.length) {
+        this.$message.warning('请勿选择相同的品类')
+        this.form.belongCategoryList[index].type_id = ''
       }
     }
   }
+}
 </script>

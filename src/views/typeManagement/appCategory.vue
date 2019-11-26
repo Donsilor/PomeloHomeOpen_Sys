@@ -25,10 +25,10 @@
             label="品类ID"/>
           <el-table-column
             prop="name"
-            label="大品类"/>
+            label="APP品类"/>
           <el-table-column
-            prop="created_user"
-            label="创建人"
+            prop="children"
+            label="下属品类"
             align="center"/>
           <el-table-column
             prop="created_at"
@@ -107,11 +107,11 @@ export default {
         page: this.listQuery.page
       }
       fetch({
-        url: '/product/parenttype_lists',
+        url: 'apptype/lists',
         method: 'post',
         data: params
       }).then(res => {
-        this.tableData = res.list
+        this.tableData = res.data
         this.total = res.total
         this.listLoading = false
       })

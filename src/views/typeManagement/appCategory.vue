@@ -21,8 +21,8 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="id"
-            label="品类ID"/>
+            prop="order"
+            label="排序"/>
           <el-table-column
             prop="name"
             label="APP品类"/>

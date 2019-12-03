@@ -38,7 +38,7 @@
                   prop="sort">
                   <el-col :span="12">
                     <el-input
-                      v-model="form.sort"
+                      v-model.trim="form.sort"
                       :disabled="disabled"
                       :span="6"
                       placeholder=""/>
@@ -49,7 +49,7 @@
                   prop="name">
                   <el-col :span="12">
                     <el-input
-                      v-model="form.name"
+                      v-model.trim="form.name"
                       :disabled="disabled"
                       :span="6"
                       placeholder="请输入app品类名称"/>
@@ -278,7 +278,9 @@ export default {
         let { order, child_list, name } = res
         this.form.sort = order
         this.form.name = name
-        this.form.belongCategoryList = child_list
+        if (Array.isArray(child_list) && child_list.length > 0) {
+          this.form.belongCategoryList = child_list
+        }
       })
     },
     // 编辑品类信息

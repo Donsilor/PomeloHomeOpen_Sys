@@ -112,6 +112,20 @@
           <el-row class="card-row">
             <el-col
               :span="3"
+              class="card-span-left edit-label">产品别名</el-col>
+            <el-col
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <el-input
+                :readonly="!edit"
+                :class="{'no-border':!edit}"
+                v-model="productDetail.display_name"/>
+            </el-col>
+          </el-row>
+          <el-row class="card-row">
+            <el-col
+              :span="3"
               class="card-span-left edit-label">产品型号</el-col>
             <el-col
               :span="16"
@@ -262,13 +276,21 @@
                 @click="removeCompat(idx)">删除</el-button>
             </el-row>
             <div v-if="!edit">
-              <el-col
-                :span="3"
-                class="card-span-left edit-label"/>
-              <img
-                width="80"
-                :src="it.icon_url"
-                alt="">
+              <el-form>
+                <el-form-item>
+                  <el-row class="card-row">
+                    <el-col
+                      :span="3"
+                      class="card-span-left edit-label"/>
+                    <img
+                      width="80"
+                      style="margin-left: 50px;"
+                      :src="it.icon_url"
+                      alt="">
+                  </el-row>
+                </el-form-item>
+              </el-form>
+
             </div>
           </el-row>
 
@@ -1192,7 +1214,7 @@ export default {
   },
   created() {
     console.log('cookie=', document.cookie)
-    this.adminSuper = Cookies.get('ISSUPERADMIN')
+    this.adminSuper = JSON.parse(Cookies.get('ISSUPERADMIN'))
     this.product_id = this.$route.query.product_id
     this.lineStatus = this.$route.query.lineStatus
   },
@@ -1661,7 +1683,7 @@ export default {
       if (formData.attr_list) {
         formData.attr_list = JSON.stringify(formData.attr_list)
       }
-
+      formData.display_name = this.productDetail.display_name
       // // 配置协议
       // if (this.configFile && this.configFile.file_url) {
       //   formData.agreement_file = JSON.stringify(this.configFile)

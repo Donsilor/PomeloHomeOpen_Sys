@@ -65,6 +65,9 @@ const user = {
             if (response.hasOwnProperty('permissions') && response.permissions.del_product_admin == 1) {
               console.log('超级管理员')
               setIsSuperAdmin(true)
+            } else if (response.permissions.del_product_admin == 0) {
+              console.log('普通管理员')
+              setIsSuperAdmin(false)
             }
             commit('SET_NAME', mail)
             commit('SET_TOKEN', data.token)

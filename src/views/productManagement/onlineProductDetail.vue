@@ -144,57 +144,134 @@
               </el-form>
             </el-col>
           </el-row>
-
           <el-row
             v-for="(it, idx) in productDetail.compat_ext"
             :key="idx"
             class="card-row">
-            <el-col
-              :span="3"
-              class="card-span-left edit-label">{{ '兼容机型' + (idx + 2) }}</el-col>
-            <el-col
-              :span="6"
-              :offset="1"
-              class="card-span-right">
-              <el-form :model="productDetail">
-                <el-form-item
-                  :rules="[{validator:validCompat}]"
-                  prop="compat">
-                  <el-input
-                    :readonly="!edit"
-                    :class="{'no-border':!edit}"
-                    v-model="it.brand"/>
-                </el-form-item>
-              </el-form>
-            </el-col>
-            <el-col
-              :span="10"
-              :offset="1"
-              class="card-span-right">
-              <el-form :model="productDetail">
-                <el-form-item
-                  :rules="[{validator:validCompat}]"
-                  prop="compat">
-                  <el-input
-                    :readonly="!edit"
-                    :class="{'no-border':!edit}"
-                    v-model="it.compat"/>
-                </el-form-item>
-              </el-form>
-            </el-col>
-            <el-button
-              v-if="idx == 0"
-              :disabled ="!edit"
-              type="primary"
-              icon="el-icon-plus"
-              @click="addCompat">添加</el-button>
-            <el-button
-              v-else
-              :disabled ="!edit"
-              type="primary"
-              icon="el-icon-minus"
-              @click="removeCompat(idx)">删除</el-button>
+            <el-row
+              class="card-row">
+              <el-col
+                :span="3"
+                class="card-span-left edit-label">{{ '兼容机型' + (idx + 2) }}</el-col>
+              <el-col
+                :span="2"
+                :offset="1"
+                class="card-span-right">
+                <el-form :model="productDetail">
+                  <!--                <el-form-item-->
+                  <!--                  :rules="[{validator:validCompat}]"-->
+                  <!--                  prop="compat">-->
+                  <!--                  <el-input-->
+                  <!--                    :readonly="!edit"-->
+                  <!--                    :class="{'no-border':!edit}"-->
+                  <!--                    v-model="it.brand"/>-->
+                  <!--                </el-form-item>-->
+                  <el-form-item
+                    prop="compat">
+                    <el-input
+                      :readonly="!edit"
+                      v-model="it.brand"
+                      placeholder="子品牌"
+                      style="width: 150px;"/>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+              <el-col
+                :span="2"
+                :offset="1"
+                class="card-span-right">
+                <el-form :model="productDetail">
+<!--                                  <el-form-item-->
+<!--                                    :rules="[{validator:validCompat}]"-->
+<!--                                    prop="name">-->
+<!--                                    <el-input-->
+<!--                                      :readonly="!edit"-->
+<!--                                      :class="{'no-border':!edit}"-->
+<!--                                      v-model="it.name"/>-->
+<!--                                  </el-form-item>-->
+                  <el-form-item
+                    prop="name">
+                    <el-input
+                      :readonly="!edit"
+                      v-model="it.name"
+                      placeholder="产品名"
+                      style="width: 150px;"/>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+              <el-col
+                :span="2"
+                :offset="1"
+                class="card-span-right">
+                <el-form
+                  :model="it">
+                  <el-form-item
+                    :rules="[{validator:validModel}]"
+                    prop="compat"
+                    >
+                    <el-input
+                      :readonly="!edit"
+                      v-model="it.compat"
+                      placeholder="型号"
+                      style="width: 150px;margin-right: 30px;"
+                    />
+                  </el-form-item>
+                </el-form>
+              </el-col>
+              <el-col
+                v-if="edit"
+                :span="9">
+                <el-form inline>
+                  <el-form-item
+                    label-width="70"
+                    label="上传图片"
+                    class="upload-img"
+                    style="margin-right: 30px;margin-left: 50px;width: 300px;display: inline-block;">
+                    <el-input
+                      :readonly="!edit"
+                      v-model="it.icon_url"
+                      placeholder="图片支持jpeg,jpg,png"/>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-upload
+                      :data="{type:26,token:token}"
+                      :show-file-list="false"
+                      :before-upload="beforeImgUpload"
+                      :on-success="v => handleSuccess(v, idx)"
+                      accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+                      action="/api/index.php/files/save"
+                    >
+                      <el-button
+                        type="primary">选择文件</el-button>
+                    </el-upload>
+                    <!--                                                    <fileupload :img_type="26" inputid="fileupload1" v-on:upload-data="handleSuccess" :needpreview="false" :buttontype="2" initclass="uploadSquare" order="0" accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp" :filtertype="1"></fileupload>-->
+                  </el-form-item>
+                </el-form>
+              </el-col>
+              <el-button
+                v-if="idx == 0 && edit"
+                :disabled ="!edit"
+                type="primary"
+                icon="el-icon-plus"
+                @click="addCompat">添加</el-button>
+              <el-button
+                v-if="idx !=0 && edit"
+                :disabled ="!edit"
+                type="primary"
+                icon="el-icon-minus"
+                @click="removeCompat(idx)">删除</el-button>
+            </el-row>
+            <div v-if="!edit">
+              <el-col
+                :span="3"
+                class="card-span-left edit-label"/>
+              <img
+                width="80"
+                :src="it.icon_url"
+                alt="">
+            </div>
           </el-row>
+
 
           <el-row class="card-row">
             <el-col
@@ -1296,6 +1373,16 @@ export default {
         if (!this.productDetail.compat_ext || this.productDetail.compat_ext.length == 0) {
           this.productDetail.compat_ext = []
           this.addCompat()
+        } else {
+          this.productDetail.compat_ext = this.productDetail.compat_ext.map(val => {
+            return {
+              ...val,
+              brand: val.brand,
+              compat: val.compat,
+              name: val.name,
+              icon_url: val.icon_url || ''
+            }
+          })
         }
 
         this.copyProductDetail = JSON.parse(JSON.stringify(response))
@@ -1617,6 +1704,17 @@ export default {
       }
       callback()
     },
+    validModel(rule, value, callback) {
+      if (value) {
+        if (/[\u4e00-\u9fa5]/.test(value)) {
+          callback(new Error('不能输入汉字'))
+        } else {
+          callback()
+        }
+      } else {
+        callback()
+      }
+    },
     calAttr() {
       const arry = []
       const map = {}
@@ -1669,7 +1767,10 @@ export default {
     addCompat(){
       this.productDetail.compat_ext.push({
         "brand": '',
-        "compat": ''
+        "compat": '',
+        "name": '',
+        "icon_url": '',
+        "icon": ''
       })
     },
     // 移除兼容机型
@@ -1699,6 +1800,13 @@ export default {
           this.$router.push('/productManagement/offlineProducts')
         })
       })
+    },
+    // 兼容机型上传图片
+    handleSuccess(res, idx) {
+      if (res.code === 200) {
+        this.productDetail.compat_ext[idx].icon_url = res.result.file_url
+        this.productDetail.compat_ext[idx].icon = res.result
+      }
     }
   },
 }

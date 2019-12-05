@@ -106,23 +106,30 @@
             :offset="1"
             class="card-span-right">{{ checkDetail.compat }}</el-col>
         </el-row>
-        <el-row
-          v-for="(it, idx) in checkDetail.compat_ext"
-          :key="idx"
-          class="card-row">
-          <el-col
-            :span="3"
-            class="card-span-left edit-label">{{ '兼容机型' + (idx + 2) }}</el-col>
-          <el-col
-            :span="6"
-            :offset="1"
-            class="card-span-right">{{ it.brand }}</el-col>
-          <el-col
-            :span="10"
-            :offset="1"
-            class="card-span-right">{{ it.compat }}</el-col>
+        <el-row class="card-row" v-for="(it, idx) in checkDetail.compat_ext">
+          <el-row
+            :key="idx"
+            class="card-row">
+            <el-col
+              :span="3"
+              class="card-span-left edit-label">{{ '兼容机型' + (idx + 2) }}</el-col>
+            <el-col
+              :span="3"
+              :offset="1"
+              class="card-span-right">{{ it.brand }}</el-col>
+            <el-col
+              :span="3"
+              :offset="1"
+              class="card-span-right">{{ it.compat }}</el-col>
+            <el-col
+              :span="3"
+              :offset="1"
+              class="card-span-right">{{ it.name }}</el-col>
+          </el-row>
+          <div>
+            <img :src="it.icon_url" width="80" alt="">
+          </div>
         </el-row>
-
         <el-row class="card-row">
           <el-col
             :span="3"

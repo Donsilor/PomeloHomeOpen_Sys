@@ -129,9 +129,9 @@
           <el-row class="card-row">
             <el-col
               :span="3"
-              class="card-span-left edit-label"></el-col>
+              class="card-span-left edit-label">&nbsp;</el-col>
             <el-col :span="6">
-              <img :src="it.icon_url" width="80" alt="">
+              <img :src="it.icon_url" width="80" alt="" style="margin-left: 80px;">
             </el-col>
           </el-row>
         </el-row>

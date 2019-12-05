@@ -126,9 +126,14 @@
               :offset="1"
               class="card-span-right">{{ it.name }}</el-col>
           </el-row>
-          <div>
-            <img :src="it.icon_url" width="80" alt="">
-          </div>
+          <el-row class="card-row">
+            <el-col
+              :span="3"
+              class="card-span-left edit-label"></el-col>
+            <el-col :span="6">
+              <img :src="it.icon_url" width="80" alt="">
+            </el-col>
+          </el-row>
         </el-row>
         <el-row class="card-row">
           <el-col

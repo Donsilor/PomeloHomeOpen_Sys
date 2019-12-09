@@ -131,7 +131,7 @@
               :span="3"
               class="card-span-left edit-label">&nbsp;</el-col>
             <el-col :span="6">
-              <img :src="it.icon_url" width="80" alt="" style="margin-left: 80px;">
+              <img :src="it.icon_url" width="80" alt="" style="margin-left: 60px;">
             </el-col>
           </el-row>
         </el-row>

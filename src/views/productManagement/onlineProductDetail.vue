@@ -1245,7 +1245,7 @@ export default {
                 id: this.editForm.id,
                 product_id: this.product_id,
                 version_no: this.editForm.version_no,
-                desc: this.editForm.des,
+                des: this.editForm.des,
                 file: editFile
               }
             }).then(res=>{

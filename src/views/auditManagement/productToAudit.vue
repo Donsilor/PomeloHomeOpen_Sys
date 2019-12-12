@@ -91,6 +91,15 @@
         <el-row class="card-row">
           <el-col
             :span="3"
+            class="card-span-left">产品别名</el-col>
+          <el-col
+            :span="16"
+            :offset="1"
+            class="card-span-right">{{ checkDetail.display_name }}</el-col>
+        </el-row>
+        <el-row class="card-row">
+          <el-col
+            :span="3"
             class="card-span-left">产品型号</el-col>
           <el-col
             :span="16"

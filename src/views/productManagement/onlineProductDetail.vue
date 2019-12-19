@@ -172,14 +172,6 @@
                 :offset="1"
                 class="card-span-right">
                 <el-form :model="productDetail">
-                  <!--                <el-form-item-->
-                  <!--                  :rules="[{validator:validCompat}]"-->
-                  <!--                  prop="compat">-->
-                  <!--                  <el-input-->
-                  <!--                    :readonly="!edit"-->
-                  <!--                    :class="{'no-border':!edit}"-->
-                  <!--                    v-model="it.brand"/>-->
-                  <!--                </el-form-item>-->
                   <el-form-item
                     prop="compat">
                     <el-input
@@ -194,20 +186,15 @@
                 :span="2"
                 :offset="1"
                 class="card-span-right">
-                <el-form :model="productDetail">
-<!--                                  <el-form-item-->
-<!--                                    :rules="[{validator:validCompat}]"-->
-<!--                                    prop="name">-->
-<!--                                    <el-input-->
-<!--                                      :readonly="!edit"-->
-<!--                                      :class="{'no-border':!edit}"-->
-<!--                                      v-model="it.name"/>-->
-<!--                                  </el-form-item>-->
+                <el-form
+                  :model="productDetail"
+                  ref="productNameValid">
                   <el-form-item
-                    prop="name">
+                    :prop="'compat_ext.'+idx+'.name'"
+                    :rules="nameRules.nameValidate">
                     <el-input
                       :readonly="!edit"
-                      v-model="it.name"
+                      v-model.trim="it.name"
                       placeholder="产品名"
                       style="width: 150px;"/>
                   </el-form-item>
@@ -1124,6 +1111,18 @@ export default {
         return callback(new Error('请输入正确的手机号'))
       }
     }
+    var productNameRules = (rule, value, callback) => {
+      if (!value) {
+        callback()
+        return
+      }
+      const reg = /^[\u4e00-\u9fa50-9]+$/
+      if (reg.test(value)) {
+        callback()
+      } else {
+        return callback(new Error('产品名称仅能汉字数字组合，且中间不能存在空格！'))
+      }
+    }
     return {
       accessType:[
         {
@@ -1205,7 +1204,13 @@ export default {
       ruleForm: {},
       lineStatus: '',
       adminSuper: '',
-      productNameValidatePass: true
+      nameRules: {
+        nameValidate: [
+          {
+            validator: productNameRules
+          }
+        ]
+      }
     }
   },
   computed: {
@@ -1232,13 +1237,12 @@ export default {
       if (!this.productDetail.name) return
       let reg = /^[\u4e00-\u9fa50-9]+$/
       let flag = reg.test(this.productDetail.name)
-      if (flag) {
-        this.productNameValidatePass = true
-        console.log(' 符合')
-      } else {
-        this.productNameValidatePass = false
-        console.log('  布符合')
-      }
+      return flag
+    },
+    productAliaNameValidate() {
+      if (!this.productDetail.display_name) return
+      let reg = /^[\u4e00-\u9fa50-9]+$/
+      let flag = reg.test(this.productDetail.display_name)
       return flag
     },
     submitForm(formName) {
@@ -1643,7 +1647,7 @@ export default {
       if (!this.productDetail.model) {
         return this.$message.error('产品型号不能为空！')
       }
-      if (!this.productNameValidate()) {
+      if (!this.productNameValidate() || !this.productAliaNameValidate()) {
         return this.$message.error('产品名称仅能汉字数字组合，且中间不能存在空格！')
       }
       if (this.productDetail.model != this.copyProductDetail.model) {
@@ -1706,18 +1710,33 @@ export default {
       // if (this.configFile && this.configFile.file_url) {
       //   formData.agreement_file = JSON.stringify(this.configFile)
       // }
+      let flag = true
+      for (let i = 0; i < this.$refs.productNameValid.length; i++) {
+        const argument = this.$refs.productNameValid[i]
+        argument.validate(bool => {
+          if (!bool) {
+            flag = false
+          }
+        })
+        if (!flag) {
+          break
+        }
+      }
+
+      if (flag) {
+        fetch({
+          url: '/admin/product_edit',
+          method: 'post',
+          data: formData
+        }).then(res => {
+          this.$message.info('保存成功')
+          this.$router.go(-1)
+        }).catch(e => {
+          this.$message.error(e.msg)
+        })
+      }
 
 
-      fetch({
-        url: '/admin/product_edit',
-        method: 'post',
-        data: formData
-      }).then(res => {
-        this.$message.info('保存成功')
-        this.$router.go(-1)
-      }).catch(e => {
-        this.$message.error(e.msg)
-      })
     },
     setEnable(row, attr) {
       if (row.key_type == '1') {

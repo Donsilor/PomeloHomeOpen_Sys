@@ -106,7 +106,7 @@
               <el-input
                 :readonly="!edit"
                 :class="{'no-border':!edit}"
-                v-model="productDetail.name"/>
+                v-model.trim="productDetail.name"/>
             </el-col>
           </el-row>
           <el-row class="card-row">
@@ -1204,7 +1204,8 @@ export default {
       },
       ruleForm: {},
       lineStatus: '',
-      adminSuper: ''
+      adminSuper: '',
+      productNameValidatePass: true
     }
   },
   computed: {
@@ -1226,6 +1227,20 @@ export default {
     this.$destroy()
   },
   methods: {
+    // 校验产品名称 只能中文和数字
+    productNameValidate() {
+      if (!this.productDetail.name) return
+      let reg = /^[\u4e00-\u9fa50-9]+$/
+      let flag = reg.test(this.productDetail.name)
+      if (flag) {
+        this.productNameValidatePass = true
+        console.log(' 符合')
+      } else {
+        this.productNameValidatePass = false
+        console.log('  布符合')
+      }
+      return flag
+    },
     submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
@@ -1627,6 +1642,9 @@ export default {
       }
       if (!this.productDetail.model) {
         return this.$message.error('产品型号不能为空！')
+      }
+      if (!this.productNameValidate()) {
+        return this.$message.error('产品名称仅能汉字数字组合，且中间不能存在空格！')
       }
       if (this.productDetail.model != this.copyProductDetail.model) {
         this.modifyData.model = this.productDetail.model

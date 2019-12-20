@@ -120,7 +120,7 @@
               <el-input
                 :readonly="!edit"
                 :class="{'no-border':!edit}"
-                v-model="productDetail.display_name"/>
+                v-model.trim="productDetail.display_name"/>
             </el-col>
           </el-row>
           <el-row class="card-row">
@@ -1234,13 +1234,13 @@ export default {
   methods: {
     // 校验产品名称 只能中文和数字
     productNameValidate() {
-      if (!this.productDetail.name) return
+      if (!this.productDetail.name) return true
       let reg = /^[\u4e00-\u9fa50-9]+$/
       let flag = reg.test(this.productDetail.name)
       return flag
     },
     productAliaNameValidate() {
-      if (!this.productDetail.display_name) return
+      if (!this.productDetail.display_name) return true
       let reg = /^[\u4e00-\u9fa50-9]+$/
       let flag = reg.test(this.productDetail.display_name)
       return flag

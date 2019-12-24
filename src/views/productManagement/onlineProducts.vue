@@ -74,6 +74,13 @@
       </el-table-column>
 
       <el-table-column align="center"
+                       label="屏蔽搜索">
+        <template slot-scope="scope">
+          <el-checkbox v-model="scope.row.unable_search === 1" @change="v => unableSearchChange(v, scope.row, scope.$index)"></el-checkbox>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center"
                        label="操作"
                        width="150">
         <template slot-scope="scope">
@@ -139,6 +146,16 @@ export default {
     })
   },
   methods: {
+    unableSearchChange(bool, row, index) {
+      fetch({
+        url: '/admin/set_unable_search',
+        method: 'post',
+        data: { unable_search: bool ? 1 : 0, product_id: row.product_id }
+      }).then(res => {
+        this.$message.success('操作成功')
+        row.unable_search = bool ? 1 : 0
+      })
+    },
     refresh() {
       this.getList()
     },

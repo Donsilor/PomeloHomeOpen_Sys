@@ -23,7 +23,7 @@
       </el-select>
       <el-select v-model="queryCondition.type_id"
                  clearable
-                 placeholder="全部品类">
+                 placeholder="大品类">
         <el-option v-for="(item,index) in typeList"
                    :key="index"
                    :label="item.name"
@@ -41,6 +41,16 @@
               fit
               highlight-current-row
               style="width: 100%">
+      <el-table-column align="center"
+                       width="100"
+                       label="序号">
+        <template slot-scope="scope">
+          <div v-if="!editSortFlag">{{scope.row.sort}}</div>
+          <div v-else>
+            <el-input v-model="scope.row.selfSort"></el-input>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column align="center"
                        label="品类"
                        prop="type_name">
@@ -95,6 +105,9 @@
 
     <div v-show="!listLoading"
          class="pagination-container">
+      <el-button type="primary" style="float: left;margin-top: 10px;" size="medium" @click="editSortFlag = true" v-if="!editSortFlag">编辑排序</el-button>
+      <el-button type="primary" style="float: left;margin-top: 10px;" size="medium" @click="saveSortResult" v-if="editSortFlag">保存排序</el-button>
+      <el-button style="float: left;margin-top: 10px;" size="medium" @click="cancelEdit" v-if="editSortFlag">取消</el-button>
       <el-pagination @size-change="handleSizeChange"
                      @current-change="handleCurrentChange"
                      :current-page.sync="listQuery.page"
@@ -131,7 +144,9 @@ export default {
       listQuery: {
         page: 1,
         limit: 15
-      }
+      },
+      copyList: [],
+      editSortFlag: false // true编辑状态
     }
   },
   computed: {},
@@ -173,10 +188,14 @@ export default {
         params.brand_id = this.queryCondition.brand_id
       }
       if (this.queryCondition.type_id != '') {
-        params.type_id = this.queryCondition.type_id
+        // params.type_id = this.queryCondition.type_id
+        params.parent_type_id = this.queryCondition.type_id
       }
       getProductList(params).then(response => {
-        this.list = response.data
+        let list = response.data
+        let newList = list.map(val => ({...val, selfSort: val.sort}))
+        this.copyList = JSON.parse(JSON.stringify(newList))
+        this.list = newList
         this.total = response.total
         this.listLoading = false
       })
@@ -200,8 +219,9 @@ export default {
       })
     },
     getTypeList() {
+      // url: '/admin/product/type_lists',
       fetch({
-        url: '/admin/product/type_lists',
+        url: '/product/parenttype_lists',
         method: 'post',
         data: {}
       }).then(res => {
@@ -217,6 +237,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.listQuery.page = val
+      this.editSortFlag = false
       this.getList()
     },
     toDetai(row) {
@@ -224,6 +245,30 @@ export default {
         product_id: row.product_id
       }
       this.$router.push({ path: '/productManagement/onlineProductDetail', query: query })
+    },
+    saveSortResult () {
+      let data = {}
+      let filterList = this.list.filter(val => val.sort != val.selfSort).map(val => ({[val.product_id]: val.selfSort})).reduce((prev, next) => {
+        data = {
+          ...data,
+          ...next
+        }
+      },data)
+      let params = {
+        sortlist: data
+      }
+      fetch({
+        url: 'admin/set_sort',
+        method: 'post',
+        data: params
+      }).then(res => {
+        this.handleCurrentChange(1)
+        this.editSortFlag = false
+      })
+    },
+    cancelEdit () {
+      this.editSortFlag = false
+      this.list = this.copyList
     }
   }
 }

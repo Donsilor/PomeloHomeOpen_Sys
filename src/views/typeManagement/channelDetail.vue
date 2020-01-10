@@ -1,77 +1,158 @@
 <template>
-    <div class="app-container calendar-list-container addCategoryPage">
-        <el-row :gutter="30">
-            <el-col :span="24">
-                <el-button type="ghost" @click="handleBackEvent">返回</el-button>
-                <el-button v-if="!isEdit" type="primary" @click="addChannel">确定并添加该渠道商</el-button>
-                <el-button v-if="isEdit" type="primary" @click="editChannel">{{editText}}</el-button>
-                <el-button type="danger" @click="handleDelEvent" v-if="isEdit&&!hasProduct">删除该渠道商</el-button>
-            </el-col>
-            <el-col :span="24" style="margin: 20px 0px;padding-bottom: 40px;">
-                <div class="desTitleTop">基本信息</div>
-                <el-col :span="24">
-                    <el-form :rules="rules" ref="ruleForm" :model="form" label-width="80px" style="margin-top: 20px;" size="large">
-                      <el-form-item label="序号" label-width="120px" prop="sort">
-                            <el-col :span="12">
-                                <el-input v-model="form.sort" :span="6" :disabled="disabled||hasProduct" placeholder=" 请输入序号"></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="渠道商名称" label-width="120px" prop="name">
-                            <el-col :span="12">
-                                <el-input v-model="form.name" :span="6" :disabled="disabled||hasProduct" placeholder=" 中文名限中文、字母、32个字符、区分大小写"></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="渠道商英文" label-width="120px" prop="name_e">
-                            <el-col :span="12">
-                                <el-input v-model="form.name_e" :disabled="disabled||hasProduct" :span="6" placeholder=" 字母、下划线, 最多32个字符，区分大小写"></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="渠道商logo" label-width="120px" style="padding-bottom: 30px;">
-                            <el-col :span="12">
-                                <p class="ttips">图标要求格式png，logo以外区域透明，大小5M以内</p>
-                                <div class="fileuploadItem channel">
-                                    <el-upload
-                                            class="avatar-uploader"
-                                            :class="disabled ? 'disabled' : ''"
-                                            action="/api/index.php/files/save"
-                                            :show-file-list="false"
-                                            :on-success="handleLogoSuccess"
-                                            :before-upload="beforeLogoUpload"
-                                            accept="image/png"
-                                            :disabled="disabled"
-                                            :data="logo">
-                                        <img v-if="form.logo.url!=''" :src="form.logo.url" class="avatar">
-                                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                    </el-upload>
-                                </div>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="二维码" label-width="120px" style="padding-bottom: 30px;">
-                            <el-col :span="12">
-                                <p class="ttips">图标要求格式png、jpg、jpeg、gif、bmp，大小5M以内</p>
-                                <div class="fileuploadItem channel">
-                                    <el-upload
-                                            class="avatar-uploader"
-                                            :class="disabled ? 'disabled' : ''"
-                                            action="/api/index.php/files/save"
-                                            :show-file-list="false"
-                                            :on-success="handleQrSuccess"
-                                            :before-upload="beforeQrUpload"
-                                            accept="image/*"
-                                            :disabled="disabled"
-                                            :data="qrcode">
-                                        <img v-if="form.qrcode.url!=''" :src="form.qrcode.url" class="avatar">
-                                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                    </el-upload>
-                                </div>
-                            </el-col>
-                        </el-form-item>
-                    </el-form>
-                </el-col>
+  <div class="app-container calendar-list-container addCategoryPage">
+    <el-row :gutter="30">
+      <el-col :span="24">
+        <el-button
+          type="ghost"
+          @click="handleBackEvent">返回</el-button>
+        <el-button
+          v-if="!isEdit"
+          type="primary"
+          @click="addChannel">确定并添加该渠道商</el-button>
+        <el-button
+          v-if="isEdit"
+          type="primary"
+          @click="editChannel">{{ editText }}</el-button>
+        <el-button
+          v-if="isEdit&&!hasProduct"
+          type="danger"
+          @click="handleDelEvent">删除该渠道商</el-button>
+      </el-col>
+      <el-col
+        :span="24"
+        style="margin: 20px 0px;padding-bottom: 40px;">
+        <div class="desTitleTop">基本信息</div>
+        <el-col :span="24">
+          <el-form
+            ref="ruleForm"
+            :rules="rules"
+            :model="form"
+            label-width="80px"
+            style="margin-top: 20px;"
+            size="large">
+            <el-form-item
+              label="序号"
+              label-width="120px"
+              prop="sort">
+              <el-col :span="12">
+                <el-input
+                  v-model="form.sort"
+                  :span="6"
+                  :disabled="disabled||hasProduct"
+                  placeholder=" 请输入序号"/>
+              </el-col>
+            </el-form-item>
+            <el-form-item
+              label="渠道商名称"
+              label-width="120px"
+              prop="name">
+              <el-col :span="12">
+                <el-input
+                  v-model="form.name"
+                  :span="6"
+                  :disabled="disabled||hasProduct"
+                  placeholder=" 中文名限中文、字母、32个字符、区分大小写"/>
+              </el-col>
+            </el-form-item>
+            <el-form-item
+              label="渠道商英文"
+              label-width="120px"
+              prop="name_e">
+              <el-col :span="12">
+                <el-input
+                  v-model="form.name_e"
+                  :disabled="disabled||hasProduct"
+                  :span="6"
+                  placeholder=" 字母、下划线, 最多32个字符，区分大小写"/>
+              </el-col>
+            </el-form-item>
+            <el-form-item
+              label="渠道商logo"
+              label-width="120px"
+              style="padding-bottom: 30px;">
+              <el-col :span="12">
+                <p class="ttips">图标要求格式png，logo以外区域透明，大小5M以内</p>
+                <div class="fileuploadItem channel">
+                  <el-upload
+                    :class="disabled ? 'disabled' : ''"
+                    :show-file-list="false"
+                    :on-success="handleLogoSuccess"
+                    :before-upload="beforeLogoUpload"
+                    :disabled="disabled"
+                    :data="logo"
+                    class="avatar-uploader"
+                    action="/api/index.php/files/save"
+                    accept="image/png">
+                    <img
+                      v-if="form.logo.url!=''"
+                      :src="form.logo.url"
+                      class="avatar">
+                    <i
+                      v-else
+                      class="el-icon-plus avatar-uploader-icon"/>
+                  </el-upload>
+                </div>
+              </el-col>
+            </el-form-item>
+            <el-form-item
+              label="二维码"
+              label-width="120px"
+              style="padding-bottom: 30px;">
+              <el-col :span="12">
+                <p class="ttips">图标要求格式png、jpg、jpeg、gif、bmp，大小5M以内</p>
+                <div class="fileuploadItem channel">
+                  <el-upload
+                    :class="disabled ? 'disabled' : ''"
+                    :show-file-list="false"
+                    :on-success="handleQrSuccess"
+                    :before-upload="beforeQrUpload"
+                    :disabled="disabled"
+                    :data="qrcode"
+                    class="avatar-uploader"
+                    action="/api/index.php/files/save"
+                    accept="image/*">
+                    <img
+                      v-if="form.qrcode.url!=''"
+                      :src="form.qrcode.url"
+                      class="avatar">
+                    <i
+                      v-else
+                      class="el-icon-plus avatar-uploader-icon"/>
+                  </el-upload>
+                </div>
+              </el-col>
+            </el-form-item>
+            <el-form-item
+              label="是否第三方"
+              label-width="120px"
+              style="padding-bottom: 30px;">
+              <el-col :span="12">
+                <el-radio v-model="form.is_third" :label="1" :disabled="disabled" @change="radioChange">是</el-radio>
+                <el-radio v-model="form.is_third" :label="0" :disabled="disabled" @change="radioChange">否</el-radio>
+              </el-col>
+            </el-form-item>
+            <el-form-item
+              v-if="form.is_third"
+              label="第三方简介"
+              label-width="120px"
+              style="padding-bottom: 30px;">
+              <el-col :span="12">
+                <el-input
+                  type="textarea"
+                  :disabled="disabled"
+                  :rows="2"
+                  :max="32"
+                  placeholder="内容不限字符，32个字符，区别大小写"
+                  v-model="form.third_info">
+                </el-input>
+              </el-col>
+            </el-form-item>
+          </el-form>
+        </el-col>
 
-            </el-col>
-        </el-row>
-    </div>
+      </el-col>
+    </el-row>
+  </div>
 
 </template>
 <style lang="scss">
@@ -159,243 +240,248 @@
 </style>
 
 <script>
-    import { Loading } from 'element-ui';
-    import fetch from '@/utils/fetch';
-    import helper from '@/utils/helper';
-    import {getToken} from '@/utils/auth';
-    import {letterAndUnderscode,letterAndCN} from '@/utils/validate';
-    export default {
-        name: 'channelDetail',
-        computed: {
+import { Loading } from 'element-ui'
+import fetch from '@/utils/fetch'
+import helper from '@/utils/helper'
+import {getToken} from '@/utils/auth'
+import {letterAndUnderscode,letterAndCN} from '@/utils/validate'
+export default {
+  name: 'ChannelDetail',
+
+  components:{
+
+  },
+  data() {
+    return {
+      isEdit: this.$route.query.id ? true : false,
+      token : getToken(),
+      isLoadData : false,
+      hasProduct:false,
+      editText : '编辑渠道商信息',
+      disabled:this.$route.query.id ? true : false,
+      id:this.$route.query.id ? this.$route.query.id : '',
+      form:{
+        'sort':'',
+        "id":this.$route.query.id,
+        "name":"",
+        "name_e":"",
+        "logo":{
+          id:'',
+          type:27,
+          object:'',
+          filename:'',
+          url:'',
+          md5:''
         },
-        created() {
-            if(this.isEdit){
-                this.getChannelInfo();
-            }
+        "qrcode":{
+          id:'',
+          type:28,
+          object:'',
+          filename:'',
+          url:'',
+          md5:''
         },
-        mounted() {
-        },
-        data() {
-            return {
-                isEdit: this.$route.query.id ? true : false,
-                token : getToken(),
-                isLoadData : false,
-                hasProduct:false,
-                editText : '编辑渠道商信息',
-                disabled:this.$route.query.id ? true : false,
-                id:this.$route.query.id ? this.$route.query.id : '',
-                form:{
-                    'sort':'',
-                    "id":this.$route.query.id,
-                    "name":"",
-                    "name_e":"",
-                    "logo":{
-                        id:'',
-                        type:27,
-                        object:'',
-                        filename:'',
-                        url:'',
-                        md5:''
-                    },
-                    "qrcode":{
-                        id:'',
-                        type:28,
-                        object:'',
-                        filename:'',
-                        url:'',
-                        md5:''
-                    }
+        is_third: 1,
+        third_info: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '请输入渠道商名称', trigger: 'blur' },
+          { max: 32, message: '渠道商名称不能超过32个字符', trigger: 'blur' },
+          { validator:letterAndCN}
+        ],
+        name_e : [
+          { required: true, message: '请输入渠道商英文', trigger: 'blur' },
+          { max: 32, message: '渠道商英文不能超过32个字符', trigger: 'blur' },
+          { validator:letterAndUnderscode}
+        ]
 
-                },
-                rules: {
-                    name: [
-                        { required: true, message: '请输入渠道商名称', trigger: 'blur' },
-                        { max: 32, message: '渠道商名称不能超过32个字符', trigger: 'blur' },
-                        { validator:letterAndCN}
-                    ],
-                    name_e : [
-                        { required: true, message: '请输入渠道商英文', trigger: 'blur' },
-                        { max: 32, message: '渠道商英文不能超过32个字符', trigger: 'blur' },
-                        { validator:letterAndUnderscode}
-                    ]
-
-                },
-                logo : {
-                    'token' : getToken(),
-                    'type' : 27,
-                },
-                qrcode : {
-                    'token' : getToken(),
-                    'type' : 28,
-                },
-            }
-        },
-        methods: {
-            getChannelInfo(){
-                fetch({
-                    url: '/distributor/info',
-                    method: 'post',
-                    data: {
-                        'id': this.$route.query.id
-                    }
-                }).then(res=>{
-                  console.log(res);
-                    this.form.name = res.name;
-                    this.form.sort = res.sort;
-                    this.form.name_e = res.name_e;
-                    this.form.logo = res.logo;
-                    this.form.qrcode = res.qrcode;
-                    this.hasProduct = !!res.has_product;
-
-                });
-            },
-            handleLogoSuccess(res, file) {
-                if(res.code!==200){
-                    this.$message.error(res.msg);
-                    return;
-                }
-                let tmp = Object.assign({},res.result);
-                tmp.url = tmp.file_url;
-                this.form.logo = tmp;
-            },
-            handleQrSuccess(res, file) {
-                if(res.code!==200){
-                    this.$message.error(res.msg);
-                    return;
-                }
-                let tmp = Object.assign({},res.result);
-                tmp.url = tmp.file_url;
-                this.form.qrcode = tmp;
-            },
-            beforeLogoUpload(file) {
-                const filter = file.type === 'image/png';
-                const isLt5M = file.size / 1024 / 1024 < 5;
-
-                if (!filter) {
-                    this.$message.error('请上传5M大小内PNG格式的logo');
-                }
-                if (!isLt5M) {
-                    this.$message.error('请上传5M大小内PNG格式的logo');
-                }
-                return filter && isLt5M;
-            },
-            beforeQrUpload(file) {
-                const isLt5M = file.size / 1024 / 1024 < 5;
-                if (!isLt5M) {
-                    this.$message.error('请上传5M大小内的二维码图标');
-                }
-                return isLt5M;
-            },
-            //编辑渠道商信息
-            editChannel(){
-                if(this.disabled){
-                    this.editText = '确认并提交修改';
-                    this.disabled = false;
-                    return false;
-                }
-                this.$refs['ruleForm'].validate((valid) => {
-                    if (valid) {
-                        if(this.form.logo.url==''||this.form.qrcode.url==''){
-                            this.$message.error('请上传渠道商logo和二维码！');
-                            return;
-                        }
-                        this.$confirm('是否确认保存修改后渠道商信息？', '提示', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'warning'
-                        }).then(()=>{
-                            fetch({
-                                url: '/distributor/edit',
-                                method: 'post',
-                                data: this.form,
-                            }).then(res => {
-                              console.log(res);
-                              
-                                this.disabled = true;
-                                this.editText = '编辑渠道商信息';
-                                this.$message({
-                                    type: 'success',
-                                    message: '保存成功!'
-                                });
-                            }).catch(res => {
-                                this.$message({
-                                    type: 'error',
-                                    message: res.msg
-                                });
-                            });
-                        });
-                    }
-                });
-
-            },
-            //添加渠道商信息
-            addChannel(){
-                this.$refs['ruleForm'].validate((valid) => {
-                    if(valid){
-                        if(this.form.logo.url==''||this.form.qrcode.url==''){
-                            this.$message.error('请上传渠道商logo和二维码！');
-                            return;
-                        }
-                        this.$confirm('是否确定添加该渠道商？', '提示', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'warning'
-                        }).then(()=>{
-                            fetch({
-                                url: '/distributor/add',
-                                method: 'post',
-                                data: this.form,
-                            }).then(res => {
-                                this.$message({
-                                    type: 'success',
-                                    message: '保存成功!'
-                                });
-                                setTimeout(() => {
-                                    this.$router.push({path: '/typeManagement/channelManager'});
-                                }, 2000);
-                            }).catch(res => {
-                                this.$message({
-                                    type: 'error',
-                                    message: res.msg
-                                });
-                            });
-                        });
-                    }
-                })
-
-            },
-            //处理删除事件
-            handleDelEvent(){
-                this.$confirm('是否确认删除此渠道商，删除不能恢复。', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.deleteChannel();
-                }).catch(() => {
-                });
-            },
-            deleteChannel(){
-                fetch({
-                    url:'/distributor/delete',
-                    method:'post',
-                    data:{id:this.form.id}
-                }).then(res=>{
-                    if(res){
-                        this.$message.info('删除成功！');
-                        this.$router.push({path: '/typeManagement/channelManager'});
-                    }
-                }).catch(e=>{
-                });
-            },
-            //处理返回事件
-            handleBackEvent(){
-                this.$router.push({path: '/typeManagement/channelManager'});
-            }
-        },
-
-        components:{
-
-        }
+      },
+      logo : {
+        'token' : getToken(),
+        'type' : 27,
+      },
+      qrcode : {
+        'token' : getToken(),
+        'type' : 28,
+      },
     }
+  },
+  computed: {
+  },
+  created() {
+    if(this.isEdit){
+      this.getChannelInfo()
+    }
+  },
+  mounted() {
+  },
+  methods: {
+    radioChange (val) {
+      this.form.third_info = ''
+    },
+    getChannelInfo(){
+      fetch({
+        url: '/distributor/info',
+        method: 'post',
+        data: {
+          'id': this.$route.query.id
+        }
+      }).then(res=>{
+        console.log(res)
+        this.form.name = res.name
+        this.form.sort = res.sort
+        this.form.name_e = res.name_e
+        this.form.logo = res.logo
+        this.form.qrcode = res.qrcode
+        this.hasProduct = !!res.has_product
+        this.form.is_third = res.is_third
+        this.form.third_info = res.third_info
+      })
+    },
+    handleLogoSuccess(res, file) {
+      if(res.code!==200){
+        this.$message.error(res.msg)
+        return
+      }
+      let tmp = Object.assign({},res.result)
+      tmp.url = tmp.file_url
+      this.form.logo = tmp
+    },
+    handleQrSuccess(res, file) {
+      if(res.code!==200){
+        this.$message.error(res.msg)
+        return
+      }
+      let tmp = Object.assign({},res.result)
+      tmp.url = tmp.file_url
+      this.form.qrcode = tmp
+    },
+    beforeLogoUpload(file) {
+      const filter = file.type === 'image/png'
+      const isLt5M = file.size / 1024 / 1024 < 5
+
+      if (!filter) {
+        this.$message.error('请上传5M大小内PNG格式的logo')
+      }
+      if (!isLt5M) {
+        this.$message.error('请上传5M大小内PNG格式的logo')
+      }
+      return filter && isLt5M
+    },
+    beforeQrUpload(file) {
+      const isLt5M = file.size / 1024 / 1024 < 5
+      if (!isLt5M) {
+        this.$message.error('请上传5M大小内的二维码图标')
+      }
+      return isLt5M
+    },
+    //编辑渠道商信息
+    editChannel(){
+      if(this.disabled){
+        this.editText = '确认并提交修改'
+        this.disabled = false
+        return false
+      }
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          if(this.form.logo.url==''||this.form.qrcode.url==''){
+            this.$message.error('请上传渠道商logo和二维码！')
+            return
+          }
+          this.$confirm('是否确认保存修改后渠道商信息？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(()=>{
+            fetch({
+              url: '/distributor/edit',
+              method: 'post',
+              data: this.form,
+            }).then(res => {
+              console.log(res)
+
+              this.disabled = true
+              this.editText = '编辑渠道商信息'
+              this.$message({
+                type: 'success',
+                message: '保存成功!'
+              })
+            }).catch(res => {
+              this.$message({
+                type: 'error',
+                message: res.msg
+              })
+            })
+          })
+        }
+      })
+
+    },
+    //添加渠道商信息
+    addChannel(){
+      this.$refs['ruleForm'].validate((valid) => {
+        if(valid){
+          if(this.form.logo.url==''||this.form.qrcode.url==''){
+            this.$message.error('请上传渠道商logo和二维码！')
+            return
+          }
+          this.$confirm('是否确定添加该渠道商？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(()=>{
+            fetch({
+              url: '/distributor/add',
+              method: 'post',
+              data: this.form,
+            }).then(res => {
+              this.$message({
+                type: 'success',
+                message: '保存成功!'
+              })
+              setTimeout(() => {
+                this.$router.push({path: '/typeManagement/channelManager'})
+              }, 2000)
+            }).catch(res => {
+              this.$message({
+                type: 'error',
+                message: res.msg
+              })
+            })
+          })
+        }
+      })
+
+    },
+    //处理删除事件
+    handleDelEvent(){
+      this.$confirm('是否确认删除此渠道商，删除不能恢复。', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteChannel()
+      }).catch(() => {
+      })
+    },
+    deleteChannel(){
+      fetch({
+        url:'/distributor/delete',
+        method:'post',
+        data:{id:this.form.id}
+      }).then(res=>{
+        if(res){
+          this.$message.info('删除成功！')
+          this.$router.push({path: '/typeManagement/channelManager'})
+        }
+      }).catch(e=>{
+      })
+    },
+    //处理返回事件
+    handleBackEvent(){
+      this.$router.push({path: '/typeManagement/channelManager'})
+    }
+  },
+}
 </script>

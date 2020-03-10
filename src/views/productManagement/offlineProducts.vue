@@ -98,9 +98,9 @@
         :current-page.sync="listQuery.page"
         :page-sizes="[15,20,30, 50]"
         :page-size="listQuery.limit"
+        :total="total"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handleSizeChange"
-        :total="total"
         @current-change="handleCurrentChange"/>
     </div>
 
@@ -183,7 +183,7 @@ export default {
       fetch({
         url: '/brand/select',
         method: 'post',
-        data: { is_online: 1 }
+        data: {}
       }).then(res => {
         this.brandsList = res
       })

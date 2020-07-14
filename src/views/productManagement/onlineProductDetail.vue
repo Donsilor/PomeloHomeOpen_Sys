@@ -64,6 +64,31 @@
               </el-select>
             </el-col>
           </el-row>
+          <!-- 中控方式 -->
+          <el-row
+            class="card-row"
+            style="line-height: 40px;">
+            <el-col
+              :span="3"
+              class="card-span-left">中控方式</el-col>
+            <el-col
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <el-select
+                :readonly="!edit"
+                :disabled="!edit"
+                v-model="controlModeType"
+                placeholder="请选择">
+                <el-option
+                  v-for="item in controlMode"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"/>
+              </el-select>
+            </el-col>
+          </el-row>
+          <!-- 合作品牌 -->
           <el-row class="card-row gg">
             <el-col
               :span="3"
@@ -187,8 +212,8 @@
                 :offset="1"
                 class="card-span-right">
                 <el-form
-                  :model="productDetail"
-                  ref="productNameValid">
+                  ref="productNameValid"
+                  :model="productDetail">
                   <el-form-item
                     :prop="'compat_ext.'+idx+'.name'"
                     :rules="nameRules.nameValidate">
@@ -209,7 +234,7 @@
                   <el-form-item
                     :rules="[{validator:validModel}]"
                     prop="compat"
-                    >
+                  >
                     <el-input
                       :readonly="!edit"
                       v-model="it.compat"
@@ -270,9 +295,9 @@
                       :span="3"
                       class="card-span-left edit-label"/>
                     <img
+                      :src="it.icon_url"
                       width="80"
                       style="margin-left: 50px;"
-                      :src="it.icon_url"
                       alt="">
                   </el-row>
                 </el-form-item>
@@ -1139,6 +1164,21 @@ export default {
           label: '云中控接入'
         },
       ],
+      controlMode:[
+        {
+          value: 0,
+          label: '暂未选择' 
+        },
+        {
+          value: 1,
+          label: '嵌入式中控' 
+        },
+        {
+          value: 2,
+          label: '面板直连中控' 
+        },
+      ],
+      controlModeType: '',
       value: '',
       token: getToken(),
       product_id: '', // 产品id
@@ -1220,9 +1260,11 @@ export default {
   },
   created() {
     console.log('cookie=', document.cookie)
+    console.log('p_id', this.$route.query) // p_id
     this.adminSuper = JSON.parse(Cookies.get('ISSUPERADMIN'))
     this.product_id = this.$route.query.product_id
     this.lineStatus = this.$route.query.lineStatus
+
   },
   mounted() {
     this.getReviewInfo()
@@ -1395,11 +1437,13 @@ export default {
         product_id: this.product_id
       }
       getProductInfo(params).then(response => {
-        // console.log(response);
+        console.log('info返回的字段', response)
         // this.uploadName = response.agreement_file_name
 
         this.productDetail = response
         this.value = this.productDetail.device_access_type
+        console.log('22222', response.middle_control)
+        this.controlModeType = response.middle_control
         const arry = []
         for (const k in response.images_new) {
           arry.push({ id: k, file_url: response.images_new[k] })
@@ -1637,7 +1681,6 @@ export default {
     },
     modify() {
       this.modifyData.device_access_type = this.productDetail.device_access_type
-
       if (!this.productDetail.name) {
         return this.$message.error('产品名称不能为空！')
       }
@@ -1710,6 +1753,9 @@ export default {
       // if (this.configFile && this.configFile.file_url) {
       //   formData.agreement_file = JSON.stringify(this.configFile)
       // }
+      console.log('接入设备的类型', this.controlModeType)
+      formData.middle_control = this.controlModeType
+      console.log('formData, formData',  formData)
       let flag = true
       for (let i = 0; i < this.$refs.productNameValid.length; i++) {
         const argument = this.$refs.productNameValid[i]
@@ -1729,6 +1775,7 @@ export default {
           method: 'post',
           data: formData
         }).then(res => {
+          console.log('提交的信息', res)
           this.$message.info('保存成功')
           this.$router.go(-1)
         }).catch(e => {

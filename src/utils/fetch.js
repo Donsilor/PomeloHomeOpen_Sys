@@ -23,6 +23,9 @@ service.interceptors.request.use(
     if (config['method'] == 'get') {
       config['url'] = config['url'] + '?' + helper.serialize(config.data)
     }
+    if (config.url.indexOf('ext/gtags') > -1){
+      config.url = config.url.replace(/\/api\/index.php/,'')
+    }
     return config
   },
   error => {
@@ -66,7 +69,9 @@ service.interceptors.response.use(
         })
       }
       return Promise.reject(res)
-    } else {
+    } else if( !response.data.result) {
+      return Promise.resolve(response)
+    } else{
       return Promise.resolve(response.data.result)
     }
   },

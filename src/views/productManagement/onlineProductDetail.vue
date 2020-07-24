@@ -120,6 +120,31 @@
               </div>
             </el-col>
           </el-row>
+          <!-- 增加tag                           到时候数据需要修改    -->
+          <el-row
+            class="card-row"
+            style="line-height: 40px;">
+            <el-col
+              :span="3"
+              class="card-span-left">编组tag</el-col>
+            <el-col
+              :span="16"
+              :offset="1"
+              class="card-span-right">
+              <el-select
+                :readonly="!edit"
+                :disabled="!edit"
+                v-model="tagVal"
+                placeholder="请选择">
+                <el-option
+                  v-for="item in tagMode"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"/>
+              </el-select>
+            </el-col>
+          </el-row>
+
           <el-row class="card-row">
             <el-col
               :span="3"
@@ -1179,6 +1204,9 @@ export default {
         },
       ],
       controlModeType: '',
+      tagMode: [],
+      tagVal: '',
+      gtag_id: '',
       value: '',
       token: getToken(),
       product_id: '', // 产品id
@@ -1269,11 +1297,54 @@ export default {
   mounted() {
     this.getReviewInfo()
     this.getConfigList()
+    this.getTagList()
+    this.getProductTag()  
   },
   deactivated() {
     this.$destroy()
   },
   methods: {
+    // 获取下拉选择列表
+    getTagList(){
+      fetch({
+        url: 'api/ext/gtags/global',
+      }).then( res => {
+        for(let index = 0 ; index< res.data.data.length; index++){
+          let obj = {}
+          obj.value = res.data.data[index].gtag_id
+          obj.label = res.data.data[index].gtag_name
+          this.tagMode.push(obj)
+        }
+      })  
+    },
+    getProductTag(){  // TODO:
+      const params = {
+        product_id: this.product_id,
+      }
+      fetch({
+        url: '/api/ext/gtags/product',
+        data: params
+      }).then((res)=>{
+        // 产品标签中有信息的时候存在res.data.data这个值, 无标签信息只又一条提示信息
+        if(res.data.data){
+          this.tagVal = res.data.data.gtag_id // res有值就将其赋值
+        }else{
+          this.tagVal = '' // 无值的时候置空，令其选择
+        }
+      })
+    },
+    // 修改tag标签TODO:
+    changeTag(){
+      const params = {
+        product_id: this.product_id,
+        gtag_id: this.tagVal
+      }
+      fetch({
+        url: '/api/ext/gtags/product',
+        method: 'post',
+        data: params
+      })
+    },
     // 校验产品名称 只能中文和数字
     productNameValidate() {
       if (!this.productDetail.name) return true
@@ -1538,6 +1609,7 @@ export default {
     toEdit() {
       if (this.edit) {
         this.modify()
+        this.changeTag()
         return
       }
       this.edit = true
@@ -1753,9 +1825,7 @@ export default {
       // if (this.configFile && this.configFile.file_url) {
       //   formData.agreement_file = JSON.stringify(this.configFile)
       // }
-      console.log('接入设备的类型', this.controlModeType)
       formData.middle_control = this.controlModeType
-      console.log('formData, formData',  formData)
       let flag = true
       for (let i = 0; i < this.$refs.productNameValid.length; i++) {
         const argument = this.$refs.productNameValid[i]
@@ -1775,7 +1845,6 @@ export default {
           method: 'post',
           data: formData
         }).then(res => {
-          console.log('提交的信息', res)
           this.$message.info('保存成功')
           this.$router.go(-1)
         }).catch(e => {

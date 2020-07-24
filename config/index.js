@@ -1,6 +1,5 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
-
 module.exports = {
   build: {
     env: require('./prod.env'),
@@ -35,7 +34,17 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
-      }
+      },
+      // 对tag请求进行处理
+      '/api/ext/':{
+        // target: 'http://devpho.evergrande.cn/api/ext', // 开发环境
+        // target: 'http://172.26.83.127:8080/api/ext', // 本地测试 
+        target: 'http://betapho.evergrande.cn/api/ext', // 测试环境
+        changeOrigin: true,
+        pathRewrite: { 
+          '/api/ext/': ''
+        }
+      },
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

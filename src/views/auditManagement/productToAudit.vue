@@ -115,7 +115,7 @@
             :offset="1"
             class="card-span-right">{{ checkDetail.compat }}</el-col>
         </el-row>
-        <el-row class="card-row" v-for="(it, idx) in checkDetail.compat_ext">
+        <el-row class="card-row" v-for="(it, idx) in checkDetail.compat_ext" :key="idx">
           <el-row
             :key="idx"
             class="card-row">

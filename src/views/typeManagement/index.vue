@@ -76,7 +76,11 @@
                         name: '品牌licence管理',
                         url: '/typeManagement/manufacturer',
                         type:'manufacturer'
-                    },
+                    },{
+                        name: '编组tag管理',
+                        url: '/typeManagement/addTag',
+                        type:'addTag'
+                    }
                 ]
             }
         },

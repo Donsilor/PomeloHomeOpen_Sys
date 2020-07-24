@@ -261,6 +261,11 @@ export const constantRouterMap = [
             path: 'manufacturer',
             name: 'manufacturer',
             component: _import('typeManagement/manufacturer')
+          },
+          {
+            path: 'addTag',
+            name: 'addTag',
+            component: _import('typeManagement/addTag')
           }
         ]
       },

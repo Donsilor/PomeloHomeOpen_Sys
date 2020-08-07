@@ -109,6 +109,15 @@
         <el-row class="card-row">
           <el-col
             :span="3"
+            class="card-span-left">分组标签</el-col>
+          <el-col
+            :span="16"
+            :offset="1"
+            class="card-span-right">{{gtag_name}}</el-col>
+        </el-row>
+        <el-row class="card-row">
+          <el-col
+            :span="3"
             class="card-span-left">兼容机型</el-col>
           <el-col
             :span="16"
@@ -639,7 +648,7 @@
 </template>
 
 <script>
-import { getReviewInfo, commitCheck } from '@/api/check'
+import { getReviewInfo, commitCheck ,getProductTags} from '@/api/check'
 import utils from '@/utils/helper'
 import { Message } from 'element-ui'
 
@@ -687,7 +696,9 @@ export default {
       checkDetail: {},
       business_name: '',
       action_type: 1, // 提交审核操作类型 ，1 = 通过，2 = 驳回
-      approved_reason: '审核通过' // 审核原因
+      approved_reason: '审核通过', // 审核原因
+      gtag_name:'暂未分组'
+
     }
   },
   computed: {
@@ -762,6 +773,17 @@ export default {
       }
       getReviewInfo(params)
         .then(response => {
+          console.log('产品信息：',response);
+          //获取产品的pid，进而获取产品的分组信息
+          const params =  response && response.product_id ? {product_id:response.product_id} : {}
+          console.log('params:',params);
+          getProductTags(params)
+            .then(response=>{
+              console.log('获取的标签数据：',response);
+              response.data && response.data.gtag_name ? this.gtag_name = response.data.gtag_name:''
+              
+            })
+
           this.checkDetail = response
           // 接口放回 compat_ext 可能是json字符串不是对象
           try {

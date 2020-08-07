@@ -102,6 +102,7 @@
 
 <script>
 import fetch from '@/utils/fetch'
+import { getGlobalTags,addGlobalTags } from '@/api/check'
 export default {
   data() {
     return {
@@ -156,17 +157,14 @@ export default {
         size: this.listQuery.limit,
         page: this.listQuery.page
       }
-      fetch({
-        url: 'api/ext/gtags/global',
-        data:params
-      }).then( res => {
+      getGlobalTags(params).then(res=>{
         console.log('2222222', res)
-        this.tagList = res.data.data
+        this.tagList = res.data
         this.tagList.forEach((ele)=>{
           ele.create_time = this.dataFormat(ele.create_time*1000)
           ele.update_time = this.dataFormat(ele.update_time*1000)
         })
-        this.total = res.data.page_info.total
+        this.total = res.page_info.total
         this.listLoading = false
       })
     },
@@ -193,11 +191,8 @@ export default {
       this.formItem = row
     },
     onSubmit() {
-      fetch({
-        url: 'api/ext/gtags/global',
-        method: 'post',
-        data: this.formItem
-      }).then(res => {
+      const params = this.formItem
+      addGlobalTags(params).then(res => {
         this.$message.success('操作成功！')
         this.formVisible = false
         this.getTagList()

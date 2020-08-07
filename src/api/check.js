@@ -65,3 +65,40 @@ export function productUnshelve(params) {
     data: params
   })
 }
+
+
+// 获取某一个产品的分组标签
+export function getProductTags(params) {
+  return fetch({
+    url: '/api/ext/gtags/product',
+    method: 'get',
+    data: params
+  })
+}
+
+// 修改某一个产品的分组标签
+export function changeProductTags(params) {
+  return fetch({
+    url: '/api/ext/gtags/product',
+    method: 'post',
+    data: params
+  })
+}
+
+// 获取全局分组标签列表
+export function getGlobalTags() {
+  return fetch({
+    url: '/api/ext/gtags/global',
+    method: 'get'
+  })
+}
+
+
+// 添加全局分组标签
+export function addGlobalTags(params) {
+  return fetch({
+    url: '/api/ext/gtags/global',
+    method: 'post',
+    data: params
+  })
+}

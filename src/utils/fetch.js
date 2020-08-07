@@ -42,6 +42,8 @@ service.interceptors.response.use(
      * code为非200是抛错
      */
     const res = response.data
+     console.log('response:',response);
+    console.log('res:',res);
     if (res.code !== 200) {
       Message({
         message: res.msg,
@@ -69,8 +71,8 @@ service.interceptors.response.use(
         })
       }
       return Promise.reject(res)
-    } else if( !response.data.result) {
-      return Promise.resolve(response)
+    } else if( !response.data.result) {//新接口直接把后台回传的的数据直接返回回去
+      return Promise.resolve(response.data)
     } else{
       return Promise.resolve(response.data.result)
     }

@@ -1141,7 +1141,7 @@
 </template>
 
 <script>
-import { getProductInfo, productUnshelve } from '@/api/check'
+import { getProductInfo, productUnshelve, getGlobalTags, getProductTags, changeProductTags } from '@/api/check'
 import utils from '@/utils/helper'
 import { getToken } from '@/utils/auth'
 import fetch from '@/utils/fetch'
@@ -1306,31 +1306,26 @@ export default {
   methods: {
     // 获取下拉选择列表
     getTagList(){
-      fetch({
-        url: 'api/ext/gtags/global',
-      }).then( res => {
-        for(let index = 0 ; index< res.data.data.length; index++){
+      getGlobalTags().then(res => {
+        for(let index = 0 ; index< res.data.length; index++){
           let obj = {}
-          obj.value = res.data.data[index].gtag_id
-          obj.label = res.data.data[index].gtag_name
+          obj.value = res.data[index].gtag_id
+          obj.label = res.data[index].gtag_name
           this.tagMode.push(obj)
         }
-      })  
+      }) 
     },
     getProductTag(){  // TODO:
       const params = {
         product_id: this.product_id,
       }
-      fetch({
-        url: '/api/ext/gtags/product',
-        data: params
-      }).then((res)=>{
+      getProductTags(params).then(res =>{
         // 产品标签中有信息的时候存在res.data.data这个值, 无标签信息只又一条提示信息
-        if(res.data.data){
-          this.tagVal = res.data.data.gtag_id // res有值就将其赋值
-        }else{
-          this.tagVal = '' // 无值的时候置空，令其选择
-        }
+          if(res.data){
+            this.tagVal = res.data.gtag_id // res有值就将其赋值
+          }else{
+            this.tagVal = '' // 无值的时候置空，令其选择
+          }
       })
     },
     // 修改tag标签TODO:
@@ -1339,11 +1334,7 @@ export default {
         product_id: this.product_id,
         gtag_id: this.tagVal
       }
-      fetch({
-        url: '/api/ext/gtags/product',
-        method: 'post',
-        data: params
-      })
+      changeProductTags(params)
     },
     // 校验产品名称 只能中文和数字
     productNameValidate() {

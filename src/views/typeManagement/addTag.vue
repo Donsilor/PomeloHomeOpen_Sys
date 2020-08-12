@@ -45,6 +45,12 @@
         <template slot-scope="scope">
           <el-button 
             size="small" 
+            type="danger"
+            @click="delTag(scope.row)" >
+            删除
+          </el-button>
+          <el-button 
+            size="small" 
             type="primary" 
             @click="editTag(scope.row, true)">
             编辑
@@ -168,7 +174,6 @@ export default {
         this.listLoading = false
       })
     },
-    
 
     handleSizeChange(val) {  // 分页功能
       this.listQuery.limit = val
@@ -189,6 +194,16 @@ export default {
       this.isEdit = true
       this.formVisible = true
       this.formItem = row
+    },
+    delTag(row){
+      this.$confirm('确认删除？')
+          .then(_ => {
+            console.log(8888);
+            this.formItem = row
+            this.formItem.enable = 0 //enable传0表示删除
+            this.onSubmit(); //调用onSubmit借口发起请求
+          })
+          .catch(_ => {});
     },
     onSubmit() {
       const params = this.formItem

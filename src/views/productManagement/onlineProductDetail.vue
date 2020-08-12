@@ -135,6 +135,7 @@
                 :readonly="!edit"
                 :disabled="!edit"
                 v-model="tagVal"
+                clearable
                 placeholder="请选择">
                 <el-option
                   v-for="item in tagMode"
@@ -1320,7 +1321,7 @@ export default {
         product_id: this.product_id,
       }
       getProductTags(params).then(res =>{
-        // 产品标签中有信息的时候存在res.data.data这个值, 无标签信息只又一条提示信息
+        // 产品标签中有信息的时候存在res.data这个值, 无标签信息只又一条提示信息
           if(res.data){
             this.tagVal = res.data.gtag_id // res有值就将其赋值
           }else{
@@ -1330,9 +1331,14 @@ export default {
     },
     // 修改tag标签TODO:
     changeTag(){
-      const params = {
+      //gtag_id传0的时候表示删除
+      const params = this.tagVal ? {
         product_id: this.product_id,
         gtag_id: this.tagVal
+      }:
+      {
+        product_id: this.product_id,
+        gtag_id: 0
       }
       changeProductTags(params)
     },
@@ -1597,10 +1603,10 @@ export default {
       const pt = this.spanMap[row.nodeid]
       return utils.spanMethod(pt, columnIndex, rowIndex)
     },
-    toEdit() {
+    async toEdit() {
       if (this.edit) {
+        await this.changeTag()
         this.modify()
-        this.changeTag()
         return
       }
       this.edit = true

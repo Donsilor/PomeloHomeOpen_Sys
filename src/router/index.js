@@ -365,6 +365,24 @@ export const constantRouterMap = [
             component: _import('configManagement/appConfig')
           }
         ]
+      },,
+      {
+        path: 'screenManagement',
+        name: '屏幕配置管理',
+        component: _import('ScreenManageMent/main'),
+        redirect: '/screenManagement/screen',
+        children: [
+          {
+            path: 'screen',
+            name: 'screen',
+            component: _import('ScreenManageMent/Index')
+          },
+          {
+            path: 'screenEdite',
+            name: 'screenEdite',
+            component: _import('ScreenManageMent/ScreenEdite')
+          }
+        ]
       }
     ]
   },

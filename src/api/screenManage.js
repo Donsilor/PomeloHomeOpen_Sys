@@ -25,7 +25,7 @@ export function cardOperation(params) {
   return fetch({
     url: '/api/ext/devcard/size',
     method: 'post',
-    params:params
+    data:params
   })
 }
 

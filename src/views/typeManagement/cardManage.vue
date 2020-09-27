@@ -51,25 +51,22 @@
           <el-button 
             size="small" 
             type="danger"
-            @click="delTag(scope.row)" >
+            @click="delCard(scope.row)" >
             删除
           </el-button>
           <el-button 
             size="small" 
             type="primary" 
-            @click="editTag(scope.row, true)">
+            @click="editCard(scope.row, true)">
             编辑
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <div 
+    <!-- <div 
       v-show="!listLoading" 
       class="pagination-container">
-      <!-- 页码按钮的数量： currenCurrent
-           会sizeChange 
-       -->
       <el-pagination 
         :current-page.sync="listQuery.page" 
         :page-sizes="[15,20,30, 50]" 
@@ -78,7 +75,7 @@
         layout="total, sizes, prev, pager, next, jumper" 
         @size-change="handleSizeChange" 
         @current-change="handleCurrentChange"/>
-    </div>
+    </div> -->
 
     <el-dialog 
       :visible.sync="formVisible" 
@@ -119,7 +116,7 @@ export default {
     return {
       // ====table===
       list: null,
-      total: null,
+      // total: null,
       listLoading: false,
       listQuery: {
         page: 1,
@@ -195,18 +192,19 @@ export default {
       this.formItem = {}
       this.formItem.operator = 1
     },
-    editTag(row, isEdit) {
+    editCard(row, isEdit) {
       console.log('*row*------------------', row)  
       this.isEdit = true
       this.formVisible = true
       this.formItem = row
+       this.formItem.operator = 2
     },
-    delTag(row){
+    delCard(row){
       this.$confirm('确认删除？')
           .then(_ => {
             console.log(8888);
             this.formItem = row
-            this.formItem.enable = 0 //enable传0表示删除
+             this.formItem.operator = 3
             this.onSubmit(); //调用onSubmit借口发起请求
           })
           .catch(_ => {});
@@ -214,7 +212,7 @@ export default {
     onSubmit() {
       const params = this.formItem
       console.log('请求参数：',JSON.stringify(params));
-      addGlobalTags(params).then(res => {
+      cardOperation(params).then(res => {
         console.log('返回的数据：',res);
         this.$message.success('操作成功！')
         this.formVisible = false

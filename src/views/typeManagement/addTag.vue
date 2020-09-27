@@ -4,6 +4,7 @@
       <el-button 
         size="medium" 
         type="primary" 
+        :disabled="cardList.length ===0 "
         @click="addTag">
         新增编组tag
       </el-button>
@@ -52,6 +53,7 @@
           <el-button 
             size="small" 
             type="primary" 
+            :disabled="cardList.length ===0 "
             @click="editTag(scope.row, true)">
             编辑
           </el-button>
@@ -84,24 +86,35 @@
           label="标签编号">
           <el-input 
             v-model="formItem.gtag_id" 
-            type="textarea"/>
+            type="input"/>
         </el-form-item>
         <el-form-item label="标签名称">
           <el-input 
             v-model="formItem.gtag_name" 
-            type="textarea"/>
+            type="input"/>
         </el-form-item>
         <el-form-item label="上传图片">
-          <el-upload
+          <!-- <el-upload
             class="upload-demo"
             action="/api/index.php/files/save"
             accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
             :on-success="handleSuccess"
             :on-change="handleChange"
-            :data="this.base_img"
+            :data="base_img"
             :file-list="fileList">
             <el-button size="small" type="primary">点击上传</el-button>
-          </el-upload>
+          </el-upload> -->
+           <el-upload
+              action="/api/index.php/files/save"
+              list-type="picture-card"
+              :on-preview="handlePictureCardPreview"
+              :data="base_img"
+               accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+              :on-success="handleSuccess"
+              :on-remove="removeTagImage"
+              :limit="1">
+              <i class="el-icon-plus"></i>
+            </el-upload>
         </el-form-item>
 
         <el-form-item label="">
@@ -111,19 +124,21 @@
               <span class="">用于面板屏幕配置多设备选择设备</span>
             </div>
           </template>
-          <el-input v-model="formItem.input" placeholder="请输入正整数，0表示无穷大"></el-input>
+          <el-input v-model="formItem.dev_limit" placeholder="请输入正整数，0表示无穷大"></el-input>
         </el-form-item>
 
         <el-form-item label="面板是否可用">
-           <el-radio v-model="formItem.radio" label="1">是</el-radio>
-          <el-radio v-model="formItem.radio" label="2">否</el-radio>
+           <el-radio v-model="formItem.panel_can" label="1">是</el-radio>
+          <el-radio v-model="formItem.panel_can" label="0">否</el-radio>
         </el-form-item>
         
 
         
-        <el-row :span="24"  class="imgContent">
+        <el-row :span="24"  class="imgContent" v-for="(item,index) in cardList" :key="index">
           <el-col :span="3" class="checkContent">
-            <el-checkbox v-model="formItem.checked">1*1</el-checkbox>
+            <el-checkbox v-model="item.checked">
+              {{item.x}}*{{item.y}}
+            </el-checkbox>
           </el-col>
           <el-col :span="21">
             <el-col :span="4">安卓图片：</el-col>
@@ -132,7 +147,8 @@
                     action="/api/index.php/files/save"
                     list-type="picture-card"
                     :on-preview="handlePictureCardPreview"
-                    :data="this.base_img"
+                    :data="base_img"
+                    :on-success="uploadSuccess(item)"
                     :on-remove="handleRemove">
                     <i class="el-icon-plus"></i>
                   </el-upload>
@@ -143,7 +159,8 @@
                     action="/api/index.php/files/save"
                     list-type="picture-card"
                     :on-preview="handlePictureCardPreview"
-                    :data="this.base_img"
+                    :data="base_img"
+                     :on-success="uploadSuccess(item)"
                     :on-remove="handleRemove">
                     <i class="el-icon-plus"></i>
                   </el-upload>
@@ -154,7 +171,8 @@
                     action="/api/index.php/files/save"
                     list-type="picture-card"
                     :on-preview="handlePictureCardPreview"
-                    :data="this.base_img"
+                    :data="base_img"
+                     :on-success="uploadSuccess(item)"
                     :on-remove="handleRemove">
                     <i class="el-icon-plus"></i>
                   </el-upload>
@@ -184,6 +202,7 @@
 import fetch from '@/utils/fetch'
 import { getGlobalTags,addGlobalTags } from '@/api/check'
 import { getToken } from '@/utils/auth'
+import { cardSizeList } from '@/api/screenManage'
 export default {
   data() {
     return {
@@ -202,8 +221,9 @@ export default {
         gtag_name: '',
         gtag_id: '',
         enable: 1,    // 暂时不能进行删除，默认传1
-        input:1,
-        radio:'',
+        dev_limit:'',
+        panel_can:'',
+        gtag_img:'',//tag图片path
         list:[
           {
             width:1,
@@ -227,24 +247,31 @@ export default {
           }
         ]
       },
+      cardList:[],
+      imageList:{
+        ios:[],
+        android:[],
+        panel:[]
+      },
       fileList:[],
       imgList:[],
       base_img: {
           type: 12,
           token: getToken()
-        },
+      },
        dialogImageUrl: '',
         dialogVisible: false
     }
   },
   computed: {
     dialogTitle() {
-      return this.isEdit ? 'edit tag' : 'add tag'
+      return this.isEdit ? '编辑' : '新增'
     }
   },
   created() {},
   mounted() {
     this.refresh()
+    this.getCardSizeList()
   },
   methods: {
     dataFormat(originVal) { // 后台传回来的S
@@ -316,25 +343,40 @@ export default {
         this.getTagList()
       })
     },
-     handleChange(file, fileList) {
-        this.fileList = fileList.slice(-3);
+    getCardSizeList(){
+      this.listLoading = true
+      const params = {
+        size: this.listQuery.limit,
+        page: this.listQuery.page
+      }
+      cardSizeList(params).then(res=>{
+        res.data.forEach(item=>{
+          item.checked = false
+        })
+        this.cardList = res.data
+         console.log('cardList卡片列表：', this.cardList)
+      })
     },
     handleSuccess(res){
       console.log('上传图片返回数据：',res);
+      this.formItem.gtag_img = res.result.object
     },
-     imageChange(file, fileList) {
-        this.imgList = fileList.slice(-3);
+    removeTagImage(file, fileList){
+      //变量置空
+       this.formItem.gtag_img = ''
     },
-    imageSuccess(res){
-      console.log('图片列表上传返回：',res);
+    uploadSuccess(item){
+      return function(res){
+         console.log('列表上传图片返回数据：',res);
+      }
     },
    handleRemove(file, fileList) {
         console.log(file, fileList);
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
-      }
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    }
   }
 }
 </script>
@@ -353,7 +395,8 @@ export default {
   .imgContent{
       line-height: 80px;
       margin-left: 40px;
-    .el-upload--picture-card{
+  }
+  .el-upload--picture-card{
      width: 80px;
       height: 80px;
       line-height: 80px;
@@ -362,6 +405,5 @@ export default {
        width: 80px;
       height: 80px;
     }
-  }
 }
 </style>

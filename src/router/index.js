@@ -266,6 +266,11 @@ export const constantRouterMap = [
             path: 'addTag',
             name: 'addTag',
             component: _import('typeManagement/addTag')
+          },
+          {
+            path: 'cardManage',
+            name: 'cardManage',
+            component: _import('typeManagement/cardManage')
           }
         ]
       },

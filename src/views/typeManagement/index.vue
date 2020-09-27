@@ -80,6 +80,10 @@
                         name: '编组tag管理',
                         url: '/typeManagement/addTag',
                         type:'addTag'
+                    },{
+                        name: '卡片大小',
+                        url: '/typeManagement/cardManage',
+                        type:'cardManage'
                     }
                 ]
             }

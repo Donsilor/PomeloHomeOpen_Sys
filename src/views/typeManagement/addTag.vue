@@ -78,7 +78,7 @@
     <el-dialog 
       :visible.sync="formVisible" 
       :title="dialogTitle">
-      <el-form label-width="120px">
+      <el-form label-width="200px" class="form">
         <el-form-item 
           v-show="isEdit == false" 
           label="标签编号">
@@ -91,6 +91,63 @@
             v-model="formItem.gtag_name" 
             type="textarea"/>
         </el-form-item>
+        <el-form-item label="上传图片">
+          <el-upload
+            class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :on-change="handleChange"
+            :file-list="fileList">
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+
+        <el-form-item label="">
+          <template slot="label">
+            <div class="bottom_text">
+              编组数量限制（非必填）<br>
+              <span class="">用于面板屏幕配置多设备选择设备</span>
+            </div>
+          </template>
+          <el-input v-model="formItem.input" placeholder="请输入正整数，0表示无穷大"></el-input>
+        </el-form-item>
+
+        <el-form-item label="面板是否可用">
+           <el-radio v-model="formItem.radio" label="1">是</el-radio>
+          <el-radio v-model="formItem.radio" label="2">否</el-radio>
+        </el-form-item>
+        
+        <el-row :span="24"  class="imgContent">
+          <el-col :span="4" class="checkContent">
+            <el-checkbox v-model="formItem.checked">1*1</el-checkbox>
+          </el-col>
+          <el-col :span="20" class="imglist">
+            <el-row :span="24" type="flex" align="middle" >
+              <el-col :span="4">安卓图片：</el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4"><el-button icon="el-icon-plus" size="mini">新增图片</el-button></el-col>
+            </el-row>
+            <el-row :span="24" type="flex" align="middle" >
+              <el-col :span="4">安卓图片：</el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4"><el-button icon="el-icon-plus" size="mini">新增图片</el-button></el-col>
+            </el-row>
+            <el-row :span="24" type="flex" align="middle" >
+              <el-col :span="4">安卓图片：</el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
+              <el-col :span="4"><el-button icon="el-icon-plus" size="mini">新增图片</el-button></el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+
       </el-form>
       <span 
         slot="footer" 
@@ -126,8 +183,33 @@ export default {
       formItem: {
         gtag_name: '',
         gtag_id: '',
-        enable: 1    // 暂时不能进行删除，默认传1
-      }
+        enable: 1,    // 暂时不能进行删除，默认传1
+        input:1,
+        radio:'',
+        list:[
+          {
+            width:1,
+            height:1
+          },
+           {
+            width:2,
+            height:1
+          },
+           {
+            width:2,
+            height:2
+          },
+           {
+            width:2,
+            height:3
+          },
+           {
+            width:2,
+            height:4
+          }
+        ]
+      },
+      fileList:[]
     }
   },
   computed: {
@@ -212,7 +294,34 @@ export default {
         this.formVisible = false
         this.getTagList()
       })
-    }
+    },
+     handleChange(file, fileList) {
+        this.fileList = fileList.slice(-3);
+      }
   }
 }
 </script>
+<style lang="scss">
+.form{
+  .bottom_text{
+    line-height: 20px;
+    span{
+      font-size: 10px;
+    color: rgba(128, 128, 128, 0.529411764705882);
+    }
+    .addBtn{
+
+    }
+  }
+  .imgContent{
+    .checkContent{
+      margin-top: 5px;
+    }
+    .imglist{
+      .el-row{
+        margin-top: 10px;
+      }
+    }
+  }
+}
+</style>

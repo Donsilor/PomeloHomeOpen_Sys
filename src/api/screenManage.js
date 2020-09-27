@@ -9,3 +9,14 @@ export function getScreenList(params) {
     data: params
   })
 }
+
+// 获取审核申请列表
+export function cardSizeList() {
+  // console.log('查询入参', params);
+  return fetch({
+    url: '/api/ext/devcard/size',
+    method: 'get'
+  })
+}
+
+

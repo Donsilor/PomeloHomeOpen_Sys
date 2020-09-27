@@ -43,8 +43,8 @@ service.interceptors.response.use(
      * code为非200是抛错
      */
     const res = response.data
-    console.log('response:',response)
-    console.log('res:',res)
+    /*  console.log('response:',response)
+    console.log('res:',res) */
     if (res.code !== 200) {
       Message({
         message: res.msg,

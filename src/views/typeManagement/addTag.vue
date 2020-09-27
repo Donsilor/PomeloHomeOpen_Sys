@@ -271,7 +271,6 @@ export default {
         page: this.listQuery.page
       }
       getGlobalTags(params).then(res=>{
-        console.log('2222222', res)
         this.tagList = res.data
         this.tagList.forEach((ele)=>{
           ele.create_time = this.dataFormat(ele.create_time*1000)
@@ -284,7 +283,6 @@ export default {
 
     handleSizeChange(val) {  // 分页功能
       this.listQuery.limit = val
-      console.log(val)
       this.getTagList()
     },
     handleCurrentChange(val) { // 改变页码数量
@@ -297,20 +295,18 @@ export default {
       this.formItem = {}
     },
     editTag(row, isEdit) {
-      console.log('*row*------------------', row)  
       this.isEdit = true
       this.formVisible = true
       this.formItem = row
     },
     delTag(row){
       this.$confirm('确认删除？')
-          .then(_ => {
-            console.log(8888);
-            this.formItem = row
-            this.formItem.enable = 0 //enable传0表示删除
-            this.onSubmit(); //调用onSubmit借口发起请求
-          })
-          .catch(_ => {});
+        .then(_ => {
+          this.formItem = row
+          this.formItem.enable = 0 //enable传0表示删除
+          this.onSubmit() //调用onSubmit借口发起请求
+        })
+        .catch(_ => {})
     },
     onSubmit() {
       const params = this.formItem

@@ -4,7 +4,7 @@
       <el-button 
         size="medium" 
         type="primary" 
-        @click="addTag">
+        @click="addCart">
         新增大小
       </el-button>
     </el-row>
@@ -22,22 +22,22 @@
         label="大小名称">
         <template slot-scope="scope">
           <div>
-            {}
+            {{scope.row.x}}*{{scope.row.y}}
           </div>
         </template>
       </el-table-column>
       <el-table-column 
         align="center" 
         label="宽（多少格子）" 
-        prop="gtag_name"/>
+        prop="x"/>
       <el-table-column 
         align="center" 
         label="高（多少格子）" 
-        prop="create_time"/>
+        prop="y"/>
         <el-table-column 
         align="center" 
         label="创建时间" 
-        prop="update_time"/>
+        prop="create_time"/>
       <el-table-column 
         align="center" 
         label="更新时间" 
@@ -85,16 +85,15 @@
       :title="dialogTitle">
       <el-form label-width="120px">
         <el-form-item 
-          v-show="isEdit == false" 
           label="宽">
           <el-input 
-            v-model="formItem.gtag_id" 
-            type="textarea"/>
+            v-model="formItem.x" 
+            type="input"/>
         </el-form-item>
         <el-form-item label="高">
           <el-input 
-            v-model="formItem.gtag_name" 
-            type="textarea"/>
+            v-model="formItem.y" 
+            type="input"/>
         </el-form-item>
       </el-form>
       <span 
@@ -114,7 +113,7 @@
 <script>
 import fetch from '@/utils/fetch'
 import { addGlobalTags } from '@/api/check'
-import { cardSizeList } from '@/api/screenManage'
+import { cardSizeList,cardOperation } from '@/api/screenManage'
 export default {
   data() {
     return {
@@ -130,15 +129,15 @@ export default {
       isEdit: false,
       tagList: [],
       formItem: {
-        gtag_name: '',
-        gtag_id: '',
-        enable: 1    // 暂时不能进行删除，默认传1
+        y: '',
+        x: '',
+        operator: '' //1：新增、2：修改、3：删除
       }
     }
   },
   computed: {
     dialogTitle() {
-      return this.isEdit ? 'edit tag' : 'add tag'
+      return this.isEdit ? '修改卡片' : '新增卡片'
     }
   },
   created() {},
@@ -172,11 +171,11 @@ export default {
       cardSizeList(params).then(res=>{
         console.log('2222222', res)
         this.tagList = res.data
-        // this.tagList.forEach((ele)=>{
-        //   ele.create_time = this.dataFormat(ele.create_time*1000)
-        //   ele.update_time = this.dataFormat(ele.update_time*1000)
-        // })
-        // this.total = res.page_info.total
+        this.tagList.forEach((ele)=>{
+          ele.create_time = this.dataFormat(ele.create_time*1000)
+          ele.update_time = this.dataFormat(ele.update_time*1000)
+        })
+        //this.total = res.page_info.total
         this.listLoading = false
       })
     },
@@ -190,10 +189,11 @@ export default {
       this.listQuery.page = val
       this.getCardSizeList()
     },
-    addTag() {   // button按钮事件
+    addCart() {   // button按钮事件
       this.isEdit = false // 编辑状态开关
       this.formVisible = true // 蒙版开关
       this.formItem = {}
+      this.formItem.operator = 1
     },
     editTag(row, isEdit) {
       console.log('*row*------------------', row)  
@@ -213,7 +213,9 @@ export default {
     },
     onSubmit() {
       const params = this.formItem
+      console.log('请求参数：',JSON.stringify(params));
       addGlobalTags(params).then(res => {
+        console.log('返回的数据：',res);
         this.$message.success('操作成功！')
         this.formVisible = false
         this.getCardSizeList()

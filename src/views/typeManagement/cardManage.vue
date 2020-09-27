@@ -54,12 +54,12 @@
             @click="delCard(scope.row)" >
             删除
           </el-button>
-          <el-button 
+          <!-- <el-button 
             size="small" 
             type="primary" 
             @click="editCard(scope.row, true)">
             编辑
-          </el-button>
+          </el-button> -->
         </template>
       </el-table-column>
     </el-table>

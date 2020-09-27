@@ -129,6 +129,9 @@ export default {
         method: 'post',
         data: params
       }).then(res => {
+        console.log('====================================');
+        console.log('取回结果：',res);
+        console.log('====================================');
         this.tableData = res.list
         this.total = res.total
         this.listLoading = false

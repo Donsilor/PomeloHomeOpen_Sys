@@ -682,6 +682,7 @@ export default {
       this.form.product_id = ''
     },
     handleAvatarSuccess(res, file) {
+      console.log('上传返回：',res);
       const data = res.result
       switch (data.type) {
       case 23 : this.form.base_img = data; this.form.base_img.token = this.token; break

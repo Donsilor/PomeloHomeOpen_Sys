@@ -94,8 +94,11 @@
         <el-form-item label="上传图片">
           <el-upload
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="/api/index.php/files/save"
+            accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
+            :on-success="handleSuccess"
             :on-change="handleChange"
+            :data="this.base_img"
             :file-list="fileList">
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
@@ -116,35 +119,46 @@
           <el-radio v-model="formItem.radio" label="2">否</el-radio>
         </el-form-item>
         
+
+        
         <el-row :span="24"  class="imgContent">
-          <el-col :span="4" class="checkContent">
+          <el-col :span="3" class="checkContent">
             <el-checkbox v-model="formItem.checked">1*1</el-checkbox>
           </el-col>
-          <el-col :span="20" class="imglist">
-            <el-row :span="24" type="flex" align="middle" >
-              <el-col :span="4">安卓图片：</el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4"><el-button icon="el-icon-plus" size="mini">新增图片</el-button></el-col>
-            </el-row>
-            <el-row :span="24" type="flex" align="middle" >
-              <el-col :span="4">安卓图片：</el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4"><el-button icon="el-icon-plus" size="mini">新增图片</el-button></el-col>
-            </el-row>
-            <el-row :span="24" type="flex" align="middle" >
-              <el-col :span="4">安卓图片：</el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4">图片1<span class="el-icon-close" style="color:red"></span></el-col>
-              <el-col :span="4"><el-button icon="el-icon-plus" size="mini">新增图片</el-button></el-col>
-            </el-row>
+          <el-col :span="21">
+            <el-col :span="4">安卓图片：</el-col>
+            <el-col :span="17">
+                  <el-upload
+                    action="/api/index.php/files/save"
+                    list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
+                    :data="this.base_img"
+                    :on-remove="handleRemove">
+                    <i class="el-icon-plus"></i>
+                  </el-upload>
+              </el-col>
+              <el-col :span="4">IOS图片：</el-col>
+            <el-col :span="17">
+                  <el-upload
+                    action="/api/index.php/files/save"
+                    list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
+                    :data="this.base_img"
+                    :on-remove="handleRemove">
+                    <i class="el-icon-plus"></i>
+                  </el-upload>
+              </el-col>
+              <el-col :span="4">面板图片：</el-col>
+            <el-col :span="17">
+                  <el-upload
+                    action="/api/index.php/files/save"
+                    list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
+                    :data="this.base_img"
+                    :on-remove="handleRemove">
+                    <i class="el-icon-plus"></i>
+                  </el-upload>
+              </el-col>
           </el-col>
         </el-row>
 
@@ -159,13 +173,17 @@
         <el-button @click="formVisible=false">取消</el-button>
       </span>
     </el-dialog>
-
+    <!-- 点击放大图片查看 -->
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import fetch from '@/utils/fetch'
 import { getGlobalTags,addGlobalTags } from '@/api/check'
+import { getToken } from '@/utils/auth'
 export default {
   data() {
     return {
@@ -209,7 +227,14 @@ export default {
           }
         ]
       },
-      fileList:[]
+      fileList:[],
+      imgList:[],
+      base_img: {
+          type: 12,
+          token: getToken()
+        },
+       dialogImageUrl: '',
+        dialogVisible: false
     }
   },
   computed: {
@@ -297,6 +322,22 @@ export default {
     },
      handleChange(file, fileList) {
         this.fileList = fileList.slice(-3);
+    },
+    handleSuccess(res){
+      console.log('上传图片返回数据：',res);
+    },
+     imageChange(file, fileList) {
+        this.imgList = fileList.slice(-3);
+    },
+    imageSuccess(res){
+      console.log('图片列表上传返回：',res);
+    },
+   handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
       }
   }
 }
@@ -314,13 +355,16 @@ export default {
     }
   }
   .imgContent{
-    .checkContent{
-      margin-top: 5px;
+      line-height: 80px;
+      margin-left: 40px;
+    .el-upload--picture-card{
+     width: 80px;
+      height: 80px;
+      line-height: 80px;
     }
-    .imglist{
-      .el-row{
-        margin-top: 10px;
-      }
+    .el-upload-list--picture-card .el-upload-list__item{
+       width: 80px;
+      height: 80px;
     }
   }
 }

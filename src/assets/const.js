@@ -1,0 +1,1 @@
+export const  IMAGE_PATH = "http://zsj-smarthome.oss-cn-shenzhen.aliyuncs.com/"

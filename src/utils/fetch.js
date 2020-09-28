@@ -26,7 +26,7 @@ service.interceptors.request.use(
     if (config.url.indexOf('/api/ext') > -1){
       config.url = config.url.replace(/\/api\/index.php/,'')
     } 
-
+    console.log('ajax请求数据：',JSON.stringify(config.data));
     return config
   },
   error => {

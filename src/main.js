@@ -10,7 +10,6 @@ import '@/icons' // icon
 import '@/permission' // 权限
 import VueImg from 'v-img'
 import moment from 'vue-moment'
-
 Vue.use(ElementUI, {})
 Vue.use(moment)
 Vue.use(VueImg)

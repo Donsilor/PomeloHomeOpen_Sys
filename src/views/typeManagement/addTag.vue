@@ -2,9 +2,9 @@
   <div class="app-container calendar-list-container">
     <el-row style="margin-bottom: 10px;">
       <el-button 
+        :disabled="cardList.length ===0 " 
         size="medium" 
-        type="primary" 
-        :disabled="cardList.length ===0 "
+        type="primary"
         @click="addTag">
         新增编组tag
       </el-button>
@@ -51,9 +51,9 @@
             删除
           </el-button>
           <el-button 
+            :disabled="cardList.length ===0 " 
             size="small" 
-            type="primary" 
-            :disabled="cardList.length ===0 "
+            type="primary"
             @click="editTag(scope.row, true)">
             编辑
           </el-button>
@@ -80,7 +80,9 @@
     <el-dialog 
       :visible.sync="formVisible" 
       :title="dialogTitle">
-      <el-form label-width="200px" class="form">
+      <el-form 
+        label-width="200px" 
+        class="form">
         <el-form-item 
           v-show="isEdit == false" 
           label="标签编号">
@@ -104,17 +106,17 @@
             :file-list="fileList">
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload> -->
-           <el-upload
-              action="/api/index.php/files/save"
-              list-type="picture-card"
-              :on-preview="handlePictureCardPreview"
-              :data="base_img"
-               accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
-              :on-success="handleSuccess"
-              :on-remove="removeTagImage"
-              :limit="1">
-              <i class="el-icon-plus"></i>
-            </el-upload>
+          <el-upload
+            :on-preview="handlePictureCardPreview"
+            :data="base_img"
+            :on-success="handleSuccess"
+            :on-remove="removeTagImage"
+            :limit="1"
+            action="/api/index.php/files/save"
+            list-type="picture-card"
+            accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp">
+            <i class="el-icon-plus"/>
+          </el-upload>
         </el-form-item>
 
         <el-form-item label="">
@@ -124,59 +126,71 @@
               <span class="">用于面板屏幕配置多设备选择设备</span>
             </div>
           </template>
-          <el-input v-model="formItem.dev_limit" placeholder="请输入正整数，0表示无穷大"></el-input>
+          <el-input 
+            v-model="formItem.dev_limit" 
+            placeholder="请输入正整数，0表示无穷大"/>
         </el-form-item>
 
         <el-form-item label="面板是否可用">
-           <el-radio v-model="formItem.panel_can" label="1">是</el-radio>
-          <el-radio v-model="formItem.panel_can" label="0">否</el-radio>
+          <el-radio 
+            v-model="formItem.panel_can" 
+            label="1">是</el-radio>
+          <el-radio 
+            v-model="formItem.panel_can" 
+            label="0">否</el-radio>
         </el-form-item>
         
 
         
-        <el-row :span="24"  class="imgContent" v-for="(item,index) in cardList" :key="index">
-          <el-col :span="3" class="checkContent">
+        <el-row 
+          v-for="(item,index) in cardList" 
+          :span="24" 
+          :key="index" 
+          class="imgContent">
+          <el-col 
+            :span="3" 
+            class="checkContent">
             <el-checkbox v-model="item.checked">
-              {{item.x}}*{{item.y}}
+              {{ item.x }}*{{ item.y }}
             </el-checkbox>
           </el-col>
           <el-col :span="21">
             <el-col :span="4">安卓图片：</el-col>
             <el-col :span="17">
-                  <el-upload
-                    action="/api/index.php/files/save"
-                    list-type="picture-card"
-                    :on-preview="handlePictureCardPreview"
-                    :data="base_img"
-                    :on-success="uploadSuccess(item)"
-                    :on-remove="handleRemove">
-                    <i class="el-icon-plus"></i>
-                  </el-upload>
-              </el-col>
-              <el-col :span="4">IOS图片：</el-col>
+              <el-upload
+                :on-preview="handlePictureCardPreview"
+                :data="base_img"
+                :on-success="uploadSuccess(item)"
+                :on-remove="handleRemove"
+                action="/api/index.php/files/save"
+                list-type="picture-card">
+                <i class="el-icon-plus"/>
+              </el-upload>
+            </el-col>
+            <el-col :span="4">IOS图片：</el-col>
             <el-col :span="17">
-                  <el-upload
-                    action="/api/index.php/files/save"
-                    list-type="picture-card"
-                    :on-preview="handlePictureCardPreview"
-                    :data="base_img"
-                     :on-success="uploadSuccess(item)"
-                    :on-remove="handleRemove">
-                    <i class="el-icon-plus"></i>
-                  </el-upload>
-              </el-col>
-              <el-col :span="4">面板图片：</el-col>
+              <el-upload
+                :on-preview="handlePictureCardPreview"
+                :data="base_img"
+                :on-success="uploadSuccess(item)"
+                :on-remove="handleRemove"
+                action="/api/index.php/files/save"
+                list-type="picture-card">
+                <i class="el-icon-plus"/>
+              </el-upload>
+            </el-col>
+            <el-col :span="4">面板图片：</el-col>
             <el-col :span="17">
-                  <el-upload
-                    action="/api/index.php/files/save"
-                    list-type="picture-card"
-                    :on-preview="handlePictureCardPreview"
-                    :data="base_img"
-                     :on-success="uploadSuccess(item)"
-                    :on-remove="handleRemove">
-                    <i class="el-icon-plus"></i>
-                  </el-upload>
-              </el-col>
+              <el-upload
+                :on-preview="handlePictureCardPreview"
+                :data="base_img"
+                :on-success="uploadSuccess(item)"
+                :on-remove="handleRemove"
+                action="/api/index.php/files/save"
+                list-type="picture-card">
+                <i class="el-icon-plus"/>
+              </el-upload>
+            </el-col>
           </el-col>
         </el-row>
 
@@ -193,7 +207,10 @@
     </el-dialog>
     <!-- 点击放大图片查看 -->
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="">
+      <img 
+        :src="dialogImageUrl" 
+        width="100%" 
+        alt="">
     </el-dialog>
   </div>
 </template>
@@ -229,19 +246,19 @@ export default {
             width:1,
             height:1
           },
-           {
+          {
             width:2,
             height:1
           },
-           {
+          {
             width:2,
             height:2
           },
-           {
+          {
             width:2,
             height:3
           },
-           {
+          {
             width:2,
             height:4
           }
@@ -256,11 +273,11 @@ export default {
       fileList:[],
       imgList:[],
       base_img: {
-          type: 12,
-          token: getToken()
+        type: 12,
+        token: getToken()
       },
-       dialogImageUrl: '',
-        dialogVisible: false
+      dialogImageUrl: '',
+      dialogVisible: false
     }
   },
   computed: {
@@ -354,28 +371,29 @@ export default {
           item.checked = false
         })
         this.cardList = res.data
-         console.log('cardList卡片列表：', this.cardList)
+        console.log('cardList卡片列表：', this.cardList)
       })
     },
     handleSuccess(res){
-      console.log('上传图片返回数据：',res);
+      console.log('上传图片返回数据：',res)
       this.formItem.gtag_img = res.result.object
+      console.log(this.formItem.gtag_img)
     },
     removeTagImage(file, fileList){
       //变量置空
-       this.formItem.gtag_img = ''
+      this.formItem.gtag_img = ''
     },
     uploadSuccess(item){
       return function(res){
-         console.log('列表上传图片返回数据：',res);
+        console.log('列表上传图片返回数据：',res)
       }
     },
-   handleRemove(file, fileList) {
-        console.log(file, fileList);
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
     }
   }
 }

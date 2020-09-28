@@ -1,19 +1,17 @@
 <template>
   <el-dialog
     :visible="dialogVisible"
+    :title="title"
     center
     width="70%"
-    title="新增模版"
     @close="close">
-    <el-form :model="form">
-      <el-form-item
-        :label-width="formLabelWidth"
-        label="模版名称:">
-        <el-input
-          v-model="form.name"
-          autocomplete="off"/>
-      </el-form-item>
-    </el-form>
+    <div class="title">
+      <span>屏幕配置名称：</span>
+      <el-input
+        :disabled="title==='查看模板'"
+        v-model="localObj.name"
+        autocomplete="off"/>
+    </div>
     <div class="full-screen">
       <div
         v-for="(item,index) in itemList"
@@ -23,15 +21,21 @@
         class="screen-item"
         @click="itemCick(item)">{{ index+1 }}
       </div>
-    </div><button
-      class="save-btn"
-      @click="save">保存
-    </button>
-    <button
-      class="save-btn"
-      @click="reset">重置
-    </button>
+    </div>
     <div
+      v-if="title!=='查看模板'"
+      class="button-contaier">
+      <button
+        class="save-btn"
+        @click="save">保存当前选中
+      </button>
+      <button
+        class="save-btn"
+        @click="reset">重置
+      </button>
+    </div>
+    <div
+      v-if="title!=='查看模板'"
       slot="footer"
       class="dialog-footer">
       <el-button @click="close">取 消</el-button>
@@ -44,16 +48,28 @@
 </template>
 
 <script>
+import {screenEdite} from '@/api/screenManage.js'
 export default {
   name: 'Edite',
   props: {
     dialogVisible: {
       type: Boolean,
       default: true
+    },
+    title: {
+      type: String,
+      default: '新增模板'
+    },
+    templateObj: {
+      type: Object,
+      default(){
+        return {}
+      }
     }
   },
   data() {
     return {
+      localObj:{},
       itemList: [
         { isClick: 0, isSave: 0, key: 1, xIndex: 1, yIndex: 1, color:'' },
         { isClick: 0, isSave: 0, key: 2, xIndex: 2, yIndex: 1 ,color:''},
@@ -87,7 +103,57 @@ export default {
       formLabelWidth: '90px'
     }
   },
+  watch:{
+    templateObj:{
+      handler(value){
+        if (!value.template) return
+        this.localObj = Object.assign({},value)
+        console.log('this.localObj----', this.localObj)
+        let template = JSON.parse(value.template)
+        this.ScreenArray = template
+        if (this.title==='查看模板'){
+          this.itemList.forEach(item=>{
+            item.isSave = 1
+          })
+          template.forEach((arr,index)=>{
+            let itemArr = arr[1]
+            itemArr.forEach(item=>{
+              let rectItem = this.itemList.find(item1=>item1.key===item)
+              rectItem.color = this.color(index+1)
+            })
+          })
+        } else if (this.title==='编辑模板'){
+          this.itemList.forEach(item=>{
+            item.isSave = 1
+          })
+          template.forEach((arr,index)=>{
+            let itemArr = arr[1]
+            itemArr.forEach(item=>{
+              let rectItem = this.itemList.find(item1=>item1.key===item)
+              rectItem.color = this.color(index+1)
+            })
+          })
+        }
+      },
+      immediate:true
+    }
+  },
   methods:{
+    color(index){
+      let color = '#3a8ee6'
+      if (index===1){
+        color = '#668B8B'
+      }else if (index===2){
+        color = '#FFDAB9'
+      }else if (index===3){
+        color = '#23e01e'
+      }else if (index===4){
+        color = '#b45342'
+      }else if (index===5){
+        color = '#e2ce66'
+      }
+      return color
+    },
     save() {
       this.ItemArray.sort(function(a, b) {
         return a.key - b.key
@@ -113,21 +179,10 @@ export default {
         return
       }
       let positionArr = [width,height]
-      let arr = [indexarr, positionArr]
+      let arr = [positionArr,indexarr]
       this.ScreenArray.push(arr)
       let ScreenArrayLenth = this.ScreenArray.length
-      let color = '#3a8ee6'
-      if (ScreenArrayLenth===1){
-        color = '#668B8B'
-      }else if (ScreenArrayLenth===2){
-        color = '#FFDAB9'
-      }else if (ScreenArrayLenth===3){
-        color = '#23e01e'
-      }else if (ScreenArrayLenth===4){
-        color = '#b45342'
-      }else if (ScreenArrayLenth===5){
-        color = '#e2ce66'
-      }
+      let color = this.color(ScreenArrayLenth)
       this.ItemArray.forEach(item => {
         item.isSave = 1
         item.color = color
@@ -146,7 +201,33 @@ export default {
       }
     },
     submit() {
-      console.log('提交')
+      if (!this.localObj.name){
+        this.$message.error('请输入模版名称')
+        return
+      }
+      console.log('提交----', this.itemList)
+      const isAllSaved = (item) => item.isSave === 1
+      let result =this.itemList.every(isAllSaved)
+      if (result){
+        let type = 1
+        if (this.title==='修改模板'){
+          type = 2
+        }
+        let template =  JSON.stringify(this.ScreenArray)
+        let params = {
+          "operator":type,
+          "id": this.localObj.id,
+          "template": template,
+          "name": this.localObj.name
+        }
+        screenEdite(params).then(res=>{
+          this.$message.success('保存成功')
+          this.$emit('update:dialogVisible', false)
+          this.$emit('refresh')
+        })
+      }else {
+        this.$message.error('置屏幕不完整，请分配完所有的格子')
+      }
     },
     reset() {
       this.ScreenArray = []
@@ -183,29 +264,33 @@ export default {
     width: 300px;
   }
   .full-screen {
-    margin-left: 20px;
-    width: 340px;
-    height: 340px;
-    /*border: 1px solid red;*/
+    width: 410px;
+    height: 410px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    margin: 10px auto;
   }
   .title{
-    margin: 15px 20px;
+    width:50% ;
+    margin: 15px auto;
   }
   .el-button{
     margin-right: 15px;
     font-size: 16px;
   }
   .screen-item {
-    width: 82px;
-    height: 82px;
+    user-select:none;
+    width: 100px;
+    height: 100px;
     text-align: center;
-    line-height: 82px;
+    line-height: 100px;
     border: 1px solid lightblue;
   }
-
+ .button-contaier{
+   width: 250px;
+   margin: 10px auto;
+ }
   .click {
     background: #cbcbcb;
   }

@@ -1,6 +1,6 @@
 import fetch from '@/utils/fetch'
 
-// 获取审核申请列表
+// 获取模版列表
 export function getScreenList(params) {
   // console.log('查询入参', params);
   return fetch({
@@ -9,6 +9,17 @@ export function getScreenList(params) {
     data: params
   })
 }
+
+// 模版增删改
+export function screenEdite(params) {
+  // console.log('查询入参', params);
+  return fetch({
+    url: '/api/ext/devcard/template',
+    method: 'post',
+    data: params
+  })
+}
+
 
 // 获取卡片大小列表
 export function cardSizeList() {

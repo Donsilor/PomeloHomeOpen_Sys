@@ -127,7 +127,7 @@
           <el-col :span="3"
             class="checkContent">
             <el-checkbox v-model="item.checked">
-              {{item.x}}*{{item.y}}
+              {{ item.x }}*{{ item.y }}
             </el-checkbox>
           </el-col>
           <el-col :span="21">
@@ -423,6 +423,7 @@ export default {
     handleSuccess (res) {
       console.log('上传图片返回数据：', res);
       this.formItem.gtag_img = res.result.object
+      console.log(this.formItem.gtag_img)
     },
     removeTagImage (file, fileList) {
       console.log('删除的图片：', file, fileList);

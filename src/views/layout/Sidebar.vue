@@ -60,11 +60,6 @@ export default {
           name: '配置管理',
           url: '/configManagement',
           icon: 'el-icon-view'
-        },
-        {
-          name: '屏幕配置管理',
-          url: '/screenManagement',
-          icon: 'el-icon-goods'
         }
       ]
     }

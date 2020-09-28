@@ -1,22 +1,33 @@
 <template>
   <div class="screen-container">
-    <h3>屏幕配置列表</h3>
+    <h4>屏幕配置列表</h4>
+    <el-button
+      type="primary"
+      @click="addNew">新增大小</el-button>
     <el-table
       :data="tableData"
       border
       style="width: 1100px">
       <el-table-column
         fixed
-        prop="date"
-        label="配置日期"
-        width=""/>
-      <el-table-column
         prop="name"
-        label="配置名"
+        label="大小名称"
         width=""/>
       <el-table-column
-        prop="province"
-        label="备注"
+        prop="width"
+        label="宽（多少格子）"
+        width=""/>
+      <el-table-column
+        prop="height"
+        label="高（多少格子）"
+        width=""/>
+      <el-table-column
+        prop="createTime"
+        label="创建时间"
+        width=""/>
+      <el-table-column
+        prop="updateTime"
+        label="更新时间"
         width=""/>
       <el-table-column
         label="操作"
@@ -24,46 +35,76 @@
         <template slot-scope="scope">
           <el-button
             type="text"
-            size="small"
-            @click="handleClick(scope.row)">查看</el-button>
+            size="mini"
+            @click="handleDelete(scope.row)">删除</el-button>
           <el-button
             type="text"
-            @click="handleClick(scope.row)"
-            size="small">编辑</el-button>
+            size="mini"
+            @click="handleEdite(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <edite :dialog-visible.sync="dialogFormVisible"/>
   </div>
 </template>
 
 <script>
+import Edite from './edite.vue'
 export default {
   name: 'Index',
-
+  components:{Edite},
   data() {
     return {
+      dialogFormVisible: false,
       tableData: [{
-        date: '2016-05-02',
+        createTime: '2016-05-02',
+        updateTime: '2016-05-02',
         name: '配置1',
+        width:'2',
+        height:'3',
         province: '屏幕配置',
       }, {
-        date: '2016-05-02',
-        name: '配置2',
+        createTime: '2016-05-02',
+        updateTime: '2016-05-02',
+        name: '配置1',
+        width:'2',
+        height:'3',
         province: '屏幕配置',
-      }, {
-        date: '2016-05-02',
-        name: '配置3',
+      },{
+        createTime: '2016-05-02',
+        updateTime: '2016-05-02',
+        name: '配置1',
+        width:'2',
+        height:'3',
         province: '屏幕配置',
-      }, {
-        date: '2016-05-02',
-        name: '配置4',
+      },{
+        createTime: '2016-05-02',
+        updateTime: '2016-05-02',
+        name: '配置1',
+        width:'2',
+        height:'3',
         province: '屏幕配置',
-      }, ]
+      },{
+        createTime: '2016-05-02',
+        updateTime: '2016-05-02',
+        name: '配置1',
+        width:'2',
+        height:'3',
+        province: '屏幕配置',
+      },]
     }
   },
   methods: {
-    handleClick(row) {
+    handleEdite(row) {
       this.$router.push('/screenManagement/screenEdite')
+    },
+    addNew(){
+      this.dialogFormVisible= true
+      console.log('新增')
+      // this.$router.push('/screenManagement/screenEdite')
+    },
+    handleDelete(){
+
     }
   },
 }
@@ -72,5 +113,8 @@ export default {
 <style scoped>
 .screen-container{
   margin: 0px 20px;
+}
+.el-button{
+  margin-bottom: 10px;
 }
 </style>

@@ -1,10 +1,19 @@
 <template>
-  <div>
-    <div class="title">
-      <el-button
-        type="text"
-        @click="back">返回</el-button><span>屏幕配置</span>
-    </div>
+  <el-dialog
+    :visible="dialogVisible"
+    center
+    width="70%"
+    title="新增模版"
+    @close="close">
+    <el-form :model="form">
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="模版名称:">
+        <el-input
+          v-model="form.name"
+          autocomplete="off"/>
+      </el-form-item>
+    </el-form>
     <div class="full-screen">
       <div
         v-for="(item,index) in itemList"
@@ -14,8 +23,7 @@
         class="screen-item"
         @click="itemCick(item)">{{ index+1 }}
       </div>
-    </div>
-    <button
+    </div><button
       class="save-btn"
       @click="save">保存
     </button>
@@ -23,17 +31,27 @@
       class="save-btn"
       @click="reset">重置
     </button>
-    <button
-      class="save-btn"
-      @click="submit">提交
-    </button>
-
-  </div>
+    <div
+      slot="footer"
+      class="dialog-footer">
+      <el-button @click="close">取 消</el-button>
+      <el-button
+        type="primary"
+        @click="submit">提 交
+      </el-button>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
 export default {
-  name: 'ScreenEdite',
+  name: 'Edite',
+  props: {
+    dialogVisible: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     return {
       itemList: [
@@ -55,13 +73,21 @@ export default {
         { isClick: 0, isSave: 0, key: 16, xIndex: 4, yIndex: 4 ,color:''}
       ],
       ScreenArray: [],
-      ItemArray: []
+      ItemArray: [],
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      formLabelWidth: '90px'
     }
   },
-  methods: {
-    back(){
-      this.$router.back()
-    },
+  methods:{
     save() {
       this.ItemArray.sort(function(a, b) {
         return a.key - b.key
@@ -143,33 +169,40 @@ export default {
         { isClick: 0, isSave: 0, key: 15, xIndex: 3, yIndex: 4 ,color:''},
         { isClick: 0, isSave: 0, key: 16, xIndex: 4, yIndex: 4 ,color:''}
       ]
+    },
+    close(){
+      this.$emit('update:dialogVisible', false)
     }
   }
+
 }
 </script>
 
 <style scoped>
+  .el-input{
+    width: 300px;
+  }
   .full-screen {
     margin-left: 20px;
-    width: 410px;
-    height: 410px;
+    width: 340px;
+    height: 340px;
     /*border: 1px solid red;*/
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
   }
-   .title{
-     margin: 15px 20px;
-   }
-   .el-button{
-     margin-right: 15px;
-     font-size: 16px;
-   }
+  .title{
+    margin: 15px 20px;
+  }
+  .el-button{
+    margin-right: 15px;
+    font-size: 16px;
+  }
   .screen-item {
-    width: 100px;
-    height: 100px;
+    width: 82px;
+    height: 82px;
     text-align: center;
-    line-height: 100px;
+    line-height: 82px;
     border: 1px solid lightblue;
   }
 

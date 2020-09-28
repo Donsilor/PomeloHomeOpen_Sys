@@ -1,18 +1,20 @@
 <template>
   <div class="tab-container">
     <el-row style="padding-left: 160px;padding-bottom: 30px;">
-      <el-menu 
-        :default-active="activeName" 
-        class="sec-menu" 
-        mode="vertical" 
-        background-color="#f2f2f2" 
+      <el-menu
+        :default-active="activeName"
+        class="sec-menu"
+        mode="vertical"
+        background-color="#f2f2f2"
         text-color="#666"
         active-text-color="#409EFF">
         <template v-for="item in navs">
-          <router-link :to="item.url">
+          <router-link
+            :key="item.name"
+            :to="item.url">
             <el-menu-item :index="item.type">
-              <i 
-                v-if="item.icon" 
+              <i
+                v-if="item.icon"
                 :class="item.icon"/>
               {{ item.name }}
             </el-menu-item>
@@ -90,6 +92,10 @@ export default {
           name: '非设备卡片大小设置',
           url: '/typeManagement/addCard',
           type:'addCard'
+        },{
+          name: '面板屏幕模版',
+          url: '/typeManagement/screen',
+          type:'screen'
         }
       ]
     }

@@ -42,8 +42,8 @@
             删除
           </el-button>
           <el-button size="small"
+           :disabled="cardList.length ===0 "
             type="primary"
-            :disabled="cardList.length ===0 "
             @click="editTag(scope.row, true)">
             编辑
           </el-button>
@@ -96,7 +96,7 @@
             accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
             :on-success="handleSuccess"
             :on-remove="removeTagImage"
-            :file-list="imageList"
+            :file-list="tagImageList"
             :limit="1">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -137,7 +137,7 @@
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :data="base_img"
-                :file-list="item.androidImgList"
+                :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['0']?showImages[item.x+','+item.y]['0']:[]"
                 :on-success="uploadSuccess(item,0)"
                 :on-remove="handleRemove(item,0)">
                 <i class="el-icon-plus"></i>
@@ -149,7 +149,7 @@
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :data="base_img"
-                :file-list="item.iosImgList"
+                :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['1']?showImages[item.x+','+item.y]['1']:[]"
                 :on-success="uploadSuccess(item,1)"
                 :on-remove="handleRemove(item,0)">
                 <i class="el-icon-plus"></i>
@@ -161,7 +161,7 @@
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :data="base_img"
-                :file-list="item.panelImgList"
+                :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['2']?showImages[item.x+','+item.y]['2']:[]"
                 :on-success="uploadSuccess(item,2)"
                 :on-remove="handleRemove(item,0)">
                 <i class="el-icon-plus"></i>
@@ -214,11 +214,10 @@ export default {
         enable: 1,    // 暂时不能进行删除，默认传1
         dev_limit: '',
         panel_can: '',
-        gtag_img: '',//tag图片path
-        iosImgList:[],
-        androidImgList:[],
-        panelImgList:[]
+        gtag_img: ''//tag图片path
       },
+      showImages:{},//用于编辑时候显示相应的图片
+      operateImages:{},//用于编辑的时候，对相关图片进行操作
       cardList: [],
       imageList: {
         ios: [],
@@ -233,10 +232,7 @@ export default {
       },
       dialogImageUrl: '',
       dialogVisible: false,
-      imageList: [],
-      iosImgList:[],
-      androidImgList:[],
-      panelImgList:[]
+      tagImageList: []
     }
   },
   computed: {
@@ -276,7 +272,7 @@ export default {
       getGlobalTags(params).then(res => {
         this.tagList = res.data
         console.log('this.tagList:', this.tagList);
-        this.tagList.forEach((ele) => {
+        this.tagList.forEach((ele,index) => {
           ele.create_time = this.dataFormat(ele.create_time * 1000)
           ele.update_time = this.dataFormat(ele.update_time * 1000)
         })
@@ -297,50 +293,71 @@ export default {
       this.isEdit = false // 编辑状态开关
       this.formVisible = true // 蒙版开关
       this.formItem = {}
-      this.imageList = []
+      this.tagImageList = []
+      this.showImages={}//用于编辑时候显示相应的图片
+      this.operateImages={}//用于编辑的时候，对相关图片进行操作
     },
     editTag (row, isEdit) {
-      console.log('process.env:', process.env);
-      console.log('row:', row);
+      console.log('row:',row);
       const images = row.images
-
+      console.log('images:',JSON.stringify(images));
+      const operateImages = {}
       //为每一项目分出安卓、苹果和平板的图片列表
-      const iosImgList = []
-      const androidImgList = []
-      const panelImgList = []
       console.log('images:', images);
-      const opreateImages = {}
-      images && images.forEach(item => {
-        if (item.os === 0) {
-          androidImgList.push(
-            {
-              name: item.name,
-              url: item.img.indexOf('http') > -1 ? item.img : IMAGE_PATH + item.img,
-              imgid: item.imgid
-            }
-          )
-        } else if (item.os === 1) {
-          iosImgList.push(
-            {
-              name: item.name,
-              url: item.img.indexOf('http') > -1 ? item.img : IMAGE_PATH + item.img,
-              imgid: item.imgid
-            }
-          )
-        } else {
-          panelImgList.push(
-            {
-              name: item.name,
-              url: item.img.indexOf('http') > -1 ? item.img : IMAGE_PATH + item.img,
-              imgid: item.imgid
-            }
-          )
-        }
-        item.opt = 1//重置为修改
-        //用imgid关联可以用来操作
-        opreateImages[item.imgid] = item
+      Object.keys(images).forEach(key=>{
+        console.log('====================================');
+        console.log("key",key);
+        console.log('====================================');
+        Object.keys(images[key]).forEach(index=>{
+          console.log('index:',index);
+          console.log('images[key][index]:',images[key]);
+          images[key][index].forEach(item=>{
+            item.url = item.img.indexOf('http') > -1? item.img : IMAGE_PATH + item.img
+            images[key][index].op = 2//重置为修改
+            operateImages[item.imgid] = item
+            item.x = key.split(',')[0]
+            item.y = key.split(',')[1]
+            item.os = index
+          })
+        })
+          // images[key].forEach(item=>{
+          //   item.url = item.img.indexOf('http') > -1? item.img : IMAGE_PATH + item.img
+          //   item.op = 2//重置为修改
+          //   operateImages[item.imgid] = item
+          // })
       })
-      row.opreateImages = opreateImages
+      // images && images.forEach(item => {
+      //   console.log(8888);
+      //   if (item.os === 0) {
+      //     androidImgList.push(
+      //       {
+      //         name: item.name,
+      //         url: item.img.indexOf('http') > -1 ? item.img : IMAGE_PATH + item.img,
+      //         imgid: item.imgid
+      //       }
+      //     )
+      //   } else if (item.os === 1) {
+      //     iosImgList.push(
+      //       {
+      //         name: item.name,
+      //         url: item.img.indexOf('http') > -1 ? item.img : IMAGE_PATH + item.img,
+      //         imgid: item.imgid
+      //       }
+      //     )
+      //   } else {
+      //     panelImgList.push(
+      //       {
+      //         name: item.name,
+      //         url: item.img.indexOf('http') > -1 ? item.img : IMAGE_PATH + item.img,
+      //         imgid: item.imgid
+      //       }
+      //     )
+      //   }
+      //   item.op = 1//重置为修改
+      //   //用imgid关联可以用来操作
+      //   operateImages[item.imgid] = item
+      // })
+     // row.images = images
       this.isEdit = true
       this.formVisible = true
       this.formItem = {
@@ -350,20 +367,21 @@ export default {
         dev_limit: row.dev_limit,
         panel_can: row.panel_can,
         gtag_img: row.gtag_img,//tag图片path
-        images: row.opreateImages,
-        iosImgList:iosImgList,
-        androidImgList:androidImgList,
-        panelImgList:panelImgList
+        images: {}
       }
-      this.$set('formItem','iosImgList',iosImgList)
-       this.$set('formItem','androidImgList',androidImgList)
-        this.$set('formItem','panelImgList',panelImgList)
-      this.imageList = [
+      this.showImages = row.images
+      this.operateImages = operateImages
+      // this.$set(this.formItem,'iosImgList',iosImgList)
+      // this.$set(this.formItem,'androidImgList',androidImgList)
+      // this.$set(this.formItem,'panelImgList',panelImgList)
+      this.imageList = row.gtag_img
+      ?[
         {
           name: row.gtag_name,
           url: row.gtag_img.indexOf('http') > -1 ? row.gtag_img : IMAGE_PATH + row.gtag_img
         }
       ]
+      :[]
     },
     delTag (row) {
       this.$confirm('确认删除？')
@@ -378,19 +396,29 @@ export default {
       const params = this.formItem
       if (this.formItem.enable === 0) {//删除
 
-      } else if (this.isEdit) {//编辑
-
-      } else {//添加
+      }  else {//添加或者编辑
         //组装images参数返回给后台
         const imageList = []
+        const that = this
+        console.log('that.operateImages:',that.operateImages);
         this.cardList.forEach(item => {
           if (item.checked) {
-            Object.keys(item.opreateImages).forEach(key => {
-              imageList.push(item.opreateImages[key])
+            console.log('checked');
+            Object.keys(that.operateImages).forEach(key => {
+               console.log('checked in');
+              if(
+                parseInt(item.x) === parseInt(that.operateImages[key].x) 
+                && parseInt(item.y) === parseInt(that.operateImages[key].y) 
+                && (parseInt(that.operateImages[key].op) === 1 || parseInt(that.operateImages[key].op) === 3)  
+              ){
+                 console.log('checked in 有匹配的');
+               imageList.push(that.operateImages[key])
+              }
+              //imageList.push(item.images[key])
             })
           }
         })
-        params.opreateImages = imageList
+        params.images = imageList
       }
 
       console.log('传的参数：', JSON.stringify(params));
@@ -407,13 +435,9 @@ export default {
         const list = res.data
         list.forEach(item => {
           item.checked = false
-          //编辑时候，用于初始化展示相应的图片的列表
-          item.iosImgList = []
-          item.androidImgList = []
-          item.panelImgList = []
           //用于存放上传到服务器后返回的图片信息
           //以上传到服务器后成功返回的md5或者是取回来的imageid作为唯一标识，可以对图片进行增删改的操作
-          item.opreateImages = {}
+         // item.images = {}
         })
         this.cardList = list
 
@@ -432,7 +456,9 @@ export default {
     },
     uploadSuccess (item, type) {
       //type:0 android; 1 ios; 2 panel
-      console.log('item', item);
+     console.log('item', item);
+    console.log('888888')
+     const that = this
       return function (res) {
         console.log('列表上传图片返回数据：', res);
         const params = {
@@ -443,20 +469,31 @@ export default {
           "img": res.result.object,
           "op": 1//op:1 新增， 2 修改，3 删除
         }
-        item.opreateImages[res.result.md5] = params
-        console.log('item.opreateImages:', item.opreateImages);
+        that.operateImages[res.result.md5] = params
+        console.log('that.operateImages:', that.operateImages);
       }
     },
     handleRemove (item, type) {
+      const that = this
       return function (file, fileList) {
+        console.log('====================================');
+        console.log('file',file);
+        console.log('====================================');
         if (file.response) {//这种是传到服务器的，还没存入接口
           const result = file.response.result;
           const md5 = result.md5
-          delete item.opreateImages[md5]
-          console.log('item.opreateImages:', item.opreateImages);
+          delete that.operateImages[md5]
+          console.log('operateImages:', that.operateImages);
         } else {//这里是编辑时候从接口取回来的图片列表数据（删除需要回传，修改op为3）
-          const msgid = file.msgid
-          item.opreateImages[msgid].op = 3
+          const imgid = file.imgid
+          // console.log('====================================');
+          // console.log('imgid:',imgid);
+          //  console.log('operateImagess:',that.operateImages);
+          // console.log('operateImages[imgid]:',that.operateImages[imgid]);
+          // console.log('====================================');
+          that.operateImages[imgid].op = 3
+          console.log('that.operateImages[imgid]:',that.operateImages[imgid]);
+           console.log('that.operateImages:',that.operateImages);
         }
 
       }

@@ -27,6 +27,7 @@ service.interceptors.request.use(
       config.url = config.url.replace(/\/api\/index.php/,'')
     } 
     console.log('ajax请求数据：',JSON.stringify(config.data));
+    console.log('ajax请求数据：',config.data);
     return config
   },
   error => {

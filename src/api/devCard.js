@@ -7,3 +7,10 @@ export function rectCard(params){
     // data: params
   })
 }
+export function rectPostCard(params){
+  return fetch({
+    url: 'api/ext/devcard/rect',
+    method: 'post',
+    data: params
+  })
+}    

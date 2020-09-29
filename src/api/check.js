@@ -102,3 +102,20 @@ export function addGlobalTags(params) {
     data: params
   })
 }
+
+// 添加全局分组标签
+export function devCard(params) {
+  return fetch({
+    url: '/api/ext/devcard/product',
+    method: 'get'
+  })
+}
+
+// 添加全局分组标签
+export function devPostCard(params) {
+  return fetch({
+    url: '/api/ext/devcard/product',
+    method: 'post',
+    data: params
+  })
+}

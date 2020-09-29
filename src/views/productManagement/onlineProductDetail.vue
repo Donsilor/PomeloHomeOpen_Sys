@@ -144,8 +144,75 @@
                   :value="item.value"/>
               </el-select>
             </el-col>
+          </el-row >
+          <!-- 产品card -->
+          <el-row class="card-row">
+            <el-col
+              :span="3"
+              class="card-span-left">面板设备卡片大小</el-col>
+            <el-col 
+              :span="20"
+              :offset="1">  
+              <el-row 
+                v-for="(ele,itemIndex) in cardList" 
+                :key="itemIndex" 
+                class="imgContent">
+                <el-col 
+                  :span="1" 
+                  :offset="1"
+                  class="checkContent">
+                  <el-checkbox 
+                    v-model="ele.checked">{{ ele.x + '*' +ele.y }}</el-checkbox>
+                </el-col>
+                <el-col 
+                  :span="20" 
+                  style="margin-left:40px">
+                  <el-col :span="4">安卓图片：</el-col>
+                  <el-col :span="20">
+                    <el-upload
+                      :on-success="uploadSuccess(ele,0)"  
+                      :on-preview="handlePictureCardPreview"
+                      :data="and_base_img"
+                      :on-remove="removeSuccess(ele,0)"
+                      action="/api/index.php/files/save"
+                      list-type="picture-card">
+                      <i class="el-icon-plus"/>
+                    </el-upload>
+                  </el-col>
+                  <el-col :span="4">IOS图片：</el-col>
+                  <el-col :span="20">
+                    <el-upload
+                      :on-success="uploadSuccess(ele,1)"
+                      :on-preview="handlePictureCardPreview"
+                      :data="ios_base_img"
+                      :on-remove="removeSuccess(ele,1)"
+                      action="/api/index.php/files/save"
+                      list-type="picture-card">
+                      <i class="el-icon-plus"/>
+                    </el-upload>
+                  </el-col>
+                  <el-col :span="4">面板图片：</el-col>
+                  <el-col :span="20">
+                    <el-upload
+                      :on-success="uploadSuccess(ele,2)"
+                      :on-preview="handlePictureCardPreview"
+                      :data="ipad_base_img"
+                      :on-remove="removeSuccess(ele,2)"
+                      action="/api/index.php/files/save"
+                      list-type="picture-card">
+                      <i class="el-icon-plus"/>
+                    </el-upload>
+                  </el-col>
+                </el-col>
+              </el-row>
+            </el-col>
           </el-row>
-
+          <el-dialog :visible.sync="dialogVisible">
+            <img 
+              :src="dialogImageUrl" 
+              width="100%" 
+              alt="">
+          </el-dialog>
           <el-row class="card-row">
             <el-col
               :span="3"
@@ -1142,7 +1209,8 @@
 </template>
 
 <script>
-import { getProductInfo, productUnshelve, getGlobalTags, getProductTags, changeProductTags } from '@/api/check'
+import { getProductInfo, productUnshelve, getGlobalTags, getProductTags, changeProductTags, devCard, devPostCard} from '@/api/check'
+import { cardSizeList } from '@/api/screenManage'
 import utils from '@/utils/helper'
 import { getToken } from '@/utils/auth'
 import fetch from '@/utils/fetch'
@@ -1279,7 +1347,22 @@ export default {
             validator: productNameRules
           }
         ]
-      }
+      },
+      cardList:[],
+      dialogImageUrl: '',
+      dialogVisible: false, 
+      and_base_img: {
+        type: 12,
+        token: getToken()
+      },
+      ios_base_img: {
+        type: 12,
+        token: getToken()
+      },
+      ipad_base_img: {
+        type: 12,
+        token: getToken()
+      },
     }
   },
   computed: {
@@ -1299,12 +1382,36 @@ export default {
     this.getReviewInfo()
     this.getConfigList()
     this.getTagList()
-    this.getProductTag()  
+    this.getProductTag()
+    this.getCardSizeList()
   },
   deactivated() {
     this.$destroy()
   },
   methods: {
+    uploadSuccess(){
+      console.log('上传')
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    removeSuccess(){
+      console.log('图片移除')
+    },
+    // 获取卡片大小
+    getCardSizeList(){
+      cardSizeList({}).then(res=>{
+        res.data.forEach(item=>{
+          item.checked = false
+          item.andImgList = []
+          item.iosImgList = []
+          item.ipadImgList = []
+        })
+        this.cardList = res.data
+        console.log(this.cardList)
+      })
+    },
     // 获取下拉选择列表
     getTagList(){
       getGlobalTags().then(res => {
@@ -1322,11 +1429,11 @@ export default {
       }
       getProductTags(params).then(res =>{
         // 产品标签中有信息的时候存在res.data这个值, 无标签信息只又一条提示信息
-          if(res.data){
-            this.tagVal = res.data.gtag_id // res有值就将其赋值
-          }else{
-            this.tagVal = '' // 无值的时候置空，令其选择
-          }
+        if(res.data){
+          this.tagVal = res.data.gtag_id // res有值就将其赋值
+        }else{
+          this.tagVal = '' // 无值的时候置空，令其选择
+        }
       })
     },
     // 修改tag标签TODO:
@@ -1336,10 +1443,10 @@ export default {
         product_id: this.product_id,
         gtag_id: this.tagVal
       }:
-      {
-        product_id: this.product_id,
-        gtag_id: 0
-      }
+        {
+          product_id: this.product_id,
+          gtag_id: 0
+        }
       changeProductTags(params)
     },
     // 校验产品名称 只能中文和数字
@@ -2171,6 +2278,17 @@ export default {
         width: 100px;
         margin-right: 20px;
       }
+    }
+  }
+.imgContent{
+    /deep/ .el-upload--picture-card{
+      width: 80px;
+      height: 76px;
+      line-height: 80px;
+    }
+    /deep/ .el-upload-list--picture-card .el-upload-list__item{
+      width: 80px;
+      height: 76px;
     }
   }
 </style>

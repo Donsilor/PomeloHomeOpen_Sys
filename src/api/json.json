@@ -1,0 +1,38 @@
+{
+  "create_time": 1564409155,
+  "update_time": 1564409155,
+  "rect_id": 2001,
+  "rect_name": "室外天气",
+  "cardList": [
+    {
+      "cardSize": "1*1",
+      "andiorid":[
+        {
+          "imgid": 1234,
+          "x": 1, "y": 2,
+          "os": 1,
+          "name": "我是ios图片一",
+          "img": "http://zsj-smarthome.oss-cn-shenzhen.aliyuncs.com/oss_temp/1/202009280856212308.png"
+        }
+      ],
+      "ios":[
+        {
+          "imgid": 1234,
+          "x": 1, "y": 2,
+          "os": 1,
+          "name": "我是ios图片一",
+          "img": "http://zsj-smarthome.oss-cn-shenzhen.aliyuncs.com/oss_temp/1/202009280856212308.png"
+        }
+      ],
+      "ipad":[
+        {
+          "imgid": 1234,
+          "x": 1, "y": 2,
+          "os": 1,
+          "name": "我是ios图片一",
+          "img": "http://zsj-smarthome.oss-cn-shenzhen.aliyuncs.com/oss_temp/1/202009280856212308.png"
+        }
+      ]
+    }
+  ]
+}

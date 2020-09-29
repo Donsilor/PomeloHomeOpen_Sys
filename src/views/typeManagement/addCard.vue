@@ -57,7 +57,7 @@
           </el-col>
         </el-row>
         <el-row 
-          v-for="(ele,itemIndex) in item.cardList" 
+          v-for="(ele,itemIndex) in cardList" 
           :key="itemIndex" 
           class="imgContent">
           <el-col 
@@ -74,7 +74,7 @@
                 :on-success="handleSuccess"  
                 :on-preview="handlePictureCardPreview"
                 :data="and_base_img"
-                :file-list="ele.andImgList"
+                :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]"
                 :on-remove="handleRemove"
                 action="/api/index.php/files/save"
                 list-type="picture-card">
@@ -87,7 +87,7 @@
                 :on-success="handleSuccess"
                 :on-preview="handlePictureCardPreview"
                 :data="ios_base_img"
-                :file-list="ele.iosImgList"
+                :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['1']?item.images[ele.x+','+ele.y]['1']:[]"
                 :on-remove="handleRemove"
                 action="/api/index.php/files/save"
                 list-type="picture-card">
@@ -100,7 +100,7 @@
                 :on-success="handleSuccess"
                 :on-preview="handlePictureCardPreview"
                 :data="ipad_base_img"
-                :file-list="ele.ipadImgList"
+                :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['2']?item.images[ele.x+','+ele.y]['2']:[]"
                 :on-remove="handleRemove"
                 action="/api/index.php/files/save"
                 list-type="picture-card">
@@ -244,37 +244,50 @@ export default {
     getRectCard(){
       rectCard().then(res=>{
         this.dataList  = res.data
+        console.log('this.dataList :', this.dataList );
         // 将卡片列表装进datalist
         this.dataList.forEach(item=>{
           console.log('item',item)
           Object.keys(item.images).forEach(ele=>{
+
+             const showImages = item.images
+            const operateImages  = {}
             // 获取到每一个数组中的图片列表
             // 0 安卓图片  1  ios图片  2 ipad图片
             if(item.images[ele]['0']){
               item.images[ele]['0'].forEach(img=>{
                 img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
+                operateImages[img.imgid] = img
               })
             } 
             if(item.images[ele]['1']){
               item.images[ele]['1'].forEach(img=>{
                 img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
+                operateImages[img.imgid] = img
               })
             }
             if(item.images[ele]['2']){
               item.images[ele]['2'].forEach(img=>{
                 img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
+                operateImages[img.imgid] = img
               })
             }
-            const arr = Object.assign([],this.cardList)
-            arr.forEach((carItem,index)=>{
-              if((carItem.x+','+carItem.y) === ele){
-                if(item.images[ele]['0']) carItem.andImgList = item.images[ele]['0']
-                if(item.images[ele]['1']) carItem.iosImgList = item.images[ele]['1']
-                if(item.images[ele]['2']) carItem.ipadImgList = item.images[ele]['2']
-              }
-              item.cardList = arr
-            })
+
+            item.operateImages = operateImages
+           
+            // const arr = Object.assign([],this.cardList)
+            // arr.forEach((carItem,index)=>{
+            //   if((carItem.x+','+carItem.y) === ele){
+            //     if(item.images[ele]['0']) carItem.andImgList = item.images[ele]['0']
+            //     if(item.images[ele]['1']) carItem.iosImgList = item.images[ele]['1']
+            //     if(item.images[ele]['2']) carItem.ipadImgList = item.images[ele]['2']
+            //   }
+            //   item.cardList = arr
+            // })
+
+
           })
+           
         })
         console.log(this.dataList)
       })
@@ -296,11 +309,11 @@ export default {
       // this.formVisible = true
       const params = {
         "operator":1,
-        "rect_id": 121,
+        "rect_id": 999,
         "rect_name": "3*3",
         "images": [
           {
-            "imgid": 134,
+            "imgid": 999,
             "x": 3, "y": 3,
             "os": 0,
             "name": "5*5",
@@ -342,8 +355,20 @@ export default {
       this.fileList = fileList.slice(-3)
     },
     handleSuccess(res, file, fileList){
-      console.log('上传图片返回数据：',res)
-      console.log('上传图片列表', fileList)
+       const that = this
+        return function (res) {
+          console.log('列表上传图片返回数据：', res);
+          const params = {
+            "x": item.x,
+            "y": item.y,
+            "os": type,
+            "name": res.result.filename,
+            "img": res.result.object,
+            "op": 1//op:1 新增， 2 修改，3 删除
+          }
+          that.operateImages[res.result.md5] = params
+          console.log('that.operateImages:', that.operateImages);
+        }
     },
     imageChange(file, fileList) {
       this.imgList = fileList.slice(-3)

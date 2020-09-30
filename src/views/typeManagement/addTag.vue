@@ -91,7 +91,6 @@
           </el-upload> -->
           <el-upload action="/api/index.php/files/save"
             list-type="picture-card"
-            :on-preview="handlePictureCardPreview"
             :data="base_img"
             accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp"
             :on-success="handleSuccess"
@@ -135,7 +134,6 @@
             <el-col :span="17">
               <el-upload action="/api/index.php/files/save"
                 list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
                 :data="base_img"
                 :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['0']?showImages[item.x+','+item.y]['0']:[]"
                 :on-success="uploadSuccess(item,0)"
@@ -147,7 +145,6 @@
             <el-col :span="17">
               <el-upload action="/api/index.php/files/save"
                 list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
                 :data="base_img"
                 :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['1']?showImages[item.x+','+item.y]['1']:[]"
                 :on-success="uploadSuccess(item,1)"
@@ -159,7 +156,6 @@
             <el-col :span="17">
               <el-upload action="/api/index.php/files/save"
                 list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
                 :data="base_img"
                 :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['2']?showImages[item.x+','+item.y]['2']:[]"
                 :on-success="uploadSuccess(item,2)"
@@ -169,6 +165,8 @@
             </el-col>
           </el-col>
         </el-row>
+
+        
 
       </el-form>
       <span slot="footer"
@@ -180,7 +178,9 @@
       </span>
     </el-dialog>
     <!-- 点击放大图片查看 -->
-    <el-dialog :visible.sync="dialogVisible">
+    <el-dialog 
+      :append-to-body="true"
+      :visible.sync="dialogVisible">
       <img width="100%"
         :src="dialogImageUrl"
         alt="">
@@ -244,6 +244,11 @@ export default {
   mounted () {
     this.refresh()
     this.getCardSizeList()
+  },
+  watch: {
+    cardList(){
+      console.log('cardList变化了');
+    }
   },
   methods: {
     dataFormat (originVal) { // 后台传回来的S
@@ -434,6 +439,7 @@ export default {
       cardSizeList().then(res => {
         const list = res.data
         list.forEach(item => {
+          console.log('item:',item);
           item.checked = false
           //用于存放上传到服务器后返回的图片信息
           //以上传到服务器后成功返回的md5或者是取回来的imageid作为唯一标识，可以对图片进行增删改的操作
@@ -461,16 +467,20 @@ export default {
      const that = this
       return function (res) {
         console.log('列表上传图片返回数据：', res);
-        const params = {
-          "x": item.x,
-          "y": item.y,
-          "os": type,
-          "name": res.result.filename,
-          "img": res.result.object,
-          "op": 1//op:1 新增， 2 修改，3 删除
+        if (res.code === 200) {
+           const params = {
+            "x": item.x,
+            "y": item.y,
+            "os": type,
+            "name": res.result.filename,
+            "img": res.result.object,
+            "op": 1//op:1 新增， 2 修改，3 删除
+          }
+          that.operateImages[res.result.md5] = params
+          console.log('that.operateImages:', that.operateImages);
+        }else{
+           that.$message.error('图片上传失败，请重新选择');
         }
-        that.operateImages[res.result.md5] = params
-        console.log('that.operateImages:', that.operateImages);
       }
     },
     handleRemove (item, type) {
@@ -480,10 +490,12 @@ export default {
         console.log('file',file);
         console.log('====================================');
         if (file.response) {//这种是传到服务器的，还没存入接口
-          const result = file.response.result;
-          const md5 = result.md5
-          delete that.operateImages[md5]
-          console.log('operateImages:', that.operateImages);
+          if (response.code === 200) {
+            const result = file.response.result;
+            const md5 = result.md5
+            delete that.operateImages[md5]
+            console.log('operateImages:', that.operateImages);
+          }
         } else {//这里是编辑时候从接口取回来的图片列表数据（删除需要回传，修改op为3）
           const imgid = file.imgid
           // console.log('====================================');

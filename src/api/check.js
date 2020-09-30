@@ -70,7 +70,8 @@ export function productUnshelve(params) {
 // 获取某一个产品的分组标签
 export function getProductTags(params) {
   return fetch({
-    url: '/api/ext/gtags/product',
+    // url: '/api/ext/gtags/product',//old
+    url: '/api/ext/devcard/product',//new
     method: 'get',
     data: params
   })
@@ -79,7 +80,8 @@ export function getProductTags(params) {
 // 修改某一个产品的分组标签
 export function changeProductTags(params) {
   return fetch({
-    url: '/api/ext/gtags/product',
+    //url: '/api/ext/gtags/product',//old
+    url: '/api/ext/devcard/product',//new
     method: 'post',
     data: params
   })

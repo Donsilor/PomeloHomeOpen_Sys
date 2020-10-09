@@ -13,5 +13,8 @@ http://betapho.evergrande.cn
 测试环境
 http://betaphoau.evergrande.me
 
+开发环境--新
+http://sh-opencheck-dev.xl.cn/    776858095@qq.com  qq
+
 ashushu12@qq.com   test1234
 she@evergrande.cn   she

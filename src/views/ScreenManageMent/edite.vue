@@ -213,6 +213,12 @@ export default {
         if (this.title==='修改模板'){
           type = 2
         }
+        this.ScreenArray.sort((a,b)=>{
+          let first = a[1][0]
+          let second = b[1][0]
+          return first-second
+        })
+        // console.log('this.ScreenArray=====22', this.ScreenArray)
         let template =  JSON.stringify(this.ScreenArray)
         let params = {
           "operator":type,

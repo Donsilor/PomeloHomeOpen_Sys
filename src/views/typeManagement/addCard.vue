@@ -32,8 +32,8 @@
               ID:
             </span>
             <el-input 
-              disabled
-              v-model="item.rect_id" 
+              v-model="item.rect_id"
+              disabled 
               placeholder="请输入ID" />
           </el-col>
           <el-col 
@@ -77,7 +77,7 @@
                 :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]"
                 :on-remove="removeSuccess(item)"
                 action="/api/index.php/files/save"
-                list-type="picture-card">
+                list-type="picture">
                 <i class="el-icon-plus"/>
               </el-upload>
             </el-col>
@@ -89,7 +89,7 @@
                 :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['1']?item.images[ele.x+','+ele.y]['1']:[]"
                 :on-remove="removeSuccess(item)"
                 action="/api/index.php/files/save"
-                list-type="picture-card">
+                list-type="picture">
                 <i class="el-icon-plus"/>
               </el-upload>
             </el-col>
@@ -101,7 +101,7 @@
                 :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['2']?item.images[ele.x+','+ele.y]['2']:[]"
                 :on-remove="removeSuccess(item)"
                 action="/api/index.php/files/save"
-                list-type="picture-card">
+                list-type="picture">
                 <i class="el-icon-plus"/>
               </el-upload>
             </el-col>
@@ -156,7 +156,7 @@
                 :on-success="handleUpload(item,0)"
                 :on-remove="handleremove"
                 action="/api/index.php/files/save"
-                list-type="picture-card">
+                list-type="picture">
                 <i class="el-icon-plus"/>
               </el-upload>
             </el-col>
@@ -169,7 +169,7 @@
                 :on-success="handleUpload(item,1)"
                 :on-remove="handleremove"
                 action="/api/index.php/files/save"
-                list-type="picture-card">
+                list-type="picture">
                 <i class="el-icon-plus"/>
               </el-upload>
             </el-col>
@@ -182,7 +182,7 @@
                 :on-success="handleUpload(item,2)"
                 :on-remove="handleremove"
                 action="/api/index.php/files/save"
-                list-type="picture-card">
+                list-type="picture">
                 <i class="el-icon-plus"/>
               </el-upload>
             </el-col>
@@ -190,13 +190,13 @@
         </el-row>
       </el-form>
       <el-row class="tx-r">
-            <el-button 
-              size="medium" 
-              type="primary" 
-              @click="addNewCard">
-              确认添加
-            </el-button>
-          </el-row>
+        <el-button 
+          size="medium" 
+          type="primary" 
+          @click="addNewCard">
+          确认添加
+        </el-button>
+      </el-row>
     </el-dialog>
   </div>
 </template>
@@ -263,7 +263,7 @@ export default {
           const operateImages  = {}
           Object.keys(item.images).forEach(ele=>{
 
-             const showImages = item.images
+            const showImages = item.images
           
             // 获取到每一个数组中的图片列表
             // 0 安卓图片  1  ios图片  2 ipad图片
@@ -311,15 +311,15 @@ export default {
 
           })
           
-            item.operateImages = operateImages
-            console.log('====================================');
-            console.log('item.operateImages',item.operateImages);
-            console.log('====================================');
+          item.operateImages = operateImages
+          console.log('====================================')
+          console.log('item.operateImages',item.operateImages)
+          console.log('====================================')
            
         })
         //绑定的会引起界面变化的数据，先把数据处理好，再给他赋值
         this.dataList  = res.data
-        console.log('this.dataList :', this.dataList );
+        console.log('this.dataList :', this.dataList )
       })
     },
     // 获取卡片大小size请求
@@ -332,146 +332,146 @@ export default {
           item.ipadImgList = []
         })
         this.cardList = res.data
-        console.log('====================================');
-        console.log('this.cardList:',this.cardList);
-        console.log('====================================');
+        console.log('====================================')
+        console.log('this.cardList:',this.cardList)
+        console.log('====================================')
       })
     },
     resetCardCheck() {
       //for循环重置卡片的每个checked为false
       this.cardList.forEach(item=>{
-          item.checked = false
-        })
+        item.checked = false
+      })
     },
     // 新增卡片
     addCard(){
-     this.formVisible = true
-     this.formItem = {}
-     this.addOperateImages = {}
-     this.resetCardCheck()
+      this.formVisible = true
+      this.formItem = {}
+      this.addOperateImages = {}
+      this.resetCardCheck()
     },
     //请求接口，添加卡片请求
     addNewCard(){
-        //组装images参数返回给后台
-        const imageList = []
-        console.log('addOperateImages:',this.addOperateImages);
-        Object.keys(this.addOperateImages).forEach(key=>{
-          const x = this.addOperateImages[key].x
-          const y = this.addOperateImages[key].y
-          //如果对应的图片是再被选中的列表里面
-          // if (this.checked[x+','+y]) {
-          //   imageList.push(item.operateImages[key])
-          // }
-          this.cardList.forEach(card=>{
-            if (
-              card.checked 
+      //组装images参数返回给后台
+      const imageList = []
+      console.log('addOperateImages:',this.addOperateImages)
+      Object.keys(this.addOperateImages).forEach(key=>{
+        const x = this.addOperateImages[key].x
+        const y = this.addOperateImages[key].y
+        //如果对应的图片是再被选中的列表里面
+        // if (this.checked[x+','+y]) {
+        //   imageList.push(item.operateImages[key])
+        // }
+        this.cardList.forEach(card=>{
+          if (
+            card.checked 
               && parseInt(card.x) ===parseInt(x) 
               && parseInt(card.y) === parseInt(y)
               && (this.addOperateImages[key].op === 1 || this.addOperateImages[key].op === 3)
-              ) {
-              imageList.push(this.addOperateImages[key])
-            }
+          ) {
+            imageList.push(this.addOperateImages[key])
+          }
+        })
+      })
+      this.formItem.operator = 1
+      this.formItem.images = imageList
+      console.log('this.formItem:',this.formItem)
+      rectPostCard(this.formItem).then(res=>{
+        console.log('添加卡片返回：', res)
+        if (res.code === 200) {
+          this.$message({
+            message: '保存添加成功',
+            type: 'success'
           })
-        })
-        this.formItem.operator = 1
-        this.formItem.images = imageList
-        console.log('this.formItem:',this.formItem);
-        rectPostCard(this.formItem).then(res=>{
-          console.log('添加卡片返回：', res)
-           if (res.code === 200) {
-             this.$message({
-                message: '保存添加成功',
-                type: 'success'
-              });
-               this.formVisible = false
-              this.getRectCard()
-           }else{
-               this.$message.error('卡片添加失败');
-           }
-        })
+          this.formVisible = false
+          this.getRectCard()
+        }else{
+          this.$message.error('卡片添加失败')
+        }
+      })
     },
     // 保存卡片
     save(item, index){
       console.log(item, index)
 
-        const params = {
-          "operator":2,//1 新增， 2 修改，3 删除
-          "rect_id": item.rect_id,
-          "rect_name": item.rect_name,
-          "images":[]
+      const params = {
+        "operator":2,//1 新增， 2 修改，3 删除
+        "rect_id": item.rect_id,
+        "rect_name": item.rect_name,
+        "images":[]
+      }
+      //组装images参数返回给后台
+      const imageList = []
+      const that = this
+      console.log('item.operateImages:',item.operateImages)
+
+
+      Object.keys(item.operateImages).forEach(key=>{
+        const x = item.operateImages[key].x
+        const y = item.operateImages[key].y
+        //如果对应的图片是再被选中的列表里面
+        if (item.checked[x+','+y]) {
+          imageList.push(item.operateImages[key])
         }
-       //组装images参数返回给后台
-        const imageList = []
-        const that = this
-        console.log('item.operateImages:',item.operateImages);
-
-
-        Object.keys(item.operateImages).forEach(key=>{
-          const x = item.operateImages[key].x
-          const y = item.operateImages[key].y
-          //如果对应的图片是再被选中的列表里面
-          if (item.checked[x+','+y]) {
-            imageList.push(item.operateImages[key])
-          }
-        })
-        // console.log('imageList:',imageList);
-        params.images = imageList
-        console.log('请求的params：',params);
-        rectPostCard(params).then(res=>{
-          console.log('修改卡片返回：', res)
-           if (res.code === 200) {
-             this.$message({
-                message: '保存修改成功',
-                type: 'success'
-              });
-              this.getRectCard()
-           }else{
-               this.$message.error('保存修改失败');
-           }
-        })
-        // this.cardList.forEach(item => {
-        //   if (item.checked) {
-        //     console.log('checked');
-        //     Object.keys(item.operateImages).forEach(key => {
-        //        console.log('checked in');
-        //       if(
-        //         parseInt(item.x) === parseInt(that.operateImages[key].x) 
-        //         && parseInt(item.y) === parseInt(that.operateImages[key].y) 
-        //         && (parseInt(that.operateImages[key].op) === 1 || parseInt(that.operateImages[key].op) === 3)  
-        //       ){
-        //          console.log('checked in 有匹配的');
-        //        imageList.push(that.operateImages[key])
-        //       }
-        //       //imageList.push(item.images[key])
-        //     })
-        //   }
-        // })
-        //params.images = imageList
+      })
+      // console.log('imageList:',imageList);
+      params.images = imageList
+      console.log('请求的params：',params)
+      rectPostCard(params).then(res=>{
+        console.log('修改卡片返回：', res)
+        if (res.code === 200) {
+          this.$message({
+            message: '保存修改成功',
+            type: 'success'
+          })
+          this.getRectCard()
+        }else{
+          this.$message.error('保存修改失败')
+        }
+      })
+      // this.cardList.forEach(item => {
+      //   if (item.checked) {
+      //     console.log('checked');
+      //     Object.keys(item.operateImages).forEach(key => {
+      //        console.log('checked in');
+      //       if(
+      //         parseInt(item.x) === parseInt(that.operateImages[key].x) 
+      //         && parseInt(item.y) === parseInt(that.operateImages[key].y) 
+      //         && (parseInt(that.operateImages[key].op) === 1 || parseInt(that.operateImages[key].op) === 3)  
+      //       ){
+      //          console.log('checked in 有匹配的');
+      //        imageList.push(that.operateImages[key])
+      //       }
+      //       //imageList.push(item.images[key])
+      //     })
+      //   }
+      // })
+      //params.images = imageList
 
        
     },
     // 删除卡片
     del(item,index){
-       console.log(item, index)
-       const params = {
+      console.log(item, index)
+      const params = {
         rect_id: item.rect_id,
         rect_name: item.rect_name,
         operator: 3
       }
       this.$confirm('确认取消？')
-          .then(() => {
-            rectPostCard(params).then(res=>{
-               if (res.code === 200) {
-                  this.$message({
-                      message: '删除成功',
-                      type: 'success'
-                    });
-                    this.getRectCard()
-                }else{
-                    this.$message.error('删除失败');
-                }
-            })
-          });
+        .then(() => {
+          rectPostCard(params).then(res=>{
+            if (res.code === 200) {
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              })
+              this.getRectCard()
+            }else{
+              this.$message.error('删除失败')
+            }
+          })
+        })
     },
     checkChange(val){
       console.log(val)
@@ -483,67 +483,67 @@ export default {
       // console.log('====================================');
       // console.log('item:',item);
       // console.log('====================================');
-        return function (res) {
-          console.log('列表上传图片返回数据：', res);
-          const params = {
-            "x": cardType.x,
-            "y": cardType.y,
-            "os": type,
-            "name": res.result.filename,
-            "img": res.result.object,
-            "op": 1//op:1 新增， 2 修改，3 删除
-          }
-          item.operateImages[res.result.md5] = params
-          console.log('item.operateImages:', item.operateImages);
+      return function(res) {
+        console.log('列表上传图片返回数据：', res)
+        const params = {
+          "x": cardType.x,
+          "y": cardType.y,
+          "os": type,
+          "name": res.result.filename,
+          "img": res.result.object,
+          "op": 1//op:1 新增， 2 修改，3 删除
         }
+        item.operateImages[res.result.md5] = params
+        console.log('item.operateImages:', item.operateImages)
+      }
     },
-    removeSuccess (item) {
-      return function (file, fileList) {
-        console.log('====================================');
-        console.log('file',file);
-        console.log('====================================');
+    removeSuccess(item) {
+      return function(file, fileList) {
+        console.log('====================================')
+        console.log('file',file)
+        console.log('====================================')
         if (file.response) {//这种是传到服务器的，还没存入接口
-          const result = file.response.result;
+          const result = file.response.result
           const md5 = result.md5
           delete item.operateImages[md5]
-          console.log('operateImages:', item.operateImages);
+          console.log('operateImages:', item.operateImages)
         } else {//这里是编辑时候从接口取回来的图片列表数据（删除需要回传，修改op为3）
           const imgid = file.imgid
-          console.log('====================================');
-          console.log('imgid:',imgid);
-           console.log('operateImagess:',item.operateImages);
-          console.log('operateImages[imgid]:',item.operateImages[imgid]);
-          console.log('====================================');
+          console.log('====================================')
+          console.log('imgid:',imgid)
+          console.log('operateImagess:',item.operateImages)
+          console.log('operateImages[imgid]:',item.operateImages[imgid])
+          console.log('====================================')
           item.operateImages[imgid].op = 3
-          console.log('item.operateImages[imgid]:',item.operateImages[imgid]);
-           console.log('item.operateImages:',item.operateImages);
+          console.log('item.operateImages[imgid]:',item.operateImages[imgid])
+          console.log('item.operateImages:',item.operateImages)
         }
 
       }
     },
     handleUpload(item,type){
 
-        const that = this
-         return function (res) {
-          console.log('添加上传图片返回数据：', res);
-          const params = {
-            "x": item.x,
-            "y": item.y,
-            "os": type,
-            "name": res.result.filename,
-            "img": res.result.object,
-            "op": 1//op:1 新增， 2 修改，3 删除
-          }
-          that.addOperateImages[res.result.md5] = params
-          console.log(' this.addOperateImages:', that.addOperateImages);
+      const that = this
+      return function(res) {
+        console.log('添加上传图片返回数据：', res)
+        const params = {
+          "x": item.x,
+          "y": item.y,
+          "os": type,
+          "name": res.result.filename,
+          "img": res.result.object,
+          "op": 1//op:1 新增， 2 修改，3 删除
         }
+        that.addOperateImages[res.result.md5] = params
+        console.log(' this.addOperateImages:', that.addOperateImages)
+      }
     },
     handleremove(file, fileList){
-      console.log('file:',file);
-        const result = file.response.result;
-        const md5 = result.md5
-        delete this.addOperateImages[md5]
-        console.log('addOperateImages:',this.addOperateImages);
+      console.log('file:',file)
+      const result = file.response.result
+      const md5 = result.md5
+      delete this.addOperateImages[md5]
+      console.log('addOperateImages:',this.addOperateImages)
     },
     imageChange(file, fileList) {
       this.imgList = fileList.slice(-3)
@@ -572,17 +572,35 @@ export default {
   }
   .imgContent{
       line-height: 80px;
-    /deep/ .el-upload--picture-card{
+    /deep/ .el-upload--picture{
       width: 80px;
       height: 76px;
       line-height: 80px;
-    }
-    /deep/ .el-upload-list--picture-card .el-upload-list__item{
-      width: 80px;
-      height: 76px;
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
     }
   }
   .tx-r{
     text-align: right;
+  }
+  /deep/ .el-upload-list__item{
+    display: flex;
+    flex-direction: column;
+    height: 138px;
+    align-items: center;
+    width: 10%;
+    margin-right: 10px;
+  }
+  /deep/ .el-upload-list__item-name{
+    margin-left: -80px;
+    margin-right: 0px;
+  }
+  /deep/ .el-upload-list--picture{
+    display: flex;
+    margin-bottom: 20px;
+    flex-flow: wrap;
   }
 </style>

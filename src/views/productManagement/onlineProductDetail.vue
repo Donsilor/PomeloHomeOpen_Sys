@@ -162,7 +162,7 @@
                   :offset="1"
                   class="checkContent">
                   <el-checkbox 
-                  :disabled="!edit"
+                    :disabled="!edit"
                     v-model="ele.checked">{{ ele.x + '*' +ele.y }}</el-checkbox>
                 </el-col>
                 <el-col 
@@ -171,42 +171,42 @@
                   <el-col :span="4">安卓图片：</el-col>
                   <el-col :span="20">
                     <el-upload
-                    :disabled="!edit"
+                      :disabled="!edit"
                       :on-success="handleUpload(ele,0)"  
                       :on-preview="handlePictureCardPreview"
                       :data="and_base_img"
                       :file-list="showImages && showImages[ele.x+','+ele.y] && showImages[ele.x+','+ele.y]['0']?showImages[ele.x+','+ele.y]['0']:[]"
                       :on-remove="handleremove"
                       action="/api/index.php/files/save"
-                      list-type="picture-card">
+                      list-type="picture">
                       <i class="el-icon-plus"/>
                     </el-upload>
                   </el-col>
                   <el-col :span="4">IOS图片：</el-col>
                   <el-col :span="20">
                     <el-upload
-                    :disabled="!edit"
-                    :file-list="showImages && showImages[ele.x+','+ele.y] && showImages[ele.x+','+ele.y]['1']?showImages[ele.x+','+ele.y]['1']:[]"
+                      :disabled="!edit"
+                      :file-list="showImages && showImages[ele.x+','+ele.y] && showImages[ele.x+','+ele.y]['1']?showImages[ele.x+','+ele.y]['1']:[]"
                       :on-success="handleUpload(ele,1)"
                       :on-preview="handlePictureCardPreview"
                       :data="ios_base_img"
                       :on-remove="handleremove"
                       action="/api/index.php/files/save"
-                      list-type="picture-card">
+                      list-type="picture">
                       <i class="el-icon-plus"/>
                     </el-upload>
                   </el-col>
                   <el-col :span="4">面板图片：</el-col>
                   <el-col :span="20">
                     <el-upload
-                    :disabled="!edit"
-                    :file-list="showImages && showImages[ele.x+','+ele.y] && showImages[ele.x+','+ele.y]['2']?showImages[ele.x+','+ele.y]['2']:[]"
+                      :disabled="!edit"
+                      :file-list="showImages && showImages[ele.x+','+ele.y] && showImages[ele.x+','+ele.y]['2']?showImages[ele.x+','+ele.y]['2']:[]"
                       :on-success="handleUpload(ele,2)"
                       :on-preview="handlePictureCardPreview"
                       :data="ipad_base_img"
                       :on-remove="handleremove"
                       action="/api/index.php/files/save"
-                      list-type="picture-card">
+                      list-type="picture">
                       <i class="el-icon-plus"/>
                     </el-upload>
                   </el-col>
@@ -1405,42 +1405,42 @@ export default {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
-     handleUpload(item,type){
+    handleUpload(item,type){
 
-        const that = this
-         return function (res) {
-          console.log('添加上传图片返回数据：', res);
-          const params = {
-            "x": item.x,
-            "y": item.y,
-            "os": type,
-            "name": res.result.filename,
-            "img": res.result.object,
-            "op": 1//op:1 新增， 2 修改，3 删除
-          }
-          that.addOperateImages[res.result.md5] = params
-          console.log(' this.addOperateImages:', that.addOperateImages);
+      const that = this
+      return function(res) {
+        console.log('添加上传图片返回数据：', res)
+        const params = {
+          "x": item.x,
+          "y": item.y,
+          "os": type,
+          "name": res.result.filename,
+          "img": res.result.object,
+          "op": 1//op:1 新增， 2 修改，3 删除
         }
+        that.addOperateImages[res.result.md5] = params
+        console.log(' this.addOperateImages:', that.addOperateImages)
+      }
     },
     handleremove(file, fileList){
-      console.log('file:',file);
+      console.log('file:',file)
        
-        if (file.response) {//这种是传到服务器的，还没存入接口
-           const result = file.response.result;
-          const md5 = result.md5
-          delete this.addOperateImages[md5]
-          console.log('addOperateImages:',this.addOperateImages);
-        } else {//这里是编辑时候从接口取回来的图片列表数据（删除需要回传，修改op为3）
-          const imgid = file.imgid
-          console.log('====================================');
-          console.log('imgid:',imgid);
-           console.log('addOperateImages:',this.addOperateImages);
-          console.log('addOperateImages[imgid]:',this.addOperateImages[imgid]);
-          console.log('====================================');
-          this.addOperateImages[imgid].op = 3
-          console.log('item.addOperateImages[imgid]:',this.addOperateImages[imgid]);
-           console.log('item.addOperateImages:',this.addOperateImages);
-        }
+      if (file.response) {//这种是传到服务器的，还没存入接口
+        const result = file.response.result
+        const md5 = result.md5
+        delete this.addOperateImages[md5]
+        console.log('addOperateImages:',this.addOperateImages)
+      } else {//这里是编辑时候从接口取回来的图片列表数据（删除需要回传，修改op为3）
+        const imgid = file.imgid
+        console.log('====================================')
+        console.log('imgid:',imgid)
+        console.log('addOperateImages:',this.addOperateImages)
+        console.log('addOperateImages[imgid]:',this.addOperateImages[imgid])
+        console.log('====================================')
+        this.addOperateImages[imgid].op = 3
+        console.log('item.addOperateImages[imgid]:',this.addOperateImages[imgid])
+        console.log('item.addOperateImages:',this.addOperateImages)
+      }
     },
     // 获取卡片大小
     getCardSizeList(){
@@ -1471,7 +1471,7 @@ export default {
         product_id: this.product_id,
       }
       getProductTags(params).then(res =>{
-        console.log('获取产品tag：',res);
+        console.log('获取产品tag：',res)
         // 产品标签中有信息的时候存在res.data这个值, 无标签信息只又一条提示信息
         if(res.data){
           this.tagVal = res.data.gtag_id // res有值就将其赋值
@@ -1489,7 +1489,7 @@ export default {
                 })
               })
             })
-            console.log('处理后得 this.addOperateImages：', this.addOperateImages);
+            console.log('处理后得 this.addOperateImages：', this.addOperateImages)
             // res.data.images.forEach(img=>{
             //     img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
             //     img.op = 2//重置为修改
@@ -1507,28 +1507,28 @@ export default {
     // 修改tag标签TODO:
     changeTag(){
 
-         //组装images参数返回给后台
-        const imageList = []
-        console.log('addOperateImages:',this.addOperateImages);
-        Object.keys(this.addOperateImages).forEach(key=>{
-          const x = this.addOperateImages[key].x
-          const y = this.addOperateImages[key].y
-          //如果对应的图片是再被选中的列表里面
-          // if (this.checked[x+','+y]) {
-          //   imageList.push(item.operateImages[key])
-          // }
-          console.log('this.cardList:',this.cardList);
-          this.cardList.forEach(card=>{
-            if (
-              card.checked 
+      //组装images参数返回给后台
+      const imageList = []
+      console.log('addOperateImages:',this.addOperateImages)
+      Object.keys(this.addOperateImages).forEach(key=>{
+        const x = this.addOperateImages[key].x
+        const y = this.addOperateImages[key].y
+        //如果对应的图片是再被选中的列表里面
+        // if (this.checked[x+','+y]) {
+        //   imageList.push(item.operateImages[key])
+        // }
+        console.log('this.cardList:',this.cardList)
+        this.cardList.forEach(card=>{
+          if (
+            card.checked 
             && parseInt(card.x) ===parseInt(x) 
             && parseInt(card.y) === parseInt(y) 
             && (this.addOperateImages[key].op === 1 || this.addOperateImages[key].op === 3)
-            ) {
-              imageList.push(this.addOperateImages[key])
-            }
-          })
+          ) {
+            imageList.push(this.addOperateImages[key])
+          }
         })
+      })
       //gtag_id传0的时候表示删除
       const params = this.tagVal ? {
         product_id: this.product_id,
@@ -1539,22 +1539,22 @@ export default {
           product_id: this.product_id,
           gtag_id: 0
         }
-        console.log('修改产品tag传递参数：',params);
-        // rectPostCard(this.formItem).then(res=>{
-        //   console.log('添加卡片返回：', res)
-        //    if (res.code === 200) {
-        //      this.$message({
-        //         message: '保存添加成功',
-        //         type: 'success'
-        //       });
-        //        this.formVisible = false
-        //       this.getRectCard()
-        //    }else{
-        //        this.$message.error('卡片添加失败');
-        //    }
-        // })
+      console.log('修改产品tag传递参数：',params)
+      // rectPostCard(this.formItem).then(res=>{
+      //   console.log('添加卡片返回：', res)
+      //    if (res.code === 200) {
+      //      this.$message({
+      //         message: '保存添加成功',
+      //         type: 'success'
+      //       });
+      //        this.formVisible = false
+      //       this.getRectCard()
+      //    }else{
+      //        this.$message.error('卡片添加失败');
+      //    }
+      // })
       changeProductTags(params).then(res=>{
-          console.log('修改产品tag结果：',res);
+        console.log('修改产品tag结果：',res)
       })
     },
     // 校验产品名称 只能中文和数字
@@ -2389,14 +2389,32 @@ export default {
     }
   }
 .imgContent{
-    /deep/ .el-upload--picture-card{
+    /deep/ .el-upload--picture{
       width: 80px;
       height: 76px;
       line-height: 80px;
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
     }
-    /deep/ .el-upload-list--picture-card .el-upload-list__item{
-      width: 80px;
-      height: 76px;
-    }
+    /deep/ .el-upload-list__item{
+    display: flex;
+    flex-direction: column;
+    height: 138px;
+    align-items: center;
+    width: 15%;
+    margin-right: 10px;
+  }
+  /deep/ .el-upload-list__item-name{
+    margin-left: -80px;
+    margin-right: 0px;
+  }
+  /deep/ .el-upload-list--picture{
+    display: flex;
+    margin-bottom: 20px;
+    flex-flow: wrap;
+  }
   }
 </style>

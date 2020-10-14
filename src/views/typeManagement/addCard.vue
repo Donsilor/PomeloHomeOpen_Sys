@@ -69,42 +69,48 @@
             >{{ ele.x + '*' +ele.y }}</el-checkbox>
           </el-col>
           <el-col :span="23">
-            <el-col :span="2">安卓图片：</el-col>
-            <el-col :span="22">
-              <el-upload
-                :on-success="uploadSuccess(item,ele,0)"  
-                :data="and_base_img"
-                :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]"
-                :on-remove="removeSuccess(item)"
-                action="/api/index.php/files/save"
-                list-type="picture">
-                <i class="el-icon-plus"/>
-              </el-upload>
-            </el-col>
-            <el-col :span="2">IOS图片：</el-col>
-            <el-col :span="22">
-              <el-upload
-                :on-success="uploadSuccess(item,ele,1)"
-                :data="ios_base_img"
-                :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['1']?item.images[ele.x+','+ele.y]['1']:[]"
-                :on-remove="removeSuccess(item)"
-                action="/api/index.php/files/save"
-                list-type="picture">
-                <i class="el-icon-plus"/>
-              </el-upload>
-            </el-col>
-            <el-col :span="2">面板图片：</el-col>
-            <el-col :span="22">
-              <el-upload
-                :on-success="uploadSuccess(item,ele,2)"
-                :data="ipad_base_img"
-                :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['2']?item.images[ele.x+','+ele.y]['2']:[]"
-                :on-remove="removeSuccess(item)"
-                action="/api/index.php/files/save"
-                list-type="picture">
-                <i class="el-icon-plus"/>
-              </el-upload>
-            </el-col>
+            <el-row :span="23">
+              <el-col :span="2" class="text">安卓图片：</el-col>
+              <el-col :span="21">
+                <el-upload
+                  :on-success="uploadSuccess(item,ele,0)"  
+                  :data="and_base_img"
+                  :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]"
+                  :on-remove="removeSuccess(item)"
+                  action="/api/index.php/files/save"
+                  list-type="picture">
+                  <i class="el-icon-plus"/>
+                </el-upload>
+              </el-col>
+            </el-row>
+             <el-row :span="23">
+               <el-col :span="2"  class="text">IOS图片：</el-col>
+              <el-col :span="21">
+                <el-upload
+                  :on-success="uploadSuccess(item,ele,1)"
+                  :data="ios_base_img"
+                  :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['1']?item.images[ele.x+','+ele.y]['1']:[]"
+                  :on-remove="removeSuccess(item)"
+                  action="/api/index.php/files/save"
+                  list-type="picture">
+                  <i class="el-icon-plus"/>
+                </el-upload>
+              </el-col>
+             </el-row>
+             <el-row :span="23">
+               <el-col :span="2"  class="text">面板图片：</el-col>
+              <el-col :span="21">
+                <el-upload
+                  :on-success="uploadSuccess(item,ele,2)"
+                  :data="ipad_base_img"
+                  :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['2']?item.images[ele.x+','+ele.y]['2']:[]"
+                  :on-remove="removeSuccess(item)"
+                  action="/api/index.php/files/save"
+                  list-type="picture">
+                  <i class="el-icon-plus"/>
+                </el-upload>
+              </el-col>
+             </el-row>
           </el-col>
         </el-row>
         <!--  -->
@@ -561,6 +567,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.text{
+    line-height: 20px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .col{
     display: flex;
     justify-content: center;

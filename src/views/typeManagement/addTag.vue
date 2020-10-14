@@ -153,42 +153,48 @@
             </el-checkbox>
           </el-col>
           <el-col :span="21">
-            <el-col :span="4">安卓图片：</el-col>
-            <el-col :span="17">
-              <el-upload 
-                :data="base_img"
-                :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['0']?showImages[item.x+','+item.y]['0']:[]"
-                :on-success="uploadSuccess(item,0)"
-                :on-remove="handleRemove(item,0)"
-                action="/api/index.php/files/save"
-                list-type="picture">
-                <i class="el-icon-plus"/>
-              </el-upload>
-            </el-col>
-            <el-col :span="4">IOS图片：</el-col>
-            <el-col :span="17">
-              <el-upload 
-                :data="base_img"
-                :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['1']?showImages[item.x+','+item.y]['1']:[]"
-                :on-success="uploadSuccess(item,1)"
-                :on-remove="handleRemove(item,0)"
-                action="/api/index.php/files/save"
-                list-type="picture">
-                <i class="el-icon-plus"/>
-              </el-upload>
-            </el-col>
-            <el-col :span="4">面板图片：</el-col>
-            <el-col :span="17">
-              <el-upload 
-                :data="base_img"
-                :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['2']?showImages[item.x+','+item.y]['2']:[]"
-                :on-success="uploadSuccess(item,2)"
-                :on-remove="handleRemove(item,0)"
-                action="/api/index.php/files/save"
-                list-type="picture">
-                <i class="el-icon-plus"/>
-              </el-upload>
-            </el-col>
+            <el-row :span="21">
+              <el-col :span="4" class="text">安卓图片：</el-col>
+              <el-col :span="17">
+                <el-upload 
+                  :data="base_img"
+                  :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['0']?showImages[item.x+','+item.y]['0']:[]"
+                  :on-success="uploadSuccess(item,0)"
+                  :on-remove="handleRemove(item,0)"
+                  action="/api/index.php/files/save"
+                  list-type="picture">
+                  <i class="el-icon-plus"/>
+                </el-upload>
+              </el-col>
+            </el-row>
+            <el-row :span="21">
+              <el-col :span="4"  class="text">IOS图片：</el-col>
+              <el-col :span="17">
+                <el-upload 
+                  :data="base_img"
+                  :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['1']?showImages[item.x+','+item.y]['1']:[]"
+                  :on-success="uploadSuccess(item,1)"
+                  :on-remove="handleRemove(item,0)"
+                  action="/api/index.php/files/save"
+                  list-type="picture">
+                  <i class="el-icon-plus"/>
+                </el-upload>
+              </el-col>
+            </el-row>
+            <el-row :span="21">
+              <el-col :span="4"  class="text">面板图片：</el-col>
+              <el-col :span="17">
+                <el-upload 
+                  :data="base_img"
+                  :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['2']?showImages[item.x+','+item.y]['2']:[]"
+                  :on-success="uploadSuccess(item,2)"
+                  :on-remove="handleRemove(item,0)"
+                  action="/api/index.php/files/save"
+                  list-type="picture">
+                  <i class="el-icon-plus"/>
+                </el-upload>
+              </el-col>
+            </el-row>
           </el-col>
         </el-row>
 
@@ -548,6 +554,13 @@ export default {
 </script>
 <style lang="scss">
 .form {
+  .text{
+    line-height: 20px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .bottom_text {
     line-height: 20px;
     span {

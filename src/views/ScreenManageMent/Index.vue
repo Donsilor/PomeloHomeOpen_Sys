@@ -14,16 +14,6 @@
         label="大小名称"
         width=""/>
       <el-table-column
-        :formatter="widthFormatter"
-        prop="width"
-        label="宽（多少格子）"
-        width=""/>
-      <el-table-column
-        :formatter="heightFormatter"
-        prop="height"
-        label="高（多少格子）"
-        width=""/>
-      <el-table-column
         :formatter="timeFomatter"
         prop="create_time"
         label="创建时间"

@@ -151,6 +151,16 @@ export default {
         color = '#b45342'
       }else if (index===5){
         color = '#e2ce66'
+      } else if (index===6){
+        color = '#808cde'
+      }else if (index===7){
+        color = '#dc3dbb'
+      }else if (index===8){
+        color = '#084e21'
+      }else if (index===9){
+        color = '#ece5ab'
+      }else if (index===10){
+        color = '#a07397'
       }
       return color
     },

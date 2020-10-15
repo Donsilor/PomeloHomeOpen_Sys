@@ -71,7 +71,7 @@
           <el-col :span="23">
             <el-col :span="7">
               <el-col :span="3" class="text">安卓：</el-col>
-              <el-col :span="4">
+              <el-col :span="21">
                 <el-upload
                   :on-success="uploadSuccess(item,ele,0)"  
                   :data="and_base_img"
@@ -85,7 +85,7 @@
             </el-col>
              <el-col :span="7">
                <el-col :span="3"  class="text">IOS：</el-col>
-              <el-col :span="4">
+              <el-col :span="21">
                 <el-upload
                   :on-success="uploadSuccess(item,ele,1)"
                   :data="ios_base_img"
@@ -99,7 +99,7 @@
              </el-col>
              <el-col :span="7">
                <el-col :span="3"  class="text">面板：</el-col>
-              <el-col :span="4">
+              <el-col :span="21">
                 <el-upload
                   :on-success="uploadSuccess(item,ele,2)"
                   :data="ipad_base_img"
@@ -124,6 +124,7 @@
         alt="">
     </el-dialog>
     <el-dialog 
+      class="addDialog"
       :visible.sync="formVisible"
       title="添加卡片">
       <el-form 
@@ -153,44 +154,53 @@
             </el-checkbox>
           </el-col>
           <el-col :span="21">
-            <el-col :span="4">安卓图片：</el-col>
-            <el-col :span="17">
-              <el-upload 
-                :on-preview="handlePictureCardPreview"
-                :data="and_base_img"
-                :file-list="item.androidImgList"
-                :on-success="handleUpload(item,0)"
-                :on-remove="handleremove"
-                action="/api/index.php/files/save"
-                list-type="picture">
-                <i class="el-icon-plus"/>
-              </el-upload>
+            <el-col :span="7">
+              <el-col :span="5" class="text">安卓：</el-col>
+              <el-col :span="19">
+                <el-upload 
+                  :on-preview="handlePictureCardPreview"
+                  :data="and_base_img"
+                  :file-list="item.androidImgList"
+                  :on-success="handleUpload(item,0)"
+                  :on-remove="handleremove"
+                  action="/api/index.php/files/save"
+                  list-type="picture">
+                  <!-- <i class="el-icon-plus"/> -->
+                  <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                </el-upload>
+              </el-col>
             </el-col>
-            <el-col :span="4">IOS图片：</el-col>
-            <el-col :span="17">
-              <el-upload 
-                :on-preview="handlePictureCardPreview"
-                :data="ios_base_img"
-                :file-list="item.iosImgList"
-                :on-success="handleUpload(item,1)"
-                :on-remove="handleremove"
-                action="/api/index.php/files/save"
-                list-type="picture">
-                <i class="el-icon-plus"/>
-              </el-upload>
+            <el-col :span="7">
+              <el-col :span="5" class="text">IOS：</el-col>
+              <el-col :span="19">
+                <el-upload 
+                  :on-preview="handlePictureCardPreview"
+                  :data="ios_base_img"
+                  :file-list="item.iosImgList"
+                  :on-success="handleUpload(item,1)"
+                  :on-remove="handleremove"
+                  action="/api/index.php/files/save"
+                  list-type="picture">
+                  <!-- <i class="el-icon-plus"/> -->
+                  <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                </el-upload>
+              </el-col>
             </el-col>
-            <el-col :span="4">面板图片：</el-col>
-            <el-col :span="17">
-              <el-upload 
-                :on-preview="handlePictureCardPreview"
-                :data="ipad_base_img"
-                :file-list="item.ipadImgList"
-                :on-success="handleUpload(item,2)"
-                :on-remove="handleremove"
-                action="/api/index.php/files/save"
-                list-type="picture">
-                <i class="el-icon-plus"/>
-              </el-upload>
+            <el-col :span="7">
+              <el-col :span="5" class="text">面板：</el-col>
+              <el-col :span="19">
+                <el-upload 
+                  :on-preview="handlePictureCardPreview"
+                  :data="ipad_base_img"
+                  :file-list="item.ipadImgList"
+                  :on-success="handleUpload(item,2)"
+                  :on-remove="handleremove"
+                  action="/api/index.php/files/save"
+                  list-type="picture">
+                  <!-- <i class="el-icon-plus"/> -->
+                  <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                </el-upload>
+              </el-col>
             </el-col>
           </el-col>
         </el-row>

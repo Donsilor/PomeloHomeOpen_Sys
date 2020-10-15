@@ -173,22 +173,20 @@ export default {
         return item.key
       })
       let indexarr = IndexArray.slice(0)
-      let leftArray = this.ItemArray.map(item => {
+      let xArray = this.ItemArray.map(item => {
         return item.xIndex
       })
 
-      let topArray = this.ItemArray.map(item => {
+      let yArray = this.ItemArray.map(item => {
         return item.yIndex
       })
-      let leftSet = new Set(leftArray)
-      let topSet = new Set(topArray)
-      let width = new Set(leftArray).size
-      let height = new Set(topArray).size
-      if(indexarr.length!==width*height) {
+      let xHheiht = Math.max(...xArray) - Math.min(...xArray) +1
+      let yHheiht = Math.max(...yArray) - Math.min(...yArray) +1
+      if (indexarr.length!==yHheiht*xHheiht){
         this.$message.error('选择的方块不能组成矩形')
         return
       }
-      let positionArr = [width,height]
+      let positionArr = [xHheiht,yHheiht]
       let arr = [positionArr,indexarr]
       this.ScreenArray.push(arr)
       let ScreenArrayLenth = this.ScreenArray.length

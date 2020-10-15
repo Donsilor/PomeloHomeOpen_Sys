@@ -28,8 +28,14 @@
         prop="gtag_name" />
       <el-table-column 
         align="center"
-        label="enable"
-        prop="enable" />
+        label="面板是否可调"
+        prop="panel_can">
+        <template slot-scope="scope">
+          <div>
+            {{scope.row.panel_can.toString() === '1'?'是':'否' }}
+          </div>
+        </template>
+      </el-table-column>>
       <el-table-column 
         align="center"
         label="创建时间"
@@ -452,18 +458,29 @@ export default {
                 && (parseInt(that.operateImages[key].op) === 1 || parseInt(that.operateImages[key].op) === 3)  
               ){
                 console.log('checked in 有匹配的')
-                imageList.push(that.operateImages[key])
+                //上传提交时候，要把图片的长路径修改成短路径
+                // imageList.push(Object.assign(
+                //   {},
+                //   that.operateImages[key],
+                //   {gtag_img:'oss_temp'+that.operateImages[key].gtag_img.split('oss_temp')[1]}
+                //   ))
+
+                 imageList.push(that.operateImages[key])
               }
-              //imageList.push(item.images[key])
             })
           }
         })
         params.images = imageList
       }
-
+      
       console.log('传的参数：', JSON.stringify(params))
 
-      addGlobalTags(params).then(res => {
+      addGlobalTags(
+        //上传提交时候，要把图片的长路径修改成短路径
+        Object.assign({},params,{
+          gtag_img:'oss_temp'+params.gtag_img.split('oss_temp')[1]
+        })
+      ).then(res => {
         this.$message.success('操作成功！')
         this.formVisible = false
         this.getTagList()

@@ -26,14 +26,6 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column 
-        align="center" 
-        label="宽（多少格子）" 
-        prop="x"/>
-      <el-table-column 
-        align="center" 
-        label="高（多少格子）" 
-        prop="y"/>
         <el-table-column 
         align="center" 
         label="创建时间" 

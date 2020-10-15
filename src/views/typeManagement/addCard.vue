@@ -69,48 +69,48 @@
             >{{ ele.x + '*' +ele.y }}</el-checkbox>
           </el-col>
           <el-col :span="23">
-            <el-row :span="23">
-              <el-col :span="2" class="text">安卓图片：</el-col>
-              <el-col :span="21">
+            <el-col :span="7">
+              <el-col :span="3" class="text">安卓：</el-col>
+              <el-col :span="4">
                 <el-upload
                   :on-success="uploadSuccess(item,ele,0)"  
                   :data="and_base_img"
-                  :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]"
+                  :file-list="returnList(item,ele,'0')"
                   :on-remove="removeSuccess(item)"
-                  action="/api/index.php/files/save"
-                  list-type="picture">
-                  <i class="el-icon-plus"/>
+                  action="/api/index.php/files/save">
+                  <!-- <i class="el-icon-plus"/> -->
+                  <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
                 </el-upload>
               </el-col>
-            </el-row>
-             <el-row :span="23">
-               <el-col :span="2"  class="text">IOS图片：</el-col>
-              <el-col :span="21">
+            </el-col>
+             <el-col :span="7">
+               <el-col :span="3"  class="text">IOS：</el-col>
+              <el-col :span="4">
                 <el-upload
                   :on-success="uploadSuccess(item,ele,1)"
                   :data="ios_base_img"
-                  :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['1']?item.images[ele.x+','+ele.y]['1']:[]"
+                  :file-list="returnList(item,ele,'1')"
                   :on-remove="removeSuccess(item)"
-                  action="/api/index.php/files/save"
-                  list-type="picture">
-                  <i class="el-icon-plus"/>
+                  action="/api/index.php/files/save">
+                  <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                  <!-- <i class="el-icon-plus"/> -->
                 </el-upload>
               </el-col>
-             </el-row>
-             <el-row :span="23">
-               <el-col :span="2"  class="text">面板图片：</el-col>
-              <el-col :span="21">
+             </el-col>
+             <el-col :span="7">
+               <el-col :span="3"  class="text">面板：</el-col>
+              <el-col :span="4">
                 <el-upload
                   :on-success="uploadSuccess(item,ele,2)"
                   :data="ipad_base_img"
-                  :file-list="item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['2']?item.images[ele.x+','+ele.y]['2']:[]"
+                  :file-list="returnList(item,ele,'2')"
                   :on-remove="removeSuccess(item)"
-                  action="/api/index.php/files/save"
-                  list-type="picture">
-                  <i class="el-icon-plus"/>
+                  action="/api/index.php/files/save">
+                  <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                  <!-- <i class="el-icon-plus"/> -->
                 </el-upload>
               </el-col>
-             </el-row>
+             </el-col>
           </el-col>
         </el-row>
         <!--  -->
@@ -253,6 +253,17 @@ export default {
   mounted(){
   },
   methods: {
+    returnList(item,ele,os){
+        //item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]
+        const images =  item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]
+        const opreateImages = []
+        Object.keys(item.operateImages).forEach(key=>{
+          if (item.operateImages[key].x.toString() === ele.x.toString() && item.operateImages[key].y.toString() === ele.y.toString() && item.operateImages[key].os.toString() === os.toString()){
+            opreateImages.push(item.operateImages[key])
+          }
+        })
+        return Object.assign([],images,opreateImages)
+    },
     // get 请求 获取卡片列表
     getRectCard(){
       rectCard().then(res=>{
@@ -267,6 +278,9 @@ export default {
             item.checked[card.x+','+card.y] = false
           })
           const operateImages  = {}
+          // if (!operateImages[card.x+','+card.y]) {
+          //   operateImages[card.x+','+card.y] = []
+          // }
           Object.keys(item.images).forEach(ele=>{
 
             const showImages = item.images
@@ -415,7 +429,7 @@ export default {
       Object.keys(item.operateImages).forEach(key=>{
         const x = item.operateImages[key].x
         const y = item.operateImages[key].y
-        //如果对应的图片是再被选中的列表里面
+        //如果对应的图片是在被选中的列表里面
         if (item.checked[x+','+y]) {
           imageList.push(item.operateImages[key])
         }
@@ -568,11 +582,18 @@ export default {
 
 <style lang="scss" scoped>
 .text{
-    line-height: 20px;
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    // line-height: 20px;
+    // height: 80px;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+    margin-top: 10px;
+  }
+  .imgAddBtn{
+    margin-top: 10px;
+  }
+  .checkContent {
+    margin-top: 10px;
   }
   .col{
     display: flex;
@@ -583,37 +604,39 @@ export default {
       width: 50px;
     }
   }
-  .imgContent{
-      line-height: 80px;
-    /deep/ .el-upload--picture{
-      width: 80px;
-      height: 76px;
-      line-height: 80px;
-      border: 1px dashed #d9d9d9;
-      border-radius: 6px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-  }
-  .tx-r{
+   .tx-r{
     text-align: right;
   }
-  /deep/ .el-upload-list__item{
-    display: flex;
-    flex-direction: column;
-    height: 138px;
-    align-items: center;
-    width: 10%;
-    margin-right: 10px;
+   /deep/ .el-upload-list{
+    float: left;
   }
-  /deep/ .el-upload-list__item-name{
-    margin-left: -80px;
-    margin-right: 0px;
-  }
-  /deep/ .el-upload-list--picture{
-    display: flex;
-    margin-bottom: 20px;
-    flex-flow: wrap;
-  }
+  // .imgContent{
+  //   /deep/ .el-upload--picture{
+  //     width: 80px;
+  //     height: 76px;
+  //     line-height: 80px;
+  //     border: 1px dashed #d9d9d9;
+  //     border-radius: 6px;
+  //     cursor: pointer;
+  //     position: relative;
+  //     overflow: hidden;
+  //   }
+  // }
+  // /deep/ .el-upload-list__item{
+  //   display: flex;
+  //   flex-direction: column;
+  //   height: 138px;
+  //   align-items: center;
+  //   width: 10%;
+  //   margin-right: 10px;
+  // }
+  // /deep/ .el-upload-list__item-name{
+  //   margin-left: -80px;
+  //   margin-right: 0px;
+  // }
+  // /deep/ .el-upload-list--picture{
+  //   display: flex;
+  //   margin-bottom: 20px;
+  //   flex-flow: wrap;
+  // }
 </style>

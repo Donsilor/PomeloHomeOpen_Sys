@@ -476,9 +476,11 @@ export default {
       console.log('传的参数：', JSON.stringify(params))
 
       addGlobalTags(
+
+        // item.img.indexOf('http') > -1? item.img : IMAGE_PATH + item.img
         //上传提交时候，要把图片的长路径修改成短路径
         Object.assign({},params,{
-          gtag_img:'oss_temp'+params.gtag_img.split('oss_temp')[1]
+          gtag_img:params.gtag_img.indexOf('http') > -1?'oss_temp'+params.gtag_img.split('oss_temp')[1]:params.gtag_img
         })
       ).then(res => {
         this.$message.success('操作成功！')

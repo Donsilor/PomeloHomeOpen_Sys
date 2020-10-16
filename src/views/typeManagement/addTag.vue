@@ -562,15 +562,16 @@ export default {
       }
       
       console.log('传的参数：', JSON.stringify(params))
-console.log('this.tagImageList:',this.tagImageList)
+    console.log('this.tagImageList:',this.tagImageList)
+    console.log(' this.formItem.gtag_img:', this.formItem.gtag_img)
       addGlobalTags(
 
         // item.img.indexOf('http') > -1? item.img : IMAGE_PATH + item.img
         //上传提交时候，要把图片的长路径修改成短路径
         
         Object.assign({},params,{
-          gtag_img:this.tagImageList.length >0 &&this.tagImageList[0].url.indexOf('http') > -1?'oss_temp'+this.tagImageList[0].url.split('oss_temp')[1]:this.tagImageList[0].url
-          //gtag_img:params.gtag_img&&params.gtag_img.indexOf('http') > -1?'oss_temp'+params.gtag_img.split('oss_temp')[1]:params.gtag_img
+          //gtag_img:this.tagImageList.length >0 &&this.tagImageList[0].url.indexOf('http') > -1?'oss_temp'+this.tagImageList[0].url.split('oss_temp')[1]:this.tagImageList[0].url
+          gtag_img:params.gtag_img&&params.gtag_img.indexOf('http') > -1?'oss_temp'+params.gtag_img.split('oss_temp')[1]:params.gtag_img
         })
       ).then(res => {
         this.$message.success('操作成功！')

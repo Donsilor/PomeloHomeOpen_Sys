@@ -64,13 +64,13 @@
           <el-col 
             :span="1" 
             class="checkContent">
-            <el-checkbox 
-              v-model="item.checked[ele.x+','+ele.y]"
-            >{{ ele.x + '*' +ele.y }}</el-checkbox>
+            <div>{{ ele.x + '*' +ele.y }}</div>
           </el-col>
           <el-col :span="23">
             <el-col :span="7">
-              <el-col :span="3" class="text">安卓：</el-col>
+              <el-col :span="3" class="text">
+                 <el-checkbox v-model="item.checked[ele.x+','+ele.y]['0'].checked">安卓：</el-checkbox>
+              </el-col>
               <el-col :span="21">
                 <el-upload
                   :on-success="uploadSuccess(item,ele,0)"  
@@ -84,7 +84,9 @@
               </el-col>
             </el-col>
              <el-col :span="7">
-               <el-col :span="3"  class="text">IOS：</el-col>
+               <el-col :span="3"  class="text">
+                  <el-checkbox v-model="item.checked[ele.x+','+ele.y]['1'].checked">IOS：</el-checkbox>
+               </el-col>
               <el-col :span="21">
                 <el-upload
                   :on-success="uploadSuccess(item,ele,1)"
@@ -98,7 +100,9 @@
               </el-col>
              </el-col>
              <el-col :span="7">
-               <el-col :span="3"  class="text">面板：</el-col>
+               <el-col :span="3"  class="text">
+                 <el-checkbox v-model="item.checked[ele.x+','+ele.y]['2'].checked">面板：</el-checkbox>
+               </el-col>
               <el-col :span="21">
                 <el-upload
                   :on-success="uploadSuccess(item,ele,2)"
@@ -128,7 +132,7 @@
       :visible.sync="formVisible"
       title="添加卡片">
       <el-form 
-        label-width="200px"
+        label-width="300px"
         class="form">
         <el-form-item 
           label="ID">
@@ -149,13 +153,17 @@
           <el-col 
             :span="3"
             class="checkContent">
-            <el-checkbox v-model="item.checked">
+            <div>
               {{ item.x }}*{{ item.y }}
-            </el-checkbox>
+            </div>
           </el-col>
           <el-col :span="21">
             <el-col :span="7">
-              <el-col :span="5" class="text">安卓：</el-col>
+              <el-col :span="5" class="text">
+                <el-checkbox v-model="item.checked['0']">
+                 安卓：
+                </el-checkbox>
+              </el-col>
               <el-col :span="19">
                 <el-upload 
                   :on-preview="handlePictureCardPreview"
@@ -163,15 +171,18 @@
                   :file-list="item.androidImgList"
                   :on-success="handleUpload(item,0)"
                   :on-remove="handleremove"
-                  action="/api/index.php/files/save"
-                  list-type="picture">
+                  action="/api/index.php/files/save">
                   <!-- <i class="el-icon-plus"/> -->
                   <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
                 </el-upload>
               </el-col>
             </el-col>
             <el-col :span="7">
-              <el-col :span="5" class="text">IOS：</el-col>
+              <el-col :span="5" class="text">
+                 <el-checkbox v-model="item.checked['1']">
+                 IOS：
+                </el-checkbox>
+              </el-col>
               <el-col :span="19">
                 <el-upload 
                   :on-preview="handlePictureCardPreview"
@@ -179,15 +190,18 @@
                   :file-list="item.iosImgList"
                   :on-success="handleUpload(item,1)"
                   :on-remove="handleremove"
-                  action="/api/index.php/files/save"
-                  list-type="picture">
+                  action="/api/index.php/files/save">
                   <!-- <i class="el-icon-plus"/> -->
                   <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
                 </el-upload>
               </el-col>
             </el-col>
             <el-col :span="7">
-              <el-col :span="5" class="text">面板：</el-col>
+              <el-col :span="5" class="text">
+                <el-checkbox v-model="item.checked['2']">
+                 面板：
+                </el-checkbox>
+              </el-col>
               <el-col :span="19">
                 <el-upload 
                   :on-preview="handlePictureCardPreview"
@@ -195,8 +209,7 @@
                   :file-list="item.ipadImgList"
                   :on-success="handleUpload(item,2)"
                   :on-remove="handleremove"
-                  action="/api/index.php/files/save"
-                  list-type="picture">
+                  action="/api/index.php/files/save">
                   <!-- <i class="el-icon-plus"/> -->
                   <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
                 </el-upload>
@@ -265,29 +278,88 @@ export default {
   methods: {
     returnList(item,ele,os){
         //item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]
-        const images =  item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]
+        const filterImages =  
+          item.images && 
+          item.images[ele.x+','+ele.y] && 
+          item.images[ele.x+','+ele.y][os.toString()]
+          // item.images[ele.x+','+ele.y]['0'].name !== 'check' &&
+          //  item.images[ele.x+','+ele.y]['0'].img.indexOf('check') <= -1
+            ?item.images[ele.x+','+ele.y][os.toString()]:[]
+        const images = []
+        filterImages.forEach(item=>{
+          if (item.name !== 'check' && item.img.indexOf('check') <= -1) {
+              images.push(item)
+            }
+        })
         const opreateImages = []
         Object.keys(item.operateImages).forEach(key=>{
-          if (item.operateImages[key].x.toString() === ele.x.toString() && item.operateImages[key].y.toString() === ele.y.toString() && item.operateImages[key].os.toString() === os.toString()){
-            opreateImages.push(item.operateImages[key])
+          if (
+            item.operateImages[key].name !== 'check' &&
+           item.operateImages[key].img.indexOf('check') <= -1
+           ) {
+            if (item.operateImages[key].x.toString() === ele.x.toString() && item.operateImages[key].y.toString() === ele.y.toString() && item.operateImages[key].os.toString() === os.toString()){
+              opreateImages.push(item.operateImages[key])
+            }
           }
+          
         })
+        console.log('images:',images);
+         console.log('opreateImages:',opreateImages);
         return Object.assign([],images,opreateImages)
     },
     // get 请求 获取卡片列表
     getRectCard(){
       rectCard().then(res=>{
-      
         // 将卡片列表装进datalist
         res.data.forEach(item=>{
           console.log('item',item)
 
           item.checked = {}
-          //为每个item下的每个卡片种类赋值一个checked
+          //为每个item下的每个卡片种类赋值一个checked对象，
           this.cardList.forEach(card=>{
-            item.checked[card.x+','+card.y] = false
+            //默认安卓 IOS 和平板都赋值列表
+            item.checked[card.x+','+card.y] = {}
+            item.checked[card.x+','+card.y]['0'] = {
+              checked:false,
+              //用于提交到接口的check数据
+              postObj:{
+                op:1,//默认为新增
+                x:card.x,
+                y:card.y,
+                name:'check',
+                img:'check',
+                os:0
+              }
+            }
+
+            item.checked[card.x+','+card.y]['1'] = {
+              checked:false,
+              //用于提交到接口的check数据
+              postObj:{
+                op:1,//默认为新增
+                x:card.x,
+                y:card.y,
+                name:'check',
+                img:'check',
+                os:1
+              }
+            }
+
+            item.checked[card.x+','+card.y]['2'] = {
+              checked:false,
+              //用于提交到接口的check数据
+              postObj:{
+                op:1,//默认为新增
+                x:card.x,
+                y:card.y,
+                name:'check',
+                img:'check',
+                os:2
+              }
+            }
           })
-          const operateImages  = {}
+          const operateImages  = {} //用来操作图片
+          const opreateCheck = {} //用来区分操作是否选择的check
           // if (!operateImages[card.x+','+card.y]) {
           //   operateImages[card.x+','+card.y] = []
           // }
@@ -299,32 +371,72 @@ export default {
             // 0 安卓图片  1  ios图片  2 ipad图片
             if(item.images[ele]['0']){
               item.images[ele]['0'].forEach(img=>{
-                img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
-                img.op = 2//重置为修改
-                img.x = ele.split(',')[0]
-                img.y = ele.split(',')[1]
-                img.os = 0
-                operateImages[img.imgid] = img
+                if (img.name === 'check' && img.img.indexOf('check') >-1) {
+                  //用来获取过滤得到check选项
+                    img.op = 2//重置为修改
+                    img.x = ele.split(',')[0]
+                    img.y = ele.split(',')[1]
+                    img.os = 0
+                    opreateCheck[img.imgid] = img
+                    item.checked[ele.split(',')[0]+','+ele.split(',')[1]]['0'] = {
+                      checked:true,
+                      postObj:img
+                    }
+                }else{
+                  img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
+                  img.op = 2//重置为修改
+                  img.x = ele.split(',')[0]
+                  img.y = ele.split(',')[1]
+                  img.os = 0
+                  operateImages[img.imgid] = img
+                }
+               
               })
             } 
             if(item.images[ele]['1']){
               item.images[ele]['1'].forEach(img=>{
-                img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
-                img.op = 2//重置为修改
-                img.x = ele.split(',')[0]
-                img.y = ele.split(',')[1]
-                img.os = 1
-                operateImages[img.imgid] = img
+                if (img.name === 'check' && img.img.indexOf('check') >-1) {
+                  //用来获取过滤得到check选项
+                    img.op = 2//重置为修改
+                    img.x = ele.split(',')[0]
+                    img.y = ele.split(',')[1]
+                    img.os = 1
+                    opreateCheck[img.imgid] = img
+                    item.checked[ele.split(',')[0]+','+ele.split(',')[1]]['1'] = {
+                      checked:true,
+                      postObj:img
+                    }
+                }else{
+                  img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
+                  img.op = 2//重置为修改
+                  img.x = ele.split(',')[0]
+                  img.y = ele.split(',')[1]
+                  img.os = 1
+                  operateImages[img.imgid] = img
+                }
               })
             }
             if(item.images[ele]['2']){
               item.images[ele]['2'].forEach(img=>{
-                img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
-                img.op = 2//重置为修改
-                img.x = ele.split(',')[0]
-                img.y = ele.split(',')[1]
-                img.os = 2
-                operateImages[img.imgid] = img
+                if (img.name === 'check' && img.img.indexOf('check') >-1) {
+                  //用来获取过滤得到check选项
+                    img.op = 2//重置为修改
+                    img.x = ele.split(',')[0]
+                    img.y = ele.split(',')[1]
+                    img.os = 2
+                    opreateCheck[img.imgid] = img
+                    item.checked[ele.split(',')[0]+','+ele.split(',')[1]]['2'] = {
+                      checked:true,
+                      postObj:img
+                    }
+                }else{
+                  img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
+                  img.op = 2//重置为修改
+                  img.x = ele.split(',')[0]
+                  img.y = ele.split(',')[1]
+                  img.os = 2
+                  operateImages[img.imgid] = img
+                }
               })
             }
            
@@ -337,10 +449,8 @@ export default {
             //   }
             //   item.cardList = arr
             // })
-
-
           })
-          
+          item.opreateCheck = opreateCheck
           item.operateImages = operateImages
           console.log('====================================')
           console.log('item.operateImages',item.operateImages)
@@ -356,7 +466,11 @@ export default {
     getCardSizeList(){
       cardSizeList({}).then(res=>{
         res.data.forEach(item=>{
-          item.checked = false
+          item.checked = {
+            '0':false,
+            '1':false,
+            '2':false
+          }
           item.andImgList = []
           item.iosImgList = []
           item.ipadImgList = []
@@ -370,7 +484,11 @@ export default {
     resetCardCheck() {
       //for循环重置卡片的每个checked为false
       this.cardList.forEach(item=>{
-        item.checked = false
+        item.checked = {
+            '0':false,
+            '1':false,
+            '2':false
+          }
       })
     },
     // 新增卡片
@@ -385,6 +503,7 @@ export default {
       //组装images参数返回给后台
       const imageList = []
       console.log('addOperateImages:',this.addOperateImages)
+      console.log('this.cardList:',this.cardList)
       Object.keys(this.addOperateImages).forEach(key=>{
         const x = this.addOperateImages[key].x
         const y = this.addOperateImages[key].y
@@ -392,17 +511,26 @@ export default {
         // if (this.checked[x+','+y]) {
         //   imageList.push(item.operateImages[key])
         // }
-        this.cardList.forEach(card=>{
-          if (
-            card.checked 
-              && parseInt(card.x) ===parseInt(x) 
-              && parseInt(card.y) === parseInt(y)
-              && (this.addOperateImages[key].op === 1 || this.addOperateImages[key].op === 3)
-          ) {
-            imageList.push(this.addOperateImages[key])
-          }
-        })
+        if (this.addOperateImages[key].op === 1 || this.addOperateImages[key].op === 3) {
+          //这里是对图片的操作
+           imageList.push(this.addOperateImages[key])
+        }
       })
+      this.cardList.forEach(card=>{
+          //这里是对chedked的操作
+          Object.keys(card.checked).forEach(os=>{
+            if(card.checked[os.toString()]){//勾选上就进行添加
+              imageList.push({
+                x:card.x,
+                y:card.y,
+                name:'check',
+                img:'check',
+                os:os,
+                op:1
+              })
+            }
+          })
+        })
       this.formItem.operator = 1
       this.formItem.images = imageList
       console.log('this.formItem:',this.formItem)
@@ -434,16 +562,35 @@ export default {
       const imageList = []
       const that = this
       console.log('item.operateImages:',item.operateImages)
+      console.log('item.opreateCheck:',item.opreateCheck)
 
 
       Object.keys(item.operateImages).forEach(key=>{
         const x = item.operateImages[key].x
         const y = item.operateImages[key].y
+        const os =  item.operateImages[key].os
+        imageList.push(item.operateImages[key])
         //如果对应的图片是在被选中的列表里面
-        if (item.checked[x+','+y]) {
-          imageList.push(item.operateImages[key])
-        }
+        // if (item.checked[x+','+y][os.toString()].checked) {
+        //   imageList.push(item.operateImages[key])
+        // }
       })
+      //循环checked
+      Object.keys(item.checked).forEach(key=>{
+        Object.keys(item.checked[key]).forEach(index=>{
+          if (item.checked[key][index].checked) {//选中状态
+            imageList.push(item.checked[key][index].postObj)
+          }else{//非选中状态，查找是否存在返回的数据中，若存在，需要提交到后台进行删除
+            const imgid = item.checked[key][index].postObj.imgid
+            if (item.opreateCheck[imgid]) {//如果存在需要进行删除操作
+              item.opreateCheck[imgid].op = 3 //修改为删除操作
+              imageList.push(item.opreateCheck[imgid])
+            }
+          }
+        })
+      })
+
+
       // console.log('imageList:',imageList);
       params.images = imageList
       console.log('请求的params：',params)

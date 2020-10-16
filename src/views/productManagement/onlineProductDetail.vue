@@ -146,7 +146,7 @@
             </el-col>
           </el-row >
           <!-- 产品card -->
-          <el-row class="card-row">
+          <el-row class="card-row" v-if="checkBox">
             <el-col
               :span="3"
               class="card-span-left">面板设备卡片大小</el-col>
@@ -161,55 +161,74 @@
                   :span="1" 
                   :offset="1"
                   class="checkContent">
-                  <el-checkbox 
-                    :disabled="!edit"
-                    v-model="ele.checked">{{ ele.x + '*' +ele.y }}</el-checkbox>
+                  <div>{{ ele.x + '*' +ele.y }}</div>
                 </el-col>
                 <el-col 
-                  :span="20" 
-                  style="margin-left:40px">
-                  <el-col :span="4">安卓图片：</el-col>
-                  <el-col :span="20">
-                    <el-upload
+                  :span="21" >
+                  <el-col :span="7">
+                    <el-col :span="4">
+                      <el-checkbox 
                       :disabled="!edit"
-                      :on-success="handleUpload(ele,0)"  
-                      :on-preview="handlePictureCardPreview"
-                      :data="and_base_img"
-                      :file-list="showImages && showImages[ele.x+','+ele.y] && showImages[ele.x+','+ele.y]['0']?showImages[ele.x+','+ele.y]['0']:[]"
-                      :on-remove="handleremove"
-                      action="/api/index.php/files/save"
-                      list-type="picture">
-                      <i class="el-icon-plus"/>
-                    </el-upload>
+                      v-model="checkBox[ele.x + ',' +ele.y ]['0'].checked">安卓：</el-checkbox>
+                    </el-col>
+                    <el-col :span="20">
+                      <el-upload
+                        :disabled="!edit"
+                        :on-success="handleUpload(ele,0)"  
+                        :on-preview="handlePictureCardPreview"
+                        :data="and_base_img"
+                        :file-list="returnList(showImages,ele,'0')"
+                        :on-remove="handleremove"
+                        action="/api/index.php/files/save">
+                        <!-- <i class="el-icon-plus"/> -->
+                        <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                      </el-upload>
+                    </el-col>
                   </el-col>
-                  <el-col :span="4">IOS图片：</el-col>
-                  <el-col :span="20">
-                    <el-upload
+
+                 <el-col :span="7">
+                   <el-col :span="4">
+                     <el-checkbox 
                       :disabled="!edit"
-                      :file-list="showImages && showImages[ele.x+','+ele.y] && showImages[ele.x+','+ele.y]['1']?showImages[ele.x+','+ele.y]['1']:[]"
-                      :on-success="handleUpload(ele,1)"
-                      :on-preview="handlePictureCardPreview"
-                      :data="ios_base_img"
-                      :on-remove="handleremove"
-                      action="/api/index.php/files/save"
-                      list-type="picture">
-                      <i class="el-icon-plus"/>
-                    </el-upload>
-                  </el-col>
-                  <el-col :span="4">面板图片：</el-col>
-                  <el-col :span="20">
-                    <el-upload
+                      v-model="checkBox[ele.x + ',' +ele.y ]['1'].checked">IOS：</el-checkbox>
+                   </el-col>
+                    <el-col :span="20">
+                      <el-upload
+                        :disabled="!edit"
+                        :file-list="returnList(showImages,ele,'1')"
+                        :on-success="handleUpload(ele,1)"
+                        :on-preview="handlePictureCardPreview"
+                        :data="ios_base_img"
+                        :on-remove="handleremove"
+                        action="/api/index.php/files/save">
+                        <!-- <i class="el-icon-plus"/> -->
+                        <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                      </el-upload>
+                    </el-col>
+                 </el-col>
+
+                   <el-col :span="7">
+                     <el-col :span="4">
+                        <el-checkbox 
                       :disabled="!edit"
-                      :file-list="showImages && showImages[ele.x+','+ele.y] && showImages[ele.x+','+ele.y]['2']?showImages[ele.x+','+ele.y]['2']:[]"
-                      :on-success="handleUpload(ele,2)"
-                      :on-preview="handlePictureCardPreview"
-                      :data="ipad_base_img"
-                      :on-remove="handleremove"
-                      action="/api/index.php/files/save"
-                      list-type="picture">
-                      <i class="el-icon-plus"/>
-                    </el-upload>
-                  </el-col>
+                      v-model="checkBox[ele.x + ',' +ele.y ]['2'].checked">面板：</el-checkbox>
+                     </el-col>
+                      <el-col :span="20">
+                        <el-upload
+                          :disabled="!edit"
+                          :file-list="returnList(showImages,ele,'2')"
+                          :on-success="handleUpload(ele,2)"
+                          :on-preview="handlePictureCardPreview"
+                          :data="ipad_base_img"
+                          :on-remove="handleremove"
+                          action="/api/index.php/files/save">
+                          <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                          <!-- <i class="el-icon-plus"/> -->
+                        </el-upload>
+                      </el-col>
+                   </el-col>
+                  
+                  
                 </el-col>
               </el-row>
             </el-col>
@@ -1371,7 +1390,8 @@ export default {
         token: getToken()
       },
       addOperateImages:{},
-      showImages:null
+      showImages:null,
+      checkBox:null
     }
   },
   computed: {
@@ -1387,17 +1407,44 @@ export default {
     this.lineStatus = this.$route.query.lineStatus
 
   },
-  mounted() {
+  async mounted() {
     this.getReviewInfo()
     this.getConfigList()
     this.getTagList()
+    await this.getCardSizeList()
     this.getProductTag()
-    this.getCardSizeList()
+   
   },
   deactivated() {
     this.$destroy()
   },
   methods: {
+    returnList(showImages,ele,os){
+      console.log('showImages:',showImages);
+        //item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]
+        const filterImages =  showImages && showImages[ele.x+','+ele.y] && showImages[ele.x+','+ele.y][os.toString()]?showImages[ele.x+','+ele.y][os.toString()]:[]
+        const images = []
+        filterImages.forEach(item=>{
+          if (item.name !== 'check' && item.img.indexOf('check') <= -1) {
+              images.push(item)
+            }
+        })
+        const opreateImages = []
+        Object.keys(this.addOperateImages).forEach(key=>{
+          if (this.addOperateImages[key].name !== "check" && 
+          this.addOperateImages[key].img.indexOf('check') <= -1 &&
+          this.addOperateImages[key].os.toString() === os.toString() ) {
+            if (
+              this.addOperateImages[key].x.toString() === ele.x.toString() && 
+              this.addOperateImages[key].y.toString() === ele.y.toString() && 
+              this.addOperateImages[key].os.toString() === os.toString()
+              ){
+                opreateImages.push(this.addOperateImages[key])
+              }
+          }
+        })
+        return Object.assign([],images,opreateImages)
+    },
     handleUpload(){
       console.log('上传')
     },
@@ -1444,13 +1491,57 @@ export default {
     },
     // 获取卡片大小
     getCardSizeList(){
+      const checkBox = {}
       cardSizeList({}).then(res=>{
         res.data.forEach(item=>{
           item.checked = false
           item.andImgList = []
           item.iosImgList = []
           item.ipadImgList = []
+
+          //默认安卓 IOS 和平板都赋值列表
+            checkBox[item.x+','+item.y] = {}
+            checkBox[item.x+','+item.y]['0'] = {
+              checked:false,
+              //用于提交到接口的check数据
+              postObj:{
+                op:1,//默认为新增
+                x:item.x,
+                y:item.y,
+                name:'check',
+                img:'check',
+                os:0
+              }
+            }
+
+            checkBox[item.x+','+item.y]['1'] = {
+              checked:false,
+              //用于提交到接口的check数据
+              postObj:{
+                op:1,//默认为新增
+                x:item.x,
+                y:item.y,
+                name:'check',
+                img:'check',
+                os:1
+              }
+            }
+
+            checkBox[item.x+','+item.y]['2'] = {
+              checked:false,
+              //用于提交到接口的check数据
+              postObj:{
+                op:1,//默认为新增
+                x:item.x,
+                y:item.y,
+                name:'check',
+                img:'check',
+                os:2
+              }
+            }
+
         })
+        this.checkBox = checkBox
         this.cardList = res.data
         console.log(this.cardList)
       })
@@ -1474,21 +1565,42 @@ export default {
         console.log('获取产品tag：',res)
         // 产品标签中有信息的时候存在res.data这个值, 无标签信息只又一条提示信息
         if(res.data){
+          const  opreateCheck = {}
           this.tagVal = res.data.gtag_id // res有值就将其赋值
           if (res.data.images) {
             this.showImages = res.data.images
             Object.keys(res.data.images).forEach(key=>{
               Object.keys(res.data.images[key]).forEach(index=>{
                 res.data.images[key][index].forEach(img=>{
-                  img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
-                  img.op = 2//重置为修改
-                  img.x = key.split(',')[0]
-                  img.y = key.split(',')[1]
-                  img.os = 0
-                  this.addOperateImages[img.imgid] = img
+
+                  if (img.name === 'check' && img.img.indexOf('check') >-1) {
+                      //用来获取过滤得到check选项
+                        img.op = 2//重置为修改
+                        img.x = key.split(',')[0]
+                        img.y = key.split(',')[1]
+                        img.os = index
+                        opreateCheck[img.imgid] = img
+                        console.log('进入这里key:',key);
+                        if (this.checkBox[key.split(',')[0]+','+key.split(',')[1]]) {
+                          this.checkBox[key.split(',')[0]+','+key.split(',')[1]][index] = {
+                            checked:true,
+                            postObj:img
+                          }
+                        }
+                        
+                    }else{
+                      img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
+                      img.op = 2//重置为修改
+                      img.x = key.split(',')[0]
+                      img.y = key.split(',')[1]
+                      img.os = index
+                      this.addOperateImages[img.imgid] = img
+                    }                 
+
                 })
               })
             })
+            this.opreateCheck = opreateCheck
             console.log('处理后得 this.addOperateImages：', this.addOperateImages)
             // res.data.images.forEach(img=>{
             //     img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
@@ -1510,25 +1622,36 @@ export default {
       //组装images参数返回给后台
       const imageList = []
       console.log('addOperateImages:',this.addOperateImages)
-      Object.keys(this.addOperateImages).forEach(key=>{
-        const x = this.addOperateImages[key].x
-        const y = this.addOperateImages[key].y
-        //如果对应的图片是再被选中的列表里面
-        // if (this.checked[x+','+y]) {
-        //   imageList.push(item.operateImages[key])
-        // }
-        console.log('this.cardList:',this.cardList)
+
         this.cardList.forEach(card=>{
-          if (
-            card.checked 
-            && parseInt(card.x) ===parseInt(x) 
-            && parseInt(card.y) === parseInt(y) 
-            && (this.addOperateImages[key].op === 1 || this.addOperateImages[key].op === 3)
-          ) {
-            imageList.push(this.addOperateImages[key])
-          }
+           Object.keys(this.addOperateImages).forEach(key => {
+              console.log('checked in')
+              if(
+                parseInt(card.x) === parseInt(this.addOperateImages[key].x) 
+                && parseInt(card.y) === parseInt(this.addOperateImages[key].y) 
+                && (parseInt(this.addOperateImages[key].op) === 1 || parseInt(this.addOperateImages[key].op) === 3)  
+              ){
+                ///图片的添加
+                console.log('checked in 有匹配的')
+                 imageList.push(this.addOperateImages[key])
+              }
+            })
         })
-      })
+       //循环checked
+          Object.keys(this.checkBox).forEach(key=>{
+            Object.keys(this.checkBox[key]).forEach(index=>{
+              if (this.checkBox[key][index].checked) {//选中状态
+              this.checkBox[key][index].postObj.op = 1
+                imageList.push(this.checkBox[key][index].postObj)
+              }else{//非选中状态，查找是否存在返回的数据中，若存在，需要提交到后台进行删除
+                const imgid = this.checkBox[key][index].postObj.imgid
+                if (this.opreateCheck[imgid]) {//如果存在需要进行删除操作
+                  this.opreateCheck[imgid].op = 3 //修改为删除操作
+                  imageList.push(this.opreateCheck[imgid])
+                }
+              }
+            })
+          })
       //gtag_id传0的时候表示删除
       const params = this.tagVal ? {
         product_id: this.product_id,
@@ -2389,32 +2512,35 @@ export default {
     }
   }
 .imgContent{
-    /deep/ .el-upload--picture{
-      width: 80px;
-      height: 76px;
-      line-height: 80px;
-      border: 1px dashed #d9d9d9;
-      border-radius: 6px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-    /deep/ .el-upload-list__item{
-    display: flex;
-    flex-direction: column;
-    height: 138px;
-    align-items: center;
-    width: 15%;
-    margin-right: 10px;
+  /deep/ .el-upload-list{
+    float: left;
   }
-  /deep/ .el-upload-list__item-name{
-    margin-left: -80px;
-    margin-right: 0px;
-  }
-  /deep/ .el-upload-list--picture{
-    display: flex;
-    margin-bottom: 20px;
-    flex-flow: wrap;
-  }
+  //   /deep/ .el-upload--picture{
+  //     width: 80px;
+  //     height: 76px;
+  //     line-height: 80px;
+  //     border: 1px dashed #d9d9d9;
+  //     border-radius: 6px;
+  //     cursor: pointer;
+  //     position: relative;
+  //     overflow: hidden;
+  //   }
+  //   /deep/ .el-upload-list__item{
+  //   display: flex;
+  //   flex-direction: column;
+  //   height: 138px;
+  //   align-items: center;
+  //   width: 15%;
+  //   margin-right: 10px;
+  // }
+  // /deep/ .el-upload-list__item-name{
+  //   margin-left: -80px;
+  //   margin-right: 0px;
+  // }
+  // /deep/ .el-upload-list--picture{
+  //   display: flex;
+  //   margin-bottom: 20px;
+  //   flex-flow: wrap;
+  // }
   }
 </style>

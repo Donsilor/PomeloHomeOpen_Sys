@@ -87,7 +87,7 @@
       :visible.sync="formVisible"
       :title="dialogTitle">
       <el-form 
-        label-width="200px"
+        label-width="300px"
         class="form">
         <el-form-item 
           v-show="isEdit == false"
@@ -119,7 +119,6 @@
             :file-list="tagImageList"
             :limit="1"
             action="/api/index.php/files/save"
-            list-type="picture"
             accept="image/png,image/gif,image/jpeg,image/jpg,image/bmp">
             <i class="el-icon-plus"/>
           </el-upload>
@@ -152,55 +151,67 @@
           :key="index"
           class="imgContent">
           <el-col 
-            :span="3"
+            :span="1"
             class="checkContent">
-            <el-checkbox v-model="item.checked">
+            <div>
               {{ item.x }}*{{ item.y }}
-            </el-checkbox>
+            </div>
           </el-col>
           <el-col :span="21">
-            <el-row :span="21">
-              <el-col :span="4" class="text">安卓图片：</el-col>
-              <el-col :span="17">
+            <el-col :span="7">
+              <el-col :span="12" class="text">
+                <el-checkbox v-model="checkBox[item.x+','+item.y]['0'].checked">
+                  安卓图片：
+                </el-checkbox>
+              </el-col>
+              <el-col :span="12">
                 <el-upload 
                   :data="base_img"
-                  :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['0']?showImages[item.x+','+item.y]['0']:[]"
+                  :file-list="returnList(item,'0')"
                   :on-success="uploadSuccess(item,0)"
-                  :on-remove="handleRemove(item,0)"
-                  action="/api/index.php/files/save"
-                  list-type="picture">
-                  <i class="el-icon-plus"/>
+                  :on-remove="handleRemove"
+                  action="/api/index.php/files/save">
+                  <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                  <!-- <i class="el-icon-plus"/> -->
                 </el-upload>
               </el-col>
-            </el-row>
-            <el-row :span="21">
-              <el-col :span="4"  class="text">IOS图片：</el-col>
-              <el-col :span="17">
+            </el-col>
+            <el-col :span="7">
+              <el-col :span="12"  class="text">
+                <el-checkbox v-model="checkBox[item.x+','+item.y]['1'].checked">
+                  IOS图片：
+                </el-checkbox>
+              </el-col>
+              <el-col :span="12">
                 <el-upload 
                   :data="base_img"
-                  :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['1']?showImages[item.x+','+item.y]['1']:[]"
+                  :file-list="returnList(item,'1')"
                   :on-success="uploadSuccess(item,1)"
-                  :on-remove="handleRemove(item,0)"
-                  action="/api/index.php/files/save"
-                  list-type="picture">
-                  <i class="el-icon-plus"/>
+                  :on-remove="handleRemove"
+                  action="/api/index.php/files/save">
+                  <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                  <!-- <i class="el-icon-plus"/> -->
                 </el-upload>
               </el-col>
-            </el-row>
-            <el-row :span="21">
-              <el-col :span="4"  class="text">面板图片：</el-col>
-              <el-col :span="17">
+            </el-col>
+            <el-col :span="7">
+              <el-col :span="12"  class="text">
+                <el-checkbox v-model="checkBox[item.x+','+item.y]['2'].checked">
+                  面板图片：
+                </el-checkbox>
+              </el-col>
+              <el-col :span="12">
                 <el-upload 
                   :data="base_img"
-                  :file-list="showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['2']?showImages[item.x+','+item.y]['2']:[]"
+                  :file-list="returnList(item,'2')"
                   :on-success="uploadSuccess(item,2)"
-                  :on-remove="handleRemove(item,0)"
-                  action="/api/index.php/files/save"
-                  list-type="picture">
-                  <i class="el-icon-plus"/>
+                  :on-remove="handleRemove"
+                  action="/api/index.php/files/save">
+                  <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
+                  <!-- <i class="el-icon-plus"/> -->
                 </el-upload>
               </el-col>
-            </el-row>
+            </el-col>
           </el-col>
         </el-row>
 
@@ -273,7 +284,9 @@ export default {
       },
       dialogImageUrl: '',
       dialogVisible: false,
-      tagImageList: []
+      tagImageList: [],
+      editRow:null,
+      checkBox:null
     }
   },
   computed: {
@@ -292,6 +305,38 @@ export default {
     this.getCardSizeList()
   },
   methods: {
+    returnList(ele,os){
+      //showImages && showImages[item.x+','+item.y] && showImages[item.x+','+item.y]['0']?showImages[item.x+','+item.y]['0']:[]
+        //this.showImages && this.showImages[ele.x+','+ele.y] && this.showImages[ele.x+','+ele.y]['0']?this.showImages[ele.x+','+ele.y]['0']:[]
+        const filterImages =  
+          this.showImages && 
+          this.showImages[ele.x+','+ele.y] && 
+          this.showImages[ele.x+','+ele.y][os.toString()]
+          // this.showImages[ele.x+','+ele.y]['0'].name !== 'check' &&
+          //  this.showImages[ele.x+','+ele.y]['0'].img.indexOf('check') <= -1
+            ?this.showImages[ele.x+','+ele.y][os.toString()]:[]
+        const images = []
+        filterImages.forEach(item=>{
+          if (item.name !== 'check' && item.img.indexOf('check') <= -1) {
+              images.push(item)
+            }
+        })
+        const opreateImages = []
+        Object.keys(this.operateImages).forEach(key=>{
+          if (
+            this.operateImages[key].name !== 'check' &&
+           this.operateImages[key].img.indexOf('check') <= -1
+           ) {
+            if (this.operateImages[key].x.toString() === ele.x.toString() && this.operateImages[key].y.toString() === ele.y.toString() && this.operateImages[key].os.toString() === os.toString()){
+              opreateImages.push(this.operateImages[key])
+            }
+          }
+          
+        })
+        console.log('images:',images);
+         console.log('opreateImages:',opreateImages);
+        return Object.assign([],images,opreateImages)
+    },
     dataFormat(originVal) { // 后台传回来的S
       const date = new Date(originVal)
       const y = date.getFullYear()
@@ -342,12 +387,60 @@ export default {
       this.tagImageList = []
       this.showImages={}//用于编辑时候显示相应的图片
       this.operateImages={}//用于编辑的时候，对相关图片进行操作
+      this.initCheckBox()
     },
     editTag(row, isEdit) {
+      this.initCheckBox()      
+      const editRow = Object.assign({},row)
+        // editRow.checked = {}
+        // console.log('editRow.checked:',editRow.checked);
+      // this.cardList.forEach(card=>{
+      //       //默认安卓 IOS 和平板都赋值列表
+      //       editRow.checked[card.x+','+card.y] = {}
+      //       editRow.checked[card.x+','+card.y]['0'] = {
+      //         checked:false,
+      //         //用于提交到接口的check数据
+      //         postObj:{
+      //           op:1,//默认为新增
+      //           x:card.x,
+      //           y:card.y,
+      //           name:'check',
+      //           img:'check',
+      //           os:0
+      //         }
+      //       }
+
+      //       editRow.checked[card.x+','+card.y]['1'] = {
+      //         checked:false,
+      //         //用于提交到接口的check数据
+      //         postObj:{
+      //           op:1,//默认为新增
+      //           x:card.x,
+      //           y:card.y,
+      //           name:'check',
+      //           img:'check',
+      //           os:1
+      //         }
+      //       }
+
+      //       editRow.checked[card.x+','+card.y]['2'] = {
+      //         checked:false,
+      //         //用于提交到接口的check数据
+      //         postObj:{
+      //           op:1,//默认为新增
+      //           x:card.x,
+      //           y:card.y,
+      //           name:'check',
+      //           img:'check',
+      //           os:2
+      //         }
+      //       }
+      //     })
       console.log('row:',row)
       const images = row.images
       console.log('images:',JSON.stringify(images))
       const operateImages = {}
+      const opreateCheck = {} //用来区分操作是否选择的check
       //为每一项目分出安卓、苹果和平板的图片列表
       console.log('images:', images)
       Object.keys(images).forEach(key=>{
@@ -358,52 +451,34 @@ export default {
           console.log('index:',index)
           console.log('images[key][index]:',images[key])
           images[key][index].forEach(item=>{
-            item.url = item.img.indexOf('http') > -1? item.img : IMAGE_PATH + item.img
-            images[key][index].op = 2//重置为修改
-            operateImages[item.imgid] = item
-            item.x = key.split(',')[0]
-            item.y = key.split(',')[1]
-            item.os = index
+            if (item.name === 'check' && item.img.indexOf('check') >-1) {
+                  //用来获取过滤得到check选项
+                    images[key][index].op = 2//重置为修改
+                    item.x = key.split(',')[0]
+                    item.y = key.split(',')[1]
+                    item.os = index
+                    opreateCheck[item.imgid] = item
+                    console.log('进入这里key:',key);
+                    if (this.checkBox[key.split(',')[0]+','+key.split(',')[1]]) {
+                      this.checkBox[key.split(',')[0]+','+key.split(',')[1]][index] = {
+                        checked:true,
+                        postObj:item
+                      }
+                    }
+                    
+                }else{
+                  item.url = item.img.indexOf('http') > -1? item.img : IMAGE_PATH + item.img
+                  images[key][index].op = 2//重置为修改
+                  item.x = key.split(',')[0]
+                  item.y = key.split(',')[1]
+                  item.os = index
+                  operateImages[item.imgid] = item
+                }
+            
           })
         })
-        // images[key].forEach(item=>{
-        //   item.url = item.img.indexOf('http') > -1? item.img : IMAGE_PATH + item.img
-        //   item.op = 2//重置为修改
-        //   operateImages[item.imgid] = item
-        // })
       })
-      // images && images.forEach(item => {
-      //   console.log(8888);
-      //   if (item.os === 0) {
-      //     androidImgList.push(
-      //       {
-      //         name: item.name,
-      //         url: item.img.indexOf('http') > -1 ? item.img : IMAGE_PATH + item.img,
-      //         imgid: item.imgid
-      //       }
-      //     )
-      //   } else if (item.os === 1) {
-      //     iosImgList.push(
-      //       {
-      //         name: item.name,
-      //         url: item.img.indexOf('http') > -1 ? item.img : IMAGE_PATH + item.img,
-      //         imgid: item.imgid
-      //       }
-      //     )
-      //   } else {
-      //     panelImgList.push(
-      //       {
-      //         name: item.name,
-      //         url: item.img.indexOf('http') > -1 ? item.img : IMAGE_PATH + item.img,
-      //         imgid: item.imgid
-      //       }
-      //     )
-      //   }
-      //   item.op = 1//重置为修改
-      //   //用imgid关联可以用来操作
-      //   operateImages[item.imgid] = item
-      // })
-      // row.images = images
+      this.editRow = editRow
       this.isEdit = true
       this.formVisible = true
       this.formItem = {
@@ -417,10 +492,11 @@ export default {
       }
       this.showImages = row.images
       this.operateImages = operateImages
+      this.opreateCheck = opreateCheck
       // this.$set(this.formItem,'iosImgList',iosImgList)
       // this.$set(this.formItem,'androidImgList',androidImgList)
       // this.$set(this.formItem,'panelImgList',panelImgList)
-      this.imageList = row.gtag_img
+      this.tagImageList = row.gtag_img
         ?[
           {
             name: row.gtag_name,
@@ -448,7 +524,7 @@ export default {
         const that = this
         console.log('that.operateImages:',that.operateImages)
         this.cardList.forEach(item => {
-          if (item.checked) {
+          // if (item.checked) {
             console.log('checked')
             Object.keys(that.operateImages).forEach(key => {
               console.log('checked in')
@@ -457,30 +533,44 @@ export default {
                 && parseInt(item.y) === parseInt(that.operateImages[key].y) 
                 && (parseInt(that.operateImages[key].op) === 1 || parseInt(that.operateImages[key].op) === 3)  
               ){
+                ///图片的添加
                 console.log('checked in 有匹配的')
-                //上传提交时候，要把图片的长路径修改成短路径
-                // imageList.push(Object.assign(
-                //   {},
-                //   that.operateImages[key],
-                //   {gtag_img:'oss_temp'+that.operateImages[key].gtag_img.split('oss_temp')[1]}
-                //   ))
-
                  imageList.push(that.operateImages[key])
               }
             })
-          }
+          // }
         })
+
+          //循环checked
+          Object.keys(this.checkBox).forEach(key=>{
+            Object.keys(this.checkBox[key]).forEach(index=>{
+              if (this.checkBox[key][index].checked) {//选中状态
+              this.checkBox[key][index].postObj.op = 1
+                imageList.push(this.checkBox[key][index].postObj)
+              }else{//非选中状态，查找是否存在返回的数据中，若存在，需要提交到后台进行删除
+                const imgid = this.checkBox[key][index].postObj.imgid
+                if (this.opreateCheck&&this.opreateCheck[imgid]) {//如果存在需要进行删除操作
+                  this.opreateCheck[imgid].op = 3 //修改为删除操作
+                  imageList.push(this.opreateCheck[imgid])
+                }
+              }
+            })
+          })
+
+
         params.images = imageList
       }
       
       console.log('传的参数：', JSON.stringify(params))
-
+console.log('this.tagImageList:',this.tagImageList)
       addGlobalTags(
 
         // item.img.indexOf('http') > -1? item.img : IMAGE_PATH + item.img
         //上传提交时候，要把图片的长路径修改成短路径
+        
         Object.assign({},params,{
-          gtag_img:params.gtag_img&&params.gtag_img.indexOf('http') > -1?'oss_temp'+params.gtag_img.split('oss_temp')[1]:params.gtag_img
+          gtag_img:this.tagImageList.length >0 &&this.tagImageList[0].url.indexOf('http') > -1?'oss_temp'+this.tagImageList[0].url.split('oss_temp')[1]:this.tagImageList[0].url
+          //gtag_img:params.gtag_img&&params.gtag_img.indexOf('http') > -1?'oss_temp'+params.gtag_img.split('oss_temp')[1]:params.gtag_img
         })
       ).then(res => {
         this.$message.success('操作成功！')
@@ -492,18 +582,66 @@ export default {
     },
     getCardSizeList() {
       this.listLoading = true
+      const checkBox  = {}
       cardSizeList().then(res => {
         const list = res.data
         list.forEach(item => {
           console.log('item:',item)
-          item.checked = false
-          //用于存放上传到服务器后返回的图片信息
-          //以上传到服务器后成功返回的md5或者是取回来的imageid作为唯一标识，可以对图片进行增删改的操作
-          // item.images = {}
+          
+          //默认安卓 IOS 和平板都赋值列表
+            checkBox[item.x+','+item.y] = {}
+            checkBox[item.x+','+item.y]['0'] = {
+              checked:false,
+              //用于提交到接口的check数据
+              postObj:{
+                op:1,//默认为新增
+                x:item.x,
+                y:item.y,
+                name:'check',
+                img:'check',
+                os:0
+              }
+            }
+
+            checkBox[item.x+','+item.y]['1'] = {
+              checked:false,
+              //用于提交到接口的check数据
+              postObj:{
+                op:1,//默认为新增
+                x:item.x,
+                y:item.y,
+                name:'check',
+                img:'check',
+                os:1
+              }
+            }
+
+            checkBox[item.x+','+item.y]['2'] = {
+              checked:false,
+              //用于提交到接口的check数据
+              postObj:{
+                op:1,//默认为新增
+                x:item.x,
+                y:item.y,
+                name:'check',
+                img:'check',
+                os:2
+              }
+            }
+
         })
+        this.checkBox = checkBox
         this.cardList = list
 
         console.log('cardList卡片列表：', this.cardList)
+      })
+    },
+    initCheckBox(){
+      //将checkbox所有的checked重置为false
+      Object.keys(this.checkBox).forEach(key=>{
+        Object.keys(this.checkBox[key]).forEach(index=>{
+          this.checkBox[key][index].checked = false
+        })
       })
     },
     handleSuccess(res) {
@@ -539,14 +677,14 @@ export default {
         }
       }
     },
-    handleRemove(item, type) {
+    handleRemove(file, fileList) {
       const that = this
-      return function(file, fileList) {
-        console.log('====================================')
+
+      console.log('====================================')
         console.log('file',file)
         console.log('====================================')
         if (file.response) {//这种是传到服务器的，还没存入接口
-          if (response.code === 200) {
+          if (file.response.code === 200) {
             const result = file.response.result
             const md5 = result.md5
             delete that.operateImages[md5]
@@ -563,8 +701,10 @@ export default {
           console.log('that.operateImages[imgid]:',that.operateImages[imgid])
           console.log('that.operateImages:',that.operateImages)
         }
+      // return function(file, fileList) {
+        
 
-      }
+      // }
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
@@ -576,11 +716,12 @@ export default {
 <style lang="scss">
 .form {
   .text{
-    line-height: 20px;
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    // line-height: 20px;
+    // height: 80px;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+    margin-top: 10px;
   }
   .bottom_text {
     line-height: 20px;
@@ -592,35 +733,38 @@ export default {
     }
   }
   .imgContent {
-    line-height: 80px;
-    margin-left: 40px;
+    // line-height: 80px;
+    // margin-left: 40px;
   }
-  .el-upload--picture {
-    width: 80px;
-    height: 76px;
-    line-height: 80px;
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+  // .el-upload--picture {
+  //   width: 80px;
+  //   height: 76px;
+  //   line-height: 80px;
+  //   border: 1px dashed #d9d9d9;
+  //   border-radius: 6px;
+  //   cursor: pointer;
+  //   position: relative;
+  //   overflow: hidden;
+  // }
+   /deep/ .el-upload-list{
+    // float: left;
   }
-  /deep/ .el-upload-list__item{
-    display: flex;
-    flex-direction: column;
-    height: 138px;
-    align-items: center;
-    width: 25%;
-    margin-right: 10px;
-  }
-  /deep/ .el-upload-list__item-name{
-    margin-left: -80px;
-    margin-right: 0px;
-  }
-  /deep/ .el-upload-list--picture{
-    display: flex;
-    margin-bottom: 20px;
-    flex-flow: wrap;
-  }
+  // /deep/ .el-upload-list__item{
+  //   display: flex;
+  //   flex-direction: column;
+  //   height: 138px;
+  //   align-items: center;
+  //   width: 25%;
+  //   margin-right: 10px;
+  // }
+  // /deep/ .el-upload-list__item-name{
+  //   margin-left: -80px;
+  //   margin-right: 0px;
+  // }
+  // /deep/ .el-upload-list--picture{
+  //   display: flex;
+  //   margin-bottom: 20px;
+  //   flex-flow: wrap;
+  // }
 }
 </style>

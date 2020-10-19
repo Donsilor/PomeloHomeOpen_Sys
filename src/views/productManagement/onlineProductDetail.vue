@@ -1391,7 +1391,8 @@ export default {
       },
       addOperateImages:{},
       showImages:null,
-      checkBox:null
+      checkBox:null,
+      opreateCheck:{}
     }
   },
   computed: {
@@ -1561,14 +1562,15 @@ export default {
       const params = {
         product_id: this.product_id,
       }
+      const that = this
       getProductTags(params).then(res =>{
         console.log('获取产品tag：',res)
         // 产品标签中有信息的时候存在res.data这个值, 无标签信息只又一条提示信息
         if(res.data){
           const  opreateCheck = {}
-          this.tagVal = res.data.gtag_id // res有值就将其赋值
+          that.tagVal = res.data.gtag_id // res有值就将其赋值
           if (res.data.images) {
-            this.showImages = res.data.images
+            that.showImages = res.data.images
             Object.keys(res.data.images).forEach(key=>{
               Object.keys(res.data.images[key]).forEach(index=>{
                 res.data.images[key][index].forEach(img=>{
@@ -1581,8 +1583,8 @@ export default {
                         img.os = index
                         opreateCheck[img.imgid] = img
                         console.log('进入这里key:',key);
-                        if (this.checkBox[key.split(',')[0]+','+key.split(',')[1]]) {
-                          this.checkBox[key.split(',')[0]+','+key.split(',')[1]][index] = {
+                        if (that.checkBox[key.split(',')[0]+','+key.split(',')[1]]) {
+                          that.checkBox[key.split(',')[0]+','+key.split(',')[1]][index] = {
                             checked:true,
                             postObj:img
                           }
@@ -1594,14 +1596,14 @@ export default {
                       img.x = key.split(',')[0]
                       img.y = key.split(',')[1]
                       img.os = index
-                      this.addOperateImages[img.imgid] = img
+                      that.addOperateImages[img.imgid] = img
                     }                 
 
                 })
               })
             })
-            this.opreateCheck = opreateCheck
-            console.log('处理后得 this.addOperateImages：', this.addOperateImages)
+            that.opreateCheck = opreateCheck
+            console.log('处理后得 this.addOperateImages：', that.addOperateImages)
             // res.data.images.forEach(img=>{
             //     img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
             //     img.op = 2//重置为修改
@@ -1612,7 +1614,7 @@ export default {
             // })
           }
         }else{
-          this.tagVal = '' // 无值的时候置空，令其选择
+          that.tagVal = '' // 无值的时候置空，令其选择
         }
       })
     },
@@ -1637,17 +1639,18 @@ export default {
               }
             })
         })
+        const that = this 
        //循环checked
-          Object.keys(this.checkBox).forEach(key=>{
-            Object.keys(this.checkBox[key]).forEach(index=>{
-              if (this.checkBox[key][index].checked) {//选中状态
-              this.checkBox[key][index].postObj.op = 1
-                imageList.push(this.checkBox[key][index].postObj)
+          Object.keys(that.checkBox).forEach(key=>{
+            Object.keys(that.checkBox[key]).forEach(index=>{
+              if (that.checkBox[key][index].checked) {//选中状态
+              that.checkBox[key][index].postObj.op = 1
+                imageList.push(that.checkBox[key][index].postObj)
               }else{//非选中状态，查找是否存在返回的数据中，若存在，需要提交到后台进行删除
-                const imgid = this.checkBox[key][index].postObj.imgid
-                if (this.opreateCheck[imgid]) {//如果存在需要进行删除操作
-                  this.opreateCheck[imgid].op = 3 //修改为删除操作
-                  imageList.push(this.opreateCheck[imgid])
+                const imgid = that.checkBox[key][index].postObj.imgid
+                if (that.opreateCheck[imgid]) {//如果存在需要进行删除操作
+                  that.opreateCheck[imgid].op = 3 //修改为删除操作
+                  imageList.push(that.opreateCheck[imgid])
                 }
               }
             })
@@ -1660,7 +1663,8 @@ export default {
       }:
         {
           product_id: this.product_id,
-          gtag_id: 0
+          gtag_id: 0,
+          images:imageList
         }
       console.log('修改产品tag传递参数：',params)
       // rectPostCard(this.formItem).then(res=>{

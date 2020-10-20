@@ -510,6 +510,9 @@ export default {
         .then(_ => {
           this.formItem = row
           this.formItem.enable = 0 //enable传0表示删除
+          if (this.formItem.images) {
+            this.formItem.images = []
+          }
           this.onSubmit() //调用onSubmit借口发起请求
         })
         .catch(_ => { })
@@ -518,7 +521,7 @@ export default {
       const params = this.formItem
       if (this.formItem.enable === 0) {//删除
 
-      }  else {//添加或者编辑
+      } else {//添加或者编辑
         //组装images参数返回给后台
         const imageList = []
         const that = this

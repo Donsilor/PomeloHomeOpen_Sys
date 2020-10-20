@@ -12,7 +12,7 @@
         fixed
         prop="name"
         label="大小名称"
-        width=""/>
+        width="250"/>
       <el-table-column
         :formatter="timeFomatter"
         prop="create_time"
@@ -25,7 +25,7 @@
         width=""/>
       <el-table-column
         label="操作"
-        width="">
+        width="350">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -39,6 +39,16 @@
             type="text"
             size="mini"
             @click="handleEdite(scope.row)">编辑</el-button>
+          <el-button
+            type="info"
+            size="mini"
+            icon="el-icon-arrow-up"
+            @click="handleMove(scope.row,0)">上移</el-button>
+          <el-button
+            type="info"
+            size="mini"
+            icon="el-icon-arrow-down"
+            @click="handleMove(scope.row,1)">下移</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -70,6 +80,27 @@ export default {
     this.getDataList()
   },
   methods: {
+    handleMove(row,type){
+      let sort = parseInt(row.sort)
+      if (type===0){
+        if (sort>0){
+          sort = sort-1
+        }
+      }else {
+        sort = sort+1
+      }
+      let params = {
+        id:row.id,
+        name:row.name,
+        sort:sort,
+        template:row.template,
+        operator:2
+      }
+      console.log('handleMove----', row, type)
+      screenEdite(params).then(res=>{
+        this.getDataList()
+      })
+    },
     getDataList(){
       getScreenList({page:1,size:10}).then(res=>{
         this.tableData = res.data

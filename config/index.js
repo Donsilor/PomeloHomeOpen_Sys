@@ -27,23 +27,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api/index.php/': {
-        // target: 'http://devpho.evergrande.cn/api/index.php', // 开发环境
-        target: 'http://betapho.evergrande.cn/api/index.php', // 测试环境
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      },
-      // 对tag请求进行处理
-      '/api/ext/':{
+      '/api/':{
         //target:'http://172.26.85.69:8080',
-        target:'http://betaphoau.evergrande.me',//测试
-        // target: 'http://sh-opencheck-dev.xl.cn', // 开发环境
-          // target: 'http://172.26.84.246:8080/api/ext', // 本地测试 
-        //target: 'http://sh-opencheck-dev.xl.cn/', // 测试环境
+        // target:'http://betaphoau.evergrande.me',//测试
+        target: 'http://sh-opencheck-dev.xl.cn', // 开发环境
+          // target: 'http://172.26.84.246:8080/api/ext', // 本地测试
         changeOrigin: true,
-        
+
       },
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

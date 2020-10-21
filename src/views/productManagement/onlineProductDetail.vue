@@ -146,91 +146,13 @@
             </el-col>
           </el-row >
           <!-- 产品card -->
-          <el-row class="card-row" v-if="checkBox">
+          <el-row class="card-row">
             <el-col
               :span="3"
               class="card-span-left">面板设备卡片大小</el-col>
             <el-col 
-              :span="20"
-              :offset="1">  
-              <el-row 
-                v-for="(ele,itemIndex) in cardList" 
-                :key="itemIndex" 
-                class="imgContent">
-                <el-col 
-                  :span="1" 
-                  :offset="1"
-                  class="checkContent">
-                  <div>{{ ele.x + '*' +ele.y }}</div>
-                </el-col>
-                <el-col 
-                  :span="21" >
-                  <el-col :span="7">
-                    <el-col :span="4">
-                      <el-checkbox 
-                      :disabled="!edit"
-                      v-model="checkBox[ele.x + ',' +ele.y ]['0'].checked">安卓：</el-checkbox>
-                    </el-col>
-                    <el-col :span="20">
-                      <el-upload
-                        :disabled="!edit"
-                        :on-success="handleUpload(ele,0)"  
-                        :on-preview="handlePictureCardPreview"
-                        :data="and_base_img"
-                        :file-list="returnList(showImages,ele,'0')"
-                        :on-remove="handleremove"
-                        action="/api/index.php/files/save">
-                        <!-- <i class="el-icon-plus"/> -->
-                        <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
-                      </el-upload>
-                    </el-col>
-                  </el-col>
-
-                 <el-col :span="7">
-                   <el-col :span="4">
-                     <el-checkbox 
-                      :disabled="!edit"
-                      v-model="checkBox[ele.x + ',' +ele.y ]['1'].checked">IOS：</el-checkbox>
-                   </el-col>
-                    <el-col :span="20">
-                      <el-upload
-                        :disabled="!edit"
-                        :file-list="returnList(showImages,ele,'1')"
-                        :on-success="handleUpload(ele,1)"
-                        :on-preview="handlePictureCardPreview"
-                        :data="ios_base_img"
-                        :on-remove="handleremove"
-                        action="/api/index.php/files/save">
-                        <!-- <i class="el-icon-plus"/> -->
-                        <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
-                      </el-upload>
-                    </el-col>
-                 </el-col>
-
-                   <el-col :span="7">
-                     <el-col :span="4">
-                        <el-checkbox 
-                      :disabled="!edit"
-                      v-model="checkBox[ele.x + ',' +ele.y ]['2'].checked">面板：</el-checkbox>
-                     </el-col>
-                      <el-col :span="20">
-                        <el-upload
-                          :disabled="!edit"
-                          :file-list="returnList(showImages,ele,'2')"
-                          :on-success="handleUpload(ele,2)"
-                          :on-preview="handlePictureCardPreview"
-                          :data="ipad_base_img"
-                          :on-remove="handleremove"
-                          action="/api/index.php/files/save">
-                          <el-button  icon="el-icon-plus" class="imgAddBtn" size="mini">添加图片</el-button>
-                          <!-- <i class="el-icon-plus"/> -->
-                        </el-upload>
-                      </el-col>
-                   </el-col>
-                  
-                  
-                </el-col>
-              </el-row>
+              :span="21">  
+              <uploadComponent :operateImages="operateImages" :cardData="cardData" :edit="edit"  />
             </el-col>
           </el-row>
           <el-dialog :visible.sync="dialogVisible">
@@ -1243,9 +1165,12 @@ import fetch from '@/utils/fetch'
 import { Message, Dialog } from 'element-ui'
 import { mapGetters } from 'vuex'
 import Cookies from 'js-cookie'
+import uploadComponent from '@/components/typeManagement/uploadComponent';
 export default {
+  components:{
+    uploadComponent
+  },
   name: 'OnlineProductDetail',
-
   data() {
     var checkPhone = (rule, value, callback) => {
       // const reg = /^1\d{10}$/
@@ -1374,25 +1299,10 @@ export default {
           }
         ]
       },
-      cardList:[],
       dialogImageUrl: '',
       dialogVisible: false, 
-      and_base_img: {
-        type: 12,
-        token: getToken()
-      },
-      ios_base_img: {
-        type: 12,
-        token: getToken()
-      },
-      ipad_base_img: {
-        type: 12,
-        token: getToken()
-      },
-      addOperateImages:{},
-      showImages:null,
-      checkBox:null,
-      opreateCheck:{}
+      operateImages:{},
+      cardData:null
     }
   },
   computed: {
@@ -1412,7 +1322,6 @@ export default {
     this.getReviewInfo()
     this.getConfigList()
     this.getTagList()
-    await this.getCardSizeList()
     this.getProductTag()
    
   },
@@ -1420,133 +1329,6 @@ export default {
     this.$destroy()
   },
   methods: {
-    returnList(showImages,ele,os){
-      console.log('showImages:',showImages);
-        //item.images && item.images[ele.x+','+ele.y] && item.images[ele.x+','+ele.y]['0']?item.images[ele.x+','+ele.y]['0']:[]
-        const filterImages =  showImages && showImages[ele.x+','+ele.y] && showImages[ele.x+','+ele.y][os.toString()]?showImages[ele.x+','+ele.y][os.toString()]:[]
-        const images = []
-        filterImages.forEach(item=>{
-          if (item.name !== 'check' && item.img.indexOf('check') <= -1) {
-              images.push(item)
-            }
-        })
-        const opreateImages = []
-        Object.keys(this.addOperateImages).forEach(key=>{
-          if (this.addOperateImages[key].name !== "check" && 
-          this.addOperateImages[key].img.indexOf('check') <= -1 &&
-          this.addOperateImages[key].os.toString() === os.toString() ) {
-            if (
-              this.addOperateImages[key].x.toString() === ele.x.toString() && 
-              this.addOperateImages[key].y.toString() === ele.y.toString() && 
-              this.addOperateImages[key].os.toString() === os.toString()
-              ){
-                opreateImages.push(this.addOperateImages[key])
-              }
-          }
-        })
-        return Object.assign([],images,opreateImages)
-    },
-    handleUpload(){
-      console.log('上传')
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
-    },
-    handleUpload(item,type){
-
-      const that = this
-      return function(res) {
-        console.log('添加上传图片返回数据：', res)
-        const params = {
-          "x": item.x,
-          "y": item.y,
-          "os": type,
-          "name": res.result.filename,
-          "img": res.result.object,
-          "op": 1//op:1 新增， 2 修改，3 删除
-        }
-        that.addOperateImages[res.result.md5] = params
-        console.log(' this.addOperateImages:', that.addOperateImages)
-      }
-    },
-    handleremove(file, fileList){
-      console.log('file:',file)
-       
-      if (file.response) {//这种是传到服务器的，还没存入接口
-        const result = file.response.result
-        const md5 = result.md5
-        delete this.addOperateImages[md5]
-        console.log('addOperateImages:',this.addOperateImages)
-      } else {//这里是编辑时候从接口取回来的图片列表数据（删除需要回传，修改op为3）
-        const imgid = file.imgid
-        console.log('====================================')
-        console.log('imgid:',imgid)
-        console.log('addOperateImages:',this.addOperateImages)
-        console.log('addOperateImages[imgid]:',this.addOperateImages[imgid])
-        console.log('====================================')
-        this.addOperateImages[imgid].op = 3
-        console.log('item.addOperateImages[imgid]:',this.addOperateImages[imgid])
-        console.log('item.addOperateImages:',this.addOperateImages)
-      }
-    },
-    // 获取卡片大小
-    getCardSizeList(){
-      const checkBox = {}
-      cardSizeList({}).then(res=>{
-        res.data.forEach(item=>{
-          item.checked = false
-          item.andImgList = []
-          item.iosImgList = []
-          item.ipadImgList = []
-
-          //默认安卓 IOS 和平板都赋值列表
-            checkBox[item.x+','+item.y] = {}
-            checkBox[item.x+','+item.y]['0'] = {
-              checked:false,
-              //用于提交到接口的check数据
-              postObj:{
-                op:1,//默认为新增
-                x:item.x,
-                y:item.y,
-                name:'check',
-                img:'check',
-                os:0
-              }
-            }
-
-            checkBox[item.x+','+item.y]['1'] = {
-              checked:false,
-              //用于提交到接口的check数据
-              postObj:{
-                op:1,//默认为新增
-                x:item.x,
-                y:item.y,
-                name:'check',
-                img:'check',
-                os:1
-              }
-            }
-
-            checkBox[item.x+','+item.y]['2'] = {
-              checked:false,
-              //用于提交到接口的check数据
-              postObj:{
-                op:1,//默认为新增
-                x:item.x,
-                y:item.y,
-                name:'check',
-                img:'check',
-                os:2
-              }
-            }
-
-        })
-        this.checkBox = checkBox
-        this.cardList = res.data
-        console.log(this.cardList)
-      })
-    },
     // 获取下拉选择列表
     getTagList(){
       getGlobalTags().then(res => {
@@ -1567,52 +1349,8 @@ export default {
         console.log('获取产品tag：',res)
         // 产品标签中有信息的时候存在res.data这个值, 无标签信息只又一条提示信息
         if(res.data){
-          const  opreateCheck = {}
+          that.cardData = res.data
           that.tagVal = res.data.gtag_id // res有值就将其赋值
-          if (res.data.images) {
-            that.showImages = res.data.images
-            Object.keys(res.data.images).forEach(key=>{
-              Object.keys(res.data.images[key]).forEach(index=>{
-                res.data.images[key][index].forEach(img=>{
-
-                  if (img.name === 'check' && img.img.indexOf('check') >-1) {
-                      //用来获取过滤得到check选项
-                        img.op = 2//重置为修改
-                        img.x = key.split(',')[0]
-                        img.y = key.split(',')[1]
-                        img.os = index
-                        opreateCheck[img.imgid] = img
-                        console.log('进入这里key:',key);
-                        if (that.checkBox[key.split(',')[0]+','+key.split(',')[1]]) {
-                          that.checkBox[key.split(',')[0]+','+key.split(',')[1]][index] = {
-                            checked:true,
-                            postObj:img
-                          }
-                        }
-                        
-                    }else{
-                      img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
-                      img.op = 2//重置为修改
-                      img.x = key.split(',')[0]
-                      img.y = key.split(',')[1]
-                      img.os = index
-                      that.addOperateImages[img.imgid] = img
-                    }                 
-
-                })
-              })
-            })
-            that.opreateCheck = opreateCheck
-            console.log('处理后得 this.addOperateImages：', that.addOperateImages)
-            // res.data.images.forEach(img=>{
-            //     img.url =  img.img // 给图片列表中添加url字段从而在页面上进行展示
-            //     img.op = 2//重置为修改
-            //     img.x = ele.split(',')[0]
-            //     img.y = ele.split(',')[1]
-            //     img.os = 0
-            //     this.addOperateImages[img.imgid] = img
-            // })
-          }
         }else{
           that.tagVal = '' // 无值的时候置空，令其选择
         }
@@ -1620,66 +1358,18 @@ export default {
     },
     // 修改tag标签TODO:
     changeTag(){
-
-      //组装images参数返回给后台
-      const imageList = []
-      console.log('addOperateImages:',this.addOperateImages)
-
-        this.cardList.forEach(card=>{
-           Object.keys(this.addOperateImages).forEach(key => {
-              console.log('checked in')
-              if(
-                parseInt(card.x) === parseInt(this.addOperateImages[key].x) 
-                && parseInt(card.y) === parseInt(this.addOperateImages[key].y) 
-                && (parseInt(this.addOperateImages[key].op) === 1 || parseInt(this.addOperateImages[key].op) === 3)  
-              ){
-                ///图片的添加
-                console.log('checked in 有匹配的')
-                 imageList.push(this.addOperateImages[key])
-              }
-            })
-        })
-        const that = this 
-       //循环checked
-          Object.keys(that.checkBox).forEach(key=>{
-            Object.keys(that.checkBox[key]).forEach(index=>{
-              if (that.checkBox[key][index].checked) {//选中状态
-              that.checkBox[key][index].postObj.op = 1
-                imageList.push(that.checkBox[key][index].postObj)
-              }else{//非选中状态，查找是否存在返回的数据中，若存在，需要提交到后台进行删除
-                const imgid = that.checkBox[key][index].postObj.imgid
-                if (that.opreateCheck[imgid]) {//如果存在需要进行删除操作
-                  that.opreateCheck[imgid].op = 3 //修改为删除操作
-                  imageList.push(that.opreateCheck[imgid])
-                }
-              }
-            })
-          })
+      console.log('变化后的operateImages：',this.operateImages);
       //gtag_id传0的时候表示删除
       const params = this.tagVal ? {
         product_id: this.product_id,
         gtag_id: this.tagVal,
-        images:imageList
-      }:
-        {
+        images:this.operateImages
+      }:{
           product_id: this.product_id,
           gtag_id: 0,
-          images:imageList
+          images:this.operateImages
         }
       console.log('修改产品tag传递参数：',params)
-      // rectPostCard(this.formItem).then(res=>{
-      //   console.log('添加卡片返回：', res)
-      //    if (res.code === 200) {
-      //      this.$message({
-      //         message: '保存添加成功',
-      //         type: 'success'
-      //       });
-      //        this.formVisible = false
-      //       this.getRectCard()
-      //    }else{
-      //        this.$message.error('卡片添加失败');
-      //    }
-      // })
       changeProductTags(params).then(res=>{
         console.log('修改产品tag结果：',res)
       })

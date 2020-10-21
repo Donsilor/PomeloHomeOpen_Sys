@@ -2205,36 +2205,4 @@ export default {
       }
     }
   }
-.imgContent{
-  /deep/ .el-upload-list{
-    float: left;
-  }
-  //   /deep/ .el-upload--picture{
-  //     width: 80px;
-  //     height: 76px;
-  //     line-height: 80px;
-  //     border: 1px dashed #d9d9d9;
-  //     border-radius: 6px;
-  //     cursor: pointer;
-  //     position: relative;
-  //     overflow: hidden;
-  //   }
-  //   /deep/ .el-upload-list__item{
-  //   display: flex;
-  //   flex-direction: column;
-  //   height: 138px;
-  //   align-items: center;
-  //   width: 15%;
-  //   margin-right: 10px;
-  // }
-  // /deep/ .el-upload-list__item-name{
-  //   margin-left: -80px;
-  //   margin-right: 0px;
-  // }
-  // /deep/ .el-upload-list--picture{
-  //   display: flex;
-  //   margin-bottom: 20px;
-  //   flex-flow: wrap;
-  // }
-  }
 </style>

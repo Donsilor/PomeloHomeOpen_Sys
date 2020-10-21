@@ -29,19 +29,12 @@ module.exports = {
     proxyTable: {
       '/api/':{
         //target:'http://172.26.85.69:8080',
-        target:'http://betaphoau.evergrande.me',//测试
-        //target: 'http://sh-opencheck-dev.xl.cn', // 开发环境
-          // target: 'http://172.26.84.246:8080/api/ext', // 本地测试 
-        //target: 'http://sh-opencheck-dev.xl.cn/', // 测试环境
+        // target:'http://betaphoau.evergrande.me',//测试
+        target: 'http://sh-opencheck-dev.xl.cn', // 开发环境
+          // target: 'http://172.26.84.246:8080/api/ext', // 本地测试
         changeOrigin: true,
-
       },
     },
-    // CSS Sourcemaps off by default because relative paths are "buggy"
-    // with this option, according to the CSS-Loader README
-    // (https://github.com/webpack/css-loader#sourcemaps)
-    // In our experience, they generally work as expected,
-    // just be aware of this issue when enabling this option.
     cssSourceMap: false
   }
 }

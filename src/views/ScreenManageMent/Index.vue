@@ -24,6 +24,10 @@
         label="更新时间"
         width=""/>
       <el-table-column
+        prop="sort"
+        label="排序"
+        width="100"/>
+      <el-table-column
         label="操作"
         width="350">
         <template slot-scope="scope">
@@ -39,16 +43,16 @@
             type="text"
             size="mini"
             @click="handleEdite(scope.row)">编辑</el-button>
-          <el-button
-            type="info"
-            size="mini"
-            icon="el-icon-arrow-up"
-            @click="handleMove(scope.row,0)">上移</el-button>
-          <el-button
-            type="info"
-            size="mini"
-            icon="el-icon-arrow-down"
-            @click="handleMove(scope.row,1)">下移</el-button>
+          <div class="sort_box">
+            <el-input
+              v-model="scope.row.newSort"
+              size="mini"
+              placeholder="请输入排序号"/>
+            <el-button
+              type="info"
+              size="mini"
+              @click="handleMove(scope.row)">排序</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -80,14 +84,11 @@ export default {
     this.getDataList()
   },
   methods: {
-    handleMove(row,type){
-      let sort = parseInt(row.sort)
-      if (type===0){
-        if (sort>0){
-          sort = sort-1
-        }
-      }else {
-        sort = sort+1
+    handleMove(row){
+      let sort = parseInt(row.newSort)
+      if (!sort||sort<1){
+        this.$message.error('请输入正整数')
+        return
       }
       let params = {
         id:row.id,
@@ -96,7 +97,6 @@ export default {
         template:row.template,
         operator:2
       }
-      console.log('handleMove----', row, type)
       screenEdite(params).then(res=>{
         this.getDataList()
       })
@@ -158,7 +158,14 @@ export default {
 .screen-container{
   margin: 0px 20px;
 }
+.sort_box{
+  display: inline-block;
+  margin-left: 30px;
+}
 .el-button{
   margin-bottom: 10px;
 }
+  .el-input{
+    width: 110px;
+  }
 </style>

@@ -3,7 +3,7 @@
     <h4>屏幕配置列表</h4>
     <el-button
       type="primary"
-      @click="addNew">新增大小</el-button>
+      @click="addNew">新增配置</el-button>
     <el-table
       :data="tableData"
       border

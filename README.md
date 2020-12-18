@@ -12,6 +12,8 @@ admin
 http://betapho.evergrande.cn
 测试环境
 http://betaphoau.evergrande.me
+登录账号：jiqing@evergrande.cn 
+123qweasd
 
 开发环境--新
 http://sh-opencheck-dev.xl.cn/    776858095@qq.com  qq

@@ -276,7 +276,13 @@ export const constantRouterMap = [
             path: 'addCard',
             name: 'addCard',
             component: _import('typeManagement/addCard')
-          }, {
+          }, 
+          {
+            path: 'panelPage',
+            name: 'panelPage',
+            component: _import('typeManagement/panelPage')
+          },
+          {
             path: 'screen',
             name: 'screen',
             component: _import('ScreenManageMent/Index')

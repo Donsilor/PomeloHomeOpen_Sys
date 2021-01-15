@@ -96,6 +96,10 @@ export default {
           name: '面板屏幕模版',
           url: '/typeManagement/screen',
           type:'screen'
+        },{
+          name: '面板页面配置',
+          url:  '/typeManagement/panelPage',
+          type: 'panelPage'
         }
       ]
     }

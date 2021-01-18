@@ -146,7 +146,7 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           console.log(this.form)
-          if(status === 'add'){
+          if(this.status === 'add'){
             this.form.pageId = Number(this.form.pageId)
             this.$confirm('新增后将不可删除，手机App将一直显示该项，请谨慎操作, 是否继续?', '提示', {
               confirmButtonText: '确定',

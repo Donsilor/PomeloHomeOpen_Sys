@@ -91,11 +91,11 @@ export default {
   },
   data() {
     const valate = (rule, value, callback) => {
-      const reg = /^-?[1-9]\d*$/ //匹配整数
+      const reg = /^[0-9]\d*$/ //匹配整数
       if (reg.test(value)) {
         callback()
       } else {
-        callback(new Error('请输入整数'))
+        callback(new Error('请输入整数且不包括负整数'))
       }
     }
     return {
@@ -126,6 +126,7 @@ export default {
   computed:{
     sortNo:function(){
       if(this.form.sort === 0){ //排前面
+        // return 0
         return this.tableData[0].sortNo - 1
       }else{
         return this.tableData[this.tableData.length-1].sortNo + 1

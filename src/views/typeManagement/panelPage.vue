@@ -81,9 +81,10 @@ export default {
   methods: {
     handleMove(row){
       let sort = parseInt(row.newSort)
-      const reg = /^-?[1-9]\d*$/ //匹配整数
+      // const reg = /^[0-9]\d*$/ //匹配除负整数
+      const reg = /^-?[0-9]\d*$/ //匹配整数
       if (!reg.test(sort)) {
-        this.$message.error('请输入整数')
+        this.$message.error('请输入整数且不包括负整数')
         return
       }
       let params = {

@@ -38,6 +38,22 @@ export default {
           name: 'APP配置',
           url: '/configManagement/appConfig',
           type: 'appConfig'
+        },{
+          name: 'H5页面配置',
+          url:  '/configManagement/h5Config',
+          type: 'h5Config'
+        },{
+          name: '环境参数等级设置',
+          url:  '/configManagement/envParamsConfig',
+          type: 'envParamsConfig'
+        },{
+          name: '分数配置',
+          url:  '/configManagement/scoreConfig',
+          type: 'scoreConfig'
+        },{
+          name: '颜色图片配置',
+          url:  '/configManagement/colorPicConfig',
+          type: 'colorPicConfig'
         }
       ]
     }

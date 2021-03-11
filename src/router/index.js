@@ -388,6 +388,22 @@ export const constantRouterMap = [
             path: 'appConfig',
             name: 'appConfig',
             component: _import('configManagement/appConfig')
+          },{
+            path: 'h5Config',
+            name: 'h5Config',
+            component: _import('configManagement/h5Config')
+          },{
+            path: 'envParamsConfig',
+            name: 'envParamsConfig',
+            component: _import('configManagement/envParamsConfig')
+          },{
+            path: 'scoreConfig',
+            name: 'scoreConfig',
+            component: _import('configManagement/scoreConfig')
+          },{
+            path: 'colorPicConfig',
+            name: 'colorPicConfig',
+            component: _import('configManagement/colorPicConfig')
           }
         ]
       },,

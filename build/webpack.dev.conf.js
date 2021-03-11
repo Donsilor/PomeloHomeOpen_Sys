@@ -34,7 +34,15 @@ module.exports = merge(baseWebpackConfig, {
       filename: 'index.html',
       template: 'index.html',
       favicon: resolveApp('favicon.ico'),
-      inject: true
+      inject: true,
+      chunks:['app']
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'h5Page.html',
+      template: 'h5Page.html',
+      favicon: resolveApp('favicon.ico'),
+      inject: true,
+      chunks:['h5Page']
     }),
     new FriendlyErrorsPlugin()
   ]

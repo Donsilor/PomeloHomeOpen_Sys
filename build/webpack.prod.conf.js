@@ -76,6 +76,21 @@ var webpackConfig = merge(baseWebpackConfig, {
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
     }),
+    new HtmlWebpackPlugin({
+      filename: config.build.h5Page,
+      template: 'h5Page.html',
+      inject: true,
+      favicon: resolveApp('favicon.ico'),
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+        // more options:
+        // https://github.com/kangax/html-minifier#options-quick-reference
+      },
+      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+      chunksSortMode: 'dependency'
+    }),
     // cache Module Identifiers
     new webpack.HashedModuleIdsPlugin(),
     // split vendor js into its own file

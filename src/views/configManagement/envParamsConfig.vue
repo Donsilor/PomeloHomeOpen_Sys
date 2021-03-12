@@ -16,13 +16,13 @@
       stripe 
       fit 
       highlight-current-row 
-     >
-     <el-table-column
+    >
+      <el-table-column
         v-for="(item,index) in paramsList"
         :key="index"
-        align="center" 
         :label="item.title" 
-        :prop="item.key"/>
+        :prop="item.key" 
+        align="center"/>
 
       <!-- <el-table-column 
         align="center" 
@@ -108,24 +108,34 @@
             @click="delCard(scope.row)" >
             删除
           </el-button> -->
-          <el-button 
-            size="small" 
-            type="primary" 
-            @click="editCard(scope.row)">
-            修改
-          </el-button>
-          <el-button 
-            icon="el-icon-upload2"
-            size="small"
-             @click="sortChange(scope.row,1)"
-            type="">
-          </el-button>
-          <el-button 
-            icon="el-icon-download"
-            size="small"
-            @click="sortChange(scope.row,1)" 
-            type="">
-          </el-button>
+          <el-row>
+            <el-col :span="8">
+              <el-button 
+                size="small" 
+                type="primary" 
+                @click="editCard(scope.row)">
+                修改
+              </el-button>
+            </el-col>
+            <el-col :span="8">
+              <el-input
+                v-model="scope.row.new_sort_no"
+                size="mini" 
+                type="number"/>
+            </el-col>
+            <el-col :span="8">
+              <el-button
+                size="small"
+                type="primary" 
+                @click="sortChange(scope.row)">
+                排序
+              </el-button>
+            </el-col>
+          </el-row>
+          
+            
+            
+          
         </template>
       </el-table-column>
     </el-table>
@@ -171,16 +181,16 @@
 
     <paramsConfigView 
       v-if="addView" 
-      :configDetail="configDetail"
-      :addView="addView"
+      :config-detail="configDetail"
+      :add-view="addView"
       :op="op"
       @refresh="refresh"
       @closeView="closeView"/>
-      <Paging
-        :pageQuery="listQuery"
-        :total="total"
-        pagingStatus=""
-        @changePage="currentPageChange"/>
+    <Paging
+      :page-query="listQuery"
+      :total="total"
+      paging-status=""
+      @changePage="currentPageChange"/>
   </div>
 </template>
 
@@ -189,7 +199,7 @@ import fetch from '@/utils/fetch'
 import { addGlobalTags } from '@/api/check'
 import { cardSizeList,cardOperation } from '@/api/screenManage'
 import paramsConfigView from "@/components/configManagement/paramsConfigView"
-import { queryParams,updateParams } from '@/api/config.js';
+import { queryParams,updateParams } from '@/api/config.js'
 import Paging from '@/components/paging'
 export default {
   components:{
@@ -217,8 +227,9 @@ export default {
       addView:false,
       configDetail:{},
       op:'',
-       paramsList:[
+      paramsList:[
         {title:'room_id',key:'room_id',required:true},
+        {title:'排序编号',key:'sort_no',required:true},
         {title:'名称',key:'param_name',required:true},
         {title:'单位',key:'unit',required:true},
         {title:'等级"低"名称',key:'name_low',required:true},
@@ -237,7 +248,7 @@ export default {
         {title:'启用状态',key:'enable',required:true}
         // {title:'是否变更排序',key:'order_change',required:true}
       ],
-      total:10,
+      total:0,
 
     }
   },
@@ -251,25 +262,31 @@ export default {
     this.refresh()
   },
   methods: {
-    sortChange(row,sort_change){
-      const params = Object.assign({},row,{
-        sort_change:sort_change
-      })
+    sortChange(row){
+      console.log('row:',row)
+      if (row.new_sort_no === '' || isNaN(row.new_sort_no)) {
+        this.$message.error('请输入排序号！')
+        return
+      }
+      const params = Object.assign({},row)
+      params.sort_no = params.new_sort_no
+      console.log('修改的params：',params)
       updateParams(params).then(res=>{
-          console.log('修改参数返回：',res);
-          if (res.code) {
-            this.$message.success('修改成功！')
-            this.refresh()
-          }else{
-            this.$message.error(res.msg)
-          }
-        })
+        console.log('修改参数返回：',res)
+        if (res.code) {
+          this.$message.success('修改成功！')
+          this.refresh()
+        }else{
+          this.$message.error(res.msg)
+        }
+      })
     },
-    currentPageChange (listQuery) {
-      console.log('传入的分页查询参数：',listQuery);
+    currentPageChange(listQuery) {
+      console.log('传入的分页查询参数：',listQuery)
+      Object.assign(this.listQuery,listQuery)//同步页码
       const params = {
-         begin:listQuery.page-1,
-          size:listQuery.limit
+        begin:listQuery.page-1,
+        size:listQuery.limit
       }
       this.query(params)
       // Object.assign(this.listQuery, {
@@ -295,20 +312,33 @@ export default {
     refresh() {
       this.$nextTick(() => {
         // this.getCardSizeList()
-         const params = {
-           begin:this.listQuery.page-1,
-           size:this.listQuery.limit
-         }
-         this.query(params)
+        const params = {
+          begin:0,//每次刷新都是从第一页开始
+          size:this.listQuery.limit
+        }
+        this.query(params)
       })
     },
     query(params){
-       this.listLoading = true
+      this.listLoading = true
       queryParams(params).then(res=>{
-          console.log('查询的结果：',res);
-          this.tagList = res.data
-           this.listLoading = false
-        })
+        console.log('查询的结果：',res)
+        if (res.code === 200) {
+          if (res.data && res.data.list) {
+            this.tagList = res.data.list
+            if (res.data.more > 0) {
+              this.total = this.listQuery.page*this.listQuery.limit+res.data.more
+            }else{
+              this.total = (this.listQuery.page-1)*this.listQuery.limit+res.data.list.length
+            }
+            
+            console.log('this.total:',this.total)
+          }  
+        }else{
+          this.$message.error(res.msg)
+        }
+        this.listLoading = false
+      })
     },
     getCardSizeList(){
       this.listLoading = true
@@ -347,7 +377,7 @@ export default {
       // this.formItem.operator = 1
     },
     editCard(row) {
-      console.log('row:',row);
+      console.log('row:',row)
       this.op = "edit"
       this.configDetail = row
       this.addView = true
@@ -369,9 +399,9 @@ export default {
     },
     onSubmit() {
       const params = this.formItem
-      console.log('请求参数：',JSON.stringify(params));
+      console.log('请求参数：',JSON.stringify(params))
       cardOperation(params).then(res => {
-        console.log('返回的数据：',res);
+        console.log('返回的数据：',res)
         this.$message.success('操作成功！')
         this.formVisible = false
         this.getCardSizeList()
@@ -380,3 +410,9 @@ export default {
   }
 }
 </script>
+<style lang='scss' scoped>
+.sort_box{
+  display: inline-block;
+  margin-left: 30px;
+}
+</style>

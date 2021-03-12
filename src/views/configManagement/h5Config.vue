@@ -16,25 +16,30 @@
       stripe 
       fit 
       highlight-current-row 
-     >
-      <el-table-column 
+    >
+      <!-- <el-table-column 
         align="center" 
         label="id">
         <template slot-scope="scope">
           <div>
-            {{scope.row.x}}*{{scope.row.y}}
+            {{ scope.row.x }}*{{ scope.row.y }}
           </div>
         </template>
       </el-table-column>
-        <el-table-column 
+      <el-table-column 
         align="center" 
         label="标题" 
-        prop="create_time"/>
+        prop="create_time"/> -->
       <!-- <el-table-column 
         align="center" 
         label="更新时间" 
         prop="update_time"/> -->
-
+      <el-table-column
+        v-for="(item,index) in paramsList"
+        :key="index"
+        :label="item.title" 
+        :prop="item.key" 
+        align="center"/>
       <el-table-column 
         align="center" 
         label="操作" 
@@ -57,9 +62,10 @@
     </el-table>
 
     <Paging
-              :total="total"
-              pagingStatus=""
-              @changePage="currentPageChange"/>
+      :page-query="listQuery"
+      :total="total"
+      paging-status=""
+      @changePage="currentPageChange"/>
 
     <!-- <div 
       v-show="!listLoading" 
@@ -102,9 +108,10 @@
 
     <h5ConfigView
       v-if="addView"
-      :configDetail="configDetail"
+      :config-detail="configDetail"
       :op="op"
-      :addView="addView" 
+      :add-view="addView"
+      @refresh="refresh" 
       @closeView="closeView"/>
   </div>
 </template>
@@ -115,6 +122,7 @@ import { addGlobalTags } from '@/api/check'
 import { cardSizeList,cardOperation } from '@/api/screenManage'
 import h5ConfigView from "@/components/configManagement/h5ConfigView"
 import Paging from '@/components/paging'
+import { queryCopyList } from "@/api/config"
 export default {
   components:{
     h5ConfigView,
@@ -128,7 +136,7 @@ export default {
       listLoading: false,
       listQuery: {
         page: 1,
-        limit: 15
+        limit: 5
       },
       formVisible: false,
       isEdit: false,
@@ -139,9 +147,15 @@ export default {
         operator: '' //1：新增、2：修改、3：删除
       },
       addView:false,
-      total:10,
+      total:0,
       configDetail:{},
-      op:''
+      op:'',
+      paramsList:[
+        {title:'id',key:'id',required:true},
+        {title:'标题',key:'title',required:true},
+        {title:'创建时间',key:'createTime',required:true},
+        {title:'更新时间',key:'updateTime',required:true}
+      ],
     }
   },
   computed: {
@@ -149,11 +163,29 @@ export default {
       return this.isEdit ? '修改卡片' : '新增卡片'
     }
   },
-  created() {},
-  mounted() {
+  created() {
     this.refresh()
   },
+  mounted() {
+    
+  },
   methods: {
+    getList(params){
+      queryCopyList(params).then(res=>{
+        console.log('列表返回：',res)
+        if (res.code === 0) {
+          if (res.data) {
+            this.tagList = res.data
+          }
+          if (res.page_info) {
+            this.total = res.page_info.total
+            console.log('this.total:',this.total)
+          }
+        }else{
+          this.$message.error(res.msg)
+        }
+      })
+    },
     closeView(){
       this.addView = false
     },
@@ -169,9 +201,14 @@ export default {
       return y + '-' + m + '-' + d + ' ' + h + ':' + f + ':' + s
     },
     refresh() {
-      this.$nextTick(() => {
-        this.getCardSizeList()
-      })
+      // this.$nextTick(() => {
+      // this.getCardSizeList()
+      const params = {
+        pageNumber:1,
+        pageSize:this.listQuery.limit
+      }
+      this.getList(params)
+      // })
     },
     
     getCardSizeList(){
@@ -211,9 +248,10 @@ export default {
       // this.formItem.operator = 1
     },
     editCard(row, isEdit) {
-       this.addView = true
-      this.configDetail = {}
+      console.log('row:',row)
+      this.configDetail = Object.assign({},row)
       this.op = "edit"
+      this.addView = true
       // console.log('*row*------------------', row)  
       // this.isEdit = true
       // this.formVisible = true
@@ -232,16 +270,16 @@ export default {
     },
     onSubmit() {
       const params = this.formItem
-      console.log('请求参数：',JSON.stringify(params));
+      console.log('请求参数：',JSON.stringify(params))
       cardOperation(params).then(res => {
-        console.log('返回的数据：',res);
+        console.log('返回的数据：',res)
         this.$message.success('操作成功！')
         this.formVisible = false
         this.getCardSizeList()
       })
     },
-    currentPageChange (listQuery) {
-      console.log('传入的分页查询参数：',listQuery);
+    currentPageChange(listQuery) {
+      console.log('传入的分页查询参数：',listQuery)
       // Object.assign(this.listQuery, {
       //   page: listQuery.page,
       //   limit: listQuery.limit

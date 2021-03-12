@@ -1,22 +1,22 @@
 <template>
   <div>
     <!-- 分页管理 -->
-      <el-row
-        v-show="!listLoading"
-        class="pagination-container"
-        type="flex" justify="end"
-        >
-        <!-- 页码按钮的数量currenCurrent  sizeChange -->
-        <el-pagination
-        :small="this.pagingStatus?true:false"
-          :current-page.sync="listQuery.page"
-          :page-sizes="pageSize?pageSize:pageStatus"
-          :page-size="listQuery.limit"
-          :total="total"
-          :layout="layout"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"/>
-      </el-row>
+    <el-row
+      v-show="!listLoading"
+      class="pagination-container"
+      type="flex" 
+      justify="end"
+    >
+      <!-- 页码按钮的数量currenCurrent  sizeChange -->
+      <el-pagination
+        :small="pagingStatus?true:false"
+        :current-page.sync="listQuery.page"
+        :page-size="listQuery.limit"
+        :total="total"
+        :layout="layout"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"/>
+    </el-row>
   </div>
 </template>
 <script>
@@ -24,19 +24,23 @@
 export default {
   props: {
     total: {
-      type: Number
+      type: Number,
+      default:0
     },
     pagingStatus: { // 在抽屉组件中使用
-      type: String
+      type: String,
+      default:''
     },
     pageSize: {
-      type: Array || null
+      type: Array || null,
+      default:''
     },
     pageQuery: {
-      type: Object || null
+      type: Object || null,
+      default:''
     }
   },
-  data () {
+  data() {
     return {
       layout: this.pagingStatus ? 'sizes, total, prev, pager, next ' : 'total, sizes, prev, pager, next, jumper',
       pageStatus: this.pagingStatus ? [5, 10] : [5, 15, 20, 30, 50],
@@ -49,7 +53,7 @@ export default {
   },
   watch: {
     total: {
-      handler (val) {
+      handler(val) {
         if (val) {
           this.listLoading = false
         } else {
@@ -59,18 +63,19 @@ export default {
       immediate: true
     }
   },
-  created () {
+  created() {
+    console.log('pageQuery:',this.pageQuery)
   },
   methods: {
     // 分页管理
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log('页码', val)
       this.listQuery.page = 1
       this.listQuery.limit = val
       this.$emit('changePage', this.listQuery)
     },
     // 改变页码
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.listQuery.page = val
       this.$emit('changePage', this.listQuery)
     }

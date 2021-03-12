@@ -11,7 +11,8 @@
       <el-pagination
         :small="pagingStatus?true:false"
         :current-page.sync="listQuery.page"
-        :pageSize="listQuery.limit"
+        :page-sizes="pageSize?pageSize:pageStatus"
+        :page-size="listQuery.limit"
         :total="total"
         :layout="layout"
         @size-change="handleSizeChange"

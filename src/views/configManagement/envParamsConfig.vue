@@ -17,7 +17,14 @@
       fit 
       highlight-current-row 
      >
-      <el-table-column 
+     <el-table-column
+        v-for="(item,index) in paramsList"
+        :key="index"
+        align="center" 
+        :label="item.title" 
+        :prop="item.key"/>
+
+      <!-- <el-table-column 
         align="center" 
         label="id">
         <template slot-scope="scope">
@@ -89,16 +96,11 @@
         <el-table-column 
         align="center" 
         label="启用/禁用" 
-        prop=""/>
-      <!-- <el-table-column 
-        align="center" 
-        label="更新时间" 
-        prop="update_time"/> -->
-
+        prop=""/> -->
       <el-table-column 
         align="center" 
         label="操作" 
-        width="150">
+        width="250">
         <template slot-scope="scope">
           <!-- <el-button 
             size="small" 
@@ -109,13 +111,20 @@
           <el-button 
             size="small" 
             type="primary" 
-            @click="editCard(scope.row, true)">
+            @click="editCard(scope.row)">
             修改
           </el-button>
           <el-button 
-            size="small" 
-            type="primary">
-            排序
+            icon="el-icon-upload2"
+            size="small"
+             @click="sortChange(scope.row,1)"
+            type="">
+          </el-button>
+          <el-button 
+            icon="el-icon-download"
+            size="small"
+            @click="sortChange(scope.row,1)" 
+            type="">
           </el-button>
         </template>
       </el-table-column>
@@ -163,8 +172,15 @@
     <paramsConfigView 
       v-if="addView" 
       :configDetail="configDetail"
-      :addView="addView" 
+      :addView="addView"
+      :op="op"
+      @refresh="refresh"
       @closeView="closeView"/>
+      <Paging
+        :pageQuery="listQuery"
+        :total="total"
+        pagingStatus=""
+        @changePage="currentPageChange"/>
   </div>
 </template>
 
@@ -173,9 +189,12 @@ import fetch from '@/utils/fetch'
 import { addGlobalTags } from '@/api/check'
 import { cardSizeList,cardOperation } from '@/api/screenManage'
 import paramsConfigView from "@/components/configManagement/paramsConfigView"
+import { queryParams,updateParams } from '@/api/config.js';
+import Paging from '@/components/paging'
 export default {
   components:{
-    paramsConfigView
+    paramsConfigView,
+    Paging
   },
   data() {
     return {
@@ -185,7 +204,7 @@ export default {
       listLoading: false,
       listQuery: {
         page: 1,
-        limit: 15
+        limit: 5
       },
       formVisible: false,
       isEdit: false,
@@ -197,7 +216,29 @@ export default {
       },
       addView:false,
       configDetail:{},
-      op:''
+      op:'',
+       paramsList:[
+        {title:'room_id',key:'room_id',required:true},
+        {title:'名称',key:'param_name',required:true},
+        {title:'单位',key:'unit',required:true},
+        {title:'等级"低"名称',key:'name_low',required:true},
+        {title:'等级"中"名称',key:'name_mid',required:true},
+        {title:'等级"高"名称',key:'name_high',required:true},
+        {title:'调节间隔',key:'step',required:true},
+        {title:'最小值',key:'min',required:true},
+        {title:'调节默认低值',key:'default_low',required:true},
+        {title:'舒适默认低值',key:'comfort_low',required:true},
+        {title:'舒适默认高值',key:'comfort_high',required:true},
+        {title:'调节默认高值',key:'default_high',required:true},
+        {title:'最大值',key:'max',required:true},
+        {title:'权重',key:'weight',required:true},
+        {title:'正太分布期望值',key:'expect',required:true},
+        {title:'正太分布方差',key:'deviation',required:true},
+        {title:'启用状态',key:'enable',required:true}
+        // {title:'是否变更排序',key:'order_change',required:true}
+      ],
+      total:10,
+
     }
   },
   computed: {
@@ -210,6 +251,33 @@ export default {
     this.refresh()
   },
   methods: {
+    sortChange(row,sort_change){
+      const params = Object.assign({},row,{
+        sort_change:sort_change
+      })
+      updateParams(params).then(res=>{
+          console.log('修改参数返回：',res);
+          if (res.code) {
+            this.$message.success('修改成功！')
+            this.refresh()
+          }else{
+            this.$message.error(res.msg)
+          }
+        })
+    },
+    currentPageChange (listQuery) {
+      console.log('传入的分页查询参数：',listQuery);
+      const params = {
+         begin:listQuery.page-1,
+          size:listQuery.limit
+      }
+      this.query(params)
+      // Object.assign(this.listQuery, {
+      //   page: listQuery.page,
+      //   limit: listQuery.limit
+      // })
+      // this.getTaskList()
+    },
     closeView(){
       this.addView = false
     },
@@ -226,10 +294,22 @@ export default {
     },
     refresh() {
       this.$nextTick(() => {
-        this.getCardSizeList()
+        // this.getCardSizeList()
+         const params = {
+           begin:this.listQuery.page-1,
+           size:this.listQuery.limit
+         }
+         this.query(params)
       })
     },
-    
+    query(params){
+       this.listLoading = true
+      queryParams(params).then(res=>{
+          console.log('查询的结果：',res);
+          this.tagList = res.data
+           this.listLoading = false
+        })
+    },
     getCardSizeList(){
       this.listLoading = true
       const params = {
@@ -258,6 +338,7 @@ export default {
       this.getCardSizeList()
     },
     addCart() {   // button按钮事件
+      this.op = "add"
       this.addView = true
       this.configDetail = {}
       // this.isEdit = false // 编辑状态开关
@@ -265,8 +346,10 @@ export default {
       // this.formItem = {}
       // this.formItem.operator = 1
     },
-    editCard(row, isEdit) {
-      this.configDetail = {"id":"231","param_name":"32321","unit":"31233","name_low":"3123","name_mid":"3123","name_high":"3123","step":"1","min":"2","defalut_low":"3","comfort_low":"4","comfort_high":"5","defalut_high":"6","max":"12","weight":"2","expect":"12","variance":"212","enable":"122","order_change":"212"}
+    editCard(row) {
+      console.log('row:',row);
+      this.op = "edit"
+      this.configDetail = row
       this.addView = true
       // console.log('*row*------------------', row)  
       // this.isEdit = true

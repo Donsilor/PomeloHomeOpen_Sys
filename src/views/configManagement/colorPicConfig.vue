@@ -89,7 +89,7 @@
       </span>
     </el-dialog>
 
-    <h5ConfigView
+    <colorPicConfigView
       v-if="addView"
       :configDetail="configDetail"
       :op="op"
@@ -102,11 +102,11 @@
 import fetch from '@/utils/fetch'
 import { addGlobalTags } from '@/api/check'
 import { cardSizeList,cardOperation } from '@/api/screenManage'
-import h5ConfigView from "@/components/configManagement/h5ConfigView"
+import colorPicConfigView from "@/components/configManagement/colorPicConfigView"
 import Paging from '@/components/paging'
 export default {
   components:{
-    h5ConfigView,
+    colorPicConfigView,
     Paging
   },
   data() {

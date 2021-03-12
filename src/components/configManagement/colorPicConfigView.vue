@@ -3,7 +3,7 @@
       :close-on-click-modal="false"
       :visible.sync="addView"
       :before-close="closeView"
-      :title="op==='add'?'添加参数':'修改参数'"
+      :title="op==='add'?'添加配置':'修改配置'"
       width="60%">
       <el-form
       :model="formData"
@@ -15,20 +15,10 @@
             <el-form-item
               :prop="''+item.key+''"
               :label="item.title">
-              <el-switch
-                  v-if="item.key === 'enable'"
-                  v-model="formData[item.key]"
-                  active-text="启用"
-                  inactive-text="未启用">
-                </el-switch>
-                <el-input 
-                  v-else
-                  :disabled="item.key === 'param_name' &&  op==='edit'?true:false"
-                  v-model="formData[item.key]" 
-                  :type="item.type?item.type:'text'"/>
-                
+              <el-input 
+                v-model="formData[item.key]" 
+                type="input"/>
             </el-form-item>
-            
           </el-col>
         </el-row>
       </el-form>
@@ -38,12 +28,12 @@
         <el-button @click="closeView">取 消</el-button>
         <el-button
           type="primary"
-          @click="addFuc">{{op==='add'?'添 加':'修 改'}}</el-button>
+          @click="addFuc">确 定</el-button>
       </span>
 </el-dialog>  
 </template>
 <script>
-import { addParams,updateParams } from '@/api/config.js';
+import { Step } from 'element-ui';
 export default {
   props:{
     addView:{
@@ -59,7 +49,6 @@ export default {
   created() {
     if(this.configDetail){
       Object.assign(this.formData,this.configDetail)
-      this.formData.enable = this.formData.enable=== 1?true:false
     }
   },
   data() {
@@ -67,7 +56,7 @@ export default {
     var numValidator =  (rule, value, callback)=>{
       // callback()
         console.log('value:',value);
-        if (isNaN(value.toString().trim())) {
+        if (isNaN(value.trim())) {
           console.log('非数字')
           callback(new Error('请输入合法的数值'))
         } else {
@@ -126,25 +115,13 @@ export default {
       isClear: false,
       detail:"",
       title:'',
-      paramsList:[
-        {title:'room_id',key:'room_id',required:true,type:'number'},
+     paramsList:[
+        {title:'roomID',key:'id',required:true},
         {title:'名称',key:'param_name',required:true},
-        {title:'单位',key:'unit',required:true},
-        {title:'等级"低"名称',key:'name_low',required:true},
-        {title:'等级"中"名称',key:'name_mid',required:true},
-        {title:'等级"高"名称',key:'name_high',required:true},
-        {title:'调节间隔',key:'step',required:true,type:'number'},
-        {title:'最小值',key:'min',required:true,type:'number'},
-        {title:'调节默认低值',key:'default_low',required:true,type:'number'},
-        {title:'舒适默认低值',key:'comfort_low',required:true,type:'number'},
-        {title:'舒适默认高值',key:'comfort_high',required:true,type:'number'},
-        {title:'调节默认高值',key:'default_high',required:true,type:'number'},
-        {title:'最大值',key:'max',required:true,type:'number'},
-        {title:'权重',key:'weight',required:true,type:'number'},
-        {title:'正太分布期望值',key:'expect',required:true,type:'number'},
-        {title:'正太分布方差',key:'deviation',required:true,type:'number'},
-        {title:'启用状态',key:'enable',required:true,type:'number'}
-        // {title:'是否变更排序',key:'order_change',required:true}
+        {title:'图片',key:'unit',required:true},
+        {title:'图标',key:'name_low',required:true},
+        {title:'色值',key:'name_low',required:true},
+        {title:'排序值',key:'name_low',required:true}
       ],
       formData:{
         id:'',
@@ -162,9 +139,9 @@ export default {
         max:'',
         weight:'',
         expect:'',
-        deviation:'',
-        enable:''
-        // order_change:'',
+        variance:'',
+        enable:'',
+        order_change:'',
       },
       rules:{
         id:[
@@ -238,7 +215,7 @@ export default {
           { required: true, message: '正太分布期望值不能为空',trigger: 'blur' },
           { validator:numValidator,trigger: 'blur'}
         ],
-        deviation:[
+        variance:[
           { required: true, message: '正太分布方差不能为空' ,trigger: 'blur'},
           { validator:numValidator,trigger: 'blur'}
         ],
@@ -252,39 +229,11 @@ export default {
     }
   },
   methods: {
-    refresh(){
-      this.$emit('refresh')
-    },
     addFuc(){
        this.$refs['paramsForm'].validate(valid => {
          console.log('验证结果：',valid);
             if (valid) {
-              const params = Object.assign({},this.formData)
-              params.enable = params.enable?1:0
-                if (this.op==='add') {
-                  addParams(params).then(res=>{
-                    console.log('添加参数返回：',res);
-                    if (res.code) {
-                      this.$message.success('添加成功！')
-                      this.refresh()
-                      this.closeView()
-                    }else{
-                      this.$message.error(res.msg)
-                    }
-                  })
-                }else{
-                  updateParams(params).then(res=>{
-                    console.log('修改参数返回：',res);
-                    if (res.code) {
-                      this.$message.success('修改成功！')
-                      this.refresh()
-                      this.closeView()
-                    }else{
-                      this.$message.error(res.msg)
-                    }
-                  })
-                }
-                  
+              
             }
           })
       console.log('formData:',JSON.stringify(this.formData));

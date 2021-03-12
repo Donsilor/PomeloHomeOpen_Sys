@@ -5,7 +5,7 @@
         size="medium" 
         type="primary" 
         @click="addCart">
-        新增文案
+        新增分数
       </el-button>
     </el-row>
 
@@ -29,12 +29,12 @@
         label="操作" 
         width="150">
         <template slot-scope="scope">
-          <!-- <el-button 
+          <el-button 
             size="small" 
             type="danger"
             @click="delCard(scope.row)" >
             删除
-          </el-button> -->
+          </el-button>
           <el-button 
             size="small" 
             type="primary" 
@@ -89,7 +89,7 @@
       </span>
     </el-dialog>
 
-    <h5ConfigView
+    <scoreConfigView
       v-if="addView"
       :configDetail="configDetail"
       :op="op"
@@ -102,11 +102,11 @@
 import fetch from '@/utils/fetch'
 import { addGlobalTags } from '@/api/check'
 import { cardSizeList,cardOperation } from '@/api/screenManage'
-import h5ConfigView from "@/components/configManagement/h5ConfigView"
+import scoreConfigView from "@/components/configManagement/scoreConfigView"
 import Paging from '@/components/paging'
 export default {
   components:{
-    h5ConfigView,
+    scoreConfigView,
     Paging
   },
   data() {
@@ -216,14 +216,14 @@ export default {
       //  this.formItem.operator = 2
     },
     delCard(row){
-      // this.$confirm('确认删除？')
-      //     .then(_ => {
-      //       console.log(8888);
-      //       this.formItem = row
-      //        this.formItem.operator = 3
-      //       this.onSubmit(); //调用onSubmit借口发起请求
-      //     })
-      //     .catch(_ => {});
+      this.$confirm('确认删除？')
+          .then(_ => {
+            console.log(8888);
+            // this.formItem = row
+            //  this.formItem.operator = 3
+            // this.onSubmit(); //调用onSubmit借口发起请求
+          })
+          .catch(_ => {});
     },
     onSubmit() {
       const params = this.formItem

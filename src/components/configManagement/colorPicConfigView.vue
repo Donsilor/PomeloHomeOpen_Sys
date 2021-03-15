@@ -1,39 +1,60 @@
 <template>
-<el-dialog
-      :close-on-click-modal="false"
-      :visible.sync="addView"
-      :before-close="closeView"
-      :title="op==='add'?'添加配置':'修改配置'"
-      width="60%">
-      <el-form
+  <el-dialog
+    :close-on-click-modal="false"
+    :visible.sync="addView"
+    :before-close="closeView"
+    :title="op==='add'?'添加配置':'修改配置'"
+    width="60%">
+    <el-form
+      ref="paramsForm"
       :model="formData"
-        :rules="rules"
-        ref="paramsForm"
-        label-width="150px">
-        <el-row>
-          <el-col :span="12" v-for="(item,index) in paramsList" :key="index" >
-            <el-form-item
-              :prop="''+item.key+''"
-              :label="item.title">
-              <el-input 
-                v-model="formData[item.key]" 
-                type="input"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
+      :rules="rules"
+      label-width="150px">
+      <el-row>
+        <el-col 
+          v-for="(item,index) in paramsList" 
+          :span="12" 
+          :key="index" >
+          <el-form-item
+            :prop="''+item.key+''"
+            :label="item.title">
+            <!-- 房间颜色 -->
+            <template v-if="item.key === 'bgColor'">
+              <el-col
+                :span="18"
+              >
+                <el-input 
+                  v-model="formData[item.key]" 
+                  type="input"/>
+              </el-col>
+              <el-col
+                :span="6"
+              >
+                <colorPicker
+                  v-model="formData[item.key]"
+                  style="margin-left:25%" />
+              </el-col>
+            </template>
+            <el-input
+              v-else
+              v-model="formData[item.key]" 
+              :type="item.type?item.type:'text'"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
     <span
-        slot="footer"
-        class="dialog-footer">
-        <el-button @click="closeView">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="addFuc">确 定</el-button>
-      </span>
-</el-dialog>  
+      slot="footer"
+      class="dialog-footer">
+      <el-button @click="closeView">取 消</el-button>
+      <el-button
+        type="primary"
+        @click="addFuc">{{ op === 'add'?'添 加':'修 改' }}</el-button>
+    </span>
+  </el-dialog>  
 </template>
 <script>
-import { Step } from 'element-ui';
+import { addRoom,updateRoom} from '@/api/config.js'
 export default {
   props:{
     addView:{
@@ -46,203 +67,93 @@ export default {
       type:String
     }
   },
+  data() {
+    //检测是否为数值
+    var numValidator =  (rule, value, callback)=>{
+      // callback()
+      console.log('value:',value)
+      if (isNaN(value.toString().trim())) {
+        console.log('非数字')
+        callback(new Error('请输入合法的数值'))
+      } else {
+        callback()
+      }
+    }
+    return {
+      paramsList:[
+        {title:'roomID',key:'roomId',required:true,type:'number'},
+        {title:'名称',key:'roomName',required:true},
+        {title:'图片',key:'bgPic',required:true},
+        {title:'图标',key:'bgIcon',required:true},
+        {title:'色值',key:'bgColor',required:true},
+        {title:'排序值',key:'order',required:true,type:'number'}
+      ],
+      formData:{
+        roomId:'',
+        roomName:'',
+        bgPic:'',
+        bgIcon:'',
+        bgColor:'',
+        order:''
+      },
+      rules:{
+        roomId:[
+          { required: true, message: 'roomId不能为空',trigger: 'blur' },
+          { validator:numValidator,trigger: 'blur'}
+        ],
+        roomName:[
+          { required: true, message: '名称不能为空',trigger: 'blur' }
+        ],
+        order:[
+          { required: true, message: '排序值不能为空',trigger: 'blur' },
+          { validator:numValidator,trigger: 'blur'}
+        ]
+      }
+    }
+  },
   created() {
     if(this.configDetail){
       Object.assign(this.formData,this.configDetail)
     }
   },
-  data() {
-      //检测是否为数值
-    var numValidator =  (rule, value, callback)=>{
-      // callback()
-        console.log('value:',value);
-        if (isNaN(value.trim())) {
-          console.log('非数字')
-          callback(new Error('请输入合法的数值'))
-        } else {
-          callback()
-        }
-      }
-      //检测是否为调节间隔的整数倍
-       var stepTimesValidator =  (rule, value, callback)=>{
-      // callback()
-        const step = this.formData.step
-        if (step === '' || isNaN(step)) {
-          callback()
-        }else if(parseFloat(value)%parseFloat(step) !== 0){
-          callback('请输入调节间隔的整数倍')
-        }else{
-          callback()
-        }
-      }
-      //检测是否小于最小值
-       var minValidator =  (rule, value, callback)=>{
-      // callback()
-        const min = this.formData.min
-        if (min === '' || isNaN(min)) {
-          callback()
-        }else if(parseFloat(value) < parseFloat(min)){
-          callback('输入的值不能小于最小值')
-        }else{
-          callback()
-        }
-      }
-      //检测是否大于最大值
-       var maxValidator =  (rule, value, callback)=>{
-      // callback()
-        const max = this.formData.max
-        if (max === '' || isNaN(max)) {
-          callback()
-        }else if(parseFloat(value) > parseFloat(max)){
-          callback('输入的值不能大于最大值')
-        }else{
-          callback()
-        }
-      }
-      const stepValidator  = (rule, value, callback)=>{
-        // console.log('targetValue:',targetValue);
-        const targetValue = this.formData.step
-        if (targetValue.trim() === '') {
-           callback(new Error('调节间隔不能为空'))
-        }else if (isNaN(targetValue.trim())) {
-          console.log('非数字')
-          callback(new Error('请输入合法的数值！'))
-        } else {
-          callback()
-        }
-      }
-    return {
-      isClear: false,
-      detail:"",
-      title:'',
-     paramsList:[
-        {title:'roomID',key:'id',required:true},
-        {title:'名称',key:'param_name',required:true},
-        {title:'图片',key:'unit',required:true},
-        {title:'图标',key:'name_low',required:true},
-        {title:'色值',key:'name_low',required:true},
-        {title:'排序值',key:'name_low',required:true}
-      ],
-      formData:{
-        id:'',
-        param_name:'',
-        unit:'',
-        name_low:'',
-        name_mid:'',
-        name_high:'',
-        step:'',
-        min:'',
-        defalut_low:'',
-        comfort_low:'',
-        comfort_high:'',
-        defalut_high:'',
-        max:'',
-        weight:'',
-        expect:'',
-        variance:'',
-        enable:'',
-        order_change:'',
-      },
-      rules:{
-        id:[
-          { required: true, message: 'id不能为空',trigger: 'blur' },
-          { validator:numValidator,trigger: 'blur'}
-        ],
-        param_name:[
-          { required: true, message: '名称不能为空',trigger: 'blur' }
-        ],
-        unit:[
-          { required: true, message: '单位不能为空',trigger: 'blur' }
-        ],
-        name_low:[
-          { required: true, message: '等级"低"名称不能为空',trigger: 'blur' }
-        ],
-        name_mid:[
-          { required: true, message: '等级"中"名称不能为空' ,trigger: 'blur'}
-        ],
-        name_high:[
-          { required: true, message: '等级"高"名称不能为空',trigger: 'blur' }
-        ],
-        step:[
-          { required: true, message: '调节间隔不能为空',trigger: 'blur'},
-          { validator: numValidator, trigger: 'blur'}
-        ],
-        min:[
-          { required: true, message: '最小值不能为空',trigger: 'blur' },
-          { validator:numValidator,trigger: 'blur'},
-          { validator:stepTimesValidator,trigger: 'blur'},
-          { validator:maxValidator,trigger: 'blur'}
-        ],
-        defalut_low:[
-          { required: true, message: '调节默认低值不能为空',trigger: 'blur' },
-         { validator:numValidator,trigger: 'blur'},
-          { validator:stepTimesValidator,trigger: 'blur'},
-          { validator:minValidator,trigger: 'blur'},
-          { validator:maxValidator,trigger: 'blur'}
-        ],
-        comfort_low:[
-          { required: true, message: '舒适默认低值不能为空',trigger: 'blur' },
-          { validator:numValidator,trigger: 'blur'},
-          { validator:stepTimesValidator,trigger: 'blur'},
-          { validator:minValidator,trigger: 'blur'},
-          { validator:maxValidator,trigger: 'blur'}
-        ],
-        comfort_high:[
-          { required: true, message: '舒适默认高值不能为空',trigger: 'blur' },
-         { validator:numValidator,trigger: 'blur'},
-          { validator:stepTimesValidator,trigger: 'blur'},
-          { validator:minValidator,trigger: 'blur'},
-          { validator:maxValidator,trigger: 'blur'}
-        ],
-        defalut_high:[
-          { required: true, message: '调节默认高值不能为空',trigger: 'blur' },
-          { validator:numValidator,trigger: 'blur'},
-          { validator:stepTimesValidator,trigger: 'blur'},
-          { validator:minValidator,trigger: 'blur'},
-          { validator:maxValidator,trigger: 'blur'}
-        ],
-        max:[
-          { required: true, message: '最大值不能为空',trigger: 'blur' },
-          { validator:numValidator,trigger: 'blur'},
-          { validator:stepTimesValidator,trigger: 'blur'},
-          { validator:minValidator,trigger: 'blur'}
-        ],
-        weight:[
-          { required: true, message: '权重不能为空',trigger: 'blur' },
-         { validator:numValidator,trigger: 'blur'}
-        ],
-        expect:[
-          { required: true, message: '正太分布期望值不能为空',trigger: 'blur' },
-          { validator:numValidator,trigger: 'blur'}
-        ],
-        variance:[
-          { required: true, message: '正太分布方差不能为空' ,trigger: 'blur'},
-          { validator:numValidator,trigger: 'blur'}
-        ],
-        enable:[
-          { required: true, message: '启用状态不能为空' ,trigger: 'blur'}
-        ],
-        order_change:[
-          { required: true, message: '是否变更排序不能为空',trigger: 'blur' }
-        ],
-      }
-    }
-  },
   methods: {
     addFuc(){
-       this.$refs['paramsForm'].validate(valid => {
-         console.log('验证结果：',valid);
-            if (valid) {
-              
-            }
-          })
-      console.log('formData:',JSON.stringify(this.formData));
-    },
-     change(val) {
-      console.log(val)
+      this.$refs['paramsForm'].validate(valid => {
+        console.log('验证结果：',valid)
+        if (valid) {
+          if (this.op === 'add') {
+            addRoom(this.formData).then(res=>{
+              console.log('添加返回结果：',res)
+              if (res.code === 200) {
+                this.$message.success('添加成功！')
+                this.refresh()
+                this.closeView()
+              }else{
+                this.$message.error('添加失败！')
+              }
+            })
+          }else{
+            const params = Object.assign({},this.configDetail,this.formData)
+            updateRoom(params).then(res=>{
+              console.log('修改返回结果：',res)
+              if (res.code === 200) {
+                this.$message.success('修改成功！')
+                this.refresh()
+                this.closeView()
+              }else{
+                this.$message.error('修改失败！')
+              }
+            })
+          }   
+        }
+      })
+      console.log('formData:',JSON.stringify(this.formData))
     },
     closeView(){
       this.$emit('closeView')
+    },
+    refresh(){
+      this.$emit('refresh')
     }
   }
 }

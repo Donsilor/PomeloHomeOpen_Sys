@@ -10,6 +10,8 @@ import '@/icons' // icon
 import '@/permission' // 权限
 import VueImg from 'v-img'
 import moment from 'vue-moment'
+import vcolorpicker from 'vcolorpicker'
+Vue.use(vcolorpicker)
 Vue.use(ElementUI, {})
 Vue.use(moment)
 Vue.use(VueImg)

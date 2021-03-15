@@ -29,12 +29,86 @@ export function queryParams(params) {
   })
 }
 
+//=============分数配置========================
+
+//分数配置列表
+export function getScoreList(params) {
+  return fetch2({
+    url: '/api/ext/roomEnvScore/list',
+    method: 'post',
+    data: params
+  })
+}
+
+//添加分数配置
+export function addScore(params) {
+  return fetch2({
+    url: '/api/ext/roomEnvScore/add',
+    method: 'post',
+    data: params
+  })
+}
+
+//更新分数配置
+export function updateScore(params) {
+  return fetch2({
+    url: '/api/ext/roomEnvScore/update',
+    method: 'post',
+    data: params
+  })
+}
+
+//删除分数配置
+export function deleteScore(params) {
+  return fetch2({
+    url: '/api/ext/roomEnvScore/delete',
+    method: 'post',
+    data: params
+  })
+}
+
+//=============默认房间配置========================
+//获取房间配置列表
+export function getRoomList() {
+  return fetch2({
+    url: '/api/ext/sysDefaultRoom/list',
+    method: 'post',
+    data: {}
+  })
+}
+
+//添加房间
+export function addRoom(params) {
+  return fetch2({
+    url: '/api/ext/sysDefaultRoom/add',
+    method: 'post',
+    data: params
+  })
+}
+
+//添加房间
+export function updateRoom(params) {
+  return fetch2({
+    url: '/api/ext/sysDefaultRoom/update',
+    method: 'post',
+    data: params
+  })
+}
 //===================文案配置=============================
 
 //查询文案列表
 export function queryCopyList(params) {
   return fetch2({
     url: '/test/api/copywritingManage/list',
+    method: 'post',
+    data:params
+  })
+}
+
+//查询文案详情
+export function queryCopyDetail(params) {
+  return fetch2({
+    url: '/test/api/copywritingManage/detail',
     method: 'post',
     data:params
   })

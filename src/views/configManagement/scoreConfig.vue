@@ -16,14 +16,34 @@
       stripe 
       fit 
       highlight-current-row 
-     >
+    >
+      <template v-for="(item,index) in paramsList">
+        <el-table-column
+          v-if="item.key === 'scoreBorder'"
+          :key="index"
+          :label="item.title" 
+          align="center">
+          <template slot-scope="scope">
+            {{ scope.row.scoreSymbol }} {{ scope.row.scoreBorder }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="item.key === 'scoreLevel'"
+          :key="index"
+          :label="item.title" 
+          align="center">
+          <template slot-scope="scope">
+            {{ levelList[scope.row.scoreLevel] }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-else
+          :key="index"
+          :label="item.title" 
+          :prop="item.key" 
+          align="center"/>
+      </template>
      
-     <el-table-column 
-        v-for="(item,index) in paramsList"
-        :key="index"
-        align="center" 
-        :label="item.title" 
-        prop=""/>
       <el-table-column 
         align="center" 
         label="操作" 
@@ -38,7 +58,7 @@
           <el-button 
             size="small" 
             type="primary" 
-            @click="editCard(scope.row, true)">
+            @click="editCard(scope.row)">
             修改
           </el-button>
         </template>
@@ -46,64 +66,23 @@
     </el-table>
 
     <Paging
-              :total="total"
-              pagingStatus=""
-              @changePage="currentPageChange"/>
-
-    <!-- <div 
-      v-show="!listLoading" 
-      class="pagination-container">
-      <el-pagination 
-        :current-page.sync="listQuery.page" 
-        :page-sizes="[15,20,30, 50]" 
-        :page-size="listQuery.limit" 
-        :total="total" 
-        layout="total, sizes, prev, pager, next, jumper" 
-        @size-change="handleSizeChange" 
-        @current-change="handleCurrentChange"/>
-    </div> -->
-
-    <el-dialog 
-      :visible.sync="formVisible" 
-      :title="dialogTitle">
-      <el-form label-width="120px">
-        <el-form-item 
-          label="宽">
-          <el-input 
-            v-model="formItem.x" 
-            type="input"/>
-        </el-form-item>
-        <el-form-item label="高">
-          <el-input 
-            v-model="formItem.y" 
-            type="input"/>
-        </el-form-item>
-      </el-form>
-      <span 
-        slot="footer" 
-        class="dialog-footer">
-        <el-button 
-          type="primary" 
-          @click="onSubmit">提交</el-button>
-        <el-button @click="formVisible=false">取消</el-button>
-      </span>
-    </el-dialog>
-
+      :total="total"
+      paging-status=""
+      @changePage="currentPageChange"/>
     <scoreConfigView
       v-if="addView"
-      :configDetail="configDetail"
+      :config-detail="configDetail"
       :op="op"
-      :addView="addView" 
+      :add-view="addView"
+      @refresh="refresh"
       @closeView="closeView"/>
   </div>
 </template>
 
 <script>
-import fetch from '@/utils/fetch'
-import { addGlobalTags } from '@/api/check'
-import { cardSizeList,cardOperation } from '@/api/screenManage'
 import scoreConfigView from "@/components/configManagement/scoreConfigView"
 import Paging from '@/components/paging'
+import { getScoreList,deleteScore} from '@/api/config.js'
 export default {
   components:{
     scoreConfigView,
@@ -111,90 +90,58 @@ export default {
   },
   data() {
     return {
-      // ====table===
-      list: null,
-      // total: null,
       listLoading: false,
       listQuery: {
         page: 1,
         limit: 15
       },
-      formVisible: false,
-      isEdit: false,
       tagList: [],
-      formItem: {
-        y: '',
-        x: '',
-        operator: '' //1：新增、2：修改、3：删除
-      },
       addView:false,
-      total:10,
+      total:0,
       configDetail:{},
       op:'',
       paramsList:[
-        {title:'等级',key:'id',required:true},
-        {title:'分数区间0-100',key:'param_name',required:true},
-        {title:'描述',key:'unit',required:true},
-        {title:'色值',key:'name_low',required:true}
-      ]
+        {title:'等级',key:'scoreLevel',required:true},
+        {title:'分数区间0-100',key:'scoreBorder',required:true},
+        {title:'描述',key:'scoreDesc',required:false},
+        {title:'色值',key:'scoreColor',required:true},
+      ],
+      levelList:{
+        0:'不及格',
+        1:'及格',
+        2:'良好',
+        3:'优秀'
+      }
     }
   },
   computed: {
-    dialogTitle() {
-      return this.isEdit ? '修改卡片' : '新增卡片'
-    }
   },
   created() {},
   mounted() {
     this.refresh()
   },
   methods: {
-    closeView(){
-      this.addView = false
-    },
-    dataFormat(originVal) { // 后台传回来的S
-      const date = new Date(originVal)
-      const y = date.getFullYear()
-      let m = date.getMonth() + 1
-      m = m < 10 ? '0' + m : m
-      const d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-      const h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
-      const f = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
-      const s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
-      return y + '-' + m + '-' + d + ' ' + h + ':' + f + ':' + s
-    },
-    refresh() {
-      this.$nextTick(() => {
-        this.getCardSizeList()
-      })
-    },
-    
-    getCardSizeList(){
+    query(params){
       this.listLoading = true
-      const params = {
-        size: this.listQuery.limit,
-        page: this.listQuery.page
-      }
-      cardSizeList(params).then(res=>{
-        console.log('2222222', res)
-        this.tagList = res.data
-        this.tagList.forEach((ele)=>{
-          ele.create_time = this.dataFormat(ele.create_time*1000)
-          ele.update_time = this.dataFormat(ele.update_time*1000)
-        })
-        //this.total = res.page_info.total
+      getScoreList(params).then(res=>{
+        console.log('查询的结果：',res)
+        if (res.code === 200) {
+          if (res.data) {
+            this.tagList = res.data
+            // this.total = res.data.length            
+            // console.log('this.total:',this.total)
+          }  
+        }else{
+          this.$message.error(res.msg)
+        }
         this.listLoading = false
       })
     },
-
-    handleSizeChange(val) {  // 分页功能
-      this.listQuery.limit = val
-      console.log(val)
-      this.getCardSizeList()
+    closeView(){
+      this.addView = false
     },
-    handleCurrentChange(val) { // 改变页码数量
-      this.listQuery.page = val
-      this.getCardSizeList()
+    refresh() {
+      this.query({})
     },
     addCart() {   // button按钮事件
       this.addView = true
@@ -206,8 +153,8 @@ export default {
       // this.formItem.operator = 1
     },
     editCard(row, isEdit) {
-       this.addView = true
-      this.configDetail = {}
+      this.addView = true
+      this.configDetail = Object.assign({},row)
       this.op = "edit"
       // console.log('*row*------------------', row)  
       // this.isEdit = true
@@ -217,26 +164,27 @@ export default {
     },
     delCard(row){
       this.$confirm('确认删除？')
-          .then(_ => {
-            console.log(8888);
-            // this.formItem = row
-            //  this.formItem.operator = 3
-            // this.onSubmit(); //调用onSubmit借口发起请求
+        .then(_ => {
+          console.log(8888)
+          const params = {
+            scoreId:row.scoreId
+          }
+          deleteScore(params).then(res=>{
+            console.log('删除结果：',res)
+            if (res.code === 200) {
+              this.refresh()
+            }else{
+              this.$message.error('删除失败！')
+            }
           })
-          .catch(_ => {});
+          // this.formItem = row
+          //  this.formItem.operator = 3
+          // this.onSubmit(); //调用onSubmit借口发起请求
+        })
+        .catch(_ => {})
     },
-    onSubmit() {
-      const params = this.formItem
-      console.log('请求参数：',JSON.stringify(params));
-      cardOperation(params).then(res => {
-        console.log('返回的数据：',res);
-        this.$message.success('操作成功！')
-        this.formVisible = false
-        this.getCardSizeList()
-      })
-    },
-    currentPageChange (listQuery) {
-      console.log('传入的分页查询参数：',listQuery);
+    currentPageChange(listQuery) {
+      console.log('传入的分页查询参数：',listQuery)
       // Object.assign(this.listQuery, {
       //   page: listQuery.page,
       //   limit: listQuery.limit

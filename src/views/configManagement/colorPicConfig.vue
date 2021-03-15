@@ -5,10 +5,9 @@
         size="medium" 
         type="primary" 
         @click="addCart">
-        新增文案
+        新增配置
       </el-button>
     </el-row>
-
     <el-table 
       v-loading="listLoading" 
       :data="tagList" 
@@ -16,25 +15,18 @@
       stripe 
       fit 
       highlight-current-row 
-     >
-     
-<el-table-column 
+    >
+      <el-table-column 
         v-for="(item,index) in paramsList"
         :key="index"
-        align="center" 
         :label="item.title" 
-        prop=""/>
+        :prop="item.key" 
+        align="center"/>
       <el-table-column 
         align="center" 
         label="操作" 
         width="150">
         <template slot-scope="scope">
-          <!-- <el-button 
-            size="small" 
-            type="danger"
-            @click="delCard(scope.row)" >
-            删除
-          </el-button> -->
           <el-button 
             size="small" 
             type="primary" 
@@ -44,66 +36,24 @@
         </template>
       </el-table-column>
     </el-table>
-
     <Paging
-              :total="total"
-              pagingStatus=""
-              @changePage="currentPageChange"/>
-
-    <!-- <div 
-      v-show="!listLoading" 
-      class="pagination-container">
-      <el-pagination 
-        :current-page.sync="listQuery.page" 
-        :page-sizes="[15,20,30, 50]" 
-        :page-size="listQuery.limit" 
-        :total="total" 
-        layout="total, sizes, prev, pager, next, jumper" 
-        @size-change="handleSizeChange" 
-        @current-change="handleCurrentChange"/>
-    </div> -->
-
-    <el-dialog 
-      :visible.sync="formVisible" 
-      :title="dialogTitle">
-      <el-form label-width="120px">
-        <el-form-item 
-          label="宽">
-          <el-input 
-            v-model="formItem.x" 
-            type="input"/>
-        </el-form-item>
-        <el-form-item label="高">
-          <el-input 
-            v-model="formItem.y" 
-            type="input"/>
-        </el-form-item>
-      </el-form>
-      <span 
-        slot="footer" 
-        class="dialog-footer">
-        <el-button 
-          type="primary" 
-          @click="onSubmit">提交</el-button>
-        <el-button @click="formVisible=false">取消</el-button>
-      </span>
-    </el-dialog>
-
+      :total="total"
+      paging-status=""
+      @changePage="currentPageChange"/>
     <colorPicConfigView
       v-if="addView"
-      :configDetail="configDetail"
+      :config-detail="configDetail"
       :op="op"
-      :addView="addView" 
+      :add-view="addView"
+      @refresh="refresh"
       @closeView="closeView"/>
   </div>
 </template>
 
 <script>
-import fetch from '@/utils/fetch'
-import { addGlobalTags } from '@/api/check'
-import { cardSizeList,cardOperation } from '@/api/screenManage'
 import colorPicConfigView from "@/components/configManagement/colorPicConfigView"
 import Paging from '@/components/paging'
+import { getRoomList} from '@/api/config.js'
 export default {
   components:{
     colorPicConfigView,
@@ -111,134 +61,70 @@ export default {
   },
   data() {
     return {
-      // ====table===
-      list: null,
       // total: null,
       listLoading: false,
       listQuery: {
         page: 1,
         limit: 15
       },
-      formVisible: false,
-      isEdit: false,
       tagList: [],
-      formItem: {
-        y: '',
-        x: '',
-        operator: '' //1：新增、2：修改、3：删除
-      },
       addView:false,
-      total:10,
+      total:0,
       configDetail:{},
       op:'',
       paramsList:[
-        {title:'roomID',key:'id',required:true},
-        {title:'名称',key:'param_name',required:true},
-        {title:'图片',key:'unit',required:true},
-        {title:'图标',key:'name_low',required:true},
-        {title:'色值',key:'name_low',required:true},
-        {title:'排序值',key:'name_low',required:true}
+        {title:'roomID',key:'roomId',required:true},
+        {title:'名称',key:'roomName',required:true},
+        {title:'图片',key:'bgPic',required:true},
+        {title:'图标',key:'bgIcon',required:true},
+        {title:'色值',key:'bgColor',required:true},
+        {title:'排序值',key:'order',required:true}
       ]
     }
   },
   computed: {
-    dialogTitle() {
-      return this.isEdit ? '修改卡片' : '新增卡片'
-    }
   },
   created() {},
   mounted() {
     this.refresh()
   },
   methods: {
-    closeView(){
-      this.addView = false
-    },
-    dataFormat(originVal) { // 后台传回来的S
-      const date = new Date(originVal)
-      const y = date.getFullYear()
-      let m = date.getMonth() + 1
-      m = m < 10 ? '0' + m : m
-      const d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-      const h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
-      const f = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
-      const s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
-      return y + '-' + m + '-' + d + ' ' + h + ':' + f + ':' + s
-    },
-    refresh() {
-      this.$nextTick(() => {
-        this.getCardSizeList()
-      })
-    },
-    
-    getCardSizeList(){
+    query(){
       this.listLoading = true
-      const params = {
-        size: this.listQuery.limit,
-        page: this.listQuery.page
-      }
-      cardSizeList(params).then(res=>{
-        console.log('2222222', res)
-        this.tagList = res.data
-        this.tagList.forEach((ele)=>{
-          ele.create_time = this.dataFormat(ele.create_time*1000)
-          ele.update_time = this.dataFormat(ele.update_time*1000)
-        })
-        //this.total = res.page_info.total
+      getRoomList().then(res=>{
+        console.log('查询的结果：',res)
+        if (res.code === 200) {
+          if (res.data) {
+            this.tagList = res.data
+            // this.total = res.data.length            
+            // console.log('this.total:',this.total)
+          }  
+        }else{
+          this.$message.error(res.msg)
+        }
         this.listLoading = false
       })
     },
-
-    handleSizeChange(val) {  // 分页功能
-      this.listQuery.limit = val
-      console.log(val)
-      this.getCardSizeList()
+    closeView(){
+      this.addView = false
     },
-    handleCurrentChange(val) { // 改变页码数量
-      this.listQuery.page = val
-      this.getCardSizeList()
+    refresh() {
+      this.query()
     },
     addCart() {   // button按钮事件
       this.addView = true
       this.configDetail = {}
       this.op = "add"
-      // this.isEdit = false // 编辑状态开关
-      // this.formVisible = true // 蒙版开关
-      // this.formItem = {}
-      // this.formItem.operator = 1
     },
-    editCard(row, isEdit) {
-       this.addView = true
-      this.configDetail = {}
+    editCard(row) {
+      this.addView = true
+      this.configDetail = Object.assign(row)
       this.op = "edit"
-      // console.log('*row*------------------', row)  
-      // this.isEdit = true
-      // this.formVisible = true
-      // this.formItem = row
-      //  this.formItem.operator = 2
     },
     delCard(row){
-      // this.$confirm('确认删除？')
-      //     .then(_ => {
-      //       console.log(8888);
-      //       this.formItem = row
-      //        this.formItem.operator = 3
-      //       this.onSubmit(); //调用onSubmit借口发起请求
-      //     })
-      //     .catch(_ => {});
     },
-    onSubmit() {
-      const params = this.formItem
-      console.log('请求参数：',JSON.stringify(params));
-      cardOperation(params).then(res => {
-        console.log('返回的数据：',res);
-        this.$message.success('操作成功！')
-        this.formVisible = false
-        this.getCardSizeList()
-      })
-    },
-    currentPageChange (listQuery) {
-      console.log('传入的分页查询参数：',listQuery);
+    currentPageChange(listQuery) {
+      console.log('传入的分页查询参数：',listQuery)
       // Object.assign(this.listQuery, {
       //   page: listQuery.page,
       //   limit: listQuery.limit

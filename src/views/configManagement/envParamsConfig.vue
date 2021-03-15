@@ -132,10 +132,6 @@
               </el-button>
             </el-col>
           </el-row>
-          
-            
-            
-          
         </template>
       </el-table-column>
     </el-table>
@@ -153,32 +149,6 @@
         @current-change="handleCurrentChange"/>
     </div> -->
 
-    <el-dialog 
-      :visible.sync="formVisible" 
-      :title="dialogTitle">
-      <el-form label-width="120px">
-        <el-form-item 
-          label="宽">
-          <el-input 
-            v-model="formItem.x" 
-            type="input"/>
-        </el-form-item>
-        <el-form-item label="高">
-          <el-input 
-            v-model="formItem.y" 
-            type="input"/>
-        </el-form-item>
-      </el-form>
-      <span 
-        slot="footer" 
-        class="dialog-footer">
-        <el-button 
-          type="primary" 
-          @click="onSubmit">提交</el-button>
-        <el-button @click="formVisible=false">取消</el-button>
-      </span>
-    </el-dialog>
-
     <paramsConfigView 
       v-if="addView" 
       :config-detail="configDetail"
@@ -195,9 +165,6 @@
 </template>
 
 <script>
-import fetch from '@/utils/fetch'
-import { addGlobalTags } from '@/api/check'
-import { cardSizeList,cardOperation } from '@/api/screenManage'
 import paramsConfigView from "@/components/configManagement/paramsConfigView"
 import { queryParams,updateParams } from '@/api/config.js'
 import Paging from '@/components/paging'
@@ -208,27 +175,17 @@ export default {
   },
   data() {
     return {
-      // ====table===
-      list: null,
-      // total: null,
       listLoading: false,
       listQuery: {
         page: 1,
         limit: 5
       },
-      formVisible: false,
-      isEdit: false,
       tagList: [],
-      formItem: {
-        y: '',
-        x: '',
-        operator: '' //1：新增、2：修改、3：删除
-      },
       addView:false,
       configDetail:{},
       op:'',
       paramsList:[
-        {title:'room_id',key:'room_id',required:true},
+        // {title:'room_id',key:'room_id',required:true},
         {title:'排序编号',key:'sort_no',required:true},
         {title:'名称',key:'param_name',required:true},
         {title:'单位',key:'unit',required:true},
@@ -253,9 +210,6 @@ export default {
     }
   },
   computed: {
-    dialogTitle() {
-      return this.isEdit ? '修改卡片' : '新增卡片'
-    }
   },
   created() {},
   mounted() {
@@ -289,35 +243,16 @@ export default {
         size:listQuery.limit
       }
       this.query(params)
-      // Object.assign(this.listQuery, {
-      //   page: listQuery.page,
-      //   limit: listQuery.limit
-      // })
-      // this.getTaskList()
     },
     closeView(){
       this.addView = false
     },
-    dataFormat(originVal) { // 后台传回来的S
-      const date = new Date(originVal)
-      const y = date.getFullYear()
-      let m = date.getMonth() + 1
-      m = m < 10 ? '0' + m : m
-      const d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-      const h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
-      const f = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
-      const s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
-      return y + '-' + m + '-' + d + ' ' + h + ':' + f + ':' + s
-    },
     refresh() {
-      this.$nextTick(() => {
-        // this.getCardSizeList()
-        const params = {
-          begin:0,//每次刷新都是从第一页开始
-          size:this.listQuery.limit
-        }
-        this.query(params)
-      })
+      const params = {
+        begin:0,//每次刷新都是从第一页开始
+        size:this.listQuery.limit
+      }
+      this.query(params)
     },
     query(params){
       this.listLoading = true
@@ -326,13 +261,7 @@ export default {
         if (res.code === 200) {
           if (res.data && res.data.list) {
             this.tagList = res.data.list
-            if (res.data.more > 0) {
-              this.total = this.listQuery.page*this.listQuery.limit+res.data.more
-            }else{
-              this.total = (this.listQuery.page-1)*this.listQuery.limit+res.data.list.length
-            }
-            
-            console.log('this.total:',this.total)
+            this.total = res.data.total
           }  
         }else{
           this.$message.error(res.msg)
@@ -340,52 +269,16 @@ export default {
         this.listLoading = false
       })
     },
-    getCardSizeList(){
-      this.listLoading = true
-      const params = {
-        size: this.listQuery.limit,
-        page: this.listQuery.page
-      }
-      cardSizeList(params).then(res=>{
-        console.log('2222222', res)
-        this.tagList = res.data
-        this.tagList.forEach((ele)=>{
-          ele.create_time = this.dataFormat(ele.create_time*1000)
-          ele.update_time = this.dataFormat(ele.update_time*1000)
-        })
-        //this.total = res.page_info.total
-        this.listLoading = false
-      })
-    },
-
-    handleSizeChange(val) {  // 分页功能
-      this.listQuery.limit = val
-      console.log(val)
-      this.getCardSizeList()
-    },
-    handleCurrentChange(val) { // 改变页码数量
-      this.listQuery.page = val
-      this.getCardSizeList()
-    },
     addCart() {   // button按钮事件
       this.op = "add"
       this.addView = true
       this.configDetail = {}
-      // this.isEdit = false // 编辑状态开关
-      // this.formVisible = true // 蒙版开关
-      // this.formItem = {}
-      // this.formItem.operator = 1
     },
     editCard(row) {
       console.log('row:',row)
       this.op = "edit"
       this.configDetail = row
       this.addView = true
-      // console.log('*row*------------------', row)  
-      // this.isEdit = true
-      // this.formVisible = true
-      // this.formItem = row
-      //  this.formItem.operator = 2
     },
     delCard(row){
       // this.$confirm('确认删除？')
@@ -396,16 +289,6 @@ export default {
       //       this.onSubmit(); //调用onSubmit借口发起请求
       //     })
       //     .catch(_ => {});
-    },
-    onSubmit() {
-      const params = this.formItem
-      console.log('请求参数：',JSON.stringify(params))
-      cardOperation(params).then(res => {
-        console.log('返回的数据：',res)
-        this.$message.success('操作成功！')
-        this.formVisible = false
-        this.getCardSizeList()
-      })
     }
   }
 }

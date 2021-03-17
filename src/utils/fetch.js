@@ -7,13 +7,19 @@ import helper from '@/utils/helper'
 // 创建axios实例
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api的base_url
-  baseURL: '/api/index.php/', // api的base_url
+  //baseURL: '/api/index.php/', // api的base_url
   timeout: 15000 // 请求超时时间
 })
 
 // request拦截器
 service.interceptors.request.use(
   config => {
+    if(config['url'].indexOf('/java_api/') === -1){
+      //老接口，需要添加前缀
+      config['url'] = '/api/index.php'+config['url']
+    }else{
+      config['url'] = config['url'].replace(/\/java_api/g,'')
+    }
     if (!config.data) {
       config.data = {}
     }
@@ -26,7 +32,7 @@ service.interceptors.request.use(
     if (config.url.indexOf('/api/ext') > -1){
       config.url = config.url.replace(/\/api\/index.php/,'')
     } 
-     console.log('ajax请求数据：',JSON.stringify(config.data));
+    console.log('ajax请求数据：',JSON.stringify(config.data))
     return config
   },
   error => {

@@ -100,7 +100,7 @@ export default {
       const that = this
       queryCopyList(params).then(res=>{
         console.log('列表返回：',res)
-        if (res.code === 0) {
+        if (res.code === 200) {
           if (res.data) {
             this.tagList = res.data
           }

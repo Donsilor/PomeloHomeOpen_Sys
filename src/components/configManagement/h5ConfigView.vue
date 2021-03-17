@@ -82,7 +82,7 @@ export default {
         updateCopy(params).then(res=>{
           console.log('更新返回：',res)
           console.log('添加参数返回：',res)
-          if (res.code===0) {
+          if (res.code===200) {
             this.$message.success('更新成功！')
             this.refresh()
             this.closeView()
@@ -97,7 +97,7 @@ export default {
         })
         addCopy(params).then(res=>{
           console.log('添加返回：',res)
-          if (res.code===0) {
+          if (res.code===200) {
             this.$message.success('添加成功！')
             this.refresh()
             this.closeView()

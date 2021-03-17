@@ -187,7 +187,8 @@ export default {
       paramsList:[
         // {title:'room_id',key:'room_id',required:true},
         {title:'排序编号',key:'sort_no',required:true},
-        {title:'名称',key:'param_name',required:true},
+        {title:'参数名称（唯一标识）',key:'param_name',required:true},
+        {title:'中文名称',key:'param_desc',required:true},
         {title:'单位',key:'unit',required:true},
         {title:'等级"低"名称',key:'name_low',required:true},
         {title:'等级"中"名称',key:'name_mid',required:true},

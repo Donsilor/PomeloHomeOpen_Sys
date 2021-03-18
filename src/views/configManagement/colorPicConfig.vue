@@ -16,12 +16,32 @@
       fit 
       highlight-current-row 
     >
-      <el-table-column 
-        v-for="(item,index) in paramsList"
-        :key="index"
-        :label="item.title" 
-        :prop="item.key" 
-        align="center"/>
+      <template v-for="(item,index) in paramsList">
+        <el-table-column
+          v-if="item.key ==='bgPic'"
+          :key="index"
+          :label="item.title" 
+          :prop="item.key" 
+          align="center">
+          <template slot-scope="scope">
+            <el-tooltip 
+              content="点击查看大图" 
+              placement="top">
+              <img 
+                :src="`http://beenet-beta.oss-cn-shenzhen.aliyuncs.com/${scope.row[item.key]}`"
+                class="listPic" 
+                @click="picShowFun(`http://beenet-beta.oss-cn-shenzhen.aliyuncs.com/${scope.row[item.key]}`)">
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-else
+          :key="index"
+          :label="item.title" 
+          :prop="item.key" 
+          align="center"/>
+      </template>
+      
       <el-table-column 
         align="center" 
         label="操作" 
@@ -47,6 +67,15 @@
       :add-view="addView"
       @refresh="refresh"
       @closeView="closeView"/>
+    <!-- 查看大图 -->
+    <el-dialog
+      v-if="shwoBigPic"
+      :visible.sync="shwoBigPic"
+      width="60%">
+      <img 
+        :src="shwoBigPicUrl" 
+        style="width:100%">
+    </el-dialog>
   </div>
 </template>
 
@@ -79,7 +108,9 @@ export default {
         {title:'图标',key:'bgIcon',required:true},
         {title:'色值',key:'bgColor',required:true},
         {title:'排序值',key:'order',required:true}
-      ]
+      ],
+      shwoBigPic:false,
+      shwoBigPicUrl:''
     }
   },
   computed: {
@@ -89,6 +120,10 @@ export default {
     this.refresh()
   },
   methods: {
+    picShowFun(url){
+      this.shwoBigPicUrl = url
+      this.shwoBigPic = true
+    },
     query(){
       this.listLoading = true
       getRoomList().then(res=>{
@@ -134,3 +169,9 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.listPic{
+  width: 40px;
+  cursor: pointer;
+}
+</style>

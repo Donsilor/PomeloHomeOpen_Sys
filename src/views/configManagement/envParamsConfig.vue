@@ -201,8 +201,9 @@ export default {
         {title:'调节默认高值',key:'default_high',required:true},
         {title:'最大值',key:'max',required:true},
         {title:'权重',key:'weight',required:true},
-        {title:'正太分布期望值',key:'expect',required:true},
-        {title:'正太分布方差',key:'deviation',required:true},
+        {title:'参数a',key:'curve_a',required:true},
+        {title:'参数b',key:'curve_b',required:true},
+        {title:'参数c',key:'curve_c',required:true},
         {title:'启用状态',key:'enable',required:true}
         // {title:'是否变更排序',key:'order_change',required:true}
       ],

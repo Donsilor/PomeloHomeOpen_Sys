@@ -138,8 +138,9 @@ export default {
         {title:'调节默认高值',key:'default_high',required:true,type:'number'},
         {title:'最大值',key:'max',required:true,type:'number'},
         {title:'权重',key:'weight',required:true,type:'number'},
-        {title:'正太分布期望值',key:'expect',required:true,type:'number'},
-        {title:'正太分布方差',key:'deviation',required:true,type:'number'},
+        {title:'参数a',key:'curve_a',required:true,type:'number'},
+        {title:'参数b',key:'curve_b',required:true,type:'number'},
+        {title:'参数c',key:'curve_c',required:true,type:'number'},
         {title:'启用状态',key:'enable',required:true,type:'number'}
         // {title:'是否变更排序',key:'order_change',required:true}
       ],
@@ -159,8 +160,8 @@ export default {
         defalut_high:'',
         max:'',
         weight:'',
-        expect:'',
-        deviation:'',
+        curve_a:'',
+        curve_b:'',
         enable:''
         // order_change:'',
       },
@@ -232,12 +233,16 @@ export default {
           // { required: true, message: '权重不能为空',trigger: 'blur' },
           { validator:numValidator,trigger: 'blur'}
         ],
-        expect:[
-          // { required: true, message: '正太分布期望值不能为空',trigger: 'blur' },
+        curve_a:[
+          // { required: true, message: '参数a不能为空',trigger: 'blur' },
           { validator:numValidator,trigger: 'blur'}
         ],
-        deviation:[
-          // { required: true, message: '正太分布方差不能为空' ,trigger: 'blur'},
+        curve_b:[
+          // { required: true, message: '参数b不能为空' ,trigger: 'blur'},
+          { validator:numValidator,trigger: 'blur'}
+        ],
+        curve_c:[
+          // { required: true, message: '参数c不能为空' ,trigger: 'blur'},
           { validator:numValidator,trigger: 'blur'}
         ],
         enable:[

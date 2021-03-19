@@ -9,8 +9,8 @@ function resolve (dir) {
 
 module.exports = {
   entry: {
-    app: ["babel-polyfill", "./src/main.js"]
-    // h5Page:["babel-polyfill", "./src/h5Page.js"]
+    app: ["babel-polyfill", "./src/main.js"],
+    h5Page:["babel-polyfill", "./src/h5Page.js"]
   },
   output: {
     path: config.build.assetsRoot,

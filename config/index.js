@@ -4,7 +4,7 @@ module.exports = {
   build: {
     env: require('./prod.env'),
     index: path.resolve(__dirname, '../dist/index.html'),
-    // h5Page: path.resolve(__dirname, '../dist/h5Page.html'),
+    h5Page: path.resolve(__dirname, '../dist/h5Page.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: './',

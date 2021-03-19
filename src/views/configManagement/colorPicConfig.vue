@@ -17,7 +17,7 @@
       highlight-current-row 
     >
       <template v-for="(item,index) in paramsList">
-        <el-table-column
+        <!-- <el-table-column
           v-if="item.key ==='bgPic'"
           :key="index"
           :label="item.title" 
@@ -33,9 +33,8 @@
                 @click="picShowFun(`http://beenet-beta.oss-cn-shenzhen.aliyuncs.com/${scope.row[item.key]}`)">
             </el-tooltip>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
-          v-else
           :key="index"
           :label="item.title" 
           :prop="item.key" 

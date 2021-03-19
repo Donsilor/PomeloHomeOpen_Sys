@@ -44,14 +44,33 @@
       <el-table-column 
         align="center" 
         label="操作" 
-        width="150">
+        width="250">
         <template slot-scope="scope">
-          <el-button 
-            size="small" 
-            type="primary" 
-            @click="editCard(scope.row, true)">
-            修改
-          </el-button>
+          
+          <el-row>
+            <el-col :span="8">
+              <el-button 
+                size="small" 
+                type="primary" 
+                @click="editCard(scope.row, true)">
+                修改
+              </el-button>
+            </el-col>
+            <el-col :span="8">
+              <el-input
+                v-model="scope.row.new_order"
+                size="mini" 
+                type="number"/>
+            </el-col>
+            <el-col :span="8">
+              <el-button
+                size="small"
+                type="primary" 
+                @click="sortChange(scope.row)">
+                排序
+              </el-button>
+            </el-col>
+          </el-row>
         </template>
       </el-table-column>
     </el-table>
@@ -82,6 +101,7 @@
 import colorPicConfigView from "@/components/configManagement/colorPicConfigView"
 import Paging from '@/components/paging'
 import { getRoomList} from '@/api/config.js'
+import { updateRoom} from '@/api/config.js'
 export default {
   components:{
     colorPicConfigView,
@@ -119,6 +139,25 @@ export default {
     this.refresh()
   },
   methods: {
+    sortChange(row){
+      console.log('row:',row)
+      if (row.new_order === '' || isNaN(row.new_order)) {
+        this.$message.error('请输入排序号！')
+        return
+      }
+      const params = Object.assign({},row)
+      params.order = params.new_order
+      console.log('修改的params：',params)
+      updateRoom(params).then(res=>{
+        console.log('修改房间返回：',res)
+        if (res.code) {
+          this.$message.success('修改成功！')
+          this.refresh()
+        }else{
+          this.$message.error(res.msg)
+        }
+      })
+    },
     picShowFun(url){
       this.shwoBigPicUrl = url
       this.shwoBigPic = true

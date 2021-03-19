@@ -178,7 +178,7 @@ export default {
       listLoading: false,
       listQuery: {
         page: 1,
-        limit: 5
+        limit: 20
       },
       tagList: [],
       addView:false,

@@ -82,6 +82,7 @@ export default {
       op:'',
       paramsList:[
         {title:'id',key:'id',required:true},
+        {title:'唯一标识key',key:'copywritingKey',required:true},
         {title:'标题',key:'title',required:true},
         {title:'创建时间',key:'createTime',required:true},
         {title:'更新时间',key:'updateTime',required:true}

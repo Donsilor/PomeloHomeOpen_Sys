@@ -21,7 +21,7 @@ export default {
     const querParams = this.paramQuery()
     console.log('querParams:',querParams)
     const params = {
-      id:querParams.id
+      copywritingKey:querParams.copywritingKey
     }
     queryCopyDetail(params).then(res=>{
       console.log('详情结果：',res)

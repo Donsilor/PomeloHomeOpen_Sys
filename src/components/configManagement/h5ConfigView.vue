@@ -13,6 +13,13 @@
           type="input"/>
       </el-form-item>
       <el-form-item 
+        label="唯一标识key">
+        <el-input 
+          :disabled="op==='edit'"
+          v-model="copywritingKey" 
+          type="number"/>
+      </el-form-item>
+      <el-form-item 
         label="文案内容"/>
     </el-form>
     <wangEnduit 
@@ -57,13 +64,15 @@ export default {
       isClear: false,
       detail:"",
       title:'',
-      content:this.configDetail.content?this.configDetail.content:''
+      content:this.configDetail.content?this.configDetail.content:'',
+      copywritingKey:''
     }
   },
   created(){
     console.log('configDetail:',this.configDetail)
     if (this.op==='edit') {
       this.title = this.configDetail.title
+      this.copywritingKey = this.configDetail.copywritingKey
       this.content = this.configDetail.content
     }
    
@@ -77,7 +86,8 @@ export default {
         const params = Object.assign({},{
           id:this.configDetail.id,
           title:this.title,
-          content:this.content
+          content:this.content,
+          copywritingKey:this.copywritingKey
         })
         updateCopy(params).then(res=>{
           console.log('更新返回：',res)
@@ -93,7 +103,8 @@ export default {
       }else{
         const params = Object.assign({},{
           title:this.title,
-          content:this.content
+          content:this.content,
+          copywritingKey:this.copywritingKey
         })
         addCopy(params).then(res=>{
           console.log('添加返回：',res)

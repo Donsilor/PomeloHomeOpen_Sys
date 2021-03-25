@@ -157,7 +157,7 @@ export default {
         defalut_low:'',
         comfort_low:'',
         comfort_high:'',
-        defalut_high:'',
+        default_high:'',
         max:'',
         weight:'',
         curve_a:'',
@@ -216,7 +216,7 @@ export default {
           { validator:minValidator,trigger: 'blur'},
           { validator:maxValidator,trigger: 'blur'}
         ],
-        defalut_high:[
+        default_high:[
           // { required: true, message: '调节默认高值不能为空',trigger: 'blur' },
           { validator:numValidator,trigger: 'blur'},
           { validator:stepTimesValidator,trigger: 'blur'},

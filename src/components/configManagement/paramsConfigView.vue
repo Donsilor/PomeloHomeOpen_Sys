@@ -154,7 +154,7 @@ export default {
         name_high:'',
         step:'',
         min:'',
-        defalut_low:'',
+        default_low:'',
         comfort_low:'',
         comfort_high:'',
         default_high:'',
@@ -195,7 +195,7 @@ export default {
           { validator:stepTimesValidator,trigger: 'blur'},
           { validator:maxValidator,trigger: 'blur'}
         ],
-        defalut_low:[
+        default_low:[
           // { required: true, message: '调节默认低值不能为空',trigger: 'blur' },
           { validator:numValidator,trigger: 'blur'},
           { validator:stepTimesValidator,trigger: 'blur'},

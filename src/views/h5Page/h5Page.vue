@@ -1,8 +1,9 @@
 <template>
   <div 
     id="content" 
+    style=""
     class="content">
-    <p style="text-align:center">内容加载中....</p>
+    <p style="text-align:center;color:white">内容加载中....</p>
   </div>
 </template>
 <script>
@@ -26,8 +27,10 @@ export default {
     queryCopyDetail(params).then(res=>{
       console.log('详情结果：',res)
       this.content = res.data.content
+      document.getElementById('content').setAttribute('style','height:'+window.screen.availHeight+'px')
       document.getElementById('content').innerHTML = this.content
     })
+    
   },
   methods:{
     paramQuery() {
@@ -56,6 +59,7 @@ export default {
   .content{
     margin: 20px;
     word-break: break-all;
+    background-color: black;
   }
   .wrapper {
     display: flex;

@@ -57,12 +57,12 @@ export default {
 
 <style  scoped>
 html{
-  background-color: black;
+  background-color: #1f1e1d;
 }
   .content{
-    margin: 20px;
+    padding: 20px;
     word-break: break-all;
-    background-color: black;
+    background-color: #1f1e1d;
   }
   .wrapper {
     display: flex;

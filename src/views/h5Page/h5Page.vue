@@ -27,7 +27,7 @@ export default {
     queryCopyDetail(params).then(res=>{
       console.log('详情结果：',res)
       this.content = res.data.content
-      document.getElementById('content').setAttribute('style','height:'+window.screen.availHeight+'px')
+      // document.getElementById('content').setAttribute('style','height:'+window.screen.availHeight+'px')
       document.getElementById('content').innerHTML = this.content
     })
     
@@ -56,6 +56,9 @@ export default {
 </script>
 
 <style  scoped>
+html{
+  background-color: black;
+}
   .content{
     margin: 20px;
     word-break: break-all;

@@ -84,7 +84,7 @@ export default {
     var numValidator =  (rule, value, callback)=>{
       // callback()
       console.log('value:',value)
-      if (isNaN(value.trim())) {
+      if (isNaN(value.toString().trim())) {
         console.log('非数字')
         callback(new Error('请输入合法的数值'))
       } else {

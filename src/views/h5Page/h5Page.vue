@@ -56,28 +56,11 @@ export default {
 </script>
 
 <style  scoped>
-html{
-  background-color: #1f1e1d;
-}
   .content{
     padding: 20px;
     word-break: break-all;
-    background-color: #1f1e1d;
-  }
-  .wrapper {
-    display: flex;
-    /* align-items: center; */
-    /* justify-content: center; */
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    
   }
   .van-overlay{
     height: 100%;
-  }
-  .block {
-    width: 120px;
-    height: 120px;
-    background-color: #fff;
   }
 </style>

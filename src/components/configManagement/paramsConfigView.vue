@@ -162,6 +162,7 @@ export default {
         weight:'',
         curve_a:'',
         curve_b:'',
+        curve_c:'',
         enable:''
         // order_change:'',
       },

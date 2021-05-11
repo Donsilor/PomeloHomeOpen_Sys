@@ -152,7 +152,10 @@
               class="card-span-left">面板设备卡片大小</el-col>
             <el-col 
               :span="21">  
-              <uploadComponent :operateImages="operateImages" :cardData="cardData" :edit="edit"  />
+              <uploadComponent 
+                :operate-images="operateImages" 
+                :card-data="cardData" 
+                :edit="edit" />
             </el-col>
           </el-row>
           <el-dialog :visible.sync="dialogVisible">
@@ -1165,12 +1168,12 @@ import fetch from '@/utils/fetch'
 import { Message, Dialog } from 'element-ui'
 import { mapGetters } from 'vuex'
 import Cookies from 'js-cookie'
-import uploadComponent from '@/components/typeManagement/uploadComponent';
+import uploadComponent from '@/components/typeManagement/uploadComponent'
 export default {
+  name: 'OnlineProductDetail',
   components:{
     uploadComponent
   },
-  name: 'OnlineProductDetail',
   data() {
     var checkPhone = (rule, value, callback) => {
       // const reg = /^1\d{10}$/
@@ -1358,17 +1361,17 @@ export default {
     },
     // 修改tag标签TODO:
     changeTag(){
-      console.log('变化后的operateImages：',this.operateImages);
+      console.log('变化后的operateImages：',this.operateImages)
       //gtag_id传0的时候表示删除
       const params = this.tagVal ? {
         product_id: this.product_id,
         gtag_id: this.tagVal,
         images:this.operateImages
       }:{
-          product_id: this.product_id,
-          gtag_id: 0,
-          images:this.operateImages
-        }
+        product_id: this.product_id,
+        gtag_id: 0,
+        images:this.operateImages
+      }
       console.log('修改产品tag传递参数：',params)
       changeProductTags(params).then(res=>{
         console.log('修改产品tag结果：',res)
@@ -1985,7 +1988,7 @@ export default {
     removeProduct() {
       this.$confirm('确认删除该产品？', '重新上架').then(() => {
         fetch({
-          url: 'product/admin_del',
+          url: '/product/admin_del',
           method: 'post',
           data: { 'product_id': this.product_id }
         }).then(data => {
@@ -1997,7 +2000,7 @@ export default {
     reStocking() {
       this.$confirm('确认重新上架该产品？', '重新上架').then(() => {
         fetch({
-          url: 'admin/product_reschedule',
+          url: '/admin/product_reschedule',
           method: 'post',
           data: { 'product_id': this.product_id }
         }).then(data => {

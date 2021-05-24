@@ -60,6 +60,11 @@ export default {
           name: '配置管理',
           url: '/configManagement',
           icon: 'el-icon-view'
+        },
+        {
+          name: '规则引擎',
+          url: '/ruleEngine',
+          icon: 'el-icon-s-cooperation'
         }
       ]
     }

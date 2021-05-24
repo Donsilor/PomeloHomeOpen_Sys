@@ -21,10 +21,10 @@
     "v-img": "^0.1.9",
     "vcolorpicker": "^1.1.0",
     "vue": "2.5.9",
-    "vue-moment": "4.0.0",
+    "vue-moment": "^4.0.0",
     "vue-router": "2.7.0",
     "vuex": "2.3.1",
-    "wangeditor": "^4.6.8"
+    "wangeditor": "^4.7.1"
   },
   "devDependencies": {
     "autoprefixer": "7.1.6",

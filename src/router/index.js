@@ -343,7 +343,7 @@ export const constantRouterMap = [
             name: 'list',
             component: _import('enterpriseManagement/list')
           },
-          {
+          { 
             path: 'enterpriseInfo',
             name: 'enterpriseInfo',
             component: _import('enterpriseManagement/enterpriseInfo')
@@ -406,7 +406,30 @@ export const constantRouterMap = [
             component: _import('configManagement/colorPicConfig')
           }
         ]
-      },,
+      },
+      {
+        path: 'ruleEngine',
+        name: '规则引擎',
+        component: _import('ruleEngine/index'),
+        redirect: '/ruleEngine/template',
+        children: [
+          {
+            path: 'template',
+            name: 'template',
+            component: _import('ruleEngine/template')
+          },
+          {
+            path: 'scene',
+            name: 'scene',
+            component: _import('ruleEngine/scene')
+          },
+          {
+            path: 'primaryCategoryDetail',
+            name: 'primaryCategoryDetail',
+            component: _import('ruleEngine/primaryCategoryDetail')
+          },
+        ]
+      },
       {
         path: 'screenManagement',
         name: '屏幕配置管理',

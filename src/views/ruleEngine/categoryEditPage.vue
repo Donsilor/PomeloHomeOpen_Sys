@@ -1,5 +1,5 @@
 <template>
-  <div class="page-content">
+  <div class="app-container">
     <el-row class="title">
       <el-button 
         type="primary" 
@@ -30,7 +30,7 @@
 </template>
 <script>
 import SubInfo from '@/components/ruleEngine/categorySubInfo'
-// import Physical from '@/components/ruleEngine/physicalModelInfo'
+import Physical from '@/components/ruleEngine/physicalModelInfo'
 export default {
   data() {
     return {
@@ -44,11 +44,11 @@ export default {
           name: '0',
           content: SubInfo
         },
-        /* {
+        {
           title: '物模型信息',
           name: '1',
           content: Physical
-        } */
+        }
       ]
     }
   },

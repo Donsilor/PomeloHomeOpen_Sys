@@ -299,6 +299,7 @@ export default {
         this.$nextTick(() => {
           this.form.categoryNumber = res.data.data.categoryNumber
           this.form.categoryName = res.data.data.categoryName
+          this.form.categoryNameE = res.data.data.categoryNameE
           console.log('我是返回来的', res.data.data.fileList)
           if (JSON.stringify(res.data.data.fileList) !== 'null' && res.data.data.fileList.length !== 0) {
             res.data.data.fileList.forEach((e, index) => {

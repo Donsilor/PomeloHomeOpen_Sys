@@ -21,6 +21,7 @@
     "v-img": "^0.1.9",
     "vcolorpicker": "^1.1.0",
     "vue": "2.6.0",
+    "vue-json-viewer": "^2.2.19",
     "vue-moment": "4.0.0",
     "vue-router": "2.7.0",
     "vuex": "2.3.1",

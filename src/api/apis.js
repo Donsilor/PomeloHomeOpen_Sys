@@ -67,7 +67,7 @@ export const DEVICE_MANAGE_SERVICE_API = {
 // 产品服务物模型模块
 export const MODEL_MANAGE_SERVICE_API = {
   THING_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/modelManage/getThingModel`, // 产品物模型
-  UNITS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/modelManage/units`, // 编辑页面
+  UNITS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/units`, // 编辑页面 fixed
   DRAFT_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/modelManage/getDraftModel`, //
   MODEL_VERSIONS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/modelManage/getModelVersions`, //
   MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/modelManage/model`, // 对模型的添加删除等操作
@@ -119,76 +119,6 @@ export const LOG_SERVICE_API = {
   PRODUCT_LOG: `${BASE_URL}${PROXY_NAME.LOG_SERVICE}/logDeviceList`, // 查询设备日志
   LOG_DEVICE: `${BASE_URL}${PROXY_NAME.LOG_SERVICE}/logDevice`, // 获取日志详情
   DEVICE_COUNT: `${BASE_URL}${PROXY_NAME.LOG_SERVICE}/home/device/count` // 首页获取设备数量，活跃设备数量
-}
-
-// 固件升级模块
-export const OTA_SERVICE_API = {
-  PRODUCT_LIST: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/productManage/product/listProduct`, // 获取产品列表
-  FIRMWARE_LIST: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/firmware/getByPage`, // // 固件升级列表
-  ADD_FIRMWARE: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/firmware/add`, // 新增固件
-  DELETE_FIRMWARE: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/firmware/delete`, // 删除固件
-  Add_STRATEGY: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/strategy/add`, // 验证固件/批量升级
-  ISEXISTSTRATEGY: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/strategy/isExistStrategy`, // 升级策略验证
-  GET_STRATEGY_BY_FIRMWAREID: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/strategy/getStrategyByFirmwareId`, // 获取批次管理列表
-  PRODUCT_VERSION: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/product/version`, // 获取产品版本
-  GET_DEVICE_BY_FIRMWAREID: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/device/getDeviceByFirmwareId`, // 通过固件ID获取设备管理列表
-  GET_MODULES: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/product/getModules`, // 获取模块id根据productKey
-  GET_VERSIONS_LIST: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/product/getVersions`, // 获取版本号列表
-  GET_DEVICES: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/product/getDevices`, // 获取模块id根据productKey
-  PROGRESS_STATUS: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/firmware/progressStatus`,
-  STRATEGY_CANCLE_UPGRADE: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/strategy/cancelUpgrade`,
-  FIRMWARE_DETAILS: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/firmware/details`,
-  FIRMWARE_UPDATE: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/firmware/update`,
-  GET_DEVICE_BY_STRATEGY_BY_ID: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/device/getDeviceByStrategyId`, // 通过批次ID获取设备管理列表
-  DEVICE_CANCLE_UPGRADE: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/device/cancelUpgrade`, // 取消升级
-  DEVICE_REUPGRADE: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/device/reUpgrade`, // 重升级
-  STRATEGY_DETAILS: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/strategy/details`, // 获取批次信息
-  STRATEGY_STATISTICS_DEVICE: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/strategy/statisticsDevice`,
-  UPLOAD_PATH: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/file/upload`, //
-  IMPORT: `${BASE_URL}${PROXY_NAME.OTA_SERVICE}/ota/upgrade/product/import`// 批量导入
-}
-
-//  CA证书模块
-export const SAFETY_SERVICE_API = {
-  CERT_QUERY_LIST: `${BASE_URL}${PROXY_NAME.SAFETY_SERVICE}/cert/query/list`, // 获取注册证书列表
-  REGISCERT_INFO: `${BASE_URL}${PROXY_NAME.SAFETY_SERVICE}/cert/query/registerCertInfo`, // 获取证书详情
-  BINDCERT_INFO: `${BASE_URL}${PROXY_NAME.SAFETY_SERVICE}/cert/query/bindCertInfo`, // 获取证书绑定列表详情
-  CERT_INFO: `${BASE_URL}${PROXY_NAME.SAFETY_SERVICE}/cert/query/certInfo`, // 获取证书绑定列表项的详情数据
-  DOWNLOAD_TEMPLATE: `${BASE_URL}${PROXY_NAME.SAFETY_SERVICE}/cert/download/template`, // csv模板
-  CERT_DOWNLOAD: `${BASE_URL}${PROXY_NAME.SAFETY_SERVICE}/cert/download`, // 设备的csv模板
-  CERT_REGIS: `${BASE_URL}${PROXY_NAME.SAFETY_SERVICE}/cert/register`, // 注册证书
-  CERT_BIND: `${BASE_URL}${PROXY_NAME.SAFETY_SERVICE}/cert/bind`, // 绑定证书
-  CERT_DELETE: `${BASE_URL}${PROXY_NAME.SAFETY_SERVICE}/cert/delete` // 删除证书
-}
-
-// 鉴权服务，角色管理
-export const ROLE_SERVICE_API = {
-  ROLE_LIST: `${AUTH_BASE_URL}/role/list`, // 角色列表
-  ROLE: `${AUTH_BASE_URL}/role`, // 角色信息、添加、修改、删除
-  BIND_MENU: `${AUTH_BASE_URL}/role/bindMenu`, // 角色绑定菜单(去掉了不用了)
-  BIND_ACCESS: `${AUTH_BASE_URL}/role/bindAccess`// 为角色分配权限
-}
-
-// 鉴权服务，角色模板管理
-export const ROLE_TEMPLATE_SERVICE_API = {
-  ROLE_TEMPLATE: `${AUTH_BASE_URL}/rightTemplate`, // 角色模板修改、查看、删除（查看和删除路径后面直接带id）、新增
-  TEMPLATE_LIST: `${AUTH_BASE_URL}/rightTemplate/list` // 角色模板列表
-}
-
-// 鉴权服务：菜单管理
-export const MENU_SERVICE_API = {
-  MENU_BIND_ACCESS: `${AUTH_BASE_URL}/rightMenu/bindAccess`, // 为菜单分配权限
-  OWNER_MENU_LIST: `${AUTH_BASE_URL}/rightMenu/listOwnerMenu`, // 获取当前登录用户菜单列表
-  RIGHT_MENU: `${AUTH_BASE_URL}/rightMenu`, // 获取指定菜单（路径上带id）、新增菜单（post带上params参数）
-  MENU_LIST: `${AUTH_BASE_URL}/rightMenu/list`, // 菜单列表
-  MENU_BY_ROLE_ID: `${AUTH_BASE_URL}/rightMenu/listMenuByRoleId` // 获取指定角色菜单+按钮
-}
-
-// 鉴权服务：授权管理
-export const PERMISSION_SERVICE_API = {
-  RIGHT_ACCESS_LIST: `${AUTH_BASE_URL}/rightAccess/list`, // 授权列表
-  RIGHT_ACCESS: `${AUTH_BASE_URL}/rightAccess`, // get 根据id获取指定权限
-  RIGHT_ACCESS_LIST_BY_BUTTON_ID: `${AUTH_BASE_URL}/rightAccess/listByButtonId`// get 根据btnid获取指定权限
 }
 
 // 用户管理
@@ -259,7 +189,7 @@ export const CATEGORY_MANAGE_SERVICE_API = {
   GET_SUB_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/list`, // 获取子品类列表   fixed 
   DETAIL_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取子品类详情  fixed
   ADD_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/add`, // 添加子品类列表   fixed
-  EDIT_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/editSub`, // 编辑子品类列表
+  EDIT_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/edit`, // 编辑子品类列表 fixed
   DELETE_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/delete`, // 删除子品类列表 fixed
   UPLOAD: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/upload`, // 上传物模型,
   GET_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/getModel`, // 获取物模型,

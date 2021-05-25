@@ -33,17 +33,12 @@
           placeholder="请输入品类名称"/>
       </el-form-item>
       <el-form-item 
-        :required="true" 
-        label="所属品类">
+        label="品类英文名" 
+        prop="categoryNameE">
         <el-input 
-          :disabled="true" 
-          v-model="belongCategory" 
+          v-model="form.categoryNameE" 
           autocomplete="off" 
-          placeholder="请输入品类名称">
-          <i
-            slot="suffix"
-            class="el-icon-arrow-down el-input__icon"/>
-        </el-input>
+          placeholder="请输入品类英文名称"/>
       </el-form-item>
       <el-form-item 
         label="品类图片" 
@@ -136,17 +131,24 @@
         </el-radio-group>
       </el-form-item> -->
     </el-form>
+    <AddSubDialog
+      v-if="addDialogVisible"
+      :add-dialog-visible="addDialogVisible"
+      :category="routeData"
+      :prop-data="propData"
+      @closeAddDialog="closeAddDialog"
+    />
   </div>
 </template>
 <script>
 import { detailSubCategory } from '@/api/categoryManager'
+import AddSubDialog from '@/components/ruleEngine/subCategoryDialog'
 export default {
+  components: {
+    AddSubDialog
+  },
   props: {
     categoryId: {
-      type: String,
-      default: ''
-    },
-    categoryName: {
       type: String,
       default: ''
     }
@@ -201,7 +203,8 @@ export default {
       ],
       form: {
         categoryNumber: '',
-        categoryName: ''
+        categoryName: '',
+        categoryNameE: ''
         // modelType: 0
       },
       belongCategory: '', // 品类名称
@@ -225,18 +228,18 @@ export default {
     }
   },
   created() {
-    // this.getSubDetail()
+    this.getSubDetail()
   },
   methods: {
     getSubDetail() {
       const params = {
-        categoryId: this.categoryId,
-        categoryName: this.categoryName
+        categoryId: this.categoryId
       }
       detailSubCategory({ params }).then((res) => {
         this.$nextTick(() => {
           this.form.categoryNumber = res.data.data.categoryNumber
           this.form.categoryName = res.data.data.categoryName
+          this.form.categoryNameE = res.data.data.categoryNameE
           this.belongCategory = res.data.data.parentName
           console.log('我是返回来的', res.data.data.fileList)
           if (JSON.stringify(res.data.data.fileList) !== 'null' && res.data.data.fileList.length !== 0) {

@@ -2,88 +2,137 @@
   <div>
     <!-- 新增参数Dialog -->
     <el-dialog
-      width="30%"
       :close-on-click-modal="false"
       :append-to-body="true"
       :title="lastDataStauts==='view'?'查看参数':'编辑参数'"
       :visible.sync="lastVoDialogVisible"
-      :before-close="closeAddDialog">
-      <el-form ref="paramsRuleForm"
+      :before-close="closeAddDialog"
+      width="30%">
+      <el-form 
+        ref="paramsRuleForm"
         :rules="paramsRules"
         :model="paramsRuleForm"
         :disabled="lastDataStauts==='view'?true:false"
         label-position="top">
-        <el-form-item  prop="name">
+        <el-form-item prop="name">
           <el-row slot="label">
             <span>参数名称</span>
-            <el-tooltip content="必填，支持中文、大小写字母、数字、短划线、下划线和小数点，必须以中文、英文或数字开头，不超过 30 个字符。" placement="right" effect="light">
-              <span class="el-icon-question"></span>
+            <el-tooltip 
+              content="必填，支持中文、大小写字母、数字、短划线、下划线和小数点，必须以中文、英文或数字开头，不超过 30 个字符。" 
+              placement="right" 
+              effect="light">
+              <span class="el-icon-question"/>
             </el-tooltip>
           </el-row>
-          <el-input v-model="paramsRuleForm.name" placeholder="请输入参数名称"></el-input>
+          <el-input 
+            v-model="paramsRuleForm.name" 
+            placeholder="请输入参数名称"/>
         </el-form-item>
-        <el-form-item  prop="identifier">
+        <el-form-item prop="identifier">
           <el-row slot="label">
-            <span style="margin-right:2px" class="name">标识符</span>
-            <el-tooltip content="支持大小写字母、数字和下划线、不超过 50 个字符。" placement="right" effect="light">
-              <span class="el-icon-question"></span>
+            <span 
+              style="margin-right:2px" 
+              class="name">标识符</span>
+            <el-tooltip 
+              content="支持大小写字母、数字和下划线、不超过 50 个字符。" 
+              placement="right" 
+              effect="light">
+              <span class="el-icon-question"/>
             </el-tooltip>
           </el-row>
-          <el-input :maxlength="50" v-model="paramsRuleForm.identifier" placeholder="请输入标识符" ></el-input>
+          <el-input 
+            :maxlength="50" 
+            v-model="paramsRuleForm.identifier" 
+            placeholder="请输入标识符" />
         </el-form-item>
         <!-- 属性独有 -->
-        <el-form-item label="数据类型" prop="dataType" :required="true">
-          <el-select v-model="paramsRuleForm.dataType.type" placeholder="请输入数据类型" style="width:100%" @change="selChange">
+        <el-form-item 
+          :required="true" 
+          label="数据类型" 
+          prop="dataType">
+          <el-select 
+            v-model="paramsRuleForm.dataType.type" 
+            placeholder="请输入数据类型" 
+            style="width:100%" 
+            @change="selChange">
             <el-option
-            v-for="(item,index) in dataTypeList"
-            :key="index"
-            :label="item.label"
-            :value="item.value"
-            >
-            </el-option>
+              v-for="(item,index) in dataTypeList"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <!-- int float double -->
-        <el-form-item label="取值范围" prop="valueRange" v-if="paramsRuleForm.dataType.type==='int'||paramsRuleForm.dataType.type==='float'||paramsRuleForm.dataType.type==='double'">
+        <el-form-item 
+          v-if="paramsRuleForm.dataType.type==='int'||paramsRuleForm.dataType.type==='float'||paramsRuleForm.dataType.type==='double'" 
+          label="取值范围" 
+          prop="valueRange">
           <el-row>
             <el-col :span="11">
               <el-form-item prop="dataType.specs.min">
-                <el-input type="number" placeholder="最小值" v-model="paramsRuleForm.dataType.specs.min"></el-input>
+                <el-input 
+                  v-model="paramsRuleForm.dataType.specs.min" 
+                  type="number" 
+                  placeholder="最小值"/>
               </el-form-item>
             </el-col>
-            <el-col class="line" :span="2" style="text-align:center">-</el-col>
+            <el-col 
+              :span="2" 
+              class="line" 
+              style="text-align:center">-</el-col>
             <el-col :span="11">
               <el-form-item prop="dataType.specs.max">
-                <el-input type="number" placeholder="最大值" v-model="paramsRuleForm.dataType.specs.max"></el-input>
+                <el-input 
+                  v-model="paramsRuleForm.dataType.specs.max" 
+                  type="number" 
+                  placeholder="最大值"/>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form-item>
         <!-- 步长 -->
-        <el-form-item label="步长" prop="dataType.specs.step" v-if="paramsRuleForm.dataType.type==='int'||paramsRuleForm.dataType.type==='float'||paramsRuleForm.dataType.type==='double'">
-          <el-input  placeholder="请输入步长" v-model="paramsRuleForm.dataType.specs.step"></el-input>
+        <el-form-item 
+          v-if="paramsRuleForm.dataType.type==='int'||paramsRuleForm.dataType.type==='float'||paramsRuleForm.dataType.type==='double'" 
+          label="步长" 
+          prop="dataType.specs.step">
+          <el-input 
+            v-model="paramsRuleForm.dataType.specs.step" 
+            placeholder="请输入步长"/>
         </el-form-item>
         <!-- 单位 -->
-        <el-form-item label="单位" prop="unit" v-if="paramsRuleForm.dataType.type==='int'||paramsRuleForm.dataType.type==='float'||paramsRuleForm.dataType.type==='double'">
-          <el-select v-model="paramsRuleForm.dataType.specs.unit" filterable placeholder="请输入单位" style="width:100%" @change="unitChange">
+        <el-form-item 
+          v-if="paramsRuleForm.dataType.type==='int'||paramsRuleForm.dataType.type==='float'||paramsRuleForm.dataType.type==='double'" 
+          label="单位" 
+          prop="unit">
+          <el-select 
+            v-model="paramsRuleForm.dataType.specs.unit" 
+            filterable 
+            placeholder="请输入单位" 
+            style="width:100%" 
+            @change="unitChange">
             <el-option
               v-for="item in getSelList"
               :key="item.id"
               :label="item.uName"
-              :value="item.unit">
-            </el-option>
+              :value="item.unit"/>
           </el-select>
         </el-form-item>
         <!-- bool -->
-        <el-form-item label="布尔值" prop="bool" v-if="paramsRuleForm.dataType.type==='bool'">
+        <el-form-item 
+          v-if="paramsRuleForm.dataType.type==='bool'" 
+          label="布尔值" 
+          prop="bool">
           <el-row style="margin-bottom:5px">
             <el-col :span="1">
               0
             </el-col>
-            <el-col class="line" :span="1">-</el-col>
+            <el-col 
+              :span="1" 
+              class="line">-</el-col>
             <el-col :span="22">
-              <el-form-item prop='dataType.specs[0]'>
-                <el-input  v-model="paramsRuleForm.dataType.specs[0]"></el-input>
+              <el-form-item prop="dataType.specs[0]">
+                <el-input v-model="paramsRuleForm.dataType.specs[0]"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -91,49 +140,89 @@
             <el-col :span="1">
               1
             </el-col>
-            <el-col class="line" :span="1">-</el-col>
+            <el-col 
+              :span="1" 
+              class="line">-</el-col>
             <el-col :span="22">
-              <el-form-item prop='dataType.specs[1]'>
-                <el-input v-model="paramsRuleForm.dataType.specs[1]"></el-input>
+              <el-form-item prop="dataType.specs[1]">
+                <el-input v-model="paramsRuleForm.dataType.specs[1]"/>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form-item>
         <!--enum -->
-        <el-form-item label="枚举项" prop="dataType.specs.enum" v-if="paramsRuleForm.dataType.type==='enum'">
+        <el-form-item 
+          v-if="paramsRuleForm.dataType.type==='enum'" 
+          label="枚举项" 
+          prop="dataType.specs.enum">
           <el-row>
             <el-col :span="12">参数值</el-col>
             <el-col :span="12">参数描述</el-col>
           </el-row>
-          <el-row v-for="(item,index) in enumList" :key="index" class="row">
+          <el-row 
+            v-for="(item,index) in enumList" 
+            :key="index" 
+            class="row">
             <el-col :span="lastDataStauts==='view'?11:10">
               <el-form-item >
-                <el-input type="number" placeholder="编号如0" onkeyup="value=value.replace(/[^\d]/g,'')" v-model="item.key"></el-input>
+                <el-input 
+                  v-model="item.key" 
+                  type="number" 
+                  placeholder="编号如0" 
+                  onkeyup="value=value.replace(/[^\d]/g,'')"/>
               </el-form-item>
             </el-col>
-            <el-col :span="2" style="text-align:center"> ~ </el-col>
+            <el-col 
+              :span="2" 
+              style="text-align:center"> ~ </el-col>
             <el-col :span="lastDataStauts==='view'?11:10">
               <el-form-item >
-                <el-input placeholder="对该枚举项的描述" v-model="item.value"></el-input>
+                <el-input 
+                  v-model="item.value" 
+                  placeholder="对该枚举项的描述"/>
               </el-form-item>
             </el-col>
-            <el-col :span="2" class="delete" @click.native="deleteItem(item,index)" v-if="enumList.length > 1 && lastDataStauts!=='view'" >删除</el-col>
+            <el-col 
+              v-if="enumList.length > 1 && lastDataStauts!=='view'" 
+              :span="2" 
+              class="delete" 
+              @click.native="deleteItem(item,index)" >删除</el-col>
           </el-row>
-          <el-tooltip content="最多不超过100条" placement="top" effect="light">
-            <span class="tooltip" @click="addItem" v-if="lastDataStauts!=='view'">+添加枚举项</span>
+          <el-tooltip 
+            content="最多不超过100条" 
+            placement="top" 
+            effect="light">
+            <span 
+              v-if="lastDataStauts!=='view'" 
+              class="tooltip" 
+              @click="addItem">+添加枚举项</span>
           </el-tooltip>
         </el-form-item>
         <!-- text -->
-        <el-form-item label="数据长度（单位:字节）" prop="dataType.specs.length" v-if="paramsRuleForm.dataType.type==='text'">
-          <el-input  placeholder="请输入读写类型" v-model="paramsRuleForm.dataType.specs.length"></el-input>
+        <el-form-item 
+          v-if="paramsRuleForm.dataType.type==='text'" 
+          label="数据长度（单位:字节）" 
+          prop="dataType.specs.length">
+          <el-input 
+            v-model="paramsRuleForm.dataType.specs.length" 
+            placeholder="请输入读写类型"/>
         </el-form-item>
         <!-- date -->
-        <el-form-item label="时间格式"  v-if="paramsRuleForm.dataType.type==='date'">
-          <el-input :disabled="true" placeholder="请输入时间格式" v-model="paramsRuleForm.datemsg"></el-input>
+        <el-form-item 
+          v-if="paramsRuleForm.dataType.type==='date'" 
+          label="时间格式">
+          <el-input 
+            :disabled="true" 
+            v-model="paramsRuleForm.datemsg" 
+            placeholder="请输入时间格式"/>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="confirm">确定</el-button>
+      <span 
+        slot="footer" 
+        class="dialog-footer">
+        <el-button 
+          type="primary" 
+          @click="confirm">确定</el-button>
         <el-button @click="closeAddDialog">取消</el-button>
       </span>
     </el-dialog>
@@ -144,7 +233,7 @@ import { funcName, bool0, bool1, identifierReg } from '@/assets/js/validator'
 import { mapGetters } from 'vuex'
 export default {
   props: ['lastVoDialogVisible', 'lastData', 'lastDataStauts'],
-  data () {
+  data() {
     const step = (rule, value, callback) => {
       if (value < 0) {
         callback(new Error('步长不能小于0'))
@@ -286,7 +375,7 @@ export default {
     lastData: {
       immediate: true,
       deep: true,
-      handler (val) {
+      handler(val) {
         console.log('lastData-------------------', this.lastData)
         this.paramsRuleForm = Object.assign({}, this.lastData)
         if (this.paramsRuleForm.dataType.type === 'enum') {
@@ -304,9 +393,9 @@ export default {
       }
     }
   },
-  created () {},
+  created() {},
   methods: {
-    unitChange (val) {
+    unitChange(val) {
       const unitName = this.getSelList.find((item) => {
         return item.unit === val
       })
@@ -314,7 +403,7 @@ export default {
         this.paramsRuleForm.dataType.specs.unitName = unitName.unitName
       }
     },
-    selChange (val) {
+    selChange(val) {
       console.log('Ⅸ-----', this.paramsRuleForm, this.enumList)
       if (val === 'int' || val === 'float' || val === 'double') {
         this.paramsRuleForm.dataType.specs = {
@@ -348,10 +437,10 @@ export default {
         }
       }
     },
-    closeAddDialog () {
+    closeAddDialog() {
       this.$emit('openLast')
     },
-    confirm () {
+    confirm() {
       this.$refs.paramsRuleForm.validate(valid => {
         if (valid) {
           // 将enum转换回对象
@@ -369,20 +458,20 @@ export default {
       })
     },
     // 增加删除enumList
-    addItem () {
+    addItem() {
       this.enumList.push({
         key: '',
         value: ''
       })
     },
-    deleteItem (item, index) {
+    deleteItem(item, index) {
       this.enumList.splice(index, 1)
     }
   }
 }
 </script>
 
-<style lang='less' scoped>
+<style lang='scss' scoped>
   /deep/ .el-form-item__label{
     line-height: 14px;
   }

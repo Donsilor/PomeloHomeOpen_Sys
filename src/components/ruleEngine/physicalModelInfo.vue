@@ -61,24 +61,24 @@
       :import-phydata="importPhydata" 
       @close-view="showImportModel.show = false" 
       @getImportPhyData="getImportPhyData"/>
-      <!-- 物模型数据展示dialog -->
-      <physicalModelDailog 
+    <!-- 物模型数据展示dialog -->
+    <physicalModelDailog 
       :res-data="resData" 
       :dialog-visible="dialogVisible" 
       @open="dialogVisible=false"/>
-      <!-- 编辑dialog -->
-      <!-- <viewMoreDailog 
+    <!-- 编辑dialog -->
+    <viewMoreDailog 
       v-if="infosDialogVisible" 
       :pro-params="proParams" 
       :rowsdata="rowsData" 
       :infos-dialog-visible="infosDialogVisible" 
-      @open-view-dialog="infosDialogVisible=false"/> -->
-      <!-- 添加自定义dialog -->
-      <!-- <addCustomDailog 
+      @open-view-dialog="infosDialogVisible=false"/>
+    <!-- 添加自定义dialog -->
+    <addCustomDailog 
       v-if="addCustomDialogVisible" 
       :pro-params="proParams" 
       :add-custom-dialog-visible="addCustomDialogVisible" 
-      @open-addcustom-dialog="addCustomDialogVisible=false"/> -->
+      @open-addcustom-dialog="addCustomDialogVisible=false"/>
   </div>
 </template>
 <script>
@@ -88,15 +88,15 @@ import { unitsName, publishModel } from '@/api/productRegistration'
 import emptyView from '@/components/ruleEngine/empty'
 import modelDialog from '@/components/functionDefinitionDailogs/importModelDialog' // TODO:
 import physicalModelDailog from '@/components/functionDefinitionDailogs/PhysicalModelDailog'
-/* import viewMoreDailog from '@/components/functionDefinitionDailogs/viewMoreDailog' // TODO:
-import addCustomDailog from '@/components/functionDefinitionDailogs/addCustomDailog' // TODO: */
+import viewMoreDailog from '@/components/functionDefinitionDailogs/viewMoreDailog' // TODO:
+import addCustomDailog from '@/components/functionDefinitionDailogs/addCustomDailog' // TODO:
 export default {
   components: {
     emptyView,
     modelDialog,
-    physicalModelDailog,
-    /* viewMoreDailog,
-    addCustomDailog */
+    physicalModelDailog, 
+    viewMoreDailog,
+    addCustomDailog
   },
   props: {
     categoryId: {

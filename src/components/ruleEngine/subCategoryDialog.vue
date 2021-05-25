@@ -35,17 +35,12 @@
             placeholder="请输入品类名称"/>
         </el-form-item>
         <el-form-item 
-          :required="true" 
-          label="所属品类">
+          label="品类英文名" 
+          prop="categoryNameE">
           <el-input 
-            :disabled="true" 
-            v-model="belongCategory" 
+            v-model="form.categoryNameE" 
             autocomplete="off" 
-            placeholder="请输入品类名称">
-            <i
-              slot="suffix"
-              class="el-icon-arrow-down el-input__icon"/>
-          </el-input>
+            placeholder="请输入品类英文名称"/>
         </el-form-item>
         <el-form-item 
           label="品类图片" 
@@ -199,12 +194,6 @@ export default {
       default: function(){
         return {}
       }
-    },
-    category: {
-      type: Object,
-      default: function(){
-        return {}
-      }
     }
   },
   data() {
@@ -215,16 +204,16 @@ export default {
         callback()
       }
     } */
-    /* const categoryNum = (rule, value, callback) => {
-      const reg = /[0-9]/
-      if (this.form.modelType === '') {
+    const categoryNum = (rule, value, callback) => {
+      const reg = /^[1-9]\d*$/
+      if (value === '') {
         callback(new Error('品类序列号不能为空!'))
-      } else if (!reg.test(this.form.modelType)) {
-        callback(new Error('品类序列号格式错误!'))
+      } else if (!reg.test(value)) {
+        callback(new Error('品类序列号格式错误! 只能为正整数'))
       } else {
         callback()
       }
-    } */
+    }
     const fileNumber = (rule, value, callback) => {
       console.log(this.$refs.upload)
       console.log(this.jsonFileList)
@@ -270,25 +259,29 @@ export default {
       form: {
         categoryNumber: '',
         categoryName: '',
+        categoryNameE: '',
         modelType: 0
       },
       highLightUrl: '', // 测试
       normalBigUrl: '',
       normalSmallUrl: '',
       disabledUrl: '',
-      belongCategory: '', // 品类名称
       rules: {
         modelType: [
           { required: true, message: '请选择模板类型', trigger: 'change' }
         ],
         categoryNumber: [
-          { required: true, message: '品类序列号不能为空', trigger: 'blur' }
+          // { required: true, message: '品类序列号不能为空', trigger: 'blur' }
+          { required: true, validator: categoryNum, trigger: 'blur' }
         ],
         categoryName: [
           { required: true, message: '品类名称不能为空', trigger: 'blur' }
         ],
+        categoryNameE: [
+          { required: true, message: '品类英文名  不能为空', trigger: 'blur' }
+        ],
         /* fileLists: [
-          { required: true, validator: urlVerti, trigger: 'change' }
+          { required: true, validator: categoryNum, trigger: 'change' }
         ], */
         snUrl: [
           { required: true, validator: fileNumber, trigger: 'change' }
@@ -297,7 +290,6 @@ export default {
     }
   },
   created() {
-    this.belongCategory = this.category.categoryName
     if (this.propData.status !== 0) {
       const params = {
         categoryId: this.propData.categoryId
@@ -393,7 +385,6 @@ export default {
               }
             })
           } else {
-            this.form.categoryParentId = this.category.categoryId
             const params = Object.assign({}, this.form)
             addSubCategory({ params }).then((res) => {
               if (res.data.code === 200 || res.data.code === 0) {

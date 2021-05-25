@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
+import { v4 as uuidv4 } from 'uuid'
 import { getToken } from '@/utils/auth'
 import helper from '@/utils/helper'
 
@@ -14,11 +15,29 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
-    if(config['url'].indexOf('/java_api/') === -1){
+    const defaultParams = {
+      id: uuidv4(),
+      timestamp: Date.parse(new Date()),
+      version: '1.0'
+    }
+    /* if(config['url'].indexOf('/java_api/') !== 1){
+      config['url'] = config['url'].replace(/\/java_api/g,'')
+    }else if (config['url'].indexOf('/v1') !== -1) {
+      console.log(11)
+    }else{
       //老接口，需要添加前缀
       config['url'] = '/api/index.php'+config['url']
+    } */
+    if(config['url'].indexOf('/v1') !== -1){ 
+      console.log('11')
+      config.data = Object.assign(defaultParams, config.data)
     }else{
-      config['url'] = config['url'].replace(/\/java_api/g,'')
+      if(config['url'].indexOf('/java_api/') === -1){
+        //老接口，需要添加前缀
+        config['url'] = '/api/index.php'+config['url']
+      }else{
+        config['url'] = config['url'].replace(/\/java_api/g,'')
+      }
     }
     if (!config.data) {
       config.data = {}
@@ -48,6 +67,7 @@ service.interceptors.response.use(
     /**
      * code为非200是抛错
      */
+    console.log(response.config.url)
     const res = response.data
     /*  console.log('response:',response)
     console.log('res:',res) */
@@ -78,7 +98,10 @@ service.interceptors.response.use(
         })
       }
       return Promise.reject(res)
-    } else if( !response.data.result) {//新接口直接把后台回传的的数据直接返回回去
+    } else if(response.config.url.indexOf('/v1') !== -1){
+      console.log(11)
+      return Promise.resolve(response)
+    }else if( !response.data.result) {//新接口直接把后台回传的的数据直接返回回去
       return Promise.resolve(response.data)
     } else{
       return Promise.resolve(response.data.result)

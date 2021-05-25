@@ -9,7 +9,7 @@ const MODEL_SERVICE = '/paas-business' // 其他模块名称统一
 const AUTH_SERVICE = '/pass-central-authentication' // 鉴权
 const FILE_SERVICE = '/file-service'
 const API_PLATFORM = '/api/paas-platform'// 平台服务层（接口的前缀）
-const BASE_URL = API_PLATFORM + MODEL_SERVICE + API_VERSION
+const BASE_URL =  API_VERSION
 const AUTH_BASE_URL = API_PLATFORM + AUTH_SERVICE
 const FILE_BASE_URL = API_PLATFORM + FILE_SERVICE + API_VERSION
 // 代理标记肯定是要的，在本地开发才能识别不同服务跳转到不同的本地服务器
@@ -254,13 +254,13 @@ export const CATEGORY_MANAGE_SERVICE_API = {
   ADD_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/addPri`, // 添加一级品类列表 √
   EDIT_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/editPri`, // 编辑一级品类列表 √
   DELETE_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/deletePri`, // 删除一级品类列表 √
-  GET_DETAIL_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取一级品类详情
+  // GET_DETAIL_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取一级品类详情
   GET_SELECT_PRIMARY_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/priList`, // 获取一级品类下拉列表
-  GET_SUB_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/subCategory`, // 获取子品类列表
-  DETAIL_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detailSub`, // 获取子品类详情
-  ADD_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/addSub`, // 添加子品类列表
+  GET_SUB_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/list`, // 获取子品类列表   fixed 
+  DETAIL_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取子品类详情  fixed
+  ADD_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/add`, // 添加子品类列表   fixed
   EDIT_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/editSub`, // 编辑子品类列表
-  DELETE_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/deleteSub`, // 删除子品类列表
+  DELETE_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/delete`, // 删除子品类列表 fixed
   UPLOAD: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/upload`, // 上传物模型,
   GET_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/getModel`, // 获取物模型,
   ADD_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/addModel`, // 添加物模型,

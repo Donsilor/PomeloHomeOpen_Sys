@@ -20,7 +20,7 @@ import * as filters from '@/utils/filter' // 过滤工具
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k])) // 注册过滤器
 
 // 创建构建
-Vue.mixin({
+/* Vue.mixin({
   beforeRouteEnter(to, from, next) {
     next(vm => {
       const enter_path = sessionStorage.getItem('enter_path', from.path)
@@ -42,7 +42,7 @@ Vue.mixin({
     }
     next()
   }
-})
+}) */
 
 // 登录拦截
 router.beforeEach((to, from, next) => {

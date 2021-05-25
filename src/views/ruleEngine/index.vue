@@ -35,7 +35,7 @@ export default {
         {
           name: '系统模板',
           url: '/ruleEngine/template',
-          type: 'model'
+          type: 'template'
         },
         {
           name: '系统场景',

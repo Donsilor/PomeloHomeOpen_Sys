@@ -44,6 +44,10 @@ module.exports = {
         // target: 'http://sh-opencheck-dev.xl.cn', // 开发环境
           // target: 'http://172.26.84.246:8080/api/ext', // 本地测试
         changeOrigin: true,
+      },
+      '/v1/':{
+        target:'http://192.168.1.13:7101',
+        changeOrigin: true,
       }
     },
     cssSourceMap: false

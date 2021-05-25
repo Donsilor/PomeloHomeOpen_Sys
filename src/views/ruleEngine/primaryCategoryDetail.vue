@@ -1,20 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- <el-row 
-      type="flex" 
-      class="primary-category">
-      <el-col :span="1">
-        <span 
-          class="go-back el-icon-back" 
-          @click="goBack"/>
-      </el-col>
-      <el-col 
-        :span="5" 
-        :offset="0.5" 
-        class="name">
-        产品品类: {{ routeData.categoryName }}
-      </el-col>
-    </el-row> -->
     <!-- 品类 -->
     <div class="sec-category">
       <el-row class="product-menu">
@@ -50,6 +35,9 @@
           <el-table-column
             prop="categoryName"
             label="品类名称"/>
+          <el-table-column
+            prop="categoryNameE"
+            label="品类英文名"/>
           <el-table-column
             prop="createTime"
             label="创建时间 "/>
@@ -165,9 +153,10 @@ export default {
       switch (sty) {
       case 'view':
         this.$router.push({
-          path: '/categoryManager/categoryEditPage',
+          path: 'categoryEditPage',
           query: {
-            categoryId: row.categoryId
+            categoryId: row.categoryId,
+            categoryName: row.categoryName
           }
         })
         // this.addDialogVisible = true

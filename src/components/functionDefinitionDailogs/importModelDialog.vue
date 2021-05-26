@@ -66,17 +66,13 @@ export default {
     showImportModel: {
       type: Object,
       default: function(){
-        return {
-          
-        }
+        return {}
       }
     },
     importPhydata: {
       type: Object,
       default: function(){
-        return {
-
-        }
+        return {}
       }
     }
   },

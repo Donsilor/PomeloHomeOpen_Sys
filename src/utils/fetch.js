@@ -29,8 +29,9 @@ service.interceptors.request.use(
       config['url'] = '/api/index.php'+config['url']
     } */
     if(config['url'].indexOf('/v1') !== -1){ 
-      console.log('11')
-      config.data = Object.assign(defaultParams, config.data)
+      if(!(config.data instanceof FormData)){
+        config.data = Object.assign(defaultParams, config.data)
+      }
     }else{
       if(config['url'].indexOf('/java_api/') === -1){
         //老接口，需要添加前缀
@@ -67,8 +68,9 @@ service.interceptors.response.use(
     /**
      * code为非200是抛错
      */
-    console.log(response.config.url)
+    // console.log(response.config.url)
     const res = response.data
+    console.log(res)
     /*  console.log('response:',response)
     console.log('res:',res) */
     if (res.code !== 200) {
@@ -96,10 +98,18 @@ service.interceptors.response.use(
             window.location.origin + window.location.pathname + '#/login'
           )
         })
+        return Promise.reject(res)
+      }else if(response.config.url.indexOf('/v1') !== -1 && res.code === 102990){
+        Message({
+          message: res.msg || res.message,
+          type: 'error',
+          duration: 5 * 1000
+        })
+        // return Promise.reject(res)
+      }else{
+        return Promise.reject(res)
       }
-      return Promise.reject(res)
-    } else if(response.config.url.indexOf('/v1') !== -1){
-      console.log(11)
+    }else if(response.config.url.indexOf('/v1') !== -1){
       return Promise.resolve(response)
     }else if( !response.data.result) {//新接口直接把后台回传的的数据直接返回回去
       return Promise.resolve(response.data)
@@ -112,7 +122,7 @@ service.interceptors.response.use(
     console.log('err' + error) // for debug
 
     Message({
-      message: res.msg,
+      message: res.msg || res.message,
       type: 'error',
       duration: 5 * 1000
     })

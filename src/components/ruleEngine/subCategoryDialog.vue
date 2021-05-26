@@ -57,7 +57,7 @@
                 :before-upload="beforeUp"
                 :on-remove="handleRemove"
                 class="avatar-uploader"
-                action="/api/paas-platform/file-service/v1/file/upload/fileUpload"
+                action="/api/index.php/files/save"
                 accept="image/png">
                 <img
                   v-if="fileList[0].fileUrl!==''"
@@ -81,7 +81,7 @@
                 :before-upload="beforeUp"
                 :on-remove="handleRemove"
                 class="avatar-uploader"
-                action="/api/paas-platform/file-service/v1/file/upload/fileUpload"
+                action="/api/index.php/files/save"
                 accept="image/png">
                 <img
                   v-if="fileList[1].fileUrl!==''"
@@ -105,7 +105,7 @@
                 :before-upload="beforeUp"
                 :on-remove="handleRemove"
                 class="avatar-uploader"
-                action="/api/paas-platform/file-service/v1/file/upload/fileUpload"
+                action="/api/index.php/files/save"
                 accept="image/png">
                 <img
                   v-if="fileList[2].fileUrl!==''"
@@ -128,7 +128,7 @@
                 :before-upload="beforeUp"
                 :on-remove="handleRemove"
                 class="avatar-uploader"
-                action="/api/paas-platform/file-service/v1/file/upload/fileUpload"
+                action="/api/index.php/files/save"
                 accept="image/png">
                 <img
                   v-if="fileList[3].fileUrl!==''"
@@ -182,6 +182,7 @@
   </div>
 </template>
 <script>
+import { getToken } from '@/utils/auth'
 import { addSubCategory, editSubCategory, detailSubCategory } from '@/api/categoryManager'
 export default {
   props: {
@@ -225,7 +226,8 @@ export default {
     }
     return {
       data: {
-        dir: 'category/subCategory/img'
+        type: 12,
+        token: getToken()
       },
       token: localStorage.getItem('authorization'),
       jsonFileList: [],
@@ -323,14 +325,15 @@ export default {
       console.log(file, fileList)
     },
     handleAvatarSuccess(obj, res, file) {
-      // console.log(obj, res, file)
+      console.log(obj, res, file)
       if (res.code !== 200) {
         this.$message.error('上传出错，请重新上传')
         return
       }
-      this.fileList[obj].fileUrl = res.data.fileUrl
-      this.fileList[obj].fileKey = res.data.pathKey
-      this.fileList[obj].fileName = file.name
+      console.log(res.result)
+      this.fileList[obj].fileUrl = res.result.url
+      this.fileList[obj].fileKey = res.result.md5
+      this.fileList[obj].fileName = res.result.filename
       /* switch (obj) {
         case 0:
           this.fileList[obj].fileDesc = 'highLight'

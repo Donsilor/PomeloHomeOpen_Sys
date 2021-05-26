@@ -32,6 +32,7 @@
 import SubInfo from '@/components/ruleEngine/categorySubInfo'
 import Physical from '@/components/ruleEngine/physicalModelInfo'
 export default {
+  name: 'CategoryEditPage',
   data() {
     return {
       editStatus: '0',

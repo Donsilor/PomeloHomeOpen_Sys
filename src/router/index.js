@@ -426,13 +426,14 @@ export const constantRouterMap = [
           {
             path: 'primaryCategoryDetail',
             name: 'primaryCategoryDetail',
-            component: _import('ruleEngine/primaryCategoryDetail')
+            component: _import('ruleEngine/primaryCategoryDetail'),
+            meta: { breadNumber: 1, notKeepAlive: true }
           },
           {
             path: 'categoryEditPage',
             name: 'categoryEditPage',
             component: _import('ruleEngine/categoryEditPage'),
-            meta: { breadNumber: 1, key: 'primaryCategoryDetail', isdetail: true }
+            meta: {breadNumber: 1, notKeepAlive: true, key: 'primaryCategoryDetail', isdetail: true}
           },
           
         ]

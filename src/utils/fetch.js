@@ -29,6 +29,7 @@ service.interceptors.request.use(
       config['url'] = '/api/index.php'+config['url']
     } */
     if(config['url'].indexOf('/v1') !== -1){ 
+      
       if(!(config.data instanceof FormData)){
         config.data = Object.assign(defaultParams, config.data)
       }
@@ -75,7 +76,7 @@ service.interceptors.response.use(
     console.log('res:',res) */
     if (res.code !== 200) {
       Message({
-        message: res.msg,
+        message: res.msg || res.message,
         type: 'error',
         duration: 2 * 1000
       })
@@ -98,17 +99,8 @@ service.interceptors.response.use(
             window.location.origin + window.location.pathname + '#/login'
           )
         })
-        return Promise.reject(res)
-      }else if(response.config.url.indexOf('/v1') !== -1 && res.code === 102990){
-        Message({
-          message: res.msg || res.message,
-          type: 'error',
-          duration: 5 * 1000
-        })
-        // return Promise.reject(res)
-      }else{
-        return Promise.reject(res)
       }
+      return Promise.reject(res)
     }else if(response.config.url.indexOf('/v1') !== -1){
       return Promise.resolve(response)
     }else if( !response.data.result) {//新接口直接把后台回传的的数据直接返回回去

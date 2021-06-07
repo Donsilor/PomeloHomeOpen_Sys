@@ -349,6 +349,7 @@
 
 <script>
 import { validaTemplateName } from '@/utils/validate'
+import { addSence } from '@/api/ruleEngine.js'
 
 export default {
   data() {
@@ -361,7 +362,7 @@ export default {
     }
 
     return {
-      dialogShow: true,       // 弹窗显示隐藏
+      dialogShow: false,       // 弹窗显示隐藏
       type: 1,                // 弹窗类型： 1为创建，2为查看，3为编辑  
       searchVal: '',          // 搜索值
       list: [                 // 虚拟列表
@@ -508,41 +509,78 @@ export default {
     },
     // 确认添加模板
     addOrEdit() {
-      this.$refs.permissionForm.validate(valid => {
-        if (valid) {
-          // 判断触发条件的关系（‘或’或者‘与’）
-          var tree = this.form.details.trigger;
-          if(tree.relation == 0){
-            var res = tree.content.every(o => {
-              return o.type == '设备'
-            })
+      // this.$refs.permissionForm.validate(valid => {
+      //   if (valid) {
+      //     // 判断触发条件的关系（‘或’或者‘与’）
+      //     var tree = this.form.details.trigger;
+      //     if(tree.relation == 0){
+      //       var res = tree.content.every(o => {
+      //         return o.type == '设备'
+      //       })
 
-            if(res){
-              this.dialogType = 0;
-              this.dialogVisible = true;
-              this.dialogContent = '请选择触发条件的关系'
-            }else{
-              this.dialogType = 1;
-              this.dialogVisible = true;
-              this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
-            }
-          }else if(tree.relation == 1){
-            var res = tree.content.every(o => {
-              return o.type == '设备'
-            })
+      //       if(res){
+      //         this.dialogType = 0;
+      //         this.dialogVisible = true;
+      //         this.dialogContent = '请选择触发条件的关系'
+      //       }else{
+      //         this.dialogType = 1;
+      //         this.dialogVisible = true;
+      //         this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
+      //       }
+      //     }else if(tree.relation == 1){
+      //       var res = tree.content.every(o => {
+      //         return o.type == '设备'
+      //       })
 
-            if(!res){
-              this.dialogType = 1;
-              this.dialogVisible = true;
-              this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
-            }
-          }
+      //       if(!res){
+      //         this.dialogType = 1;
+      //         this.dialogVisible = true;
+      //         this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
+      //       }
+      //     }
 
-        } else {
-          console.log('error submit!!')
-          return false
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
+
+
+
+      // const isAllSaved = (item) => item.isSave === 1
+      // let result =this.itemList.every(isAllSaved)
+      // if (result){
+      //   let type = 1
+      //   if (this.title==='修改模板'){
+      //     type = 2
+      //   }
+      //   this.ScreenArray.sort((a,b)=>{
+      //     let first = a[1][0]
+      //     let second = b[1][0]
+      //     return first-second
+      //   })
+        // console.log('this.ScreenArray=====22', this.ScreenArray)
+        let template =  JSON.stringify(this.ScreenArray)
+        let params = {
+          "id": 0,
+          "templateName": '123',
+          "templateDesc": '456',
+          "templateIntroduce": '789',
+          "templateType": '11',
+          "usedTimes": 5,
+          "isEnable": '是',
+          "bigImage": require('../../assets/imgs/adf.jpeg'),
+          "smallImage": require('../../assets/imgs/adf.jpeg'),
+          "relationScene": 'aaa'
         }
-      })
+        addSence(params).then(res=>{
+          this.$message.success('保存成功')
+          // this.$emit('update:dialogVisible', false)
+          // this.$emit('refresh')
+        })
+      // }else {
+      //   this.$message.error('置屏幕不完整，请分配完所有的格子')
+      // }
       
     },
     switchRelation(type) {

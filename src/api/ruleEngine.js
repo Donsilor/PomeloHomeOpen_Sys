@@ -1,10 +1,10 @@
 import fetch from '@/utils/fetch'
 
 // 获取模版列表
-export function getScreenList(params) {
+export function addSence(params) {
   // console.log('查询入参', params);
   return fetch({
-    url: '/sence_web_template_mgt/type_add_or_update',
+    url: '/sence_web_template_mgt/add',
     method: 'post',
     data: params
   })

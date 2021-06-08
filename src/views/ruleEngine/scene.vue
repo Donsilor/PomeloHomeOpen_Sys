@@ -7,7 +7,7 @@
           <el-button 
             type="primary" 
             class="first-btn" 
-            @click="addScene">添加场景</el-button>
+            @click="addScene">创建类型</el-button>
         </el-col>
         <el-col :span="12">
           <el-input 
@@ -33,32 +33,57 @@
           tooltip-effect="dark"
           style="width: 100%">
           <el-table-column
-            prop="type"
-            label="触发类型"/>
+            prop="sort"
+            label="序号"/>
           <el-table-column
-            prop="sceneName"
+            prop="typeName"
             label="场景名称"/>
           <el-table-column
-            prop="sceneName"
-            label="关联场景"/>
+            prop="createdTime"
+            label="创建时间"/>
           <el-table-column
-            prop="createTime"
-            label="创建时间 "/>
-          <el-table-column
-            prop="updateTime"
+            prop="updatedTime"
             label="修改时间 "/>
           <el-table-column
-            prop="status"
-            label="状态"/>
+            label="状态">
+            <template slot-scope="scope">
+              <div>{{ scope.row.isEnable ? '已启用' : '已禁用' }}</div>
+            </template>
+          </el-table-column>
           <el-table-column
             label="操作"
           >
             <template slot-scope="scope">
               <div class="opreationBtn">
-                <el-button 
+                <el-button
+                  v-if="scope.row.typeName !== '安防'"
                   type="primary" 
                   size="mini" 
-                  @click="handlerClick('edit',scope.row)"> 修改</el-button>
+                  @click="handlerClick('edit',scope.row)">编辑</el-button>
+                
+                <el-button
+                  v-if="scope.row.typeName !== '安防'"
+                  type="primary" 
+                  size="mini" 
+                  @click="handlerClick('ifEnable',scope.row)">{{scope.row.isEnable ? '禁用' : '启用'}}</el-button>
+
+                <el-button
+                  v-if="scope.row.typeName !== '安防'"
+                  type="primary" 
+                  size="mini" 
+                  @click="handlerClick('delete',scope.row)">删除</el-button>
+
+                <el-button
+                  v-if="scope.row.typeName == '安防'"
+                  type="primary" 
+                  size="mini" 
+                  @click="handlerClick('save',scope.row)">保存</el-button>
+
+                <el-button
+                  v-if="scope.row.typeName == '安防'"
+                  type="primary" 
+                  size="mini" 
+                  @click="handlerClick('quit',scope.row)">取消</el-button>
               </div>
             </template>
           </el-table-column>
@@ -83,6 +108,8 @@ import { mixin } from '@/mixins/mixin.js'
 import AddDialog from '@/components/ruleEngine/scene/addDialog'
 import Paging from '@/components/paging'
 import { subCategory } from '@/api/categoryManager' // subCategoryDetail
+import { getSenceList, enableSenceType, delSenceType } from '@/api/ruleEngine.js'
+
 export default {
   components: {
     Paging,
@@ -108,6 +135,7 @@ export default {
       addDialogVisible: false,
       propData: {
         status: 0, // 0.新增 1.查看 2.编辑
+        editData: null,
         categoryId: ''
       }
     }
@@ -126,10 +154,11 @@ export default {
     getList() {
       const params = {
         pageNumber: this.listQuery.page,
-        pageSize: this.listQuery.limit
+        pageSize: this.listQuery.limit,
+        typeName: ""
       }
-      subCategory({ params }).then((res) => {
-        const resData = res.data.data
+      getSenceList({ params }).then((res) => {
+        const resData = res.data
         this.total = resData.total
         this.tableData = resData.list
       })
@@ -145,14 +174,44 @@ export default {
       }
     },
     handlerClick(sty, row) {
+      let params;
       switch (sty) {
-      case 'edit':
-        this.addDialogVisible = true
-        this.propData.categoryId = row.categoryId // 子集ID
-        this.propData.status = 2
-        break
-      default:
-        break
+        case 'edit':
+          this.propData.status = 2
+          this.addDialogVisible = true
+          this.propData.editData = Object.assign({}, row);
+          // this.propData.categoryId = row.categoryId // 子集ID
+          break
+
+        case 'ifEnable':
+          params = {
+            "id": row.id, 
+            "isEnable": row.isEnable ? false : true
+          }
+          enableSenceType({ params }).then((res) => {
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            });
+            this.getList()
+          })
+          break
+
+        case 'delete':
+          params = {
+            "id": row.id
+          }
+          delSenceType({ params }).then((res) => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.getList()
+          })
+          break
+
+        default:
+          break
       }
     },
     // 分页管理

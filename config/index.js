@@ -48,6 +48,10 @@ module.exports = {
       '/v1/':{
         target:'http://192.168.1.13:7101',
         changeOrigin: true,
+      },
+      '/scene_web_type_mgt/':{
+        target:'http://192.168.1.13:8080',
+        changeOrigin: true,
       }
     },
     cssSourceMap: false

@@ -28,8 +28,7 @@ service.interceptors.request.use(
       //老接口，需要添加前缀
       config['url'] = '/api/index.php'+config['url']
     } */
-    if(config['url'].indexOf('/v1') !== -1){ 
-      
+    if(config['url'].indexOf('/v1') !== -1 || config['url'].indexOf('/scene_web_type_mgt') !== -1){ 
       if(!(config.data instanceof FormData)){
         config.data = Object.assign(defaultParams, config.data)
       }
@@ -101,7 +100,7 @@ service.interceptors.response.use(
         })
       }
       return Promise.reject(res)
-    }else if(response.config.url.indexOf('/v1') !== -1){
+    }else if(response.config.url.indexOf('/v1') !== -1 ){
       return Promise.resolve(response)
     }else if( !response.data.result) {//新接口直接把后台回传的的数据直接返回回去
       return Promise.resolve(response.data)

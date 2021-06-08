@@ -349,7 +349,7 @@
 
 <script>
 import { validaTemplateName } from '@/utils/validate'
-import { addSence } from '@/api/ruleEngine.js'
+import { getSenceList, AddSenceTemplate } from '@/api/ruleEngine.js'
 
 export default {
   data() {
@@ -385,6 +385,14 @@ export default {
       currentPage2: 5,
       currentPage3: 5,
       currentPage4: 4, 
+      // 分页功能
+      total: 0, // 到时候从后台获取
+      listQuery: {
+        page: 1,
+        limit: 5
+      },
+      // ------------
+      tableData: [],
 
       form: {       
         scene_num: 0,   
@@ -453,6 +461,9 @@ export default {
       return this.sortKey(this.list, "status");
     }
   },
+  created() {
+    this.getList()
+  },
   methods: {
     // 分页方法
     handleSizeChange(val) {
@@ -460,6 +471,19 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+    },
+    // 获取场景列表
+    getList() {
+      const params = {
+        pageNumber: this.listQuery.page,
+        pageSize: this.listQuery.limit
+      }
+      getSenceList({ params }).then((res) => {
+        const resData = res.data
+        this.total = resData.total
+        this.tableData = resData.list
+        console.log(889, this.total, this.tableData)
+      })
     },
     // 按时间排序
     sortKey(array, key) {
@@ -562,18 +586,20 @@ export default {
         // console.log('this.ScreenArray=====22', this.ScreenArray)
         let template =  JSON.stringify(this.ScreenArray)
         let params = {
-          "id": 0,
-          "templateName": '123',
-          "templateDesc": '456',
-          "templateIntroduce": '789',
-          "templateType": '11',
-          "usedTimes": 5,
-          "isEnable": '是',
-          "bigImage": require('../../assets/imgs/adf.jpeg'),
-          "smallImage": require('../../assets/imgs/adf.jpeg'),
-          "relationScene": 'aaa'
+          params: {
+            "templateName": '123',
+            "templateDesc": '456',
+            "templateIntroduce": '789',
+            "templateType": '11',
+            "usedTimes": 5,
+            "isEnable": '是',
+            "bigImage": require('../../assets/imgs/adf.jpeg'),
+            "smallImage": require('../../assets/imgs/adf.jpeg'),
+            "relationScene": 'aaa'
+          }
         }
-        addSence(params).then(res=>{
+
+        AddSenceTemplate(params).then(res=>{
           this.$message.success('保存成功')
           // this.$emit('update:dialogVisible', false)
           // this.$emit('refresh')

@@ -4,9 +4,7 @@
       :title="
         propData.status === 0
           ? '新增类型'
-          : propData.status === 2
-            ? '编辑'
-            : '查看'
+          : '编辑类型'
       "
       :visible.sync="addDialogVisible"
       :before-close="resetForm"
@@ -17,7 +15,6 @@
     >
       <el-form
         ref="ruleForm"
-        :disabled="propData.status === 1"
         :rules="rules"
         :model="form"
         reset-fields
@@ -28,7 +25,6 @@
           prop="className">
           <el-input
             v-model="form.className"
-            :disabled="propData.status === 2"
             autocomplete="off"
             type="text"
             placeholder="请输入类型"
@@ -41,6 +37,16 @@
             v-model="form.usage"
             autocomplete="off"
             placeholder="请输入功能"
+          />
+        </el-form-item>
+        <el-form-item 
+          label="英文名" 
+          prop="identityName">
+          <el-input
+            v-model="form.identityName"
+            autocomplete="off"
+            type="text"
+            placeholder="请输入类型"
           />
         </el-form-item>
       </el-form>
@@ -64,8 +70,6 @@
 import { getToken } from '@/utils/auth'
 import {
   imageTypegoryAdd,
-  imageDetailUpdate,
-  // imageDetailAdd,
   imageUpdate
 } from '@/api/image'
 export default {
@@ -99,25 +103,26 @@ export default {
       form: {
         className: '',
         usage: '',
+        identityName:''
       },
       id:1,
       rules: {
         className: [
           { required: true, message: '类型不能为空', trigger: 'change' },
         ],
+        identityName:[
+          { required: true, message: '英文名称不能为空', trigger: 'change' },
+        ],
         usage: [{ required: true, message: '功能不能为空', trigger: 'blur' }],
       },
     }
   },
   created() {
-    if (this.propData.status !== 0) {
-      imageTypegoryAdd({ params }).then((res) => {
-        console.log(res)
-        this.$nextTick(() => {
-          this.form.className = res.data.className
-          this.form.usage = res.data.usage
-        })
+    if(this.propData.status){
+      Object.keys(this.form).forEach(e =>{
+        this.form[e] = this.propData[e]
       })
+      console.log(this.form)
     }
   },
   methods: {
@@ -127,10 +132,12 @@ export default {
       } */
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          if (this.propData.status) {
+          if (this.propData.status === 2) {
             const params = Object.assign({}, this.form)
-            imageUpdate({ params }).then((res) => {
-              if (res.data.code === 200 || res.data.code === 0) {
+            params.id = this.propData.id
+            imageUpdate(params).then((res) => {
+              console.log(1)
+              if (res.code === 200 ) {
                 this.$message({
                   type: 'success',
                   message: '编辑完成',
@@ -140,12 +147,11 @@ export default {
             })
           } else {
             const params = Object.assign({}, this.form)
-            imageDetailUpdate({ params }).then((res) => {
+            imageTypegoryAdd( params ).then((res) => {
               if (res.code === 200 || res.code === 0) {
                 this.$message({
                   type: 'success',
                   message: '新增成功',
-                  
                 })
                 this.$emit('closeAddDialog', 1)
               }

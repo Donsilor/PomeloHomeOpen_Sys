@@ -1,6 +1,19 @@
 <template>
   <div class="app-container">
-    <!-- 品类 -->
+    <el-row style="margin-bottom: 20px">
+      <el-col :span="4">
+        <div style="font-size:20px">
+          <el-tooltip 
+            content="点击返回上页" 
+            placement="top">
+            <i 
+              class="el-icon-back" 
+              style="font-size:24px; font-weight:600; cursor:pointer" 
+              @click="goBack"/>
+          </el-tooltip>
+        </div>
+      </el-col>
+    </el-row>
     <div class="sec-category">
       <el-row class="product-menu">
         <el-col>
@@ -13,7 +26,7 @@
         </el-col>
         <el-col :span="12">
           <el-input
-            v-model="className"
+            v-model="displayName"
             placeholder="请输入图片名称"
             class="input-with-select"
           >
@@ -35,26 +48,40 @@
           border
           tooltip-effect="dark"
           style="width: 100%"
+          @sort-change="tableChange"
         >
           <el-table-column 
             prop="id" 
-            label="序号" />
+            label="序号" >
+            <template slot-scope="scope">
+              {{ (listQuery.page -1 ) * listQuery.limit + scope.$index + 1 }}
+            </template>
+          </el-table-column>
           <el-table-column 
-            prop="className" 
+            prop="displayName" 
+            label="中文名称" />
+          <el-table-column 
+            prop="fileName" 
             label="图片名称" />
           <el-table-column 
             prop="identityName" 
             label="英文名称" />
           <el-table-column 
             prop="createTime" 
+            sortable="custom" 
             label="创建时间 " />
           <el-table-column 
             prop="updateTime" 
+            sortable="custom" 
             label="修改时间 " />
           <el-table-column 
             prop="status" 
             label="状态">
-            {{ haveaction }}
+            <template slot-scope="scope">
+              {{
+                scope.row.status === 1? '启用' :'禁用'
+              }}
+            </template>
           </el-table-column>
           <el-table-column 
             label="操作" 
@@ -65,45 +92,33 @@
                   type="primary"
                   size="mini"
                   @click="selectClick(scope.row)"
-                >
-                  查看</el-button
-                  >
+                >查看</el-button>
                 <el-button
                   type="primary"
                   size="mini"
                   @click="updateClick(scope.row)"
-                >
-                  编辑</el-button
-                  >
+                >编辑</el-button>
                 <el-button
-                  type="primary"
+                  v-if="scope.row.status === 0"
+                  type="success"
                   size="mini"
                   @click="startClick(scope.row)"
-                >
-                  启动</el-button
-                  >
+                >启动</el-button>
                 <el-button
-                  type="primary"
+                  v-else
+                  type="warning"
                   size="mini"
                   @click="stopClick(scope.row)"
-                >
-                  禁用</el-button
-                  >
+                >禁用</el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  @click="delClick(scope.row)"
+                >删除</el-button>
               </div>
             </template>
           </el-table-column>
         </el-table>
-        <div class="block">
-          <el-pagination
-            :current-page="currentPage"
-            :page-sizes="[5, 10, 15, 20]"
-            :page-size="100"
-            :total="11"
-            layout="total, sizes, prev, pager, next, jumper"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          />
-        </div>
       </div>
       <Paging 
         :total="total" 
@@ -124,11 +139,9 @@ import { mixin } from '@/mixins/mixin.js'
 import AddDialog1 from '@/components/imageResource/addDialog1'
 import Paging from '@/components/paging'
 import {
-  imageDetailAdd,
   imageDetailUpdate,
-  imageUpdate,
   imageDetailPage,
-  imageGetByID,
+  imageDetailsDelete,
   imageEnable,
 } from '@/api/image' // subCategoryDetail
 export default {
@@ -143,57 +156,13 @@ export default {
       routeData: null,
       // 分页功能
       total: 0, // 到时候从后台获取
-      page: 1, //页码
-      limit: 5, //一页最大数
-      pageNum: 1, //页码
-      pageSize: 5, //每页记录数
-      totalSize: 2, //总记录数
-      totalPages: 1, //总页数
-      currentPage: 1, //当前页
       listQuery: {
         page: 1,
-        totalSize: 5,
+        limit: 5,
       },
-      haveaction: '已禁用',
+      displayName:'',
       // ------------
-      tableData: [
-        {
-          id: 1,
-          className: '场景图标',
-          identityName: 'changjingicon',
-          createTime: '2021-6-1 15:23:20',
-          updateTime: '2021-6-1 15:23:20',
-          status: '已禁用',//0已禁用 1已启用
-        },
-        {
-          id: 2,
-          className: '场景图标',
-          identityName: 'changjingicon',
-          createTime: '2021-6-1 15:23:20',
-          updateTime: '2021-6-1 15:23:20',
-          status: 0,//0已禁用 1已启用
-        },
-        {
-          id: 3,
-          className: '场景图标',
-          identityName: 'changjingicon',
-          createTime: '2021-6-1 15:23:20',
-          updateTime: '2021-6-1 15:23:20',
-          status: 0,//0已禁用 1已启用
-        },
-        {
-          id: 4,
-          className: '场景图标',
-          identityName: 'changjingicon',
-          createTime: '2021-6-1 15:23:20',
-          updateTime: '2021-6-1 15:23:20',
-          status: 0,//0已禁用 1已启用
-        },
-        
-      ],
-      // id: 1,
-      // status: 0,
-      // checked: false,
+      tableData: [],
       // 设置表格的样式
       acellStyle: { 'text-align': 'center' },
       headCellStyle: {
@@ -214,6 +183,9 @@ export default {
     this.getList()
   },
   methods: {
+    goBack() {
+      this.$router.go(-1)
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
       this.da
@@ -225,21 +197,46 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    getList() {
-      const params = {
-        id: 1,
-        status: 1,
-      }
-      imageEnable({ params }).then((res) => {
-        if (res.code == 200) {
-          this.$message({
-            type: 'success',
-            message: '成功',
-            data: null,
-          })
+    tableChange(column){
+      console.log(column)
+      if(column.prop === 'createTime' && column.order){
+        let paramsOrder = {}
+        paramsOrder.orderBy = 'createTime'
+        if(column.order === 'descending'){
+          paramsOrder.direct = 'desc'
         }
-        this.id = res.data.id
-        this.status = res.data.status
+        if(column.order === 'ascending'){
+          paramsOrder.direct = 'asc'
+        }
+        this.getList(paramsOrder)
+      }
+      if(column.prop === 'updateTime' && column.order){
+        let paramsOrder = {}
+        paramsOrder.orderBy = 'updateTime'
+        if(column.order === 'descending'){
+          paramsOrder.direct = 'desc'
+        }
+        if(column.order === 'ascending'){
+          paramsOrder.direct = 'asc'
+        }
+        this.getList(paramsOrder)
+      }
+    },
+    getList(val) {
+      let params = {
+        pageNum: this.listQuery.page,
+        pageSize: this.listQuery.limit,
+        search: {
+          classId: this.$route.query.id,
+          displayName: this.displayName
+        }
+      }
+      if(val) {params = {...params, ...val}}
+      imageDetailPage( params ).then((res) => {
+        if (res.code === 200) {
+          this.total = res.data.totalSize
+          this.tableData = res.data.content
+        }
       })
       // imageDetailAdd({ params }).then((res) => {
       //   if(res.code==200){
@@ -274,6 +271,7 @@ export default {
     },
     addMap() {
       this.propData.status = 0
+      this.propData.classId = this.$route.query.id
       this.addDialogVisible = true
       this.getList()
     },
@@ -284,22 +282,67 @@ export default {
       }
     },
     selectClick(row) {
-      this.propData.status = 0
+      this.propData.status = 1
+      this.propData.id = row.id
       this.addDialogVisible = true
     },
     updateClick(row) {
-      this.propData.status = 0
+      this.propData.status = 2
+      this.propData.id = row.id
       this.addDialogVisible = true
     },
     startClick(row) {
-      if (this.status == 1) {
-        this.haveaction = '以启用'
+      const params = {
+        id: row.id,
+        status: 1
       }
+      imageEnable(params).then((res)=>{
+        if(res.code === 200){
+          this.$message.success('启用成功')
+          this.getList()
+        }
+      })
     },
     stopClick(row) {
-      if (this.status == 0) {
-        this.haveaction = '以禁用'
+      const params = {
+        id: row.id,
+        status: 0
       }
+      imageEnable(params).then((res)=>{
+        if(res.code === 200){
+          this.$message.success('禁用成功')
+          this.getList()
+        }
+      })
+    },
+    delClick(row){
+      const params = {
+        id: row.id
+      }
+      this.$confirm('正在删除当前品类, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        const params = {
+          id: row.id
+        }
+        imageDetailsDelete(params).then((res) => {
+          if (res.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '删除成功'
+            })
+            this.cutPage()
+            this.getList()
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '删除取消'
+        })
+      })
     },
     // 分页管理
     changePage(val) {

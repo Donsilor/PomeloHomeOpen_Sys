@@ -41,12 +41,7 @@ export default {
           name: '图片资源',
           url: '/imageResource/template',
           type: 'template',
-        },
-        {
-          name: '图片类别',
-          url: '/imageResource/imageType',
-          type: 'imageType',
-        },
+        }
       ],
     }
   },

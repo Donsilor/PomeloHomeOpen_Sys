@@ -452,7 +452,8 @@ export const constantRouterMap = [
           {
             path: 'imageType',
             name: 'imageType',
-            component: _import('imageResource/imageType')
+            component: _import('imageResource/imageType'),
+            meta: {breadNumber: 1, notKeepAlive: true, key: 'template', isdetail: true}
           },
         ]
       },

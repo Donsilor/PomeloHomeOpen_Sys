@@ -1,5 +1,5 @@
 import fetch from '@/utils/fetch'
-//图标分类添加
+//分类添加
 export function imageTypegoryAdd(params){
   return fetch({
     url: '/icon/class/add',
@@ -7,7 +7,7 @@ export function imageTypegoryAdd(params){
     data:params
   })
 }
-// 图标分类分页查询
+// 分类分页查询
 export function imageTypegoryPage(params){
   return fetch({
     url: '/icon/class/page',
@@ -15,7 +15,33 @@ export function imageTypegoryPage(params){
     data: params
   })
 }
-// 图标详情添加
+//更新分类
+export function imageUpdate(params){
+  return fetch({
+    url: '/icon/class/update',
+    method: 'post',
+    data:params
+  })
+}
+//根据id获取分类详情
+export function imageGetByID(params){
+  return fetch({
+    url: '/icon/class/getById',
+    method: 'get',
+    data:params
+  })
+}
+//分类删除
+export function imageDelete(params){
+  return fetch({
+    url: '/icon/class/delete',
+    method: 'get',
+    params:params
+  })
+}
+
+// =======================================================================================
+//图标详情添加 ✔
 export function imageDetailAdd(params){
   return fetch({
     url: '/icon/details/add',
@@ -23,7 +49,7 @@ export function imageDetailAdd(params){
     data: params
   })
 }
-// 图标详情分页查询
+// 图标详情分页查询 ✔
 export function imageDetailPage(params){
   return fetch({
     url: '/icon/details/page',  
@@ -39,7 +65,7 @@ export function imageUpload(params){
     data: params
   })
 }
-// 更新图标详情
+// 更新图标详情 ✔
 export function imageDetailUpdate(params){
   return fetch({
     url: '/icon/details/update',
@@ -55,23 +81,7 @@ export function imagebatchImport(params){
     data: params
   })
 }
-//根据id获取图标分类
-export function imageGetByID(params){
-  return fetch({
-    url: '/icon/class/getById',
-    method: 'get',
-    data:params
-  })
-}
-//分类删除
-export function imageDelete(params){
-  return fetch({
-    url: '/icon/class/delete',
-    method: 'get',
-    data:params
-  })
-}
-//图标详情启用状态更新
+//图标详情启用状态更新 ✔
 export function imageEnable(params){
   return fetch({
     url: '/icon/details/enable',
@@ -79,26 +89,18 @@ export function imageEnable(params){
     data:params
   })
 } 
-//根据id获取图标详情
-export function imageDetailsGetByID(params){
+//根据id获取图标详情 ✔
+export function imageDetailsGetById(params){
   return fetch({
     url: '/icon/details/getById',
     method: 'get',
-    data:params
+    params:params
   })
 }
-//删除图标详情
+//删除图标详情 ✔
 export function imageDetailsDelete(params){
   return fetch({
     url: '/icon/details/delete',
-    method: 'get',
-    data:params
-  })
-}
-//更新图标分类
-export function imageUpdate(params){
-  return fetch({
-    url: '/icon/class/update',
     method: 'get',
     data:params
   })

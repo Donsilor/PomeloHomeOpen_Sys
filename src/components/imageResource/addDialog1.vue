@@ -17,69 +17,45 @@
         label-width="100px">
         <el-form-item 
           label="中文名称" 
-          prop="categoryName">
+          prop="displayName">
           <el-input 
-            v-model="form.categoryName" 
-            :disabled="propData.status===2" 
+            v-model="form.displayName" 
+            :disabled="propData.status===1" 
             autocomplete="off" 
             type="text" 
-            placeholder="请输入"/>
+            placeholder="请输入中文名称"/>
         </el-form-item>
         <el-form-item 
           label="英文名称" 
-          prop="categoryNameE">
+          prop="identityName">
           <el-input 
-            v-model="form.categoryNameE" 
-            :disabled="propData.status===2" 
+            v-model="form.identityName" 
+            :disabled="propData.status===1" 
             autocomplete="off" 
             type="text" 
-            placeholder="请输入"/>
+            placeholder="请输入英文名称"/>
         </el-form-item>
         <el-form-item 
           label="图片" 
-          prop="fileLists">
-          <el-row type="flex">
-            <!-- 高亮 -->
-            <el-col 
-              :span="5" 
-              class="fileuploadItem gavin">
-              <el-upload
-                :data="data"
-                :show-file-list="false"
-                :on-success="(res,file)=>{handleAvatarSuccess(0,res,file)}"
-                :before-upload="beforeUp"
-                :on-remove="handleRemove"
-                class="avatar-uploader"
-                action="/api/index.php/files/save"
-                accept="image/png">
-                <img
-                  v-if="fileList[0].fileUrl!==''"
-                  :src="fileList[0].fileUrl"
-                  class="avatar">
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"/>
-              </el-upload>
-            </el-col>
-            <!-- 默认状态小尺寸 -->
-          </el-row>
-        </el-form-item>
-        <el-form-item 
-          v-if="form.modelType === 1" 
-          label="选择文件" 
-          prop="snUrl">
+          prop="pathKey">
+          <!-- 高亮 -->
           <el-upload
-            ref="upload"
-            :auto-upload="false"
-            :on-change="handleChange"
-            :file-list="jsonFileList"
-            name="file"
-            action="bb"
-            accept=".json">
-            <el-button 
-              size="small" 
-              type="primary">点击上传</el-button>
+            :disabled="propData.status === 1" 
+            :data="data"
+            :show-file-list="false"
+            :on-success="(res,file)=>{handleAvatarSuccess(0,res,file)}"
+            class="avatar-uploader"
+            action="/api/index.php/files/save"
+            accept="image/png/jpg">
+            <img
+              v-if="fileUrl!==''"
+              :src="fileUrl"
+              class="avatar">
+            <i
+              v-else
+              class="el-icon-plus avatar-uploader-icon"/>
           </el-upload>
+        </el-col>
         </el-form-item>
       </el-form>
       <div 
@@ -96,8 +72,7 @@
 </template>
 <script>
 import { getToken } from '@/utils/auth'
-import {imageTypegory} from '@/api/image.js'
-import { addSubCategory, editSubCategory, detailSubCategory } from '@/api/categoryManager'
+import {imageDetailUpdate, imageDetailAdd, imageDetailsGetById} from '@/api/image.js'
 export default {
   props: {
     addDialogVisible: {
@@ -112,14 +87,14 @@ export default {
     }
   },
   data() {
-    /* const urlVerti = (rule, value, callback) => {
-      if (this.fileList.length < 1) {
-        callback(new Error('至少上传一张图片'))
+    const urlVerti = (rule, value, callback) => {
+      if (this.fileUrl === '') {
+        callback(new Error('请上传图片'))
       } else {
         callback()
       }
-    } */
-    const categoryName = (rule, value, callback) => {
+    }
+    const displayName = (rule, value, callback) => {
       const reg = /^[1-9]\d*$/
       if (value === '') {
         callback(new Error('中文名不能为空'))
@@ -127,19 +102,10 @@ export default {
         callback()
       }
     }
-    const categoryNameE = (rule, value, callback) => {
+    const identityName = (rule, value, callback) => {
       const reg = /^[1-9]\d*$/
       if (value === '') {
         callback(new Error('英文名不能为空'))
-      } else {
-        callback()
-      }
-    }
-    const fileNumber = (rule, value, callback) => {
-      console.log(this.$refs.upload)
-      console.log(this.jsonFileList)
-      if (this.jsonFileList.length < 1) {
-        callback(new Error('请选择文件！'))
       } else {
         callback()
       }
@@ -150,128 +116,66 @@ export default {
         token: getToken()
       },
       token: localStorage.getItem('authorization'),
-      jsonFileList: [],
-      fileList: [
-        {
-          fileKey: '',
-          fileUrl: '',
-          fileDesc: 'highLight',
-          fileName: ''
-        },
-      ],
-      jsonObject: null,
+      fileList: [],
+      fileUrl: '',
       form: {
-        categoryName: '',
-        categoryNameE:'',
+        displayName: '',
+        identityName:'',
+        pathKey:'',
+        fileName:''
       },
-      highLightUrl: '', // 测试
       rules: {
-        categoryName: [
+        displayName: [
           // { required: true, message: '英文名不能为空', trigger: 'blur' }
-          { required: true, validator: categoryName, trigger: 'blur' }
+          { required: true, validator: displayName, trigger: 'blur' }
         ],
-        categoryNameE: [
+        identityName: [
           // { required: true, message: '中文名不能为空', trigger: 'blur' }
-          { required: true, validator: categoryNameE, trigger: 'blur' }
+          { required: true, validator: identityName, trigger: 'blur' }
         ],
-        /* fileLists: [
-          { required: true, validator: categoryNum, trigger: 'change' }
-        ], */
-        snUrl: [
-          { required: true, validator: fileNumber, trigger: 'change' }
-        ]
+        pathKey: [
+          { required: true, validator: urlVerti, trigger: 'change' }
+        ],
       }
     }
   },
   created() {
+    console.log(this.propData.status)
     if (this.propData.status !== 0) {
       const params = {
-        categoryId: this.propData.categoryId
+        id: this.propData.id
       }
-      detailSubCategory({ params }).then((res) => {
-        console.log(res.data.data)
+      console.log(params)
+      imageDetailsGetById(params).then((res) => {
+        console.log(res.data)
         this.$nextTick(() => {
-          this.form.categoryName = res.data.data.categoryName
-          this.form.categoryNameE = res.data.data.ecategoryNameE
-          console.log('我是返回来的', res.data.data.fileList)
-          if (JSON.stringify(res.data.data.fileList) !== 'null' && res.data.data.fileList.length !== 0) {
-            res.data.data.fileList.forEach((e, index) => {
-              this.fileList.forEach((ele, i) => {
-                if (e.fileDesc === ele.fileDesc) {
-                  ele.fileKey = e.fileKey
-                  ele.fileUrl = e.fileUrl
-                  ele.fileName = e.fileName
-                }
-              })
-            })
-            console.log('我是已经有的', this.fileList)
-          }
+          Object.keys(this.form).forEach(e=>{
+            this.form[e] = res.data[e]
+          })
+          this.fileUrl = res.data.fileUrl
         })
       })
     }
   },
   methods: {
     // 上传图片
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
     handleAvatarSuccess(obj, res, file) {
-      console.log(obj, res, file)
       if (res.code !== 200) {
         this.$message.error('上传出错，请重新上传')
         return
       }
-      console.log(res.result)
-      this.fileList[obj].fileUrl = res.result.url
-      this.fileList[obj].fileKey = res.result.md5
-      this.fileList[obj].fileName = res.result.filename
-      /* switch (obj) {
-        case 0:
-          this.fileList[obj].fileDesc = 'highLight'
-          break
-        case 1:
-          this.fileList[obj].fileDesc = 'normalSmall'
-          break
-        case 2:
-          this.fileList[obj].fileDesc = 'normalBig'
-          break
-        case 3:
-          this.fileList[obj].fileDesc = 'disabled'
-          break
-      } */
-    },
-    beforeUp(file) {
-      const reader = new FileReader()
-      reader.onload = function(event) {
-        const txt = event.target.result
-        const img = document.createElement('img')
-        img.src = txt
-        img.onload = function() {
-          /* console.log(img.width)
-          console.log(img.height) */
-        }
-      }
-      reader.readAsDataURL(file)
+      this.fileUrl = res.result.url
+      this.form.pathKey = res.result.object
+      this.form.fileName = res.result.filename
     },
     submitForm() {
-      /* if (this.$refs.ruleForm.validateField('fileList')) {
-        return false
-      } */
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          if (this.form.modelType === 1) {
-            this.form.jsonObject = this.jsonObject
-          }
-          this.form.categoryId = this.propData.categoryId
-          const list = this.fileList.filter((e) => {
-            console.log(e)
-            return e.fileKey !== ''
-          })
-          this.form.fileList = list
-          if (this.propData.status) {
-            const params = Object.assign({}, this.form)
-            editSubCategory({ params }).then((res) => {
-              if (res.data.code === 200 || res.data.code === 0) {
+          const params = Object.assign({}, this.form)
+          params.id = this.propData.id
+          if (this.propData.status === 2) {
+            imageDetailUpdate(params).then((res) => {
+              if (res.code === 200) {
                 this.$message({
                   type: 'success',
                   message: '编辑完成'
@@ -280,9 +184,9 @@ export default {
               }
             })
           } else {
-            const params = Object.assign({}, this.form)
-            addSubCategory({ params }).then((res) => {
-              if (res.data.code === 200 || res.data.code === 0) {
+            params.classId = this.propData.classId
+            imageDetailAdd( params ).then((res) => {
+              if (res.code === 200) {
                 this.$message({
                   type: 'success',
                   message: '新增成功'
@@ -298,26 +202,6 @@ export default {
     },
     resetForm() {
       this.$emit('closeAddDialog')
-    },
-    handleChange(file, fileList) {
-      if (fileList.length > 1) {
-        fileList.splice(0, 1)
-      }
-      const files = fileList[0]
-      console.log(fileList)
-      this.jsonFileList = fileList
-      console.log(this.jsonFileList)
-      const reader = new FileReader()
-      reader.readAsText(files.raw)
-      reader.onload = (e) => {
-      // 读取文件内容
-        const fileString = e.target.result
-        // 需要给其重新赋值否则转对象失败
-        const strObj = fileString
-        console.log(strObj)
-        this.jsonObject = JSON.parse(strObj)
-        console.log(this.jsonObject)
-      }
     },
     beforeUpload(file) {
       /* const name = file.name
@@ -345,8 +229,6 @@ export default {
 /deep/.avatar-uploader {
     width: 100px;
     height: 100px;
-    margin-left: 100px;
-    margin-top: 30px;
 }
 /deep/.avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;

@@ -54,7 +54,8 @@ module.exports = {
         changeOrigin: true,
       },
       '/icon/':{
-        target:'http://172.26.254.119:8181/',
+        target:'http://172.26.254.119:8181',
+        changeOrigin: true,
       }
     },
     cssSourceMap: false

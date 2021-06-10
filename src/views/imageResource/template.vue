@@ -162,11 +162,12 @@ export default {
       this.getList()
     },
     getList() {
+      console.log(1)
       const params = {
         pageNum: this.listQuery.page,
         pageSize: this.listQuery.limit,
       }
-      imageTypegoryPage({ params })
+      imageTypegoryPage(params)
         .then((res) => {
           console.log(res)
           if (res.code == 200 || res.code == 0) {
@@ -203,8 +204,6 @@ export default {
       switch (sty) {
       case 'edit':
         this.addDialogVisible = true
-        //
-
         this.propData.status = 2
         break
       default:

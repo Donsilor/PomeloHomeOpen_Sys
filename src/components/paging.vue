@@ -35,9 +35,7 @@ export default {
     pageSize: {
       type: Array || null,
       default:function(){
-        return {
-
-        }
+        return []
       }
     },
     pageQuery: {
@@ -73,7 +71,6 @@ export default {
     }
   },
   created() {
-    console.log('pageQuery:',this.pageQuery)
   },
   methods: {
     // 分页管理

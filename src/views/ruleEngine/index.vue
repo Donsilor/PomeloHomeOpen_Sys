@@ -37,12 +37,12 @@ export default {
       width: window.innerWidth - 300,
       navs: [
         {
-          name: '系统模板',
+          name: '场景模板',
           url: '/ruleEngine/template',
           type: 'template'
         },
         {
-          name: '系统场景',
+          name: '场景类型',
           url: '/ruleEngine/scene',
           type: 'scene'
         },

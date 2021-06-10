@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog 
-      :title="propData.status === 0 ?'新增品类':propData.status === 2 ?'编辑品类':'查看品类'" 
+      :title="propData.status === 0 ?'新增类型':propData.status === 2 ?'编辑类型':'查看类型'" 
       :visible.sync="addDialogVisible" 
       :before-close="resetForm" 
       :append-to-body="true" 
@@ -16,7 +16,7 @@
         reset-fields 
         label-width="100px">
         <el-form-item 
-          label="品类序列号" 
+          label="类型序号" 
           prop="categoryNumber">
           <el-input 
             v-model.number="form.categoryNumber" 
@@ -24,29 +24,31 @@
             on-keypress="return (/[\d\.]/.test(String.fromCharCode(event.keyCode)))" 
             autocomplete="off" 
             type="number" 
-            placeholder="请输入品类序列号"/>
+            placeholder="请输入类型序号"/>
         </el-form-item>
         <el-form-item 
-          label="品类名称" 
+          label="类型名称" 
           prop="categoryName">
           <el-input 
             v-model="form.categoryName" 
             autocomplete="off" 
-            placeholder="请输入品类名称"/>
+            placeholder="请输入类型名称"/>
         </el-form-item>
-        <el-form-item 
+
+        <!-- <el-form-item 
           label="品类英文名" 
           prop="categoryNameE">
           <el-input 
             v-model="form.categoryNameE" 
             autocomplete="off" 
             placeholder="请输入品类英文名称"/>
-        </el-form-item>
-        <el-form-item 
+        </el-form-item> -->
+        
+        <!-- <el-form-item 
           label="品类图片" 
           prop="fileLists">
           <el-row type="flex">
-            <!-- 高亮 -->
+            高亮
             <el-col 
               :span="5" 
               class="fileuploadItem gavin">
@@ -69,7 +71,7 @@
               </el-upload>
               <span class="file_upload_img_des">高亮状态</span>
             </el-col>
-            <!-- 默认状态小尺寸 -->
+            默认状态小尺寸
             <el-col 
               :offset="1" 
               :span="5" 
@@ -93,7 +95,7 @@
               </el-upload>
               <span class="file_upload_img_des">默认状态小尺寸</span>
             </el-col>
-            <!-- 默认状态大尺寸 -->
+            默认状态大尺寸
             <el-col 
               :offset="1" 
               :span="5" 
@@ -117,7 +119,7 @@
               </el-upload>
               <span class="file_upload_img_des">默认状态大尺寸</span>
             </el-col>
-            <!-- 不可用 -->
+            不可用
             <el-col 
               :offset="1" 
               class="fileuploadItem gavin">
@@ -141,8 +143,9 @@
               <span class="file_upload_img_des">不可用状态</span>
             </el-col>
           </el-row>
-        </el-form-item>
-        <el-form-item 
+        </el-form-item> -->
+        
+        <!-- <el-form-item 
           v-if="propData.status === 0" 
           label="物模型类型" 
           prop="modelType">
@@ -167,8 +170,9 @@
               size="small" 
               type="primary">点击上传</el-button>
           </el-upload>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
+
       <div 
         slot="footer" 
         class="dialog-footer">
@@ -184,6 +188,7 @@
 <script>
 import { getToken } from '@/utils/auth'
 import { addSubCategory, editSubCategory, detailSubCategory } from '@/api/categoryManager'
+import { addSenceType } from '@/api/ruleEngine.js'
 export default {
   props: {
     addDialogVisible: {
@@ -293,30 +298,33 @@ export default {
   },
   created() {
     if (this.propData.status !== 0) {
+      this.form.categoryNumber = this.propData.editData.sort
+      this.form.categoryName = this.propData.editData.typeName
       const params = {
         categoryId: this.propData.categoryId
       }
-      detailSubCategory({ params }).then((res) => {
-        console.log(res.data.data)  
-        this.$nextTick(() => {
-          this.form.categoryNumber = res.data.data.categoryNumber
-          this.form.categoryName = res.data.data.categoryName
-          this.form.categoryNameE = res.data.data.categoryNameE
-          console.log('我是返回来的', res.data.data.fileList)
-          if (JSON.stringify(res.data.data.fileList) !== 'null' && res.data.data.fileList.length !== 0) {
-            res.data.data.fileList.forEach((e, index) => {
-              this.fileList.forEach((ele, i) => {
-                if (e.fileDesc === ele.fileDesc) {
-                  ele.fileKey = e.fileKey
-                  ele.fileUrl = e.fileUrl
-                  ele.fileName = e.fileName
-                }
-              })
-            })
-            console.log('我是已经有的', this.fileList)
-          }
-        })
-      })
+
+      // detailSubCategory({ params }).then((res) => {
+      //   console.log(res.data.data)
+      //   this.$nextTick(() => {
+      //     this.form.categoryNumber = res.data.data.categoryNumber
+      //     this.form.categoryName = res.data.data.categoryName
+      //     this.form.categoryNameE = res.data.data.categoryNameE
+      //     console.log('我是返回来的', res.data.data.fileList)
+      //     if (JSON.stringify(res.data.data.fileList) !== 'null' && res.data.data.fileList.length !== 0) {
+      //       res.data.data.fileList.forEach((e, index) => {
+      //         this.fileList.forEach((ele, i) => {
+      //           if (e.fileDesc === ele.fileDesc) {
+      //             ele.fileKey = e.fileKey
+      //             ele.fileUrl = e.fileUrl
+      //             ele.fileName = e.fileName
+      //           }
+      //         })
+      //       })
+      //       console.log('我是已经有的', this.fileList)
+      //     }
+      //   })
+      // })
     }
   },
   methods: {
@@ -363,9 +371,6 @@ export default {
       reader.readAsDataURL(file)
     },
     submitForm() {
-      /* if (this.$refs.ruleForm.validateField('fileList')) {
-        return false
-      } */
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           if (this.form.modelType === 1) {
@@ -378,9 +383,13 @@ export default {
           })
           this.form.fileList = list
           if (this.propData.status) {
-            const params = Object.assign({}, this.form)
-            editSubCategory({ params }).then((res) => {
-              if (res.data.code === 200 || res.data.code === 0) {
+            const params = {
+              "typeCode": 1,
+              "typeName": this.form.categoryName,
+              "sort": this.form.categoryNumber
+            }
+            addSenceType({ params }).then((res) => {
+              if (res.code === 200 || res.code === 0) {
                 this.$message({
                   type: 'success',
                   message: '编辑完成'
@@ -389,9 +398,13 @@ export default {
               }
             })
           } else {
-            const params = Object.assign({}, this.form)
-            addSubCategory({ params }).then((res) => {
-              if (res.data.code === 200 || res.data.code === 0) {
+            const params = {
+              "typeCode": 2,
+              "typeName": this.form.categoryName,
+              "sort": this.form.categoryNumber
+            }
+            addSenceType({ params }).then((res) => {
+              if (res.code === 200 || res.code === 0) {
                 this.$message({
                   type: 'success',
                   message: '新增成功'

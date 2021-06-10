@@ -28,6 +28,7 @@ export function validatAlphabets(str) {
   const reg = /^[A-Za-z]+$/
   return reg.test(str)
 }
+
 /*字母下划线*/
 export function letterAndUnderscode(rule, value, callback) {
     let flag = true;
@@ -50,6 +51,7 @@ export function letterAndUnderscode(rule, value, callback) {
         callback();
     }
 }
+
 /*中文字母*/
 export function letterAndCN(rule, value, callback){
     let flag = true;
@@ -69,5 +71,11 @@ export function letterAndCN(rule, value, callback){
     if(flag){
         callback();
     }
+}
+
+/*中文英文字母下划线，首位不为数字*/
+export function validaTemplateName(str) {
+    var reg = /^[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9_\u4e00-\u9fa5]*$/;
+    return reg.test(str);
 }
 

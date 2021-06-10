@@ -49,9 +49,12 @@ module.exports = {
         target:'http://192.168.1.13:7101',
         changeOrigin: true,
       },
+      '/scene_web_type_mgt/':{
+        target:'http://192.168.1.13:8080',
+        changeOrigin: true,
+      },
       '/icon/':{
         target:'http://172.26.254.119:8181/',
-        changeOrigin: true,
       }
     },
     cssSourceMap: false

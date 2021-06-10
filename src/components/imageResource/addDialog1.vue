@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog 
-      :title="propData.status === 0 ?'新增品类':propData.status === 2 ?'编辑品类':'查看品类'" 
+      :title="propData.status === 0 ?'添加图片':propData.status === 2 ?'编辑':'查看'" 
       :visible.sync="addDialogVisible" 
       :before-close="resetForm" 
       :append-to-body="true" 
@@ -16,34 +16,27 @@
         reset-fields 
         label-width="100px">
         <el-form-item 
-          label="品类序列号" 
-          prop="categoryNumber">
-          <el-input 
-            v-model.number="form.categoryNumber" 
-            :disabled="propData.status===2" 
-            on-keypress="return (/[\d\.]/.test(String.fromCharCode(event.keyCode)))" 
-            autocomplete="off" 
-            type="number" 
-            placeholder="请输入品类序列号"/>
-        </el-form-item>
-        <el-form-item 
-          label="品类名称" 
+          label="中文名称" 
           prop="categoryName">
           <el-input 
             v-model="form.categoryName" 
+            :disabled="propData.status===2" 
             autocomplete="off" 
-            placeholder="请输入品类名称"/>
+            type="text" 
+            placeholder="请输入"/>
         </el-form-item>
         <el-form-item 
-          label="品类英文名" 
+          label="英文名称" 
           prop="categoryNameE">
           <el-input 
             v-model="form.categoryNameE" 
+            :disabled="propData.status===2" 
             autocomplete="off" 
-            placeholder="请输入品类英文名称"/>
+            type="text" 
+            placeholder="请输入"/>
         </el-form-item>
         <el-form-item 
-          label="品类图片" 
+          label="图片" 
           prop="fileLists">
           <el-row type="flex">
             <!-- 高亮 -->
@@ -67,89 +60,9 @@
                   v-else
                   class="el-icon-plus avatar-uploader-icon"/>
               </el-upload>
-              <span class="file_upload_img_des">高亮状态</span>
             </el-col>
             <!-- 默认状态小尺寸 -->
-            <el-col 
-              :offset="1" 
-              :span="5" 
-              class="fileuploadItem gavin">
-              <el-upload
-                :data="data"
-                :show-file-list="false"
-                :on-success="(res,file)=>{handleAvatarSuccess(1,res,file)}"
-                :before-upload="beforeUp"
-                :on-remove="handleRemove"
-                class="avatar-uploader"
-                action="/api/index.php/files/save"
-                accept="image/png">
-                <img
-                  v-if="fileList[1].fileUrl!==''"
-                  :src="fileList[1].fileUrl"
-                  class="avatar">
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"/>
-              </el-upload>
-              <span class="file_upload_img_des">默认状态小尺寸</span>
-            </el-col>
-            <!-- 默认状态大尺寸 -->
-            <el-col 
-              :offset="1" 
-              :span="5" 
-              class="fileuploadItem gavin">
-              <el-upload
-                :data="data"
-                :show-file-list="false"
-                :on-success="(res,file)=>{handleAvatarSuccess(2,res,file)}"
-                :before-upload="beforeUp"
-                :on-remove="handleRemove"
-                class="avatar-uploader"
-                action="/api/index.php/files/save"
-                accept="image/png">
-                <img
-                  v-if="fileList[2].fileUrl!==''"
-                  :src="fileList[2].fileUrl"
-                  class="avatar">
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"/>
-              </el-upload>
-              <span class="file_upload_img_des">默认状态大尺寸</span>
-            </el-col>
-            <!-- 不可用 -->
-            <el-col 
-              :offset="1" 
-              class="fileuploadItem gavin">
-              <el-upload
-                :data="data"
-                :show-file-list="false"
-                :on-success="(res,file)=>{handleAvatarSuccess(3,res,file)}"
-                :before-upload="beforeUp"
-                :on-remove="handleRemove"
-                class="avatar-uploader"
-                action="/api/index.php/files/save"
-                accept="image/png">
-                <img
-                  v-if="fileList[3].fileUrl!==''"
-                  :src="fileList[3].fileUrl"
-                  class="avatar">
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"/>
-              </el-upload>
-              <span class="file_upload_img_des">不可用状态</span>
-            </el-col>
           </el-row>
-        </el-form-item>
-        <el-form-item 
-          v-if="propData.status === 0" 
-          label="物模型类型" 
-          prop="modelType">
-          <el-radio-group v-model="form.modelType">
-            <el-radio :label="0">自定义物模型</el-radio>
-            <el-radio :label="1">导入物模型</el-radio>
-          </el-radio-group>
         </el-form-item>
         <el-form-item 
           v-if="form.modelType === 1" 
@@ -183,6 +96,7 @@
 </template>
 <script>
 import { getToken } from '@/utils/auth'
+import {imageTypegory} from '@/api/image.js'
 import { addSubCategory, editSubCategory, detailSubCategory } from '@/api/categoryManager'
 export default {
   props: {
@@ -205,12 +119,18 @@ export default {
         callback()
       }
     } */
-    const categoryNum = (rule, value, callback) => {
+    const categoryName = (rule, value, callback) => {
       const reg = /^[1-9]\d*$/
       if (value === '') {
-        callback(new Error('品类序列号不能为空!'))
-      } else if (!reg.test(value)) {
-        callback(new Error('品类序列号格式错误! 只能为正整数'))
+        callback(new Error('中文名不能为空'))
+      } else {
+        callback()
+      }
+    }
+    const categoryNameE = (rule, value, callback) => {
+      const reg = /^[1-9]\d*$/
+      if (value === '') {
+        callback(new Error('英文名不能为空'))
       } else {
         callback()
       }
@@ -238,49 +158,21 @@ export default {
           fileDesc: 'highLight',
           fileName: ''
         },
-        {
-          fileKey: '',
-          fileUrl: '',
-          fileDesc: 'normalSmall',
-          fileName: ''
-        },
-        {
-          fileKey: '',
-          fileUrl: '',
-          fileDesc: 'normalBig',
-          fileName: ''
-        },
-        {
-          fileKey: '',
-          fileUrl: '',
-          fileDesc: 'disabled',
-          fileName: ''
-        }
       ],
       jsonObject: null,
       form: {
-        categoryNumber: '',
         categoryName: '',
-        categoryNameE: '',
-        modelType: 0
+        categoryNameE:'',
       },
       highLightUrl: '', // 测试
-      normalBigUrl: '',
-      normalSmallUrl: '',
-      disabledUrl: '',
       rules: {
-        modelType: [
-          { required: true, message: '请选择模板类型', trigger: 'change' }
-        ],
-        categoryNumber: [
-          // { required: true, message: '品类序列号不能为空', trigger: 'blur' }
-          { required: true, validator: categoryNum, trigger: 'blur' }
-        ],
         categoryName: [
-          { required: true, message: '品类名称不能为空', trigger: 'blur' }
+          // { required: true, message: '英文名不能为空', trigger: 'blur' }
+          { required: true, validator: categoryName, trigger: 'blur' }
         ],
         categoryNameE: [
-          { required: true, message: '品类英文名  不能为空', trigger: 'blur' }
+          // { required: true, message: '中文名不能为空', trigger: 'blur' }
+          { required: true, validator: categoryNameE, trigger: 'blur' }
         ],
         /* fileLists: [
           { required: true, validator: categoryNum, trigger: 'change' }
@@ -297,11 +189,10 @@ export default {
         categoryId: this.propData.categoryId
       }
       detailSubCategory({ params }).then((res) => {
-        console.log(res.data.data)  
+        console.log(res.data.data)
         this.$nextTick(() => {
-          this.form.categoryNumber = res.data.data.categoryNumber
           this.form.categoryName = res.data.data.categoryName
-          this.form.categoryNameE = res.data.data.categoryNameE
+          this.form.categoryNameE = res.data.data.ecategoryNameE
           console.log('我是返回来的', res.data.data.fileList)
           if (JSON.stringify(res.data.data.fileList) !== 'null' && res.data.data.fileList.length !== 0) {
             res.data.data.fileList.forEach((e, index) => {
@@ -454,6 +345,8 @@ export default {
 /deep/.avatar-uploader {
     width: 100px;
     height: 100px;
+    margin-left: 100px;
+    margin-top: 30px;
 }
 /deep/.avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;

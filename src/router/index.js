@@ -439,6 +439,24 @@ export const constantRouterMap = [
         ]
       },
       {
+        path: 'imageResource',
+        name: '资源管理',
+        component: _import('imageResource/index'),
+        redirect: '/imageResource/template',
+        children: [
+          {
+            path: 'template',
+            name: 'template',
+            component: _import('imageResource/template')
+          },
+          {
+            path: 'imageType',
+            name: 'imageType',
+            component: _import('imageResource/imageType')
+          },
+        ]
+      },
+      {
         path: 'screenManagement',
         name: '屏幕配置管理',
         component: _import('ScreenManageMent/main'),

@@ -48,6 +48,10 @@ module.exports = {
       '/v1/':{
         target:'http://192.168.1.13:7101',
         changeOrigin: true,
+      },
+      '/icon/':{
+        target:'http://172.26.254.119:8181/',
+        changeOrigin: true,
       }
     },
     cssSourceMap: false

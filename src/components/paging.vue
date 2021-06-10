@@ -34,9 +34,19 @@ export default {
     },
     pageSize: {
       type: Array || null,
+      default:function(){
+        return {
+
+        }
+      }
     },
     pageQuery: {
       type: Object || null,
+      default:function(){
+        return {
+          
+        }
+      }
     }
   },
   data() {

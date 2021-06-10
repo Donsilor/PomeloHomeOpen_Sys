@@ -5,8 +5,8 @@
         propData.status === 0
           ? '新增类型'
           : propData.status === 2
-          ? '编辑'
-          : '查看'
+            ? '编辑'
+            : '查看'
       "
       :visible.sync="addDialogVisible"
       :before-close="resetForm"
@@ -23,7 +23,9 @@
         reset-fields
         label-width="100px"
       >
-        <el-form-item label="类型" prop="className">
+        <el-form-item 
+          label="类型" 
+          prop="className">
           <el-input
             v-model="form.className"
             :disabled="propData.status === 2"
@@ -32,7 +34,9 @@
             placeholder="请输入类型"
           />
         </el-form-item>
-        <el-form-item label="功能" prop="usage">
+        <el-form-item 
+          label="功能" 
+          prop="usage">
           <el-input
             v-model="form.usage"
             autocomplete="off"
@@ -40,7 +44,9 @@
           />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div 
+        slot="footer" 
+        class="dialog-footer">
         <el-button @click="resetForm">{{
           propData.status !== 1 ? '取 消' : '关 闭'
         }}</el-button>
@@ -48,7 +54,7 @@
           v-if="propData.status !== 1"
           type="primary"
           @click="submitForm('ruleForm')"
-          >确 定</el-button
+        >确 定</el-button
         >
       </div>
     </el-dialog>
@@ -70,7 +76,7 @@ export default {
     },
     propData: {
       type: Object,
-      default: function () {
+      default: function() {
         return {}
       },
     },

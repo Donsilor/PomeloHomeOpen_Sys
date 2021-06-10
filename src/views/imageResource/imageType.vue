@@ -4,8 +4,11 @@
     <div class="sec-category">
       <el-row class="product-menu">
         <el-col>
-          <el-button type="primary" class="first-btn" @click="addMap"
-            >添加图片</el-button
+          <el-button 
+            type="primary" 
+            class="first-btn" 
+            @click="addMap"
+          >添加图片</el-button
           >
         </el-col>
         <el-col :span="12">
@@ -14,7 +17,10 @@
             placeholder="请输入图片名称"
             class="input-with-select"
           >
-            <el-button slot="append" icon="el-icon-search" @click="select" />
+            <el-button 
+              slot="append" 
+              icon="el-icon-search" 
+              @click="select" />
           </el-input>
         </el-col>
       </el-row>
@@ -30,15 +36,29 @@
           tooltip-effect="dark"
           style="width: 100%"
         >
-          <el-table-column prop="id" label="序号" />
-          <el-table-column prop="className" label="图片名称" />
-          <el-table-column prop="identityName" label="英文名称" />
-          <el-table-column prop="createTime" label="创建时间 " />
-          <el-table-column prop="updateTime" label="修改时间 " />
-          <el-table-column prop="status" label="状态">
+          <el-table-column 
+            prop="id" 
+            label="序号" />
+          <el-table-column 
+            prop="className" 
+            label="图片名称" />
+          <el-table-column 
+            prop="identityName" 
+            label="英文名称" />
+          <el-table-column 
+            prop="createTime" 
+            label="创建时间 " />
+          <el-table-column 
+            prop="updateTime" 
+            label="修改时间 " />
+          <el-table-column 
+            prop="status" 
+            label="状态">
             {{ haveaction }}
           </el-table-column>
-          <el-table-column label="操作" width="300px">
+          <el-table-column 
+            label="操作" 
+            width="300px">
             <template slot-scope="scope">
               <div class="opreationBtn">
                 <el-button
@@ -47,46 +67,47 @@
                   @click="selectClick(scope.row)"
                 >
                   查看</el-button
-                >
+                  >
                 <el-button
                   type="primary"
                   size="mini"
                   @click="updateClick(scope.row)"
                 >
                   编辑</el-button
-                >
+                  >
                 <el-button
                   type="primary"
                   size="mini"
                   @click="startClick(scope.row)"
                 >
                   启动</el-button
-                >
+                  >
                 <el-button
                   type="primary"
                   size="mini"
                   @click="stopClick(scope.row)"
                 >
                   禁用</el-button
-                >
+                  >
               </div>
             </template>
           </el-table-column>
         </el-table>
         <div class="block">
           <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
             :current-page="currentPage"
             :page-sizes="[5, 10, 15, 20]"
             :page-size="100"
-            layout="total, sizes, prev, pager, next, jumper"
             :total="11"
-          >
-          </el-pagination>
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
         </div>
       </div>
-      <Paging :total="total" @changePage="changePage" />
+      <Paging 
+        :total="total" 
+        @changePage="changePage" />
       <!-- 新增dialog -->
       <AddDialog1
         v-if="addDialogVisible"
@@ -133,9 +154,7 @@ export default {
         page: 1,
         totalSize: 5,
       },
-      currentPage: 1,
       haveaction: '已禁用',
-
       // ------------
       tableData: [
         {

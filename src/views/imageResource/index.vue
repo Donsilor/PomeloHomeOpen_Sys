@@ -10,9 +10,13 @@
         active-text-color="#409EFF"
       >
         <template v-for="item in navs">
-          <router-link :key="item.name" :to="item.url">
+          <router-link 
+            :key="item.name" 
+            :to="item.url">
             <el-menu-item :index="item.type">
-              <i v-if="item.icon" :class="item.icon" />
+              <i 
+                v-if="item.icon" 
+                :class="item.icon" />
               {{ item.name }}
             </el-menu-item>
           </router-link>

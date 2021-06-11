@@ -19,29 +19,6 @@ if (process.env.NODE_ENV !== 'production' && location.port === '8080') {
   // 端口是8080的时候是本地开发转发到每个人的不同机器的，需要根据标记来转发
   Object.assign(PROXY_NAME, PROXY_FLAG.LOCAL)
 }
-// 规则引擎模块
-export const RULE_ENGINE_API = {
-  ADD: `${BASE_URL}${PROXY_NAME.RULES_SERVICE}/rules/scene/add`, // 添加
-  SCENE_RULES: `${BASE_URL}${PROXY_NAME.RULES_SERVICE}/rules/scene/rules` // 规则列表
-}
-// 数据统计模块
-export const DATA_SERVICE_API = {
-  TASK_LIST: `${BASE_URL}${PROXY_NAME.DATA_ANALYSIS_SERVICE}/dataAnalysis/map/taskList`, // 获取产品对应的统计任务列表
-  MAP: `${BASE_URL}${PROXY_NAME.DATA_ANALYSIS_SERVICE}/dataAnalysis/map/map`, // 获取对应统计任务数据
-  DOWNLOAD_PATH: `${BASE_URL}${PROXY_NAME.DATA_ANALYSIS_SERVICE}/dataAnalysis/map/download`, // 文件下载地址
-  TASK_TASKLIST: `${BASE_URL}/dataAnalysis/task/taskList`, // 任务管理任务列表
-  EDIT_TASK: `${BASE_URL}/dataAnalysis/task/exitTask`, // 任务修改
-  ADD_TASK: `${BASE_URL}/dataAnalysis/task/addTask`, // 添加任务
-  DEL_TASK: `${BASE_URL}/dataAnalysis/task/delTask`, // 删除任务
-  HOME_MAP: `${BASE_URL}/dataAnalysis/homePage/map`, // 获取首页各省所有/在线 设备数量
-  TASK_STATUS: `${BASE_URL}/dataAnalysis/task/taskStatus`, // 任务得开启关闭
-  TASK_DETAIL: `${BASE_URL}/dataAnalysis/task/taskDetail`, // 任务详情
-  TASK_TIMER_MANUAL: `${BASE_URL}/dataAnalysis/timer/manual`, // 手动触发任务
-  TIMER_CHECK: `${BASE_URL}/dataAnalysis/timer/check`, // 手动触发任务前进行检查
-  TASK_PRODUCT_INFO: `${BASE_URL}/dataAnalysis/map/taskProductInfo`, // 存在统计任务的产品信息
-  TASK_NAME: `${BASE_URL}/dataAnalysis/map/taskName` // 任务名称模糊查询
-
-}
 // 产品服务设备模块
 export const DEVICE_MANAGE_SERVICE_API = {
   DEVICE_BATCH_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/deviceManage/device/batchList`, // 查询批次设备列表
@@ -104,146 +81,22 @@ export const ANALYSIS_DATA_SERVICE_API = {
   ADD: `${BASE_URL}/scriptManage/script/add`, // 保存脚本
   HANDLE: `${BASE_URL}/scriptManage/script/handle` // 执行脚本
 }
-
-// 影子设备服务模块
-export const DEVICE_SHADOW_SERVICE_API = {
-  DEVICE_SHADOWN: `${BASE_URL}${PROXY_NAME.SHADOW_SERVICE}/getDeviceShadow`, // 获取物模型运行状态列表数据
-  HISTORY_PROPERTIES: `${BASE_URL}${PROXY_NAME.SHADOW_SERVICE}/getHistoryProperties`, // 获取某个运行状态的历史数据
-  DEVICE_SERVICE_LOG: `${BASE_URL}${PROXY_NAME.SHADOW_SERVICE}/getDeviceServiceLogList`, // 设备服务运行状态数据
-  GET_DEVICE_EVENT_LOG_LIST: `${BASE_URL}${PROXY_NAME.SHADOW_SERVICE}/getDeviceEventLogList` // 获取事件调用列表
-}
-
-// 日志服务模块
-export const LOG_SERVICE_API = {
-  ONLINE_LOG: `${BASE_URL}${PROXY_NAME.LOG_SERVICE}/logDeviceStatusList`, // 获取产品/设备上下线日志
-  PRODUCT_LOG: `${BASE_URL}${PROXY_NAME.LOG_SERVICE}/logDeviceList`, // 查询设备日志
-  LOG_DEVICE: `${BASE_URL}${PROXY_NAME.LOG_SERVICE}/logDevice`, // 获取日志详情
-  DEVICE_COUNT: `${BASE_URL}${PROXY_NAME.LOG_SERVICE}/home/device/count` // 首页获取设备数量，活跃设备数量
-}
-
-// 用户管理
-export const USER_SERVICE_API = {
-  USER_LIST: `${AUTH_BASE_URL}/user/list`, // 用户列表
-  USER: `${AUTH_BASE_URL}/user`, // POST添加用户 PUT修改用户信息 DELETE删除用户信息
-  USER_BING_ROLE: `${AUTH_BASE_URL}/user/bindRole`, // 分配用户角色
-  USER_INFO: `${AUTH_BASE_URL}/user/info`, // 获取用户信息
-  USER_UPDATE_PASSWORD: `${AUTH_BASE_URL}/user/updatePassword`, // 修改用户密码
-  USER_STATUS: `${AUTH_BASE_URL}/user/status/change`, // 启用/禁用用户
-  USER_LIST_BY_USER_ID: `${AUTH_BASE_URL}/role/listByUserId`, // 根据用户来查回显角色
-  USER_RESET: `${AUTH_BASE_URL}/user/resetPassword`
-}
-
-// 模块管理
-export const MODEL_SERVICE_API = {
-  MENU_LIST: `${AUTH_BASE_URL}/rightMenu/list`, // 菜单列表
-  ADD_MENU: `${AUTH_BASE_URL}/rightMenu`, // POST 添加新增菜单 put 修改 DELETE删除
-  MENU_FOR_ID: `${AUTH_BASE_URL}/rightMenu`, // get 根据id获取指定菜单
-  OWNER_MENU_LIST: `${AUTH_BASE_URL}/rightMenu/listOwnerMenu`, // 获取当前登录用户菜单列表
-  MENU_BIND_ACCESS: `${AUTH_BASE_URL}/rightMenu/bindButton` // 为菜单分配按钮
-}
-
-// 登录/登出
-export const LOGIN_SERVICE_API = {
-  LOGIN_KEY: `${AUTH_BASE_URL}/login`, // get 获取登录验证key
-  LOGIN: `${AUTH_BASE_URL}/login`, // 登录
-  LOGOUT: `${AUTH_BASE_URL}/logout` // get 登出
-}
-
-// 组织管理
-export const ORGANIZATION_SERVICE_API = {
-  LIST: `${AUTH_BASE_URL}/organization/list`, // 获取组织列表
-  ORGANIZATION: `${AUTH_BASE_URL}/organization` // get -查看组织 post--新增组织 delete--删除组织 put--修改组织
-}
-
-// 按钮管理
-export const BUTTONS_SERVICE_API = {
-  LIST: `${AUTH_BASE_URL}/button/list`, // 获取按钮列表
-  BUTTON_HANDLE: `${AUTH_BASE_URL}/button`, // post--新增按钮 delete--删除按钮 put--修改按钮 get--查看按钮
-  BUTTON_BIND_ACCESS: `${AUTH_BASE_URL}/button/bindAccess`, // 按钮绑定权限
-  BUTTON_LIST_BY_MENU_ID: `${AUTH_BASE_URL}/button/listByMenuId` // 根据菜单ID进行按钮回显
-}
-//  数据分析模块
-export const DATA_ANALYST = {
-  DATA_ANALYST_TASK_LOG_LIST: `${BASE_URL}/dataAnalysis/task/taskLogList`, // 任务操作日志列表
-  DATA_ANALYST_TASK_LIST: `${BASE_URL}/dataAnalysis/task/taskList`, // 展示统计任务接口
-  DATA_ANALYST_TIMER_LOG_LIST: `${BASE_URL}/dataAnalysis/timer/timerLogList`// 任务调度列表接口
-}
-
-// SN管理
-export const SN_API = {
-  SN_LIST: `${BASE_URL}/device/sn/list `, // 查询设备SN列表
-  SN_DEL: `${BASE_URL}/device/sn/del`, // 删除SN
-  SN_ADD: `${BASE_URL}/device/sn/add`, // 添加SN
-  SN_FILE_LIST: `${BASE_URL}/device/sn/file/list`, // sn历史文件列表
-  SN_FILE: `${BASE_URL}/device/sn/file`// 上传文件
-}
-
 // 品类管理
 export const CATEGORY_MANAGE_SERVICE_API = {
+  GET_SUB_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/list`, // 获取大品类列表   fixed 
+  DETAIL_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取子品类详情  fixed
+  ADD_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/add`, // 添加子品类列表   fixed
+  EDIT_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/edit`, // 编辑子品类列表 fixed
+  DELETE_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/delete`, // 删除子品类列表 fixed
   GET_PRIMARY_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/primaryCategory`, // 获取一级品类列表 √
   ADD_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/addPri`, // 添加一级品类列表 √
   EDIT_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/editPri`, // 编辑一级品类列表 √
   DELETE_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/deletePri`, // 删除一级品类列表 √
   // GET_DETAIL_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取一级品类详情
   GET_SELECT_PRIMARY_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/priList`, // 获取一级品类下拉列表
-  GET_SUB_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/list`, // 获取子品类列表   fixed 
-  DETAIL_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取子品类详情  fixed
-  ADD_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/add`, // 添加子品类列表   fixed
-  EDIT_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/edit`, // 编辑子品类列表 fixed
-  DELETE_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/delete`, // 删除子品类列表 fixed
   UPLOAD: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/upload`, // 上传物模型,
   GET_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/getModel`, // 获取物模型,
   ADD_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/addModel`, // 添加物模型,
   EDIT_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/editModel`, // 编辑物模型,
   DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/deleteModel` // 删除子品类模板
-}
-
-// 设备文件日志
-export const FILE_SERVICE_API = {
-  DEVICE_FILE_LIST: `${FILE_BASE_URL}/device/file/getDeviceFileList`, // 获取一级品类列表
-  SYNC_FILE: `${FILE_BASE_URL}/device/file/syncFile`, // 同步文件
-  QUERY_SYNC_INFO: `${FILE_BASE_URL}/device/file/querySyncInfo`, // 查询同步文件信息
-  QUERT_UPLOAD_PROGRESS: `${FILE_BASE_URL}/device/file/queryUploadProgress`, // 查询文件上传进度查询
-  SYNC_FILE_LIST: `${FILE_BASE_URL}/device/file/syncFileList`, // 同步文件列表
-  QUERY_INCR_FILE_LIST: `${FILE_BASE_URL}/device/file/queryIncrFileList`, // 增量查询文件列表
-  DEVICE_FILE_DOWNLOAD: `${FILE_BASE_URL}/device/file/deviceFileDownload`, // 下载文件
-  DEVICE_FILE_DELETE: `${FILE_BASE_URL}/device/file/deviceFileDelete`, // 删除文件
-  CHUNK_FILE_UPLOAD: `${FILE_BASE_URL}/file/upload/uploadChunk`, // OTA固件切片文件上传地址
-  CHUNK_UPLOAD_CHECK: `${FILE_BASE_URL}/file/upload/checkFile`, // 检测文件是否上传
-  MERGE_FILE_OTA: `${FILE_BASE_URL}/file/upload/mergeFile`, // 合并文件切片
-  GET_SERVICE_ID: `${FILE_BASE_URL}/file/upload/getServiceId`, // 获取切片上传服务id
-  PREVIEW_FILE_UPLOAD: `${FILE_BASE_URL}/file/upload/fileUpload`, // 普通文件上传
-  DELETE_FILE: `${FILE_BASE_URL}/file/upload/deleteFile`, // 文件删除
-  GET_UPLOAD_ID: `${FILE_BASE_URL}/file/upload/getUploadId`, // 获取分片上传文件夹id
-  DELETE_IMG: `${FILE_BASE_URL}/file/upload/deleteFile`
-}
-// 引导页接口
-export const APP_GUIDE_API = {
-  QUERY: `${BASE_URL}/productManage/appGuide/query`, // 获取列表
-  DELETE: `${BASE_URL}/productManage/appGuide/delete`, // 删除
-  DETAIL: `${BASE_URL}/productManage/appGuide/detail`, // 详情
-  BRANDLIST: `${BASE_URL}/productManage/brand/getAll`, // 获取品牌列表
-  SUB_CATEGORY_LIST: `${BASE_URL}/productManage/appGuide/categoryName`, // 获取品类列表
-  ALL_MODEL: `${BASE_URL}/productManage/appGuide/allModel`, // 根据品牌ID跟品类ID获取型号
-  ADD: `${BASE_URL}/productManage/appGuide/add`, // 添加引导页
-  UPDATE: `${BASE_URL}/productManage/appGuide/update`, // 更新
-  DISABLE: `${BASE_URL}/productManage/appGuide/disable`// 启用 禁用
-}
-// 分组标签页管理接口
-export const GROUP_LABEL_API = {
-  QUERY: `${BASE_URL}/productManage/signGroup/query`, // 获取列表
-  ADD: `${BASE_URL}/productManage/signGroup/add`, // 添加引导页
-  DELETE: `${BASE_URL}/productManage/signGroup/delete`, // 删除
-  DETAIL: `${BASE_URL}/productManage/signGroup/detail`, // 详情
-  UPDATE: `${BASE_URL}/productManage/signGroup/update`, // 更新
-  DISABLE: `${BASE_URL}/productManage/signGroup/disable`// 启用 禁用
-}
-// 品牌管理接口
-export const BRAND_API = {
-  QUERY: `${BASE_URL}/productManage/brand/query`, // 获取列表
-  ADD: `${BASE_URL}/productManage/brand/add`, // 添加引导页
-  DELETE: `${BASE_URL}/productManage/brand/delete`, // 删除
-  DETAIL: `${BASE_URL}/productManage/brand/detail`, // 详情
-  UPDATE: `${BASE_URL}/productManage/brand/update`, // 更新
-  DISABLE: `${BASE_URL}/productManage/brand/disable`// 启用 禁用
 }

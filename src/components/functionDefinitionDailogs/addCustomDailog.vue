@@ -65,6 +65,28 @@
             v-model="paramsRuleForm.identifier" 
             placeholder="请输入标识符"/>
         </el-form-item>
+        <!-- 执行动作 -->
+        <el-form-item prop="action">
+          <el-row slot="label">
+            <span class="name">执行动作</span>
+            <el-tooltip 
+              content="选择执行动作" 
+              placement="right" 
+              effect="light">
+              <span class="el-icon-question"/>
+            </el-tooltip>
+          </el-row>
+          <el-select 
+            v-model="paramsRuleForm.action"
+            style="width:100% "
+            placeholder="请选择执行动作">
+            <el-option
+              v-for="item in actionOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
+        </el-form-item>
         <!-- 属性独有 -->
         <el-form-item 
           v-if="paramsRuleForm.functionType===0" 
@@ -441,7 +463,7 @@
 <script>
 // import addParamsDialog from '@/components/functionDefinitionDailogs/addParamsDialog'
 import { mapGetters } from 'vuex'
-import { functionTypeList, dataTypeList, defitionObjectModel, specsObjectModel } from '@/assets/js/defition'
+import { functionTypeList, dataTypeList, defitionObjectModel,actionOptions, specsObjectModel } from '@/assets/js/defition'
 import viewOrEditParamsDialog from '@/components/functionDefinitionDailogs/viewOrEditParamsDialog'
 import addDialog from '@/components/functionDefinitionDailogs/add1'
 import { funcName, arrStructVf, identifierReg } from '@/assets/js/validator'
@@ -511,6 +533,7 @@ export default {
       keyFlag: false,
       functionTypeList: Object.assign([], functionTypeList), // 功能列表
       dataTypeList: Object.assign([], dataTypeList), // 功能为属性时候的 数据类型列表
+      actionOptions: Object.assign([], actionOptions), // 执行动作
       paramsRuleForm: Object.assign({}, defitionObjectModel), // 提交时的数据模板
       paramsRules: {
         functionType: [
@@ -522,6 +545,9 @@ export default {
         ],
         identifier: [
           { required: true, validator: identifierReg, trigger: 'blur' }
+        ],
+        action:[
+          { required: true, message: '请选择执行动作', trigger: 'blur' }
         ],
         'dataType.type': [
           { required: true, message: '请选择数据类型', trigger: 'blur' }
@@ -723,6 +749,7 @@ export default {
             accessMode: this.paramsRuleForm.accessMode,
             identifier: this.paramsRuleForm.identifier,
             name: this.paramsRuleForm.name,
+            action:this.paramsRuleForm.action,
             required: false,
             desc: this.paramsRuleForm.desc
           }

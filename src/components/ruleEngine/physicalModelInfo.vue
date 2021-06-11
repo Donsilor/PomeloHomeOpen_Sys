@@ -179,7 +179,8 @@ export default {
       this.tableData = []
       const params = {
         params: {
-          categoryId: this.categoryId
+          categoryId: this.categoryId,
+          key:''
         }
       }
       getModel(params).then(res => {

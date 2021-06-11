@@ -53,6 +53,28 @@
             v-model="ruleForm.identifier" 
             placeholder="请输入标识符" />
         </el-form-item>
+        <!-- 执行动作 -->
+        <el-form-item prop="action">
+          <el-row slot="label">
+            <span class="name">执行动作</span>
+            <el-tooltip 
+              content="选择执行动作" 
+              placement="right" 
+              effect="light">
+              <span class="el-icon-question"/>
+            </el-tooltip>
+          </el-row>
+          <el-select 
+            v-model="ruleForm.action"
+            style="width:100% "
+            placeholder="请选择执行动作">
+            <el-option
+              v-for="item in actionOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
+        </el-form-item>
         <!-- 属性独有 -->
         <el-form-item 
           v-if="ruleForm.dataType" 
@@ -429,6 +451,7 @@ import { mapGetters } from 'vuex'
 import { funcName, bool0, bool1, arrStructVf, identifierReg } from '@/assets/js/validator'
 import { editModel } from '@/api/productRegistration'
 import { editSubModel } from '@/api/categoryManager'
+import { actionOptions } from '@/assets/js/defition'
 export default {
   components: {
     viewOrEditParamsDialog,
@@ -511,6 +534,7 @@ export default {
       }
     }
     return {
+      actionOptions: Object.assign([], actionOptions), // 执行动作
       keyFlag: false,
       dataTypeList: [
         {
@@ -555,6 +579,7 @@ export default {
         type: 'info', // 事件类型 info---信息 ，alert---告警，error---故障
         name: '',
         identifier: '',
+        action: '',
         accessMode: '只读',
         structVerify: [],
         dataType: {
@@ -580,6 +605,9 @@ export default {
         ],
         accessMode: [
           { required: true, message: '请选择读写类型', trigger: 'blur' }
+        ],
+        action: [
+          { required: true, message: '请选择执行动作', trigger: 'blur' }
         ],
         'dataType.specs.min': [
           { required: true, message: '最小值不能为空', trigger: 'blur' }
@@ -747,7 +775,7 @@ export default {
               params: {
                 productKey: this.proParams.prokey,
                 modelVersion: this.proParams.modelVersion,
-                identifier: this.rowsdata.identifier
+                identifier: this.rowsdata.identifier,
               }
             }
           }

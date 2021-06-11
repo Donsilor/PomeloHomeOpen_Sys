@@ -43,7 +43,7 @@
             placeholder="请输入品类英文名称"/>
         </el-form-item>
         <el-form-item 
-          label="品类图片" 
+          label="品类图标" 
           prop="fileLists">
           <el-row type="flex">
             <!-- 高亮 -->

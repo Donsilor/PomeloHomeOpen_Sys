@@ -52,8 +52,11 @@
                 <el-button 
                   type="primary" 
                   size="mini" 
-                  @click="handlerClick('view',scope.row)"> 查看</el-button>
-                <!-- <span class="edit" @click="handlerClick('edit',scope.row)" >编辑</span> -->
+                  @click="handlerClick('view',scope.row)"> 查看子品类</el-button>
+                <el-button 
+                  type="primary" 
+                  size="mini" 
+                  @click="handlerClick('edit',scope.row)"> 编辑</el-button>
                 <el-button 
                   type="danger" 
                   size="mini" 
@@ -152,6 +155,9 @@ export default {
     handlerClick(sty, row) {
       switch (sty) {
       case 'view':
+        console.log(2)
+        break
+      case 'edit':
         this.$router.push({
           path: 'categoryEditPage',
           query: {
@@ -162,11 +168,6 @@ export default {
         // this.addDialogVisible = true
         this.propData.categoryId = row.categoryId // 子集ID
         this.propData.status = 1
-        break
-      case 'edit':
-        this.addDialogVisible = true
-        this.propData.categoryId = row.categoryId // 子集ID
-        this.propData.status = 2
         break
       case 'del':
         this.$confirm('正在删除当前品类, 是否继续?', '提示', {

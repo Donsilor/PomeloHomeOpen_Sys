@@ -424,18 +424,22 @@ export const constantRouterMap = [
             component: _import('ruleEngine/scene')
           },
           {
-            path: 'primaryCategoryDetail',
-            name: 'primaryCategoryDetail',
-            component: _import('ruleEngine/primaryCategoryDetail'),
-            meta: { breadNumber: 1, notKeepAlive: true }
+            path: 'category',
+            name: 'category',
+            component: _import('ruleEngine/category'),
           },
           {
             path: 'categoryEditPage',
             name: 'categoryEditPage',
             component: _import('ruleEngine/categoryEditPage'),
-            meta: {breadNumber: 1, notKeepAlive: true, key: 'primaryCategoryDetail', isdetail: true}
+            meta: {breadNumber: 1, notKeepAlive: true, key: 'category', isdetail: true}
           },
-          
+          {
+            path: 'sonCategory',
+            name: 'sonCategory',
+            component: _import('ruleEngine/sonCategory'),
+            meta: {breadNumber: 1, notKeepAlive: true, key: 'category', isdetail: true}
+          },
         ]
       },
       {

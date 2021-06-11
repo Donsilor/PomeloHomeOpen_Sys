@@ -48,8 +48,8 @@ export default {
         },
         {
           name: '品类管理',
-          url: '/ruleEngine/primaryCategoryDetail',
-          type: 'primaryCategoryDetail'
+          url: '/ruleEngine/category',
+          type: 'category'
         },
       ]
     }

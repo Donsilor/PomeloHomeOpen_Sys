@@ -18,7 +18,28 @@ export const functionTypeList = [
     label: '事件'
   }
 ]
-
+export const actionOptions= [
+  {
+    id: 0,
+    value: 0,
+    label: '触发条件属性'
+  },
+  {
+    id: 1,
+    value: 1,
+    label: '执行任务'
+  },
+  {
+    id: 2,
+    value: 2,
+    label: '触发条件和执行任务'
+  },
+  {
+    id: 3,
+    value: 3,
+    label: '非触发条件和非执行任务'
+  }
+]
 export const DATA_TYPE = {
   INT: 'int',
   FLOAT: 'float',
@@ -149,6 +170,7 @@ export const defitionObjectModel = {
   callType: 'sync', // 调用方式
   type: 'info', // 事件类型 info---信息 ，alert---告警，error---故障
   name: '',
+  action: 0,
   identifier: '',
   accessMode: 'r',
   structVerify: [],

@@ -83,20 +83,38 @@ export const ANALYSIS_DATA_SERVICE_API = {
 }
 // 品类管理
 export const CATEGORY_MANAGE_SERVICE_API = {
-  GET_SUB_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/list`, // 获取大品类列表   fixed 
-  DETAIL_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取子品类详情  fixed
-  ADD_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/add`, // 添加子品类列表   fixed
-  EDIT_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/edit`, // 编辑子品类列表 fixed
-  DELETE_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/delete`, // 删除子品类列表 fixed
+  GET_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/list`, // 获取大品类列表   fixed 
+  DETAIL_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取大品类详情  fixed
+  ADD_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/add`, // 添加大品类列表   fixed
+  EDIT_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/edit`, // 编辑大品类列表 fixed
+  DELETE_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/delete`, // 删除大品类列表 fixed
+
+  // 子品类
+  GET_SUB_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/list`,
+  ADD_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/add`,
+  EDIT_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/edit`,
+  DEL_SUB_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/delete`,
+  SUB_CATEGORY_DETAIL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/detail`,
+  BRAND_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/getAllBrand`,
+
   GET_PRIMARY_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/primaryCategory`, // 获取一级品类列表 √
   ADD_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/addPri`, // 添加一级品类列表 √
   EDIT_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/editPri`, // 编辑一级品类列表 √
   DELETE_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/deletePri`, // 删除一级品类列表 √
   // GET_DETAIL_PRIMARY_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取一级品类详情
   GET_SELECT_PRIMARY_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/priList`, // 获取一级品类下拉列表
+
+  //  大品类模板
   UPLOAD: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/upload`, // 上传物模型,
   GET_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/getModel`, // 获取物模型,
   ADD_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/addModel`, // 添加物模型,
   EDIT_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/editModel`, // 编辑物模型,
-  DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/deleteModel` // 删除子品类模板
+  DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/deleteModel`, // 删除子品类模板
+
+  // 子品类模板
+  SUB_UPLOAD: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/upload`, // 上传物模型,
+  SUB_GET_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/getModel`, // 获取物模型,
+  SUB_ADD_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/addModel`, // 添加物模型,
+  SUB_EDIT_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/editModel`, // 编辑物模型,
+  SUB_DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/deleteModel` // 删除子品类模板
 }

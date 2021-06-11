@@ -49,32 +49,65 @@ export function selectSubCategory(params) {
     data: params
   })
 }
-// 获取子品类列表
+// 获取品类列表
 export function subCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.GET_CATEGORY_LIST,
+    method: 'post',
+    data: params
+  })
+}
+// 获取品类详情
+export function detailSubCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.DETAIL_CATEGORY,
+    method: 'post',
+    data: params
+  })
+}
+// 添加品类列表
+export function addSubCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.ADD_CATEGORY,
+    method: 'post',
+    data: params
+  })
+}
+// 编辑品类列表
+export function editSubCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.EDIT_CATEGORY,
+    method: 'post',
+    data: params
+  })
+}
+// 删除品类列表
+export function delSubCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.DELETE_CATEGORY,
+    method: 'post',
+    data: params
+  })
+}
+// =======================================子品类================================
+// 获取子品类列表
+export function sonCategory(params) {
   return axios({
     url: CATEGORY_MANAGE_SERVICE_API.GET_SUB_CATEGORY_LIST,
     method: 'post',
     data: params
   })
 }
-// 获取子品类详情
-export function detailSubCategory(params) {
-  return axios({
-    url: CATEGORY_MANAGE_SERVICE_API.DETAIL_SUB_CATEGORY,
-    method: 'post',
-    data: params
-  })
-}
-// 添加子品类列表
-export function addSubCategory(params) {
+// 新增子品类
+export function addSonCategory(params) {
   return axios({
     url: CATEGORY_MANAGE_SERVICE_API.ADD_SUB_CATEGORY,
     method: 'post',
     data: params
   })
 }
-// 编辑子品类列表
-export function editSubCategory(params) {
+// 编辑子品类
+export function editSonCategory(params) {
   return axios({
     url: CATEGORY_MANAGE_SERVICE_API.EDIT_SUB_CATEGORY,
     method: 'post',
@@ -82,14 +115,30 @@ export function editSubCategory(params) {
   })
 }
 // 删除子品类列表
-export function delSubCategory(params) {
+export function delSonCategory(params) {
   return axios({
-    url: CATEGORY_MANAGE_SERVICE_API.DELETE_SUB_CATEGORY,
+    url: CATEGORY_MANAGE_SERVICE_API.DEL_SUB_CATEGORY,
     method: 'post',
     data: params
   })
 }
-
+// 获取子品类详情
+export function sonCategoryDetail(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SUB_CATEGORY_DETAIL,
+    method: 'post',
+    data: params
+  })
+}
+// 获取品牌列表
+export function brandList(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.BRAND_LIST,
+    method: 'post',
+    data: params
+  })
+}
+/* ==================================================大品类物模型============================================== */
 // 上传物模型模块接口
 export function upload(params) {
   return axios({
@@ -126,6 +175,48 @@ export function editSubModel(params) {
 export function delModel(params) {
   return axios({
     url: CATEGORY_MANAGE_SERVICE_API.DELETE_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+
+/* ==================================================子品类物模型============================================== */
+// 上传子品类物模型模块接口
+export function sonUpload(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SUB_UPLOAD,
+    method: 'post',
+    data: params
+  })
+}
+// 获取子品类物模型模块接口
+export function getSonModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SUB_GET_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+// 添加子品类物模型模块接口
+export function addSonModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SUB_ADD_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+// 编辑子品类物模型模块接口
+export function editSonModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SUB_EDIT_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+// 删除子品类物模型模块接口
+export function delSonModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SUB_DELETE_MODEL,
     method: 'post',
     data: params
   })

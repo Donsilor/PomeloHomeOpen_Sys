@@ -450,7 +450,7 @@ import addDialog from '@/components/functionDefinitionDailogs/add1'
 import { mapGetters } from 'vuex'
 import { funcName, bool0, bool1, arrStructVf, identifierReg } from '@/assets/js/validator'
 import { editModel } from '@/api/productRegistration'
-import { editSubModel } from '@/api/categoryManager'
+import { editSubModel, editSonModel } from '@/api/categoryManager'
 import { actionOptions } from '@/assets/js/defition'
 export default {
   components: {
@@ -798,9 +798,50 @@ export default {
             params.params.events = editData
           }
           console.log('params', params)
-          this.proParams.type === 'category'
-            ? editSubModel(params).then((res) => {
-              console.log(res)
+          if(this.proParams.type === 'category'){
+            if(this.proParams.val === 'son'){
+              delete params.params.categoryId
+              params.params.subCategoryId = this.proParams.prokey
+              editSonModel(params).then((res) => {
+                console.log(res)
+                if (res.data.code === 200) {
+                  this.$message({
+                    type: 'success',
+                    message: '编辑成功'
+                  })
+                  this.handleClose()
+                  setTimeout(() => {
+                    this.$parent.getDraftModelData()
+                  }, 0)
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: res.data.message
+                  })
+                }
+              })
+            }else{
+              editSubModel(params).then((res) => {
+                console.log(res)
+                if (res.data.code === 200) {
+                  this.$message({
+                    type: 'success',
+                    message: '编辑成功'
+                  })
+                  this.handleClose()
+                  setTimeout(() => {
+                    this.$parent.getDraftModelData()
+                  }, 0)
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: res.data.message
+                  })
+                }
+              })
+            }
+          }else{
+            editModel(params).then((res) => {
               if (res.data.code === 200) {
                 this.$message({
                   type: 'success',
@@ -817,23 +858,7 @@ export default {
                 })
               }
             })
-            : editModel(params).then((res) => {
-              if (res.data.code === 200) {
-                this.$message({
-                  type: 'success',
-                  message: '编辑成功'
-                })
-                this.handleClose()
-                setTimeout(() => {
-                  this.$parent.getDraftModelData()
-                }, 0)
-              } else {
-                this.$message({
-                  type: 'error',
-                  message: res.data.message
-                })
-              }
-            })
+          } 
         } else {
           return false
         }

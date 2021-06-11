@@ -13,35 +13,49 @@
       :rules="rules" 
       :model="form" 
       reset-fields 
-      label-width="100px" 
-      label-position="left">
+      label-width="110px">
       <el-form-item 
-        label="品类序列号" 
-        prop="categoryNumber">
+        label="子品类序列号" 
+        prop="subCategoryNumber">
         <el-input 
-          v-model.number="form.categoryNumber" 
+          v-model.number="form.subCategoryNumber" 
+          on-keypress="return (/[\d\.]/.test(String.fromCharCode(event.keyCode)))" 
           autocomplete="off" 
           type="number" 
-          placeholder="请输入品类序列号"/>
+          placeholder="请输入子品类序列号"/>
       </el-form-item>
       <el-form-item 
-        label="品类名称" 
-        prop="categoryName">
+        label="子品类名称" 
+        prop="subCategoryName">
         <el-input 
-          v-model="form.categoryName" 
+          v-model="form.subCategoryName" 
           autocomplete="off" 
-          placeholder="请输入品类名称"/>
+          placeholder="请输入子品类名称"/>
       </el-form-item>
       <el-form-item 
-        label="品类英文名" 
-        prop="categoryNameE">
+        label="子品类英文名" 
+        prop="subCategoryNameE">
         <el-input 
-          v-model="form.categoryNameE" 
+          v-model="form.subCategoryNameE" 
           autocomplete="off" 
-          placeholder="请输入品类英文名称"/>
+          placeholder="请输入子品类英文名称"/>
       </el-form-item>
       <el-form-item 
-        label="品类图片" 
+        label="品牌"
+        prop="brandId">
+        <el-select 
+          v-model="form.brandId" 
+          style="width:100%" 
+          placeholder="请选择品牌">
+          <el-option
+            v-for="item in brandOptions"
+            :key="item.id"
+            :label="item.brandName"
+            :value="item.brandId"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item 
+        label="子品类图标" 
         prop="fileLists">
         <el-row type="flex">
           <!-- 高亮 -->
@@ -151,14 +165,14 @@
   </div>
 </template>
 <script>
-import { detailSubCategory } from '@/api/categoryManager'
-import AddSubDialog from '@/components/ruleEngine/subCategoryDialog'
+import { sonCategoryDetail,brandList } from '@/api/categoryManager'
+import AddSubDialog from '@/components/ruleEngine/sonCategoryDialog'
 export default {
   components: {
     AddSubDialog
   },
   props: {
-    categoryId: {
+    subCategoryId: {
       type: String,
       default: ''
     }
@@ -185,6 +199,7 @@ export default {
       },
       routeData: {},
       addDialogVisible: false,
+      brandOptions: '',
       fileList: [
         {
           fileKey: '',
@@ -212,10 +227,11 @@ export default {
         }
       ],
       form: {
-        categoryNumber: '',
-        categoryName: '',
-        categoryNameE: '',
-        modeType: ''
+        subCategoryNumber: '',
+        subCategoryName: '',
+        subCategoryNameE: '',
+        brandId: '',
+        modeType: '',
         // modelType: 0
       },
       belongCategory: '', // 品类名称
@@ -226,10 +242,10 @@ export default {
         modeType: [
           { required: true, message: '请选择物模型类别', trigger: 'change' }
         ],
-        categoryNumber: [
+        subCategoryNumber: [
           { required: true, message: '品类序列号不能为空', trigger: 'blur' }
         ],
-        categoryName: [
+        subCategoryName: [
           { required: true, message: '品类名称不能为空', trigger: 'blur' }
         ],
         fileLists: [
@@ -242,19 +258,21 @@ export default {
     }
   },
   created() {
+    this.getBrand()
     this.getSubDetail()
   },
   methods: {
     getSubDetail() {
       const params = {
-        categoryId: this.categoryId
+        subCategoryId: this.subCategoryId
       }
-      detailSubCategory({ params }).then((res) => {
+      sonCategoryDetail({ params }).then((res) => {
         this.$nextTick(() => {
-          this.form.categoryNumber = res.data.data.categoryNumber
-          this.form.categoryName = res.data.data.categoryName
-          this.form.categoryNameE = res.data.data.categoryNameE
+          this.form.subCategoryNumber = res.data.data.subCategoryNumber
+          this.form.subCategoryName = res.data.data.subCategoryName
+          this.form.subCategoryNameE = res.data.data.subCategoryNameE
           this.form.modeType = res.data.data.modeType
+          this.form.brandId = res.data.data.brandId
           this.belongCategory = res.data.data.parentName
           console.log('我是返回来的', res.data.data.fileList)
           if (JSON.stringify(res.data.data.fileList) !== 'null' && res.data.data.fileList.length !== 0) {
@@ -272,10 +290,20 @@ export default {
         })
       })
     },
+    getBrand(){
+      console.log(1)
+      const params = {
+        params: '1'
+      }
+      brandList(params).then((res)=>{
+        console.log(res)
+        this.brandOptions = res.data.data
+      })
+    },
     editBasInfo() {
       this.addDialogVisible = true
-      this.propData.categoryId = this.categoryId
-      this.routeData.categoryName = this.belongCategory
+      this.propData.subCategoryId = this.subCategoryId
+      this.routeData.subCategoryName = this.belongCategory
     },
     closeAddDialog(val) {
       this.addDialogVisible = false

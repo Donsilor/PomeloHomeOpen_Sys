@@ -1,5 +1,24 @@
 <template>
   <div class="app-container">
+    <el-row 
+      style="margin-bottom: 20px" 
+      class="row-handle">
+      <el-col :span="2">
+        <div style="font-size:20px">
+          <el-tooltip 
+            content="点击返回品类" 
+            placement="top">
+            <i 
+              class="el-icon-back" 
+              style="font-size:24px; font-weight:600; cursor:pointer" 
+              @click="goBack"/>
+          </el-tooltip>
+        </div>
+      </el-col>
+      <el-col>
+        <h2>品类： {{ this.$route.query.categoryName }} </h2>
+      </el-col>
+    </el-row>
     <!-- 品类 -->
     <div class="sec-category">
       <el-row class="product-menu">
@@ -7,12 +26,12 @@
           <el-button 
             type="primary" 
             class="first-btn" 
-            @click="addCategory">添加品类</el-button>
+            @click="addCategory">添加子品类</el-button>
         </el-col>
         <el-col :span="12">
           <el-input 
-            v-model="categoryName" 
-            placeholder="请输入品类名称" 
+            v-model="subCategoryName" 
+            placeholder="请输入子品类名称" 
             class="input-with-select" >
             <el-button 
               slot="append" 
@@ -33,10 +52,10 @@
           tooltip-effect="dark"
           style="width: 100%">
           <el-table-column
-            prop="categoryName"
+            prop="subCategoryName"
             label="品类名称"/>
           <el-table-column
-            prop="categoryNameE"
+            prop="subCategoryNameE"
             label="品类英文名"/>
           <el-table-column
             prop="createTime"
@@ -49,10 +68,6 @@
           >
             <template slot-scope="scope">
               <div class="opreationBtn">
-                <el-button 
-                  type="primary" 
-                  size="mini" 
-                  @click="handlerClick('view',scope.row)"> 查看子品类</el-button>
                 <el-button 
                   type="primary" 
                   size="mini" 
@@ -88,9 +103,9 @@
 </template>
 <script>
 import { mixin } from '@/mixins/mixin.js'
-import AddSubDialog from '@/components/ruleEngine/subCategoryDialog'
+import AddSubDialog from '@/components/ruleEngine/sonCategoryDialog'
 import Paging from '@/components/paging'
-import { subCategory, delSubCategory } from '@/api/categoryManager' // subCategoryDetail
+import { sonCategory, delSonCategory } from '@/api/categoryManager' // subCategoryDetail
 export default {
   components: {
     Paging,
@@ -109,7 +124,7 @@ export default {
       // ------------
       tableData: [],
       // checked: false,
-      categoryName: '',
+      subCategoryName: '',
       // 设置表格的样式
       acellStyle: { 'text-align': 'center' },
       headCellStyle: { 'text-align': 'center', 'font-weight': 'bold', 'font-size': '17px', color: 'black', 'background-color': '#f4f5f7' },
@@ -121,22 +136,21 @@ export default {
     }
   },
   created() {
-    this.getCateGoryList()
+    this.getList()
   },
   methods: {
-    goBack() {
-      this.$router.go(-1)
-    },
     sel() {
       this.listQuery.page = 1
-      this.getCateGoryList()
+      this.getList()
     },
-    getCateGoryList() {
+    getList() {
       const params = {
+        categoryId: this.$route.query.categoryId,
+        subCategoryName: this.subCategoryName,
         pageNumber: this.listQuery.page,
         pageSize: this.listQuery.limit
       }
-      subCategory({ params }).then((res) => {
+      sonCategory({ params }).then((res) => {
         const resData = res.data.data
         this.total = resData.total
         this.tableData = resData.list
@@ -144,25 +158,24 @@ export default {
     },
     addCategory() {
       this.propData.status = 0
+      this.propData.categoryId = this.$route.query.categoryId
       this.addDialogVisible = true
     },
     closeAddDialog(val) {
       this.addDialogVisible = false
       if (val) {
-        this.getCateGoryList()
+        this.getList()
       }
     },
     handlerClick(sty, row) {
+      console.log(row)
       switch (sty) {
-      case 'view':
-        console.log(2)
-        break
       case 'edit':
         this.$router.push({
-          path: 'categoryEditPage',
+          path: 'sonCategoryEditPage',
           query: {
-            categoryId: row.categoryId,
-            categoryName: row.categoryName
+            subCategoryId: row.subCategoryId,
+            subCategoryName: row.subCategoryName
           }
         })
         // this.addDialogVisible = true
@@ -176,17 +189,17 @@ export default {
           type: 'error'
         }).then(() => {
           const params = {
-            categoryId: row.categoryId
+            subCategoryId: row.subCategoryId
           }
-          delSubCategory({ params }).then((res) => {
+          delSonCategory({ params }).then((res) => {
             if (res.data.code === 200 || res.data.code === 0) {
               this.$message({
                 type: 'success',
                 message: '删除成功'
-              })
+              }) 
               this.cutPage()
               console.log(this.listQuery.page)
-              this.getCateGoryList()
+              this.getList()
             }
           })
         }).catch(() => {
@@ -200,16 +213,24 @@ export default {
         break
       }
     },
+    goBack(){
+      this.$router.go(-1)
+    },
     // 分页管理
     changePage(val) {
       this.listQuery = val
-      this.getCateGoryList()
+      this.getList()
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
+.row-handle{
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #c0c0c0;
+}
 .primary-category{
   font-size: 18px;
   align-items: center;

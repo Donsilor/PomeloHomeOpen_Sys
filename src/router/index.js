@@ -440,6 +440,12 @@ export const constantRouterMap = [
             component: _import('ruleEngine/sonCategory'),
             meta: {breadNumber: 1, notKeepAlive: true, key: 'category', isdetail: true}
           },
+          {
+            path: 'sonCategoryEditPage',
+            name: 'sonCategoryEditPage',
+            component: _import('ruleEngine/sonCategoryEditPage'),
+            meta: {breadNumber: 1, notKeepAlive: true, key: 'category', isdetail: true}
+          },
         ]
       },
       {

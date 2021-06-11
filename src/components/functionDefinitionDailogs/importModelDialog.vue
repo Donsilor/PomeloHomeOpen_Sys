@@ -59,7 +59,7 @@
 </template>
 <script>
 import { upLoadFile } from '@/api/productRegistration'
-import { upload } from '@/api/categoryManager'
+import { upload,sonUpload } from '@/api/categoryManager'
 import { v4 as uuidv4 } from 'uuid'
 export default {
   props: {
@@ -117,24 +117,39 @@ export default {
       if (this.importPhydata.type === 'category') {
         const formData = new FormData()
         formData.append('file', item.file)
-        formData.append('categoryId', this.importPhydata.beforeKey)
+        this.importPhydata.val === 'son' ? formData.append('subCategoryId', this.importPhydata.beforeKey) : formData.append('categoryId', this.importPhydata.beforeKey)
         formData.append('id', uuidv4())
         formData.append('timestamp', Date.parse(new Date()))
         formData.append('version', '1.0')
         console.log(formData)
-        upload(formData)
-          .then(res => {
-            if (res.data.code === 200) {
-              this.$message.success('上传文件成功')
-              this.$emit('getImportPhyData', 1)
-              this.$emit('close-view')
+        this.importPhydata.val === 'son'?
+          sonUpload(formData)
+            .then(res => {
+              if (res.data.code === 200) {
+                this.$message.success('上传文件成功')
+                this.$emit('getImportPhyData', 1)
+                this.$emit('close-view')
               // this.flag = false
-            } else {
-              this.$message.error(res.data.message)
-              this.flag = true
-              return false
-            }
-          })
+              } else {
+                this.$message.error(res.data.message)
+                this.flag = true
+                return false
+              }
+            })
+          :
+          upload(formData)
+            .then(res => {
+              if (res.data.code === 200) {
+                this.$message.success('上传文件成功')
+                this.$emit('getImportPhyData', 1)
+                this.$emit('close-view')
+              // this.flag = false
+              } else {
+                this.$message.error(res.data.message)
+                this.flag = true
+                return false
+              }
+            })
       } else {
         console.log(1)
         const formData = new FormData()

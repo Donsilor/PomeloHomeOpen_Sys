@@ -468,7 +468,7 @@ import viewOrEditParamsDialog from '@/components/functionDefinitionDailogs/viewO
 import addDialog from '@/components/functionDefinitionDailogs/add1'
 import { funcName, arrStructVf, identifierReg } from '@/assets/js/validator'
 import { addModel } from '@/api/productRegistration'
-import { addSubModel } from '@/api/categoryManager'
+import { addSubModel, addSonModel } from '@/api/categoryManager'
 export default {
   components: {
     // addParamsDialog
@@ -785,8 +785,33 @@ export default {
             params.params.abilityType = 3
             params.params.events = this.params
           }
-          this.proParams.type === 'category'
-            ? addSubModel(params).then((res) => {
+          if(this.proParams.type === 'category'){
+            if(this.proParams.val === 'son' ){
+              delete params.params.categoryId
+              params.params.subCategoryId = this.proParams.prokey
+              console.log(params)
+              addSonModel(params).then((res) => {
+                if (res.data.code === 200) {
+                  this.$message.success('新增成功')
+                  this.closeAddDialog()
+                  setTimeout(() => {
+                    this.$parent.getDraftModelData()
+                  }, 0)
+                }
+              })
+            }else{
+              addSubModel(params).then((res) => {
+                if (res.data.code === 200) {
+                  this.$message.success('新增成功')
+                  this.closeAddDialog()
+                  setTimeout(() => {
+                    this.$parent.getDraftModelData()
+                  }, 0)
+                }
+              })
+            } 
+          }else{
+            addModel(params).then((res) => {
               if (res.data.code === 200) {
                 this.$message.success('新增成功')
                 this.closeAddDialog()
@@ -795,15 +820,7 @@ export default {
                 }, 0)
               }
             })
-            : addModel(params).then((res) => {
-              if (res.data.code === 200) {
-                this.$message.success('新增成功')
-                this.closeAddDialog()
-                setTimeout(() => {
-                  this.$parent.getDraftModelData()
-                }, 0)
-              }
-            })
+          }  
         } else {
           return false
         }

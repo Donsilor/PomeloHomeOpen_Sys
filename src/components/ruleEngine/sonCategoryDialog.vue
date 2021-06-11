@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog 
-      :title="propData.status === 0 ?'新增品类':propData.status === 2 ?'编辑品类':'查看品类'" 
+      :title="propData.status === 0 ?'新增子品类':propData.status === 2 ?'编辑子品类':'查看子品类'" 
       :visible.sync="addDialogVisible" 
       :before-close="resetForm" 
       :append-to-body="true" 
@@ -14,36 +14,51 @@
         :rules="rules" 
         :model="form" 
         reset-fields 
-        label-width="100px">
+        label-width="110px">
         <el-form-item 
-          label="品类序列号" 
-          prop="categoryNumber">
+          label="子品类序列号" 
+          prop="subCategoryNumber">
           <el-input 
-            v-model.number="form.categoryNumber" 
+            v-model.number="form.subCategoryNumber" 
             :disabled="propData.status===2" 
             on-keypress="return (/[\d\.]/.test(String.fromCharCode(event.keyCode)))" 
             autocomplete="off" 
             type="number" 
-            placeholder="请输入品类序列号"/>
+            placeholder="请输入子品类序列号"/>
         </el-form-item>
         <el-form-item 
-          label="品类名称" 
-          prop="categoryName">
+          label="子品类名称" 
+          prop="subCategoryName">
           <el-input 
-            v-model="form.categoryName" 
+            v-model="form.subCategoryName" 
             autocomplete="off" 
-            placeholder="请输入品类名称"/>
+            placeholder="请输入子品类名称"/>
         </el-form-item>
         <el-form-item 
-          label="品类英文名" 
-          prop="categoryNameE">
+          label="子品类英文名" 
+          prop="subCategoryNameE">
           <el-input 
-            v-model="form.categoryNameE" 
+            v-model="form.subCategoryNameE" 
             autocomplete="off" 
-            placeholder="请输入品类英文名称"/>
+            placeholder="请输入子品类英文名称"/>
         </el-form-item>
         <el-form-item 
-          label="品类图标" 
+          label="品牌"
+          prop="brandId">
+          <el-select 
+            :disabled="propData.status===2"
+            v-model="form.brandId" 
+            style="width:100%" 
+            placeholder="请选择品牌">
+            <el-option
+              v-for="item in brandOptions"
+              :key="item.id"
+              :label="item.brandName"
+              :value="item.brandId"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item 
+          label="子品类图标" 
           prop="fileLists">
           <el-row type="flex">
             <!-- 高亮 -->
@@ -157,7 +172,7 @@
           prop="modelType">
           <el-radio-group v-model="form.modelType">
             <el-radio :label="0">自定义物模型</el-radio>
-            <el-radio :label="1">导入物模型</el-radio>
+            <!-- <el-radio :label="1">导入物模型</el-radio> -->
           </el-radio-group>
         </el-form-item>
         <el-form-item 
@@ -192,7 +207,7 @@
 </template>
 <script>
 import { getToken } from '@/utils/auth'
-import { addSubCategory, editSubCategory, detailSubCategory } from '@/api/categoryManager'
+import { brandList,addSonCategory, editSonCategory, sonCategoryDetail } from '@/api/categoryManager'
 export default {
   props: {
     addDialogVisible: {
@@ -217,9 +232,9 @@ export default {
     const categoryNum = (rule, value, callback) => {
       const reg = /^[1-9]\d*$/
       if (value === '') {
-        callback(new Error('品类序列号不能为空!'))
+        callback(new Error('子品类序列号不能为空!'))
       } else if (!reg.test(value)) {
-        callback(new Error('品类序列号格式错误! 只能为正整数'))
+        callback(new Error('子品类序列号格式错误! 只能为正整数'))
       } else {
         callback()
       }
@@ -266,13 +281,15 @@ export default {
           fileName: ''
         }
       ],
+      brandOptions:[],
       jsonObject: null,
       form: {
-        categoryNumber: '',
-        categoryName: '',
-        categoryNameE: '',
-        modeType: 0,
-        modelType: 0
+        subCategoryNumber: '',
+        subCategoryName: '',
+        subCategoryNameE: '',
+        brandId: '',
+        modelType: 0,
+        modeType: 0
       },
       highLightUrl: '', // 测试
       normalBigUrl: '',
@@ -285,15 +302,18 @@ export default {
         modeType: [
           { required: true, message: '请选择物模型类别', trigger: 'change' }
         ],
-        categoryNumber: [
-          // { required: true, message: '品类序列号不能为空', trigger: 'blur' }
+        subCategoryNumber: [
+          // { required: true, message: '子品类序列号不能为空', trigger: 'blur' }
           { required: true, validator: categoryNum, trigger: 'blur' }
         ],
-        categoryName: [
-          { required: true, message: '品类名称不能为空', trigger: 'blur' }
+        subCategoryName: [
+          { required: true, message: '子品类名称不能为空', trigger: 'blur' }
         ],
-        categoryNameE: [
-          { required: true, message: '品类英文名  不能为空', trigger: 'blur' }
+        subCategoryNameE: [
+          { required: true, message: '子品类英文名不能为空', trigger: 'blur' }
+        ],
+        brandId: [
+          { required: true, message: '请选择品牌', trigger: 'blur' }
         ],
         /* fileLists: [
           { required: true, validator: categoryNum, trigger: 'change' }
@@ -305,17 +325,20 @@ export default {
     }
   },
   created() {
+    console.log(this.propData)
     if (this.propData.status !== 0) {
       const params = {
-        categoryId: this.propData.categoryId
+        categoryId: this.propData.categoryId,
+        subCategoryId: this.propData.subCategoryId
       }
-      detailSubCategory({ params }).then((res) => {
+      sonCategoryDetail({ params }).then((res) => {
         console.log(res.data.data)
         this.$nextTick(() => {
-          this.form.categoryNumber = res.data.data.categoryNumber
-          this.form.categoryName = res.data.data.categoryName
-          this.form.categoryNameE = res.data.data.categoryNameE
+          this.form.subCategoryNumber = res.data.data.subCategoryNumber
+          this.form.subCategoryName = res.data.data.subCategoryName
+          this.form.subCategoryNameE = res.data.data.subCategoryNameE
           this.form.modeType = res.data.data.modeType
+          this.form.brandId = res.data.data.brandId
           console.log('我是返回来的', res.data.data.fileList)
           if (JSON.stringify(res.data.data.fileList) !== 'null' && res.data.data.fileList.length !== 0) {
             res.data.data.fileList.forEach((e, index) => {
@@ -332,8 +355,18 @@ export default {
         })
       })
     }
+    this.getBrand()
   },
   methods: {
+    getBrand(){
+      const params = {
+        params: '1'
+      }
+      brandList(params).then((res)=>{
+        console.log(res)
+        this.brandOptions = res.data.data
+      })
+    },
     // 上传图片
     handleRemove(file, fileList) {
       console.log(file, fileList)
@@ -385,26 +418,27 @@ export default {
           if (this.form.modelType === 1) {
             this.form.jsonObject = this.jsonObject
           }
-          this.form.categoryId = this.propData.categoryId
           const list = this.fileList.filter((e) => {
             console.log(e)
             return e.fileKey !== ''
           })
           this.form.fileList = list
           if (this.propData.status) {
+            this.form.subCategoryId = this.propData.subCategoryId
             const params = Object.assign({}, this.form)
-            editSubCategory({ params }).then((res) => {
+            editSonCategory({ params }).then((res) => {
               if (res.data.code === 200 || res.data.code === 0) {
                 this.$message({
                   type: 'success',
                   message: '编辑完成'
                 })
-                this.$emit('closeAddDialog', 1)
+                this.$emit('closeAddDialog', 1) 
               }
             })
           } else {
+            this.form.categoryId = this.propData.categoryId
             const params = Object.assign({}, this.form)
-            addSubCategory({ params }).then((res) => {
+            addSonCategory({ params }).then((res) => {
               if (res.data.code === 200 || res.data.code === 0) {
                 this.$message({
                   type: 'success',

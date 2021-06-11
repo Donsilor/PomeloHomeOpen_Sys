@@ -155,7 +155,14 @@ export default {
     handlerClick(sty, row) {
       switch (sty) {
       case 'view':
-        console.log(2)
+        console.log(row)
+        this.$router.push({
+          path: 'sonCategory',
+          query: {
+            categoryId: row.categoryId,
+            categoryName: row.categoryName
+          }
+        })
         break
       case 'edit':
         this.$router.push({

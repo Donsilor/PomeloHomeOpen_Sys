@@ -106,6 +106,15 @@ export function imageDetailsDelete(params){
   })
 }
 
+//根据分类标识符获取 ✔
+export function getByClass(params){
+  return fetch({
+    url: '/icon/details/getByClass',
+    method: 'get',
+    data:params
+  })
+}
+
 
 
 

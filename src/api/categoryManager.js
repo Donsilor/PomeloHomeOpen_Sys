@@ -1,6 +1,6 @@
 // 品类管理
 import axios from '@/utils/fetch'
-import { CATEGORY_MANAGE_SERVICE_API } from './apis'
+import { CATEGORY_MANAGE_SERVICE_API, CATEGORY_MANAGE_SUB_API } from './apis'
 // 获取一级品类列表
 export function primaryCategory(params) {
   return axios({

@@ -46,7 +46,7 @@ module.exports = {
         changeOrigin: true,
       },
       '/v1/':{
-        target:'http://192.168.1.13:7101',
+        target:'http://192.168.1.18:7101',
         changeOrigin: true,
       },
       '/scene_web_type_mgt/':{

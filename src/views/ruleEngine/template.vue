@@ -156,12 +156,12 @@
                       </el-option>
                     </el-select>
 
-                    <el-select v-if="item.type == '设备'" v-model="item.facilityChild" placeholder="请选择子品类">
+                    <el-select v-if="item.type == '设备'" v-model="item.facilityChild" @change="getSubModel(item.facilityChild)" placeholder="请选择子品类">
                       <el-option
                         v-for="(fac, index) in facilityChild"
                         :key="index"
                         :label="fac.subCategoryName"
-                        :value="fac.brandId">
+                        :value="fac.categoryId">
                       </el-option>
                     </el-select>
 
@@ -254,8 +254,8 @@
 
           </div>
           <!-- 手动详情 -->
-          <!-- <div v-else class="content">
-            <div class="trigger" v-for="(item, index) in form.details.trigger.content" :key="index+'a'">
+          <div v-else class="content">
+            <div class="trigger" v-for="(item, index) in form.action" :key="index+'a'">
               <el-row class="trigger_row">
                 <el-col :span="19">
                   <div>触发条件1</div>
@@ -343,7 +343,7 @@
                 </el-col>
               </el-row>
             </div>
-          </div> -->
+          </div>
         </div>
       </el-form>
 
@@ -376,7 +376,7 @@
 import { validaTemplateName } from '@/utils/validate'
 import { getSenceTemplate, addSenceTemplate, getSenceList, getSenceSelectList } from '@/api/ruleEngine.js'
 import Paging from '@/components/paging'
-import { primaryCategory, subCategory, getSubCategory } from '@/api/categoryManager'
+import { primaryCategory, subCategory, getSubCategory, getModel } from '@/api/categoryManager'
 import { getByClass } from '@/api/image'
 
 export default {
@@ -492,7 +492,7 @@ export default {
       // 自动方式
       detailsType: ['设备', '定时', '家庭安防'],
       facility: [],       // 设备品类
-      facilityChild: ['桐灯', '挂式空调'],
+      facilityChild: [],
       attribute: ['温度', '风速', '模式'],
       comparison: ['大于', '等于', '小于'],
       executeMode: ['只执行一次','指定日期','每周'],
@@ -615,7 +615,17 @@ export default {
         console.log(369, res)
         this.facilityChild = res.data.data.list
       })
-    
+    },
+    getSubModel(id) {
+      const params = {
+        subCategoryId: id,
+        key: ''
+      }
+
+      getModel({ params }).then((res) => {
+        console.log(258, res)
+        // this.facilityChild = res.data.data.list
+      })
     },
     // 按时间排序
     sortKey(array, key) {

@@ -48,13 +48,30 @@ export function delSenceType(params) {
   })
 }
 
+//类型下拉框列表
+export function getSenceSelectList(params) {
+  return fetch({
+    url: '/scene_web_type_mgt/comboBoxList',
+    method: 'post',
+    data: params
+  })
+}
 
 // 场景模板
 
-// 新增场景模板
-export function AddSenceTemplate(params) {
+// 获取场景模板列表
+export function getSenceTemplate(params) {
   return fetch({
-    url: '/sence_web_template_mgt/add',
+    url: '	/scene_web_template_mgt/list',
+    method: 'post',
+    data: params
+  })
+}
+
+// 新增场景模板
+export function addSenceTemplate(params) {
+  return fetch({
+    url: '/scene_web_template_mgt/add',
     method: 'post',
     data: params
   })

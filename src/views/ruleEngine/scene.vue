@@ -39,6 +39,9 @@
             prop="typeName"
             label="场景名称"/>
           <el-table-column
+            prop="typeCode"
+            label="标识符"/>
+          <el-table-column
             prop="createdTime"
             label="创建时间"/>
           <el-table-column
@@ -47,7 +50,7 @@
           <el-table-column
             label="状态">
             <template slot-scope="scope">
-              <div>{{ scope.row.isEnable ? '已启用' : '已禁用' }}</div>
+              <div>{{ scope.row.isEnable == 1 ? '已禁用' : '已启用' }}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -56,39 +59,37 @@
             <template slot-scope="scope">
               <div class="opreationBtn">
                 <el-button
-                  v-if="scope.row.typeName !== '安防'"
                   type="primary" 
                   size="mini" 
                   @click="handlerClick('edit',scope.row)">编辑</el-button>
                 
                 <el-button
-                  v-if="scope.row.typeName !== '安防'"
                   type="primary" 
                   size="mini" 
-                  @click="handlerClick('ifEnable',scope.row)">{{scope.row.isEnable ? '禁用' : '启用'}}</el-button>
+                  @click="handlerClick('ifEnable',scope.row)">{{scope.row.isEnable == 1 ? '启用' : '禁用'}}</el-button>
 
                 <el-button
-                  v-if="scope.row.typeName !== '安防'"
                   type="primary" 
                   size="mini" 
                   @click="handlerClick('delete',scope.row)">删除</el-button>
-
-                <el-button
-                  v-if="scope.row.typeName == '安防'"
-                  type="primary" 
-                  size="mini" 
-                  @click="handlerClick('save',scope.row)">保存</el-button>
-
-                <el-button
-                  v-if="scope.row.typeName == '安防'"
-                  type="primary" 
-                  size="mini" 
-                  @click="handlerClick('quit',scope.row)">取消</el-button>
               </div>
             </template>
           </el-table-column>
         </el-table>
       </div>
+
+      <el-dialog
+        title="提示"
+        :visible.sync="visibleDialog"
+        width="30%"
+        center>
+        <span>{{ dialogText }}</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="visibleDialog = false">取 消</el-button>
+          <el-button type="primary" @click="delData()">确 定</el-button>
+        </span>
+      </el-dialog>
+
       <Paging 
         :total="total" 
         @changePage="changePage"/>
@@ -107,7 +108,6 @@
 import { mixin } from '@/mixins/mixin.js'
 import AddDialog from '@/components/ruleEngine/scene/addDialog'
 import Paging from '@/components/paging'
-import { subCategory } from '@/api/categoryManager' // subCategoryDetail
 import { getSenceList, enableSenceType, delSenceType } from '@/api/ruleEngine.js'
 
 export default {
@@ -137,7 +137,10 @@ export default {
         status: 0, // 0.新增 1.查看 2.编辑
         editData: null,
         categoryId: ''
-      }
+      },
+      visibleDialog: false,
+      deleteId: '',
+      dialogText: '是否确认删除'
     }
   },
   created() {
@@ -174,7 +177,6 @@ export default {
       }
     },
     handlerClick(sty, row) {
-      let params;
       switch (sty) {
         case 'edit':
           this.propData.status = 2
@@ -184,35 +186,44 @@ export default {
           break
 
         case 'ifEnable':
-          params = {
+          let params = {
             "id": row.id, 
-            "isEnable": row.isEnable ? false : true
+            "isEnable": row.isEnable == 1 ? 0 : 1
           }
           enableSenceType({ params }).then((res) => {
-            this.$message({
-              type: 'success',
-              message: '修改成功!'
-            });
-            this.getList()
+            if(res.code == 200){
+              this.$message({
+                type: 'success',
+                message: '修改成功!'
+              });
+              this.getList()
+            }
           })
           break
 
         case 'delete':
-          params = {
-            "id": row.id
-          }
-          delSenceType({ params }).then((res) => {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-            this.getList()
-          })
+          this.deleteId = row.id;
+          this.visibleDialog = true;
           break
 
         default:
           break
       }
+    },
+    delData() {
+      let params = {
+        "id": this.deleteId
+      }
+      delSenceType({ params }).then((res) => {
+        if(res.code == 200){
+          this.visibleDialog = false
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.getList()
+        }
+      })
     },
     // 分页管理
     changePage(val) {
@@ -275,5 +286,9 @@ export default {
         text-align: center;
       }
     }
+}
+
+.opreationBtn{
+  min-width: 200px;
 }
 </style>

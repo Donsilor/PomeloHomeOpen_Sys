@@ -20,11 +20,10 @@
           prop="categoryNumber">
           <el-input 
             v-model.number="form.categoryNumber" 
-            :disabled="propData.status===2" 
             on-keypress="return (/[\d\.]/.test(String.fromCharCode(event.keyCode)))" 
             autocomplete="off" 
             type="number" 
-            placeholder="请输入类型序号"/>
+            placeholder="请输入模板类型序号"/>
         </el-form-item>
         <el-form-item 
           label="类型名称" 
@@ -32,17 +31,17 @@
           <el-input 
             v-model="form.categoryName" 
             autocomplete="off" 
-            placeholder="请输入类型名称"/>
+            placeholder="请输入模板类型名称"/>
         </el-form-item>
 
-        <!-- <el-form-item 
-          label="品类英文名" 
+        <el-form-item 
+          label="标识符" 
           prop="categoryNameE">
           <el-input 
             v-model="form.categoryNameE" 
             autocomplete="off" 
-            placeholder="请输入品类英文名称"/>
-        </el-form-item> -->
+            placeholder="请输入模板类型标识符"/>
+        </el-form-item>
         
         <!-- <el-form-item 
           label="品类图片" 
@@ -187,8 +186,7 @@
 </template>
 <script>
 import { getToken } from '@/utils/auth'
-import { addSubCategory, editSubCategory, detailSubCategory } from '@/api/categoryManager'
-import { addSenceType } from '@/api/ruleEngine.js'
+import { addSenceType, editSenceType } from '@/api/ruleEngine.js'
 export default {
   props: {
     addDialogVisible: {
@@ -282,10 +280,10 @@ export default {
           { required: true, validator: categoryNum, trigger: 'blur' }
         ],
         categoryName: [
-          { required: true, message: '品类名称不能为空', trigger: 'blur' }
+          { required: true, message: '模板类型名称不能为空', trigger: 'blur' }
         ],
         categoryNameE: [
-          { required: true, message: '品类英文名  不能为空', trigger: 'blur' }
+          { required: true, message: '模板类型标识符不能为空', trigger: 'blur' }
         ],
         /* fileLists: [
           { required: true, validator: categoryNum, trigger: 'change' }
@@ -300,6 +298,7 @@ export default {
     if (this.propData.status !== 0) {
       this.form.categoryNumber = this.propData.editData.sort
       this.form.categoryName = this.propData.editData.typeName
+      this.form.categoryNameE = this.propData.editData.typeCode
       const params = {
         categoryId: this.propData.categoryId
       }
@@ -384,11 +383,12 @@ export default {
           this.form.fileList = list
           if (this.propData.status) {
             const params = {
-              "typeCode": 1,
+              "id": this.propData.editData.id,
+              "typeCode": this.form.categoryNameE,
               "typeName": this.form.categoryName,
               "sort": this.form.categoryNumber
             }
-            addSenceType({ params }).then((res) => {
+           editSenceType({ params }).then((res) => {
               if (res.code === 200 || res.code === 0) {
                 this.$message({
                   type: 'success',
@@ -399,10 +399,11 @@ export default {
             })
           } else {
             const params = {
-              "typeCode": 2,
+              "typeCode": this.form.categoryNameE,
               "typeName": this.form.categoryName,
               "sort": this.form.categoryNumber
             }
+
             addSenceType({ params }).then((res) => {
               if (res.code === 200 || res.code === 0) {
                 this.$message({

@@ -28,15 +28,12 @@ service.interceptors.request.use(
       //老接口，需要添加前缀
       config['url'] = '/api/index.php'+config['url']
     } */
-    if(config['url'].indexOf('/scene_web_type_mgt') !== -1 || config['url'].indexOf('/scene_web_template_mgt') !== -1 || config['url'].indexOf('/icon') === -1){ 
-      if(!(config.data instanceof FormData)){
-        config.data = Object.assign(defaultParams, config.data)
-      }
-    }else if(config['url'].indexOf('/v1') !== -1){ 
+    if(!(config.data instanceof FormData) && config['url'].indexOf('/icon') === -1){
+      config.data = Object.assign(defaultParams, config.data)
+    }
+    
+    if(config['url'].indexOf('/v1') !== -1 || config['url'].indexOf('/scene_web_type_mgt') !== -1 || config['url'].indexOf('scene_web_template_mgt') !== -1|| config['url'].indexOf('/icon') !== -1){ 
       console.log('执行新接口')
-      // if(!(config.data instanceof FormData)){
-      //   config.data = Object.assign(defaultParams, config.data)
-      // }
     }else{
       if(config['url'].indexOf('/java_api/') === -1){
         //老接口，需要添加前缀

@@ -198,6 +198,11 @@ export const CATEGORY_MANAGE_SERVICE_API = {
   DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/deleteModel` // 删除子品类模板
 }
 
+//子品类管理
+export const CATEGORY_MANAGE_SUB_API = {
+  GET_SUB_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/list`, // 获取子品类列表 √
+}
+
 // 设备文件日志
 export const FILE_SERVICE_API = {
   DEVICE_FILE_LIST: `${FILE_BASE_URL}/device/file/getDeviceFileList`, // 获取一级品类列表

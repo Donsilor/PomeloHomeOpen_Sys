@@ -1,6 +1,6 @@
 // 品类管理
 import axios from '@/utils/fetch'
-import { CATEGORY_MANAGE_SERVICE_API } from './apis'
+import { CATEGORY_MANAGE_SERVICE_API, CATEGORY_MANAGE_SUB_API } from './apis'
 // 获取一级品类列表
 export function primaryCategory(params) {
   return axios({
@@ -126,6 +126,15 @@ export function editSubModel(params) {
 export function delModel(params) {
   return axios({
     url: CATEGORY_MANAGE_SERVICE_API.DELETE_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+
+// 获取子品类列表接口
+export function getSubCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SUB_API.GET_SUB_LIST,
     method: 'post',
     data: params
   })

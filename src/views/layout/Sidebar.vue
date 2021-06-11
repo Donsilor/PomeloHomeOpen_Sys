@@ -65,6 +65,11 @@ export default {
           name: '规则引擎',
           url: '/ruleEngine',
           icon: 'el-icon-s-cooperation'
+        },
+        {
+          name: '资源管理',
+          url: '/imageResource',
+          icon: 'el-icon-s-cooperation'
         }
       ]
     }

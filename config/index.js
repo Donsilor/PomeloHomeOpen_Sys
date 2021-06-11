@@ -55,8 +55,16 @@ module.exports = {
       },
       '/scene_web_template_mgt/':{
         target:'http://192.168.1.13:8080',
+      },
+      '/icon/':{
+        target:'http://192.168.1.12:8181',
         changeOrigin: true,
       }
+
+
+      // 192.168.1.12:8181      徐
+      // 192.168.1.18:7101      钟
+      // 192.168.1.13:8080      张
     },
     cssSourceMap: false
   }

@@ -118,7 +118,7 @@
         <div class="scene_details">
           <div class="name">场景详情</div>
           <!-- 自动详情 -->
-          <div v-if="form.scene_type == 'auto'" class="content">
+          <div v-if="form.sceneType == '0'" class="content">
             <!-- <div>
               <el-tooltip class="item" effect="dark" show-overflow-tooltip content="与：满足所有条件才会触发；或：满足任一条件即可触发" placement="right">
                 <div class="tip">
@@ -128,13 +128,11 @@
             </div> -->
           
             <div class="relation">
-              <!-- <el-radio v-model="form.details.trigger.relation" label="1">满足全部关系时</el-radio> -->
-              <!-- <el-radio v-model="form.details.trigger.relation" label="2">满足任意关系时</el-radio> -->
-              <el-radio label="1">满足全部关系时</el-radio>
-              <el-radio label="2">满足任意关系时</el-radio>
+              <el-radio v-model="condition" label="0">满足全部关系时</el-radio>
+              <el-radio v-model="condition" label="1">满足任意关系时</el-radio>
             </div>
 
-            <!-- <div class="trigger" v-for="(item, index) in form.details.trigger.content" :key="index+'a'">
+            <div class="trigger" v-for="(item, index) in form.condition" :key="index+'a'">
               <el-row class="trigger_row">
                 <el-col :span="19">
                   <div>触发条件1</div>
@@ -149,12 +147,12 @@
                       </el-option>
                     </el-select>
 
-                    <el-select v-if="item.type == '设备'" v-model="item.facility" placeholder="请选择大品类">
+                    <el-select v-if="item.type == '设备'" v-model="item.condition" @change="changeCondition(item.condition)" placeholder="请选择大品类">
                       <el-option
                         v-for="(fac, index) in facility"
                         :key="index"
-                        :label="fac"
-                        :value="fac">
+                        :label="fac.categoryName"
+                        :value="fac.categoryId">
                       </el-option>
                     </el-select>
 
@@ -162,8 +160,8 @@
                       <el-option
                         v-for="(fac, index) in facilityChild"
                         :key="index"
-                        :label="fac"
-                        :value="fac">
+                        :label="fac.subCategoryName"
+                        :value="fac.brandId">
                       </el-option>
                     </el-select>
 
@@ -228,7 +226,7 @@
                   <el-button type="danger" icon="el-icon-delete" circle @click="delCondition(index)"></el-button>
                 </el-col>
               </el-row>
-            </div> -->
+            </div>
 
             <!-- <div class="trigger" v-for="(item, index) in form.details.carryOut.content" :key="index+'b'">
               <el-row class="trigger_row">
@@ -378,7 +376,8 @@
 import { validaTemplateName } from '@/utils/validate'
 import { getSenceTemplate, addSenceTemplate, getSenceList, getSenceSelectList } from '@/api/ruleEngine.js'
 import Paging from '@/components/paging'
-import { primaryCategory } from '@/api/categoryManager'
+import { primaryCategory, subCategory, getSubCategory } from '@/api/categoryManager'
+import { getByClass } from '@/api/image'
 
 export default {
   components: {
@@ -398,7 +397,7 @@ export default {
       type: 1,                // 弹窗类型： 1为创建，2为查看，3为编辑  
       searchVal: '',          // 搜索值
       sceneList: [],          // 场景类型列表
-      // 分页功能
+      condition: 0,           // 触发条件 0或 1与
 
       list: [                 // 虚拟列表
         {scene_num: 1, scene_type: '自动', scene_name: '睡眠', relevance_scene: '关联一', establish_time: '1996-11-05 20:00:00', amend_time: '1996-11-5 20:0:0', is_valid: true},
@@ -472,27 +471,27 @@ export default {
           }
         ],
         "condition": [                     // 触发条件
-            {
-              "conditionOpType":1,
-              "conditionType":2,
-              "resourceId":10,
-              "conditionProps": [{
-                  "businessId":"",
-                  "categoryId":"",
-                  "propertyName":"",
-                  "compareType":"",
-                  "compareValue":"",
-                  "deviceUuid":"",
-                  "subCategoryId":""
-              }]
-            }
-          ]
-        },
+          {
+            "conditionOpType":1,
+            "conditionType":2,
+            "resourceId":10,
+            "conditionProps": [{
+                "businessId":"",
+                "categoryId":"",
+                "propertyName":"",
+                "compareType":"",
+                "compareValue":"",
+                "deviceUuid":"",
+                "subCategoryId":""
+            }]
+          }
+        ]
+      },
       sceneType: ['自动','手动','安防'],
 
       // 自动方式
       detailsType: ['设备', '定时', '家庭安防'],
-      facility: ['灯', '空调', '面板'],
+      facility: [],       // 设备品类
       facilityChild: ['桐灯', '挂式空调'],
       attribute: ['温度', '风速', '模式'],
       comparison: ['大于', '等于', '小于'],
@@ -540,6 +539,8 @@ export default {
     this.getList()
     this.getSenceSelect()
     this.getCategory()
+    this.getSceneImage()
+    this.getSub()
   },
   methods: {
     // 分页方法
@@ -575,18 +576,46 @@ export default {
         this.sceneList = res.data
       })
     },
-    // 获取品类列表
+    // 获取模板图片
+    getSceneImage() {
+      const params = {
+        identityName: 'scen_icon'
+      }
+      console.log(4567)
+      getByClass({ params }).then((res) => {
+        console.log(21212, res)
+      })
+    },
+    // 获取大品类列表
     getCategory() {
       const params = {
         pageNumber: this.listQuery.page,
-        pageSize: this.listQuery.limit,
+        pageSize: 9999,
         categoryName: ""
       }
-      primaryCategory({ params }).then((res) => {
-        console.log(1231, res)
 
-        // this.sceneList = res.data
+      subCategory({ params }).then((res) => {
+        this.facility = res.data.data.list
       })
+    },
+    // 切换大品类
+    changeCondition(id) {
+      this.getSub(id)
+    },
+    // 获取子品类
+    getSub(id){
+      const params = {
+        categoryId: id,
+        subCategoryName: '',
+        pageNumber: this.listQuery.page,
+        pageSize: 9999
+      }
+
+      getSubCategory({ params }).then((res) => {
+        console.log(369, res)
+        this.facilityChild = res.data.data.list
+      })
+    
     },
     // 按时间排序
     sortKey(array, key) {

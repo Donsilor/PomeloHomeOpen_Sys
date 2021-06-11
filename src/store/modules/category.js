@@ -17,13 +17,13 @@ const category = {
         return true
       }
     },
-    getSelList: state => {
+    /* getSelList: state => {
       if (sessionStorage.getItem('selList')) {
         return JSON.parse(sessionStorage.getItem('selList'))
       } else {
         return null
       }
-    },
+    }, */
     regName: state => {
       if (localStorage.getItem('userInfos')) {
         const userInfos = JSON.parse(localStorage.getItem('userInfos'))

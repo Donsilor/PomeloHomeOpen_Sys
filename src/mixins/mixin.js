@@ -1,9 +1,9 @@
 export const mixin = {
-  data () {
+  data() {
 
   },
   methods: {
-    cutPage () {
+    cutPage() {
       if (this.listQuery.page !== 1) {
         if (Math.ceil(this.total / this.listQuery.limit) === this.listQuery.page) {
           if (this.total % this.listQuery.limit === 1) {

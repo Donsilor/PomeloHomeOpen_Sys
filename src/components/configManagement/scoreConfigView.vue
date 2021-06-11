@@ -7,12 +7,12 @@
     width="60%">
     <el-form
       ref="paramsForm"
-      :model="formData"
+      :model="formData" 
       :rules="rules"
       label-width="150px">
       <el-row>
         <el-col 
-          v-for="(item,index) in paramsList" 
+          v-for="(item,index) in paramsList"  
           :span="12" 
           :key="index" >
           <el-form-item

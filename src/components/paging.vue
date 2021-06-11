@@ -34,9 +34,18 @@ export default {
     },
     pageSize: {
       type: Array || null,
+      default:function(){
+        return [5, 15, 20, 30, 50]
+      }
     },
     pageQuery: {
       type: Object || null,
+      default:function(){
+        return {
+          page: 1,
+          limit: 5
+        }
+      }
     }
   },
   data() {
@@ -63,7 +72,6 @@ export default {
     }
   },
   created() {
-    console.log('pageQuery:',this.pageQuery)
   },
   methods: {
     // 分页管理
@@ -75,6 +83,7 @@ export default {
     },
     // 改变页码
     handleCurrentChange(val) {
+      console.log('页码', val, this.listQuery.limit)
       this.listQuery.page = val
       this.$emit('changePage', this.listQuery)
     }

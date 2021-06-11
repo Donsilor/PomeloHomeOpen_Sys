@@ -118,3 +118,8 @@ export const CATEGORY_MANAGE_SERVICE_API = {
   SUB_EDIT_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/editModel`, // 编辑物模型,
   SUB_DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/deleteModel` // 删除子品类模板
 }
+
+//子品类管理
+export const CATEGORY_MANAGE_SUB_API = {
+  GET_SUB_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/list`, // 获取子品类列表 √
+}

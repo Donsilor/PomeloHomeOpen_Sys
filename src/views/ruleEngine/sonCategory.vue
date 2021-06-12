@@ -58,6 +58,15 @@
             prop="subCategoryNameE"
             label="品类英文名"/>
           <el-table-column
+            prop="brandId"
+            label="品牌">
+            <template slot-scope="scope">
+              {{
+                scope.row.brandId | brandName
+              }}
+            </template>
+          </el-table-column>
+          <el-table-column
             prop="createTime"
             label="创建时间 "/>
           <el-table-column

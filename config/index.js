@@ -50,11 +50,11 @@ module.exports = {
         changeOrigin: true,
       },
       '/scene_web_type_mgt/':{
-        target:'http://192.168.1.18:8080',
+        target:'http://192.168.1.13:8080',
         changeOrigin: true,
       },
       '/scene_web_template_mgt/':{
-        target:'http://192.168.1.18:8080',
+        target:'http://192.168.1.13:8080',
       },
       '/icon/':{
         target:'http://192.168.1.12:8181',

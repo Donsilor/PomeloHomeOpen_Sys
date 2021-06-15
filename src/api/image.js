@@ -110,7 +110,7 @@ export function imageDetailsDelete(params){
 export function getByClass(params){
   return fetch({
     url: '/icon/details/getByClass',
-    method: 'get',
+    method: 'post',
     data:params
   })
 }

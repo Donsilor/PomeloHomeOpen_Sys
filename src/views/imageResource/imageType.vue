@@ -69,11 +69,15 @@
           <el-table-column 
             prop="createTime" 
             sortable="custom" 
-            label="创建时间 " />
+            label="创建时间" />
           <el-table-column 
             prop="updateTime" 
             sortable="custom" 
-            label="修改时间 " />
+            label="修改时间" />
+          
+          <el-table-column 
+            prop="version" 
+            label="版本号" />
           <el-table-column 
             prop="status" 
             label="状态">

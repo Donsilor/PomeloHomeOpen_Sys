@@ -195,7 +195,7 @@ export default {
               this.$message({
                 type: 'success',
                 message: '修改成功!'
-              });
+              })
               this.getList()
             }
           })

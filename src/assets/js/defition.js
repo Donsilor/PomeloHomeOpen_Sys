@@ -22,7 +22,7 @@ export const actionOptions= [
   {
     id: 0,
     value: 0,
-    label: '触发条件属性'
+    label: '触发条件'
   },
   {
     id: 1,

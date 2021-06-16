@@ -33,6 +33,9 @@
           tooltip-effect="dark"
           style="width: 100%">
           <el-table-column
+            prop="categoryNumber"
+            label="序号"/>
+          <el-table-column
             prop="categoryName"
             label="品类名称"/>
           <el-table-column
@@ -133,6 +136,7 @@ export default {
     },
     getCateGoryList() {
       const params = {
+        categoryName: this.categoryName,
         pageNumber: this.listQuery.page,
         pageSize: this.listQuery.limit
       }

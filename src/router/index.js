@@ -409,7 +409,7 @@ export const constantRouterMap = [
       },
       {
         path: 'ruleEngine',
-        name: '规则引擎',
+        name: '场景模板',
         component: _import('ruleEngine/index'),
         redirect: '/ruleEngine/template',
         children: [

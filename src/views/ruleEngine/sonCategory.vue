@@ -52,6 +52,9 @@
           tooltip-effect="dark"
           style="width: 100%">
           <el-table-column
+            prop="subCategoryNumber"
+            label="序号"/>
+          <el-table-column
             prop="subCategoryName"
             label="品类名称"/>
           <el-table-column

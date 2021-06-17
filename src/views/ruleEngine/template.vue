@@ -80,7 +80,7 @@
 
         <el-form-item :required="true" label="场景背景" prop="sceneBgIconId">
           <el-select v-model="form.sceneBgIconId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select width540">
-            <el-option v-for="(item, index) in sceneBackground" :label="item.displayName" :key="index" :value="item.id">
+            <el-option v-for="(item, index) in sceneBackground" :label="item.displayName" :key="index" :value="item.pathKey">
               <el-image
                 style="width: 100px; height: 100px"
                 :src="item.fileUrl"
@@ -91,7 +91,7 @@
 
         <el-form-item :required="true" label="场景图标" prop="sceneIconId">
           <el-select v-model="form.sceneIconId" :popper-append-to-body="false" placeholder="请选择图标" class="dialog_select width540">
-            <el-option v-for="(item, index) in sceneIcon" :label="item.displayName" :key="index" :value="item.id">
+            <el-option v-for="(item, index) in sceneIcon" :label="item.displayName" :key="index" :value="item.pathKey">
               <el-image
                 style="width: 100px; height: 100px"
                 :src="item.fileUrl"
@@ -138,84 +138,101 @@
                     <div>触发条件{{+index+1}}</div>
 
                     <div style="margin-top: 4px">
-                      <el-select v-model="item.conditionType" placeholder="请选择触发条件">
+                      <el-select v-model="item.conditionType" placeholder="请选择触发条件" @change="seleceTouch(index, item.conditionType)">
                         <el-option
-                          v-for="(det, index) in detailsType"
-                          :key="index"
+                          v-for="(det, idx) in detailsType"
+                          :key="idx"
                           :label="det"
-                          :value="index">
+                          :value="idx">
                         </el-option>
                       </el-select>
 
-                      <el-select v-if="item.conditionType == 1" v-model="item.categoryId" @change="changeCondition(item.categoryId)" placeholder="请选择大品类">
+                      <!-- ------设备------- -->
+
+                      <el-select v-if="item.conditionType == 1" v-model="item.categoryId" @change="changeCondition(index, item.categoryId)" placeholder="请选择大品类">
                         <el-option
-                          v-for="(fac, index) in facility"
-                          :key="index"
+                          v-for="(fac, idx) in facility"
+                          :key="idx"
                           :label="fac.categoryName"
                           :value="fac.categoryId">
                         </el-option>
                       </el-select>
 
-                      <el-select v-if="item.conditionType == 1 && facilityChild.length" v-model="item.conditionProps.subCategoryId" @change="getSubModelData(item.conditionProps.subCategoryId)" placeholder="请选择子品类">
+                      <el-select v-if="item.conditionType == 1 && facilityChild.length" v-model="item.conditionProps.subCategoryId" @change="getSubModelData(index, item.categoryId, item.conditionProps.subCategoryId)" placeholder="请选择子品类">
                         <el-option
-                          v-for="(faci, index) in facilityChild"
-                          :key="index"
+                          v-for="(faci, idx) in facilityChild"
+                          :key="idx"
                           :label="faci.subCategoryName"
                           :value="faci.subCategoryId">
                         </el-option>
                       </el-select>
 
-                      <el-select v-if="item.conditionType === 1" v-model="item.conditionProps.propertyName" placeholder="请选择属性">
+                      <el-select v-if="item.conditionType == 1" v-model="item.conditionProps.propertyName" placeholder="请选择属性">
                         <el-option
-                          v-for="(attr, index) in attribute"
-                          :key="index"
+                          v-for="(attr, idx) in attribute"
+                          :key="idx"
                           :label="attr.name"
                           :value="attr.identifier">
                         </el-option>
                       </el-select>
 
-                      <!-- <el-select v-if="item.conditionType === 1" v-model="item.conditionProps.compareType" placeholder="请选择比较值">
+                      <el-select v-if="item.conditionType == 1" v-model="item.conditionProps.compareType" placeholder="请选择比较值">
                         <el-option
-                          v-for="(com, index) in attribute"
-                          :key="index"
+                          v-for="(com, idx) in comparison"
+                          :key="idx"
                           :label="com"
-                          :value="com">
-                        </el-option>
-                      </el-select> -->
-
-                      <el-input v-if="item.conditionType === 1" class="width200" v-model="item.conditionProps.compareValue" placeholder="请输入内容"></el-input>
-
-                      <el-input v-if="item.conditionType === 0" class="width200" v-model="item.conditionProps.appoint_time" placeholder="请输入指定时间 HH:MM"></el-input>
-
-                      <el-select v-if="item.conditionType === 0" v-model="item.conditionProps.operation" placeholder="请选择执行方式">
-                        <el-option
-                          v-for="(exe, index) in executeMode"
-                          :key="index"
-                          :label="exe"
-                          :value="index">
+                          :value="idx">
                         </el-option>
                       </el-select>
 
+                      <el-input v-if="item.conditionType === 1" class="width200" v-model="item.conditionProps.compareValue" placeholder="请输入内容"></el-input>
+
+                      <!-- ------时间------- -->
+
+                      <el-select v-if="item.conditionType === 0" v-model="item.conditionProps.compareType" @change="changeTimeType(index, item.conditionProps.compareType)" placeholder="请选择执行方式">
+                        <el-option
+                          v-for="(exe, idx) in executeMode"
+                          :key="idx"
+                          :label="exe"
+                          :value="idx">
+                        </el-option>
+                      </el-select>
+
+                      <el-time-picker
+                        class="width200"
+                        v-if="item.conditionType == 0 && item.conditionProps.compareType == 0"
+                        v-model="item.conditionProps.compareValue"
+                        arrow-control
+                        value-format="HH:mm:ss"
+                        :picker-options="{
+                          selectableRange: '00:00:00 - 23:59:00'
+                        }"
+                        placeholder="请选择时间">
+                      </el-time-picker>
+
                       <el-date-picker
-                        v-if="item.conditionType == 0 && item.conditionProps.operation == 1"
-                        v-model="item.data"
+                        v-if="item.conditionType == 0 && item.conditionProps.compareType === 1"
+                        v-model="item.conditionProps.compareValue"
                         type="date"
-                        placeholder="选择日期"
+                        value-format="yyyy-mm-dd"
+                        placeholder="请选择日期"
                         class="width200">
                       </el-date-picker>
 
                       <el-checkbox-group 
-                        v-if="item.conditionType == 0 && item.conditionProps.operation == 3"
-                        v-model="item.weeks">
-                        <el-checkbox v-for="(week, index) in weeks" :label="week" :key="index">{{week}}</el-checkbox>
+                        v-if="item.conditionType == 0 && item.conditionProps.compareType === 2"
+                        v-model="item.conditionProps.compareValue">
+                        <el-checkbox v-for="(week, idx) in weeks" :label="idx" :key="idx">{{ week }}</el-checkbox>
                       </el-checkbox-group>
 
-                      <el-select v-if="item.conditionType == 5" v-model="item.conditionProps.security" placeholder="请选择操作">
+                      <!-- ------安防------- -->
+
+                      <el-select v-if="item.conditionType == 2" v-model="item.conditionProps.compareValue" placeholder="请选择操作">
                         <el-option
-                          v-for="(ope, index) in operation"
-                          :key="index"
+                          v-for="(ope, idx) in operation"
+                          :key="idx"
                           :label="ope"
-                          :value="index">
+                          :value="idx">
                         </el-option>
                       </el-select>
                     </div>
@@ -237,12 +254,21 @@
                   <div style="margin-top: 4px">
                     <el-select v-model="item.actionType" placeholder="请选择执行动作">
                       <el-option
-                        v-for="(det, index) in motion"
-                        :key="index"
+                        v-for="(det, idx) in motion"
+                        :key="idx"
                         :label="det"
-                        :value="index">
+                        :value="idx">
                       </el-option>
                     </el-select>
+
+                    <!-- <el-select v-model="item.actionType" placeholder="请选择操作">
+                      <el-option
+                        v-for="(det, idx) in motion"
+                        :key="idx"
+                        :label="det"
+                        :value="idx">
+                      </el-option>
+                    </el-select> -->
                   </div>
                 </el-col>
 
@@ -284,7 +310,7 @@
 </template>
 
 <script>
-import { validaTemplateName } from '@/utils/validate'
+import { validaNum, validaTemplateName } from '@/utils/validate'
 import { getSenceTemplate, addSenceTemplate, getSenceList, getSenceSelectList, delSenceTemplate, enableSenceTemplate, senceTemplateDetail, editSenceTemplate } from '@/api/ruleEngine.js'
 import Paging from '@/components/paging'
 import { primaryCategory, subCategory, getSubCategory, getModel, getSonModel } from '@/api/categoryManager'
@@ -295,7 +321,14 @@ export default {
     Paging,
   },
   data() {
-    const validateFrom = (rule, value, callback) => {
+    const validateSort = (rule, value, callback) => {
+      if (!validaNum(value)) {
+        callback(new Error('请输入正确的序号(正整数)'))
+      } else {
+        callback()
+      }
+    }
+    const validateName = (rule, value, callback) => {
       if (!validaTemplateName(value)) {
         callback(new Error('请输入正确的场景名称'))
       } else {
@@ -333,15 +366,15 @@ export default {
             "actionType": "",            // Y 条件类型（0定时 1设备 2安防 3面板 4手动场景）
             "resourceId": "",            // Y 图片资源id
             "sort": 0,                  // Y 排序
-            "actionProps": [{                 // N 条件/动作物模型json	
+            "actionProps": {                 // N 条件/动作物模型json	
                 "businessId": "",      // N 设备所属厂商ID
                 "categoryId": "",       // N 设备所属品类ID
                 "propertyName": "",     // N 属性名称
-                "compareType": "",          // N 比较类型
+                "compareType": "0",          // N 比较类型
                 "compareValue": "",         // N 比较的值
                 "deviceUuid": "",       // N 设备ID
                 "subCategoryId": ""    // N 设备所属子品类ID
-            }]
+            }
           },
           // {
           //     "actionOpType": 0,
@@ -352,7 +385,7 @@ export default {
           //         {
           //             "propertyName": "",
           //             "compareType": "",
-          //             "compare_value": ""
+          //             "compareValue": ""
           //         },
           //         {
           //             "propertyName": "",
@@ -368,7 +401,7 @@ export default {
             "conditionOpType": 0,
             "conditionType": "",
             "resourceId": "",
-            "conditionProps": [{
+            "conditionProps": {
                 "businessId": "",
                 "categoryId": "",
                 "propertyName": "",
@@ -376,12 +409,12 @@ export default {
                 "compareValue": "",
                 "deviceUuid": "",
                 "subCategoryId": ""
-            }]
+            }
           }
         ]
       },
+      
       sceneType: ['手动','自动','安防'],
-
       detailsType: ['定时','设备','安防','面板','手动场景'],
       facility: [],       // 设备品类
       facilityChild: [],
@@ -390,7 +423,8 @@ export default {
       executeMode: ['只执行一次','指定日期','每周'],
       weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
       operation: ['报警', '在家安防', '离家安防', '撤防'], 
-      motion: ['回家', '离家'],
+      motion: ['离家安防', '撤防'],
+      
 
       condition: 9,           // 触发条件 0或 1与
       isToModify: false,
@@ -402,8 +436,8 @@ export default {
       delId: '',
       
       formRules: {
-        // sort: [{ required: true, validator: validateFrom }],
-        sceneName: [{ required: true, validator: validateFrom }]
+        sort: [{ required: true, validator: validateSort, trigger: 'blur' }],
+        sceneName: [{ required: true, validator: validateName, trigger: 'blur'}]
       },
     }
   },
@@ -443,7 +477,7 @@ export default {
             "actionType": "",
             "resourceId": "",
             "sort": 0,
-            "actionProps": [{	
+            "actionProps": {	
                 "businessId": "",
                 "categoryId": "",
                 "propertyName": "",
@@ -451,7 +485,7 @@ export default {
                 "compareValue": "",
                 "deviceUuid": "",
                 "subCategoryId": ""
-            }]
+            }
           }
         ],
         "condition": [
@@ -459,7 +493,7 @@ export default {
             "conditionOpType": 0,
             "conditionType": "",
             "resourceId": "",
-            "conditionProps": [{
+            "conditionProps": {
                 "businessId": "",
                 "categoryId": "",
                 "propertyName": "",
@@ -467,7 +501,7 @@ export default {
                 "compareValue": "",
                 "deviceUuid": "",
                 "subCategoryId": ""
-            }]
+            }
           }
         ]
       }
@@ -527,8 +561,57 @@ export default {
         this.facility = res.data.data.list
       })
     },
+    // 选择触发条件
+    seleceTouch(index, val){
+      let obj = {
+        "conditionOpType": 0,
+        "conditionType": val,
+        "resourceId": "",
+        "conditionProps": {
+          "businessId": "",
+          "categoryId": "",
+          "propertyName": "",
+          "compareType": "",
+          "compareValue": "",
+          "deviceUuid": "",
+          "subCategoryId": ""
+        }
+      }
+
+      this.form.condition.splice(index, 1, obj)
+          
+      if(val == 0){
+        // 定时
+        this.form.condition[index].conditionProps.propertyName = 'appoint_time'
+        this.form.condition[index].conditionProps.compareType = 0
+        this.form.condition[index].conditionProps.compareValue = '12:00:00'
+      }else if(val == 2){
+        // this.form.condition[index].conditionProps.propertyName = 'appoint_time'
+      }
+
+    },
+    // 切换定时时执行方法
+    changeTimeType(index, val){
+      if(val == 0){
+        this.form.condition[index].conditionProps.propertyName = 'appoint_time'
+        this.form.condition[index].conditionProps.compareValue = ''
+      }else if(val == 1){
+        this.form.condition[index].conditionProps.propertyName = 'appoint_date'
+        this.form.condition[index].conditionProps.compareValue = ''
+      }else if(val == 2){
+        this.form.condition[index].conditionProps.propertyName = 'weeks'
+        this.form.condition[index].conditionProps.compareValue = []
+      }
+    },
     // 切换大品类，获取子品类
-    changeCondition(id) {
+    changeCondition(index, id) {
+      let condition = this.form.condition
+      condition.forEach((o, i) => {
+        if(i == index){
+          condition.categoryId = id
+        }
+      })
+
       const params = {
         categoryId: id,
         subCategoryName: '',
@@ -543,16 +626,23 @@ export default {
 
         // 没有子品类直接调大品类物模型
         if(!this.facilityChild.length){
-          this.getModelData(id)
+          this.getModelData(index, id)
           // 只有一个子品类，直接调子品类物模型
         }else if(this.facilityChild.length == 1){
-          this.getSubModelData(this.facilityChild[0].subCategoryId)
+          let condition = this.form.condition
+          condition.forEach((o, i) => {
+            if(i == index){
+              condition.subCategoryId = id
+            }
+          })
+
+          this.getSubModelData(index, id, this.facilityChild[0].subCategoryId)
         }
       })
     },
     
     // 获取大品类物模型
-    getModelData(id) {
+    getModelData(index, id) {
       const params = {
         categoryId: id,
         key: ''
@@ -568,7 +658,16 @@ export default {
       }
     },
     // 获取子品类物模型
-    getSubModelData(id) {
+    getSubModelData(index,bigId, id) {
+      let condition = this.form.condition
+      condition.forEach((o, i) => {
+        if(i == index){
+          console.log(2323, o)
+          o.conditionProps.categoryId = bigId
+          o.conditionProps.subCategoryId = id
+        }
+      })
+
       const params = {
         subCategoryId: id,
         key: ''
@@ -609,7 +708,6 @@ export default {
       }
 
       senceTemplateDetail({ params }).then((res) => {
-        console.log(778,res)
         if(res.code == 200){
           let data = res.data;
           this.form.id = data.id
@@ -676,7 +774,7 @@ export default {
         "conditionOpType": 1,
         "conditionType": "",
         "resourceId": "",
-        "conditionProps": [{
+        "conditionProps": {
             "businessId": "",
             "categoryId": "",
             "propertyName": "",
@@ -684,7 +782,7 @@ export default {
             "compareValue": "",
             "deviceUuid": "",
             "subCategoryId": ""
-        }]
+        }
       }
 
       this.form.condition.push(tem)
@@ -700,7 +798,7 @@ export default {
         "actionType": "",
         "resourceId": "",
         "sort": 0,
-        "actionProps": [{	
+        "actionProps": {	
             "businessId": "",
             "categoryId": "",
             "propertyName": "",
@@ -708,7 +806,7 @@ export default {
             "compareValue": "",
             "deviceUuid": "",
             "subCategoryId": ""
-        }]
+        }
       }
 
       this.form.action.push(tem)
@@ -719,6 +817,9 @@ export default {
     },
     // 确认添加模板
     addOrEdit() {
+                this.addTemplate()
+return
+
       if(this.type == 2){
         this.dialogShow = false
         return
@@ -776,6 +877,8 @@ export default {
     },
     // 添加模板
     addTemplate() {
+      console.log(3434, this.form)
+      return
       this.form.condition.forEach(item => {
         item.conditionOpType = this.condition
       })

@@ -73,6 +73,12 @@ export function letterAndCN(rule, value, callback){
     }
 }
 
+/*纯数字*/
+export function validaNum(str) {
+    const reg = /^\d+$/
+    return reg.test(str)
+  }
+
 /*中文英文字母下划线，首位不为数字*/
 export function validaTemplateName(str) {
     var reg = /^[a-zA-Z_\u4e00-\u9fa5][a-zA-Z0-9_\u4e00-\u9fa5]*$/;

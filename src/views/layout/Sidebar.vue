@@ -62,9 +62,9 @@ export default {
           icon: 'el-icon-view'
         },
         {
-          name: '规则引擎',
+          name: '场景模板',
           url: '/ruleEngine',
-          icon: 'el-icon-s-cooperation'
+          icon: 'el-icon-document-copy'
         },
         {
           name: '资源管理',

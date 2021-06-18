@@ -209,9 +209,7 @@
               >
                 <el-input 
                   v-model="item.key" 
-                  placeholder="编号如0" 
-                  type="number" 
-                  onkeyup="value=value.replace(/[^\d]/g,'')"/>
+                  placeholder="编号如0"/>
               </el-form-item>
             </el-col>
             <el-col 

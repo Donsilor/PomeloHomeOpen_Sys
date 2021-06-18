@@ -169,9 +169,7 @@
                 :rules="paramsRules.enumNum">
                 <el-input
                   v-model="item.key"
-                  placeholder="编号如0"
-                  onkeyup="value=value.replace(/[^\d]/g,'')"
-                  type="number"/>
+                  placeholder="编号如0"/>
               </el-form-item>
             </el-col>
             <el-col 

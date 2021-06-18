@@ -221,14 +221,3 @@ export function delSonModel(params) {
     data: params
   })
 }
-
-
-
-// 获取子品类列表接口
-export function getSubCategory(params) {
-  return axios({
-    url: CATEGORY_MANAGE_SUB_API.GET_SUB_LIST,
-    method: 'post',
-    data: params
-  })
-}

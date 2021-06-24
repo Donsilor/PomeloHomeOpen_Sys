@@ -1133,63 +1133,63 @@ export default {
         return
       }
 
-      // this.$refs.permissionForm.validate(valid => {
-      //   if (valid) {
-      //     // 判断触发条件的关系（‘或’或者‘与’）
-      //     if(this.condition == 9){
-      //       // 未选择
-      //       var res = this.form.condition.every(o => {
-      //         return o.conditionType == 1
-      //       })
+      this.$refs.permissionForm.validate(valid => {
+        if (valid) {
+          // 判断触发条件的关系（‘或’或者‘与’）
+          if(this.condition == 9){
+            // 未选择
+            var res = this.form.condition.every(o => {
+              return o.conditionType == 1
+            })
 
-      //       if(res){
-      //         this.dialogType = 2;
-      //         this.dialogVisible = true;
-      //         this.dialogContent = '请选择触发条件的关系'
-      //       }else{
-      //         this.dialogType = 3;
-      //         this.dialogVisible = true;
-      //         this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
-      //       }
-      //     }else if(this.condition == 1){
-      //       // 与
-      //       var res = this.form.condition.every(o => {
-      //         return o.conditionType == 1
-      //       })
+            if(res){
+              this.dialogType = 2;
+              this.dialogVisible = true;
+              this.dialogContent = '请选择触发条件的关系'
+            }else{
+              this.dialogType = 3;
+              this.dialogVisible = true;
+              this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
+            }
+          }else if(this.condition == 1){
+            // 与
+            var res = this.form.condition.every(o => {
+              return o.conditionType == 1
+            })
 
-      //       if(res){
-      //         if(this.type == 1){
-      //           this.addTemplate()
-      //         }else if(this.type ==3){
-      //           this.editTemplate()
-      //         }
-      //       }else{
-      //         this.dialogType = 3;
-      //         this.dialogVisible = true;
-      //         this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
-      //       }
-      //     }else{
-      //         // 或
-      //         if(this.type == 1){
-      //           this.addTemplate()
-      //         }else if(this.type ==3){
-      //           this.editTemplate()
-      //         }
-      //     }
+            if(res){
+              if(this.type == 1){
+                this.addTemplate()
+              }else if(this.type ==3){
+                this.editTemplate()
+              }
+            }else{
+              this.dialogType = 3;
+              this.dialogVisible = true;
+              this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
+            }
+          }else{
+              // 或
+              if(this.type == 1){
+                this.addTemplate()
+              }else if(this.type ==3){
+                this.editTemplate()
+              }
+          }
 
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
 
     
-      this.addTemplate() 
+      // this.addTemplate() 
     },
     // 添加模板
     addTemplate() {
-      console.log(121212, this.form)
-      return
+      // console.log(121212, this.form)
+      // return
       this.form.condition.forEach(item => {
         item.conditionOpType = this.condition
       })

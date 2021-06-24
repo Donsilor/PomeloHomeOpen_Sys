@@ -46,18 +46,19 @@ module.exports = {
         changeOrigin: true,
       },
       '/v1/':{
-        target:'http://192.168.1.18:7101',
+        target:'http://10.0.8.169:8080',
         changeOrigin: true,
       },
       '/scene_web_type_mgt/':{
-        target:'http://192.168.1.13:8080',
+        target:'http://10.0.8.169:8080',
         changeOrigin: true,
       },
       '/scene_web_template_mgt/':{
-        target:'http://192.168.1.13:8080',
+        target:'http://10.0.8.169:8080',
+        changeOrigin: true,
       },
       '/icon/':{
-        target:'http://192.168.1.12:8181',
+        target:'http://10.0.8.169:8080',
         changeOrigin: true,
       }
 

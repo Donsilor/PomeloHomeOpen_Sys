@@ -46,19 +46,19 @@ module.exports = {
         changeOrigin: true,
       },
       '/v1/':{
-        target:'http://10.0.8.169:8080',
+        target:'http://opencheck-uat.evergrande.cn/api2/category-model-service/',
         changeOrigin: true,
       },
       '/scene_web_type_mgt/':{
-        target:'http://10.0.8.169:8080',
+        target:'http://opencheck-uat.evergrande.cn/api2/scene-service/',
         changeOrigin: true,
       },
       '/scene_web_template_mgt/':{
-        target:'http://10.0.8.169:8080',
+        target:'http://opencheck-uat.evergrande.cn/api2/scene-service/',
         changeOrigin: true,
       },
       '/icon/':{
-        target:'http://10.0.8.169:8080',
+        target:'http://opencheck-uat.evergrande.cn/api2/resources-service/',
         changeOrigin: true,
       }
 

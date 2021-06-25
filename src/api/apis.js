@@ -110,11 +110,13 @@ export const CATEGORY_MANAGE_SERVICE_API = {
   ADD_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/addModel`, // 添加物模型,
   EDIT_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/editModel`, // 编辑物模型,
   DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/deleteModel`, // 删除子品类模板
+  GET_MODELS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/lists`, // 批量获取大品类物模型（基本信息+图片）
 
   // 子品类模板
   SUB_UPLOAD: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/upload`, // 上传物模型,
   SUB_GET_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/getModel`, // 获取物模型,
   SUB_ADD_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/addModel`, // 添加物模型,
   SUB_EDIT_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/editModel`, // 编辑物模型,
-  SUB_DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/deleteModel` // 删除子品类模板
+  SUB_DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/deleteModel`, // 删除子品类模板
+  SUB_GET_MODELS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/lists` // 批量获取子品类（基本信息+图片）
 }

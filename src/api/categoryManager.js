@@ -155,6 +155,14 @@ export function getModel(params) {
     data: params
   })
 }
+// 批量获取大品类物模型（基本信息+图片）
+export function getModels(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.GET_MODELS,
+    method: 'post',
+    data: params
+  })
+}
 // 添加物模型模块接口
 export function addSubModel(params) {
   return axios({
@@ -193,6 +201,14 @@ export function sonUpload(params) {
 export function getSonModel(params) {
   return axios({
     url: CATEGORY_MANAGE_SERVICE_API.SUB_GET_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+// 批量获取子品类物模型（基本信息+图片）
+export function getSonModels(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SUB_GET_MODELS,
     method: 'post',
     data: params
   })

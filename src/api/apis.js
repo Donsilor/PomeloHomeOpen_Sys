@@ -9,7 +9,8 @@ const MODEL_SERVICE = '/paas-business' // 其他模块名称统一
 const AUTH_SERVICE = '/pass-central-authentication' // 鉴权
 const FILE_SERVICE = '/file-service'
 const API_PLATFORM = '/api/paas-platform'// 平台服务层（接口的前缀）
-const BASE_URL =  API_VERSION
+const WEB_SERVER = '/api2/category-model-service'
+const BASE_URL =  WEB_SERVER + API_VERSION
 const AUTH_BASE_URL = API_PLATFORM + AUTH_SERVICE
 const FILE_BASE_URL = API_PLATFORM + FILE_SERVICE + API_VERSION
 // 代理标记肯定是要的，在本地开发才能识别不同服务跳转到不同的本地服务器

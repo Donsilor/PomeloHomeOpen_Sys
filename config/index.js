@@ -45,24 +45,26 @@ module.exports = {
           // target: 'http://172.26.84.246:8080/api/ext', // 本地测试
         changeOrigin: true,
       },
-      '/v1/':{
+      /* '/v1/':{
         target:'http://opencheck-uat.evergrande.cn/api2/category-model-service/',
         changeOrigin: true,
-      },
-      '/scene_web_type_mgt/':{
+      }, */
+      /* '/scene_web_type_mgt/':{
         target:'http://opencheck-uat.evergrande.cn/api2/scene-service/',
         changeOrigin: true,
       },
       '/scene_web_template_mgt/':{
         target:'http://opencheck-uat.evergrande.cn/api2/scene-service/',
         changeOrigin: true,
-      },
-      '/icon/':{
+      }, */
+      /* '/icon/':{
         target:'http://opencheck-uat.evergrande.cn/api2/resources-service/',
         changeOrigin: true,
+      }, */
+      '/api2/':{
+        target:'http://opencheck-uat.evergrande.cn',
+        changeOrigin: true,
       }
-
-
       // 192.168.1.12:8181      徐
       // 192.168.1.18:7101      钟
       // 192.168.1.13:8080      张

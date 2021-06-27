@@ -117,7 +117,7 @@ export default {
       if (this.importPhydata.type === 'category') {
         const formData = new FormData()
         formData.append('file', item.file)
-        this.importPhydata.val === 'son' ? formData.append('subCategoryId', this.importPhydata.beforeKey) : formData.append('categoryId', this.importPhydata.beforeKey)
+        this.importPhydata.val === 'son' ? formData.append('subCategoryId', this.importPhydata.deviceSubCategoryId) : formData.append('categoryId', this.importPhydata.deviceCategoryId)
         formData.append('id', uuidv4())
         formData.append('timestamp', Date.parse(new Date()))
         formData.append('version', '1.0')

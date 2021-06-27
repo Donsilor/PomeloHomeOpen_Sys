@@ -164,7 +164,8 @@ export default {
           path: 'sonCategory',
           query: {
             categoryId: row.categoryId,
-            categoryName: row.categoryName
+            categoryName: row.categoryName,
+            deviceCategoryId: row.categoryNumber
           }
         })
         break
@@ -173,7 +174,8 @@ export default {
           path: 'categoryEditPage',
           query: {
             categoryId: row.categoryId,
-            categoryName: row.categoryName
+            categoryName: row.categoryName,
+            deviceCategoryId: row.categoryNumber
           }
         })
         // this.addDialogVisible = true
@@ -187,7 +189,8 @@ export default {
           type: 'error'
         }).then(() => {
           const params = {
-            categoryId: row.categoryId
+            categoryId: row.categoryId,
+            deviceCategoryId: row.categoryNumber
           }
           delSubCategory({ params }).then((res) => {
             if (res.data.code === 200 || res.data.code === 0) {

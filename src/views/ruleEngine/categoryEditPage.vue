@@ -21,7 +21,8 @@
             v-if="item.name === activeName" 
             ref="productRef" 
             :is="item.content" 
-            :category-name ="categoryName"
+            :category-name="categoryName"
+            :device-category-id="deviceCategoryId"
             :category-id="categoryId"/>
         </keep-alive>
       </el-tab-pane>
@@ -38,6 +39,7 @@ export default {
       editStatus: '0',
       activeName: '0',
       categoryId: '',
+      deviceCategoryId:'',
       categoryName: '',
       tableOptions: [
         {
@@ -57,6 +59,7 @@ export default {
     console.log(this.$route.query.categoryId)
     this.categoryId = this.$route.query.categoryId
     this.categoryName = this.$route.query.categoryName
+    this.deviceCategoryId = this.$route.query.deviceCategoryId
     this.getActiveName()
   },
   methods: {

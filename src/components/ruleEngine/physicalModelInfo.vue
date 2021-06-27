@@ -102,7 +102,11 @@ export default {
     categoryId: {
       type: String,
       default: ''
-    }
+    },
+    deviceCategoryId:{
+      type: String,
+      default: ''
+    },
   },
   data() {
     return {
@@ -179,6 +183,7 @@ export default {
       this.tableData = []
       const params = {
         params: {
+          deviceCategoryId: this.deviceCategoryId,
           categoryId: this.categoryId,
           key:''
         }
@@ -245,12 +250,14 @@ export default {
       case 'addCustom':
         this.proParams.type = 'category'
         this.proParams.prokey = this.categoryId
+        this.proParams.deviceCategoryId = this.deviceCategoryId
         this.addCustomDialogVisible = true
         console.log('addCustom')
         break
       case 'into':
         this.importPhydata.date = Date.parse(new Date())
         this.importPhydata.beforeKey = this.categoryId
+        this.importPhydata.deviceCategoryId = this.deviceCategoryId
         this.showImportModel.show = true
         break
       case 'PhysicalModel':
@@ -262,6 +269,7 @@ export default {
       // this.proParams.prokey = this.sRow.productKey
       this.proParams.type = 'category'
       this.proParams.prokey = this.categoryId
+      this.proParams.deviceCategoryId = this.deviceCategoryId
       this.infosDialogVisible = true
       row.status = 'edit'
       row.index = index
@@ -277,6 +285,7 @@ export default {
         console.log(row)
         const params = {
           params: {
+            deviceCategoryId: this.deviceCategoryId,
             categoryId: this.categoryId,
             identifier: row.identifier,
             abilityType: row.parentId === '服务' ? 2 : row.parentId === '事件' ? 3 : 1

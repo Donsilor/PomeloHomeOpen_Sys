@@ -171,6 +171,7 @@ export default {
     addCategory() {
       this.propData.status = 0
       this.propData.categoryId = this.$route.query.categoryId
+      this.propData.categoryNumber = this.$route.query.deviceCategoryId
       this.addDialogVisible = true
     },
     closeAddDialog(val) {
@@ -187,7 +188,8 @@ export default {
           path: 'sonCategoryEditPage',
           query: {
             subCategoryId: row.subCategoryId,
-            subCategoryName: row.subCategoryName
+            subCategoryName: row.subCategoryName,
+            deviceSubCategoryId: row.subCategoryNumber
           }
         })
         // this.addDialogVisible = true

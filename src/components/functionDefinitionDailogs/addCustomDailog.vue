@@ -755,7 +755,8 @@ export default {
           if (this.proParams.type && this.proParams.type === 'category') {
             params = {
               params: {
-                categoryId: this.proParams.prokey
+                categoryId: this.proParams.prokey,
+                deviceCategoryId: this.proParams.deviceCategoryId
               }
             }
             console.log('0', params)
@@ -787,6 +788,7 @@ export default {
             if(this.proParams.val === 'son' ){
               delete params.params.categoryId
               params.params.subCategoryId = this.proParams.prokey
+              params.params.deviceSubCategoryId =  this.proParams.deviceSubCategoryId
               console.log(params)
               addSonModel(params).then((res) => {
                 if (res.data.code === 200) {

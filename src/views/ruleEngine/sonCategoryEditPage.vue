@@ -22,6 +22,7 @@
             ref="productRef" 
             :is="item.content" 
             :category-name ="subCategoryName"
+            :device-sub-category-id = "deviceSubCategoryId"
             :sub-category-id="subCategoryId"/>
         </keep-alive>
       </el-tab-pane>
@@ -38,6 +39,7 @@ export default {
       editStatus: '0',
       activeName: '0',
       subCategoryId: '',
+      deviceSubCategoryId:'',
       subCategoryName: '',
       tableOptions: [
         {
@@ -57,6 +59,7 @@ export default {
     console.log(this.$route.query.subCategoryId)
     this.subCategoryId = this.$route.query.subCategoryId
     this.subCategoryName = this.$route.query.subCategoryName
+    this.deviceSubCategoryId = this.$route.query.deviceSubCategoryId
     this.getActiveName()
   },
   methods: {

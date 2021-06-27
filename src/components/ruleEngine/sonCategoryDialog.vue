@@ -425,6 +425,7 @@ export default {
           this.form.fileList = list
           if (this.propData.status) {
             this.form.subCategoryId = this.propData.subCategoryId
+            this.form.categoryNumber = this.propData.categoryNumber
             const params = Object.assign({}, this.form)
             editSonCategory({ params }).then((res) => {
               if (res.data.code === 200 || res.data.code === 0) {
@@ -436,6 +437,7 @@ export default {
               }
             })
           } else {
+            this.form.categoryNumber = this.propData.categoryNumber
             this.form.categoryId = this.propData.categoryId
             const params = Object.assign({}, this.form)
             addSonCategory({ params }).then((res) => {

@@ -21,7 +21,8 @@
         label-width="100px"
       >
         <el-form-item 
-          label="所属类别" 
+          v-if="propData.val !== 'top'" 
+          label="所属类别"
           prop="parentName">
           <el-input
             :disabled="propData.val !== 'top'"

@@ -66,8 +66,13 @@
                 <el-button
                   type="primary"
                   size="mini"
+                  @click="handlerClick(scope.row, 'viewSon')"
+                >查看子类</el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
                   @click="handlerClick(scope.row, 'view')"
-                >查看</el-button>
+                >查看图片</el-button>
                 <el-button
                   type="primary"
                   size="mini"
@@ -184,7 +189,14 @@ export default {
     handlerClick(row,sty) {
       switch (sty) {
       case 'view':
-        console.log(1)
+        this.$router.push({
+          path: 'imageType',
+          query:{
+            id: row.id
+          }
+        })
+        break
+      case 'viewSon':
         this.$router.push({
           path: 'template',
           query:{

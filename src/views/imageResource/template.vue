@@ -57,6 +57,7 @@
         >
           <el-table-column 
             prop="id" 
+            width="80px"
             label="序号">
             <template slot-scope="scope">
               {{ (listQuery.page -1 ) * listQuery.limit + scope.$index + 1 }}
@@ -79,7 +80,9 @@
             sortable="custom"
             prop="updateTime" 
             label="修改时间 " />
-          <el-table-column label="操作">
+          <el-table-column 
+            label="操作" 
+            width="350px">
             <template slot-scope="scope">
               <div class="opreationBtn">
                 <el-button

@@ -346,7 +346,7 @@ export default {
       }
       console.log(res.result)
       this.fileList[obj].fileUrl = res.result.url
-      this.fileList[obj].fileKey = res.result.md5
+      this.fileList[obj].fileKey = res.result.object
       this.fileList[obj].fileName = res.result.filename
       /* switch (obj) {
         case 0:

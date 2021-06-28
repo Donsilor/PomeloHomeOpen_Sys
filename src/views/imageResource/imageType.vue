@@ -51,6 +51,7 @@
           @sort-change="tableChange"
         >
           <el-table-column 
+            width="80px"
             prop="id" 
             label="序号" >
             <template slot-scope="scope">
@@ -89,7 +90,7 @@
           </el-table-column>
           <el-table-column 
             label="操作" 
-            width="300px">
+            width="400px">
             <template slot-scope="scope">
               <div class="opreationBtn">
                 <el-button

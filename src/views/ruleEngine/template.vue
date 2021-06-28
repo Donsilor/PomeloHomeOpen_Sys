@@ -151,23 +151,12 @@
                       </el-select>
 
                       <!-- 非设备背景图 -->
-                      <el-select v-if="item.conditionType === 0 || item.conditionType === 2" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
+                      <el-select v-if="item.conditionType === 0 || item.conditionType === 2" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景1" class="dialog_select position">
                         <el-option v-for="(item, index) in modelCondition[index].unFacilityIcon" :label="item.displayName" :key="index" :value="item.fileId">
                           <el-image
-                            style="width: 100px; height: 100px"
-                            :src="item.fileUrl"
-                            fit="fit"></el-image>
-                        </el-option>
-                      </el-select>
-
-                      <!-- 设备背景图 -->
-                      <el-select v-if="item.conditionType === 1" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                        <el-option v-for="(item, index) in modelCondition[index].facilityIcon" :label="item.fileName" :key="index" :value="item.fileId">
-                          <el-image
-                            class="img"
                             style="width: 100%; height: 100%"
                             :src="item.fileUrl"
-                            fit="cover"></el-image>
+                            fit="fit"></el-image>
                         </el-option>
                       </el-select>
 
@@ -188,6 +177,17 @@
                           :key="idx"
                           :label="faci.subCategoryName"
                           :value="faci.subCategoryNumber">
+                        </el-option>
+                      </el-select>
+
+                      <!-- 设备背景图 -->
+                      <el-select v-if="item.conditionType === 1 && item.conditionProps[0].categoryId" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
+                        <el-option v-for="(item, index) in modelCondition[index].facilityIcon" :label="item.fileName" :key="index" :value="item.fileId">
+                          <el-image
+                            class="img"
+                            style="width: 100%; height: 100%"
+                            :src="item.fileUrl"
+                            fit="cover"></el-image>
                         </el-option>
                       </el-select>
 
@@ -296,22 +296,11 @@
 
                     <!-- 非设备背景图 -->
                     <el-select v-if="item.actionType === 0" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                      <el-option v-for="(item, index) in modelAction[index].unFacilityIcon" :label="item.displayName" :key="index" :value="item.fileId">
+                      <el-option v-for="(item, idx) in modelAction[index].unFacilityIcon" :label="item.displayName" :key="idx" :value="item.fileId">
                         <el-image
                           style="width: 100px; height: 100px"
                           :src="item.fileUrl"
                           fit="fit"></el-image>
-                      </el-option>
-                    </el-select>
-
-                    <!-- 设备背景图 -->
-                    <el-select v-if="item.actionType === 1" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                      <el-option v-for="(item, index) in modelAction[index].facilityIcon" :label="item.fileName" :key="index" :value="item.fileId">
-                        <el-image
-                          class="img"
-                          style="width: 100%; height: 100%"
-                          :src="item.fileUrl"
-                          fit="cover"></el-image>
                       </el-option>
                     </el-select>
 
@@ -332,6 +321,17 @@
                         :key="idx"
                         :label="faci.subCategoryName"
                         :value="faci.subCategoryNumber">
+                      </el-option>
+                    </el-select>
+
+                    <!-- 设备背景图 -->
+                    <el-select v-if="item.actionType === 1" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
+                      <el-option v-for="(item, index) in modelAction[index].facilityIcon" :label="item.fileName" :key="index" :value="item.fileId">
+                        <el-image
+                          class="img"
+                          style="width: 100%; height: 100%"
+                          :src="item.fileUrl"
+                          fit="cover"></el-image>
                       </el-option>
                     </el-select>
 
@@ -559,6 +559,7 @@ export default {
       detailsType: ['定时','设备','安防'],
       manualType: ['家庭安防','设备'],
       facility: [],        // 设备大品类
+      conditionImgs: [],   //触发条件图片集合（定时，设备，安防）
 
       condition: 9,           // 触发条件 0或 1与
       isToModify: false,
@@ -699,9 +700,13 @@ export default {
         this.sceneIcon = res.data
       })
 
-      getByClass({ identityName: ' trigger_condition_icon' }).then((res) => {
-        // console.log(1212, res)
-        // this.sceneIcon = res.data
+      getByClass({ identityName: 'trigger_condition_icon' }).then((res) => {
+        var imgPath = "http://pho-uat.oss-cn-shenzhen.aliyuncs.com/";
+
+        this.conditionImgs = res.data
+        this.conditionImgs.forEach((item, index) => {
+          this.conditionImgs[index].fileUrl = imgPath + item.pathKey
+        })
       })
     },
     // 获取大品类列表
@@ -736,7 +741,10 @@ export default {
       }
 
       this.modelCondition[index].facilityIcon = []
-      this.modelCondition[index].unfacilityIcon = []
+      this.modelCondition[index].unFacilityIcon = []
+      if(this.conditionImgs){
+        this.modelCondition[index].unFacilityIcon.push(this.conditionImgs[val])
+      }
 
       if(val == 1){
         // 设备
@@ -755,12 +763,6 @@ export default {
         }
 
         this.form.condition.splice(index, 1, obj)
-
-        // 获取定时图片
-        getByClass({ identityName: 'trigger_condition_icon' }).then((res) => {
-          // console.log(1231, res)
-          // this.modelCondition[index].unFacilityIcon = res.data
-        })
       }else if(val == 2){
         obj = {
           "conditionOpType": 0,
@@ -774,11 +776,6 @@ export default {
         }
 
         this.form.condition.splice(index, 1, obj)
-
-        // 获取安防图片
-        getByClass({ identityName: 'trigger_condition_icon' }).then((res) => {
-          // this.modelCondition[index].unFacilityIcon = res.data
-        })
       }
 
     },
@@ -821,11 +818,6 @@ export default {
         }
 
         this.form.action.splice(index, 1, obj)
-
-        // 获取安防图片
-        getByClass({ identityName: 'trigger_condition_icon' }).then((res) => {
-          // this.modelCondition[index].unFacilityIcon = res.data
-        })
       }
 
     },
@@ -997,6 +989,7 @@ export default {
       this.form.condition[index].conditionProps[0].compareType = ''
       this.form.condition[index].conditionProps[0].compareValue = ''
       this.form.condition[index].resourceId = ''
+      this.form.condition[index].conditionProps[0].businessId = ''
 
       this.modelCondition[index].propertyName = ''
       this.modelCondition[index].compareType = ''
@@ -1015,6 +1008,7 @@ export default {
         getSonModel({ params }).then((res) => {
           if(res.data.code == 200){
             // 拿到子品类物模型，赋值
+            this.form.condition[index].conditionProps[0].businessId = Number(res.data.data.brandId)
             this.modelCondition[index].attribute = res.data.data.thingModel.properties
             this.hasAction('condition', index)
           }
@@ -1042,6 +1036,13 @@ export default {
       this.form.action[index].actionProps[0].compareType = ''
       this.form.action[index].actionProps[0].compareValue = ''
       this.form.action[index].resourceId = ''
+      this.form.condition[index].actionProps[0].businessId = ''
+
+      this.modelAction[index].propertyName = ''
+      this.modelAction[index].compareType = ''
+      this.modelAction[index].compareValue = ''
+      this.modelAction[index].facilityIcon = ''
+
 
       const params = {
         deviceCategoryId: Number(num),
@@ -1055,6 +1056,7 @@ export default {
         getSonModel({ params }).then((res) => {
           if(res.data.code == 200){
             // 拿到子品类物模型，赋值
+            this.form.condition[index].actionProps[0].businessId = Number(res.data.data.brandId)
             this.modelAction[index].attribute = res.data.data.thingModel.properties
             this.hasAction('action', index)
           }
@@ -1643,8 +1645,8 @@ export default {
     },
     // 添加模板
     addTemplate() {
-      console.log(121212, this.form)
-      return
+      // console.log(121212, this.form)
+      // return
       this.form.condition.forEach(item => {
         item.conditionOpType = this.condition
       })

@@ -21,6 +21,17 @@
         label-width="100px"
       >
         <el-form-item 
+          label="所属类别" 
+          prop="parentName">
+          <el-input
+            :disabled="propData.val !== 'top'"
+            v-model="form.parentName"
+            autocomplete="off"
+            type="text"
+            placeholder="所属类别"
+          />
+        </el-form-item>
+        <el-form-item 
           label="类型" 
           prop="className">
           <el-input
@@ -103,7 +114,9 @@ export default {
       form: {
         className: '',
         usage: '',
-        identityName:''
+        identityName:'',
+        parentName:'',
+        parentId:''
       },
       id:1,
       rules: {
@@ -114,6 +127,7 @@ export default {
           { required: true, message: '英文名称不能为空', trigger: 'change' },
         ],
         usage: [{ required: true, message: '功能不能为空', trigger: 'blur' }],
+        parentName: [{ required: true, message: '父级类别名不能为空', trigger: 'blur' }],
       },
     }
   },
@@ -123,6 +137,10 @@ export default {
         this.form[e] = this.propData[e]
       })
       console.log(this.form)
+    }
+    if(this.propData.val === 'son'){
+      this.form.parentId = this.propData.parentId
+      this.form.parentName = this.propData.name
     }
   },
   methods: {
@@ -134,6 +152,7 @@ export default {
         if (valid) {
           if (this.propData.status === 2) {
             const params = Object.assign({}, this.form)
+            if(this.propData.val === 'top') params.parentId = null
             params.id = this.propData.id
             imageUpdate(params).then((res) => {
               console.log(1)
@@ -147,6 +166,7 @@ export default {
             })
           } else {
             const params = Object.assign({}, this.form)
+            if(this.propData.val === 'top') params.parentId = null
             imageTypegoryAdd( params ).then((res) => {
               if (res.code === 200 || res.code === 0) {
                 this.$message({

@@ -1,24 +1,5 @@
 <template>
   <div class="app-container">
-    <el-row 
-      style="margin-bottom: 20px" 
-      class="row-handle">
-      <el-col :span="2">
-        <div style="font-size:20px">
-          <el-tooltip 
-            content="点击返回品类" 
-            placement="top">
-            <i 
-              class="el-icon-back" 
-              style="font-size:24px; font-weight:600; cursor:pointer" 
-              @click="goBack"/>
-          </el-tooltip>
-        </div>
-      </el-col>
-      <el-col>
-        <h2>父级类别：{{ this.$route.query.name }} </h2>
-      </el-col>
-    </el-row>
     <!-- 品类 -->
     <div class="sec-category">
       <el-row class="product-menu">
@@ -160,9 +141,6 @@ export default {
     this.getList()
   },
   methods: {
-    goBack(){
-      this.$router.go(-1)
-    },
     select() {
       this.listQuery.page = 1
       this.getList()
@@ -171,7 +149,7 @@ export default {
       let params = {
         search: {
           className: this.className,
-          parentId: this.$route.query.id
+          parentId : -1
         },
         pageNum: this.listQuery.page,
         pageSize: this.listQuery.limit,
@@ -189,10 +167,8 @@ export default {
     },
     addType() {
       this.propData.status = 0
+      this.propData.val = 'top'
       this.addDialogVisible = true
-      this.propData.val = 'son'
-      this.propData.parentId = this.$route.query.id
-      this.propData.name = this.$route.query.name
       // var adddata={}
       // if(this.data.id!==0){
       //   this.$router.push('/adddata')
@@ -210,9 +186,10 @@ export default {
       case 'view':
         console.log(1)
         this.$router.push({
-          path: 'imageType',
+          path: 'template',
           query:{
-            id: row.id
+            id: row.id,
+            name: row.className
           }
         })
         break
@@ -220,9 +197,7 @@ export default {
         this.addDialogVisible = true
         this.propData = row
         this.propData.status = 2
-        this.propData.val = 'son'
-        this.propData.parentId = this.$route.query.id
-        this.propData.name = this.$route.query.name
+        this.propData.val = 'top'
         break
       case 'del':
         this.$confirm('正在删除当前品类, 是否继续?', '提示', {
@@ -291,10 +266,22 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.row-handle{
-  display: flex;
+.primary-category {
+  font-size: 18px;
   align-items: center;
-  border-bottom: 1px solid #c0c0c0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid silver;
+  margin-bottom: 20px;
+  .go-back {
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    width: 25px;
+    color: #0c0b0b;
+  }
+  .name {
+    font-weight: 900;
+  }
 }
 .sec-category {
   .product-menu {

@@ -39,8 +39,8 @@ export default {
       navs: [
         {
           name: '图片资源',
-          url: '/imageResource/template',
-          type: 'template',
+          url: '/imageResource/parentTemplate',
+          type: 'parentTemplate',
         }
       ],
     }

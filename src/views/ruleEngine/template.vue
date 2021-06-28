@@ -151,7 +151,7 @@
                       </el-select>
 
                       <!-- 非设备背景图 -->
-                      <el-select v-if="item.conditionType === 0 || item.conditionType === 2" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景1" class="dialog_select position">
+                      <el-select v-if="item.conditionType === 0 || item.conditionType === 2" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
                         <el-option v-for="(item, index) in modelCondition[index].unFacilityIcon" :label="item.displayName" :key="index" :value="item.fileId">
                           <el-image
                             style="width: 100%; height: 100%"

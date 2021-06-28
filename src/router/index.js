@@ -452,18 +452,24 @@ export const constantRouterMap = [
         path: 'imageResource',
         name: '资源管理',
         component: _import('imageResource/index'),
-        redirect: '/imageResource/template',
+        redirect: '/imageResource/parentTemplate',
         children: [
+          {
+            path: 'parentTemplate',
+            name: 'parentTemplate',
+            component: _import('imageResource/parentTemplate')
+          },
           {
             path: 'template',
             name: 'template',
-            component: _import('imageResource/template')
+            component: _import('imageResource/template'),
+            meta: {breadNumber: 1, notKeepAlive: true, key: 'parentTemplate', isdetail: true}
           },
           {
             path: 'imageType',
             name: 'imageType',
             component: _import('imageResource/imageType'),
-            meta: {breadNumber: 1, notKeepAlive: true, key: 'template', isdetail: true}
+            meta: {breadNumber: 1, notKeepAlive: true, key: 'parentTemplate', isdetail: true}
           },
         ]
       },

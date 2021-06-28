@@ -6,8 +6,11 @@
     background-color="#304156"
     text-color="#fff"
     active-text-color="#409EFF">
-    <template v-for="item in navs">
-      <router-link :to="item.url">
+    <template 
+      v-for="(item,index) in navs" >
+      <router-link 
+        :key="index" 
+        :to="item.url">
         <el-menu-item :index="item.url">
           <i
             v-if="item.icon"
@@ -70,6 +73,11 @@ export default {
           name: '资源管理',
           url: '/imageResource',
           icon: 'el-icon-s-cooperation'
+        },
+        {
+          name: '消息分发',
+          url: '/messageDistribution',
+          icon: 'el-icon-s-comment'
         }
       ]
     }

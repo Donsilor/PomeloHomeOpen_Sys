@@ -39,6 +39,7 @@ module.exports = {
         }
       },
       '/api/':{
+        // target:'http://192.168.0.28:8081/',
         //target:'http://172.26.85.69:8080',
         target:'http://betaphoau.evergrande.me',//测试
         // target: 'http://sh-opencheck-dev.xl.cn', // 开发环境

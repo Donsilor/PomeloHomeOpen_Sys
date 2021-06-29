@@ -142,7 +142,7 @@
 
                       <!-- 非设备图标 -->
                       <el-select v-if="item.conditionType === 0 || item.conditionType === 2" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                        <el-option v-for="(item, index) in modelCondition[index].unFacilityIcon" :label="item.displayName" :key="index" :value="item.fileId">
+                        <el-option v-for="(item, index) in modelCondition[index].unFacilityIcon" :label="item.displayName" :key="index" :value="item.pathKey">
                           <el-image
                             style="width: 100%; height: 100%"
                             :src="item.fileUrl"
@@ -172,7 +172,7 @@
 
                       <!-- 设备图标 -->
                       <el-select v-if="item.conditionType === 1 && item.conditionProps[0].categoryId" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                        <el-option v-for="(item, index) in modelCondition[index].facilityIcon" :label="item.fileName" :key="index" :value="item.fileId">
+                        <el-option v-for="(item, index) in modelCondition[index].facilityIcon" :label="item.fileName" :key="index" :value="item.pathKey">
                           <el-image
                             class="img"
                             style="width: 100%; height: 100%"
@@ -286,7 +286,7 @@
 
                     <!-- 非设备图标 -->
                     <el-select v-if="item.actionType === 0" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                      <el-option v-for="(item, idx) in modelAction[index].unFacilityIcon" :label="item.displayName" :key="idx" :value="item.fileId">
+                      <el-option v-for="(item, idx) in modelAction[index].unFacilityIcon" :label="item.displayName" :key="idx" :value="item.pathKey">
                         <el-image
                           style="width: 100px; height: 100px"
                           :src="item.fileUrl"
@@ -316,7 +316,7 @@
 
                     <!-- 设备图标 -->
                     <el-select v-if="item.actionType === 1" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                      <el-option v-for="(item, index) in modelAction[index].facilityIcon" :label="item.fileName" :key="index" :value="item.fileId">
+                      <el-option v-for="(item, index) in modelAction[index].facilityIcon" :label="item.fileName" :key="index" :value="item.pathKey">
                         <el-image
                           class="img"
                           style="width: 100%; height: 100%"
@@ -430,6 +430,27 @@ export default {
     const validateName = (rule, value, callback) => {
       if (!validaTemplateName(value)) {
         callback(new Error('请输入正确的场景名称'))
+      } else {
+        callback()
+      }
+    }
+    const validateBgIcon = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请选择场景背景'))
+      } else {
+        callback()
+      }
+    }
+    const validateIcon = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请选择场景图标'))
+      } else {
+        callback()
+      }
+    }
+    const validateSceneType = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请选择模板类型'))
       } else {
         callback()
       }
@@ -569,12 +590,12 @@ export default {
       ifSelectIcon: true,       // 触发icon，当选择设备时不可选择
       
       formRules: {
-        // sort: [{ required: true, validator: validateSort, trigger: 'blur' }],
-        // sceneType: [{ required: true, trigger: 'change'}],
-        // sceneName: [{ required: true, validator: validateName, trigger: 'blur'}],
-        // sceneBgIconId: [{ required: true, validator: '', trigger: 'blur'}],
-        // sceneIconId: [{ required: true, validator: '', trigger: 'blur'}],
-        // typeId: [{ required: true, validator: '', trigger: 'blur'}],
+        sort: [{ required: true, validator: validateSort, trigger: 'blur' }],
+        sceneType: [{ required: true, trigger: 'change'}],
+        sceneName: [{ required: true, validator: validateName, trigger: 'blur'}],
+        sceneBgIconId: [{ required: true, validator: validateBgIcon, trigger: 'change'}],
+        sceneIconId: [{ required: true, validator: validateIcon, trigger: 'change'}],
+        typeId: [{ required: true, validator: validateSceneType, trigger: 'change'}],
         // sceneDesc: [{ required: false, validator: '', trigger: 'blur'}],
         // sceneIntroduce: [{ required: false, validator: '', trigger: 'blur'}],
       },
@@ -689,17 +710,23 @@ export default {
     },
     // 获取模板图片
     getSceneImage() {  
+      var imgPath = "http://pho-uat.oss-cn-shenzhen.aliyuncs.com/";
+
       getByClass({ identityName: 'scene_background' }).then((res) => {
         this.sceneBackground = res.data
+        this.sceneBackground.forEach((item, index) => {
+          this.sceneBackground[index].fileUrl = imgPath + item.pathKey
+        })
       })
 
       getByClass({ identityName: 'scene_icon' }).then((res) => {
         this.sceneIcon = res.data
+        this.sceneIcon.forEach((item, index) => {
+          this.sceneIcon[index].fileUrl = imgPath + item.pathKey
+        })
       })
 
       getByClass({ identityName: 'trigger_condition_icon' }).then((res) => {
-        var imgPath = "http://pho-uat.oss-cn-shenzhen.aliyuncs.com/";
-
         this.conditionImgs = res.data
         this.conditionImgs.forEach((item, index) => {
           this.conditionImgs[index].fileUrl = imgPath + item.pathKey
@@ -1642,7 +1669,7 @@ export default {
     },
     // 添加模板
     addTemplate() {
-      console.log(121212, this.form)
+      // console.log(121212, this.form)
       // return
       this.form.condition.forEach(item => {
         item.conditionOpType = this.condition
@@ -1803,7 +1830,7 @@ export default {
     .scene_details{
       .name{
         width: 64px;
-        text-align: right;
+        // text-align: right;
         margin-bottom: 14px;
       }
 

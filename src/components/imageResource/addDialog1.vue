@@ -36,6 +36,16 @@
             placeholder="请输入英文名称"/>
         </el-form-item>
         <el-form-item 
+          label="图片描述" 
+          prop="description">
+          <el-input 
+            v-model="form.description" 
+            :disabled="propData.status===1" 
+            autocomplete="off" 
+            type="text" 
+            placeholder="请输入图片描述"/>
+        </el-form-item>
+        <el-form-item 
           label="图片" 
           prop="pathKey">
           <!-- 高亮 -->
@@ -122,7 +132,8 @@ export default {
         displayName: '',
         identityName:'',
         pathKey:'',
-        fileName:''
+        fileName:'',
+        description: ''
       },
       rules: {
         displayName: [

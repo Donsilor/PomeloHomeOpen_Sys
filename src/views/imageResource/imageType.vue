@@ -68,6 +68,9 @@
             prop="identityName" 
             label="英文名称" />
           <el-table-column 
+            prop="description" 
+            label="图片描述" />
+          <el-table-column 
             prop="createTime" 
             sortable="custom" 
             label="创建时间" />

@@ -22,17 +22,17 @@ export const actionOptions= [
   {
     id: 0,
     value: 0,
-    label: '触发条件'
+    label: '触发条件和执行任务'
   },
   {
     id: 1,
     value: 1,
-    label: '执行任务'
+    label: '触发条件'
   },
   {
     id: 2,
     value: 2,
-    label: '触发条件和执行任务'
+    label: '执行任务'
   },
   {
     id: 3,

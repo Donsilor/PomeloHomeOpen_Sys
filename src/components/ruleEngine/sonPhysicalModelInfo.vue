@@ -105,6 +105,10 @@ export default {
     deviceSubCategoryId: {
       type: String,
       default: ''
+    },
+    brandId: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -144,6 +148,7 @@ export default {
       const params = {
         params: {
           deviceSubCategoryId: this.deviceSubCategoryId,
+          brandId: this.brandId,
           subCategoryId: this.subCategoryId,
           key:''
         }
@@ -209,12 +214,14 @@ export default {
         this.proParams.val = 'son' // 子类标识
         this.proParams.prokey = this.subCategoryId
         this.proParams.deviceSubCategoryId = this.deviceSubCategoryId
+        this.proParams.brandId = this.brandId
         this.addCustomDialogVisible = true
         break
       case 'into':
         this.importPhydata.date = Date.parse(new Date())
         this.importPhydata.beforeKey = this.subCategoryId
         this.importPhydata.deviceSubCategoryId = this.deviceSubCategoryId
+        this.importPhydata.brandId = this.brandId
         this.importPhydata.val = 'son'
         this.showImportModel.show = true
         break
@@ -229,6 +236,7 @@ export default {
       this.proParams.val = 'son'
       this.proParams.prokey = this.subCategoryId
       this.proParams.deviceSubCategoryId = this.deviceSubCategoryId
+      this.proParams.brandId = this.brandId
       this.infosDialogVisible = true
       row.status = 'edit'
       row.index = index
@@ -245,6 +253,7 @@ export default {
         const params = {
           params: {
             deviceSubCategoryId: this.deviceSubCategoryId,
+            brandId: this.brandId,
             subCategoryId: this.subCategoryId,
             identifier: row.identifier,
             abilityType: row.parentId === '服务' ? 2 : row.parentId === '事件' ? 3 : 1

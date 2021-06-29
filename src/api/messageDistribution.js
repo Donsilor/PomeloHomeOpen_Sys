@@ -2,14 +2,14 @@ import fetch from '@/utils/fetch'
 
 export function getTopicList(params){
   return fetch({
-    url: 'api/topic/getAll',
+    url: '/java_api/api/topic/getAll',
     method: 'get',
     params
   })
 }
 export function updateTopic(params){
   return fetch({
-    url: 'api/topic/update',
+    url: '/java_api/api/topic/update',
     method: 'post',
     data: params
   })

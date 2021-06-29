@@ -1643,7 +1643,7 @@ export default {
     // 添加模板
     addTemplate() {
       console.log(121212, this.form)
-      return
+      // return
       this.form.condition.forEach(item => {
         item.conditionOpType = this.condition
       })

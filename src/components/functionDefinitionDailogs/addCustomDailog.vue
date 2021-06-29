@@ -789,6 +789,7 @@ export default {
               delete params.params.categoryId
               params.params.subCategoryId = this.proParams.prokey
               params.params.deviceSubCategoryId =  this.proParams.deviceSubCategoryId
+              params.params.brandId =  this.proParams.brandId
               console.log(params)
               addSonModel(params).then((res) => {
                 if (res.data.code === 200) {

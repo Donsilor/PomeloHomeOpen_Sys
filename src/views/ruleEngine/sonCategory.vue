@@ -189,7 +189,8 @@ export default {
           query: {
             subCategoryId: row.subCategoryId,
             subCategoryName: row.subCategoryName,
-            deviceSubCategoryId: row.subCategoryNumber
+            deviceSubCategoryId: row.subCategoryNumber,
+            brandId: row.brandId
           }
         })
         // this.addDialogVisible = true
@@ -203,7 +204,8 @@ export default {
           type: 'error'
         }).then(() => {
           const params = {
-            subCategoryId: row.subCategoryId
+            subCategoryId: row.subCategoryId,
+            brandId: row.brandId
           }
           delSonCategory({ params }).then((res) => {
             if (res.data.code === 200 || res.data.code === 0) {

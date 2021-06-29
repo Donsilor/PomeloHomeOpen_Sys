@@ -23,6 +23,7 @@
             :is="item.content" 
             :category-name ="subCategoryName"
             :device-sub-category-id = "deviceSubCategoryId"
+            :brand-id="brandId"
             :sub-category-id="subCategoryId"/>
         </keep-alive>
       </el-tab-pane>
@@ -41,6 +42,7 @@ export default {
       subCategoryId: '',
       deviceSubCategoryId:'',
       subCategoryName: '',
+      brandId: '',
       tableOptions: [
         {
           title: '基本信息',
@@ -60,6 +62,7 @@ export default {
     this.subCategoryId = this.$route.query.subCategoryId
     this.subCategoryName = this.$route.query.subCategoryName
     this.deviceSubCategoryId = this.$route.query.deviceSubCategoryId
+    this.brandId = this.$route.query.brandId
     this.getActiveName()
   },
   methods: {

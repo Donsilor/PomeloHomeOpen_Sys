@@ -64,7 +64,7 @@
                   @click="handlerClick('edit',scope.row)">编辑</el-button>
                 
                 <el-button
-                  :type= "scope.row.isEnable == 1 ? 'warning' : 'primary'"
+                  :type= "scope.row.isEnable == 1 ? 'primary' : 'warning'"
                   size="mini" 
                   @click="handlerClick('ifEnable',scope.row)">{{scope.row.isEnable == 1 ? '启用' : '禁用'}}</el-button>
 

@@ -33,9 +33,6 @@
       <el-table-column align="center" label="场景名称" prop="sceneName">
       </el-table-column>
       <el-table-column align="center" label="类型" prop="typeName">
-        <!-- <template slot-scope="scope">
-          <div>{{ getSenceType(scope.row.typeId, sceneList) }}</div>
-        </template> -->
       </el-table-column>
       <el-table-column align="center" label="简介" prop="sceneDesc">
       </el-table-column>
@@ -63,7 +60,7 @@
 
     <!-- 创建场景弹窗 -->
     <el-dialog center width="720px" class="doc-dialog"
-          :title="type == 1 ? '创建模板' : type == 2 ? '查看模板' : '编辑模板'" :visible.sync="dialogShow" positi>
+          :title="type == 1 ? '创建模板' : type == 2 ? '查看模板' : '编辑模板'" :visible.sync="dialogShow" @close="closeDialog">
       <el-form ref="permissionForm" :model="form" label-width="90px" :disabled="type==2" label-position="left" :rules="formRules" >
         <el-form-item label="场景序号" prop="sort">
           <el-input v-model="form.sort" type="number" placeholder="请输入序号"></el-input>
@@ -81,7 +78,7 @@
 
         <el-form-item label="场景背景" prop="sceneBgIconId">
           <el-select v-model="form.sceneBgIconId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select width540">
-            <el-option v-for="(item, index) in sceneBackground" :label="item.displayName" :key="index" :value="item.pathKey">
+            <el-option v-for="(item, index) in sceneBackground" :label="item.displayName" :key="index" :value="item.id">
               <el-image
                 style="width: 100px; height: 100px"
                 :src="item.fileUrl"
@@ -92,7 +89,7 @@
 
         <el-form-item label="场景图标" prop="sceneIconId">
           <el-select v-model="form.sceneIconId" :popper-append-to-body="false" placeholder="请选择图标" class="dialog_select width540">
-            <el-option v-for="(item, index) in sceneIcon" :label="item.displayName" :key="index" :value="item.pathKey">
+            <el-option v-for="(item, index) in sceneIcon" :label="item.displayName" :key="index" :value="item.id">
               <el-image
                 style="width: 100px; height: 100px"
                 :src="item.fileUrl"
@@ -141,8 +138,8 @@
                       </el-select>
 
                       <!-- 非设备图标 -->
-                      <el-select v-if="item.conditionType === 0 || item.conditionType === 2" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                        <el-option v-for="(item, index) in modelCondition[index].unFacilityIcon" :label="item.displayName" :key="index" :value="item.pathKey">
+                      <el-select v-if="item.conditionType === 0 || item.conditionType === 2" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position position_left">
+                        <el-option v-for="(item, index) in modelCondition[index].unFacilityIcon" :label="item.displayName" :key="index" :value="item.id">
                           <el-image
                             style="width: 100%; height: 100%"
                             :src="item.fileUrl"
@@ -171,8 +168,8 @@
                       </el-select>
 
                       <!-- 设备图标 -->
-                      <el-select v-if="item.conditionType === 1 && item.conditionProps[0].categoryId" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                        <el-option v-for="(item, index) in modelCondition[index].facilityIcon" :label="item.fileName" :key="index" :value="item.pathKey">
+                      <el-select v-if="item.conditionType === 1 && item.conditionProps[0].categoryId" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position" :class="{position_left: item.conditionProps[0].subCategoryId != 0}">
+                        <el-option v-for="(item, index) in modelCondition[index].facilityIcon" :label="item.fileName" :key="index" :value="item.picId">
                           <el-image
                             class="img"
                             style="width: 100%; height: 100%"
@@ -285,8 +282,8 @@
                     </el-select>
 
                     <!-- 非设备图标 -->
-                    <el-select v-if="item.actionType === 0" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                      <el-option v-for="(item, idx) in modelAction[index].unFacilityIcon" :label="item.displayName" :key="idx" :value="item.pathKey">
+                    <el-select v-if="item.actionType === 0" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position position_left">
+                      <el-option v-for="(item, idx) in modelAction[index].unFacilityIcon" :label="item.displayName" :key="idx" :value="item.id">
                         <el-image
                           style="width: 100px; height: 100px"
                           :src="item.fileUrl"
@@ -315,11 +312,11 @@
                     </el-select>
 
                     <!-- 设备图标 -->
-                    <el-select v-if="item.actionType === 1" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position">
-                      <el-option v-for="(item, index) in modelAction[index].facilityIcon" :label="item.fileName" :key="index" :value="item.pathKey">
+                    <el-select v-if="item.actionType === 1" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position" :class="{position_left: item.conditionProps[0].subCategoryId != 0}">
+                      <el-option v-for="(item, index) in modelAction[index].facilityIcon" :label="item.fileName" :key="index" :value="item.picId">
                         <el-image
                           class="img"
-                          style="width: 100%; height: 100%"
+                          style="width: 100%; height: 100%" 
                           :src="item.fileUrl"
                           fit="cover"></el-image>
                       </el-option>
@@ -623,53 +620,53 @@ export default {
     // 重置数据
     resetData(){
       this.form = {
-        "sort": '',
-        'sceneType': 1,
-        "sceneName": '',
-        "sceneBgIconId": '',
-        "sceneIconId": '',
-        "typeId": '',
-        "sceneDesc":'',
-        "sceneIntroduce": '',
-        "action": [
+        sort: '',
+        sceneType: 1,
+        sceneName: '',
+        sceneBgIconId: '',
+        sceneIconId: '',
+        typeId: '',
+        sceneDesc:'',
+        sceneIntroduce: '',
+        action: [
           {
-            "actionOpType": 0,
-            "actionType": "",
-            "resourceId": "",
-            "sort": 0,
-            "actionProps": [{	
-                "businessId": "",
-                "categoryId": "",
-                "categoryName": "",
-                "propertyName": "",
-                "compareType": "",
-                "compareValue": "",
-                "deviceUuid": "",
-                "subCategoryId": "",
-                "subCategoryName": ""
+            actionOpType: 0,
+            actionType: "",
+            resourceId: "",
+            sort: 0,
+            actionProps: [{	
+              businessId: 0,
+                categoryId: "",
+                categoryName: "",
+                propertyName: "",
+                compareType: "",
+                compareValue: "",
+                deviceUuid: 0,
+                subCategoryId: 0,
+                subCategoryName: ""
             }]
           }
         ],
-        "condition": [
+        condition: [
           {
-            "conditionOpType": 0,
-            "conditionType": "",
-            "resourceId": "",
-            "conditionProps": [{
-                "businessId": "",
-                "categoryId": "",
-                "categoryName": "",
-                "propertyName": "",
-                "compareType": "",
-                "compareValue": "",
-                "deviceUuid": "",
-                "subCategoryId": "",
-                "subCategoryName": ""
+            conditionOpType: 0,
+            conditionType: "",
+            resourceId: "",
+            conditionProps: [{
+                businessId: 0,
+                categoryId: "",
+                categoryName: "",
+                propertyName: "",
+                compareType: "",
+                compareValue: "",
+                deviceUuid: 0,
+                subCategoryId: 0,
+                subCategoryName: ""
             },
             {
-              "propertyName": "",
-              "compareType": "",
-              "compareValue": ""
+              propertyName: "",
+              compareType: "",
+              compareValue: ""
             }]
           }
         ]
@@ -747,102 +744,128 @@ export default {
     },
     // 选择触发条件
     seleceTouch(index, val){
-      let obj = {
-        "conditionOpType": 0,
-        "conditionType": val,
-        "resourceId": "",
-        "conditionProps": [{
-          "businessId": "",
-          "categoryId": "",
-          "categoryName": "",
-          "propertyName": "",
-          "compareType": "",
-          "compareValue": "",
-          "deviceUuid": "",
-          "subCategoryId": "",
-          "subCategoryName": ""
-        }]
-      }
-
       this.modelCondition[index].facilityIcon = []
       this.modelCondition[index].unFacilityIcon = []
-      if(this.conditionImgs){
-        this.modelCondition[index].unFacilityIcon.push(this.conditionImgs[val])
-      }
+
+//       -- 触发条件图标分类
+//     0定时   trigger_condition_time
+//     1设备   trigger_condition_device 
+//     2安防   trigger_condition_safe
+//     3延时   trigger_condition_delay
+//     4天气   trigger_condition_weather
+//     5场景   trigger_condition_scene
+//     6其它   trigger_condition_other
+
+      var classify = ''
 
       if(val == 1){
         // 设备
+        classify = 'trigger_condition_device'
+
+        let obj = {
+          conditionOpType: 0,
+          conditionType: val,
+          resourceId: "",
+          conditionProps: [{
+            businessId: "",
+            categoryId: "",
+            categoryName: "",
+            propertyName: "",
+            compareType: "",
+            compareValue: "",
+            deviceUuid: "",
+            subCategoryId: "",
+            subCategoryName: ""
+          }]
+        }
         this.form.condition.splice(index, 1, obj)
       }else if(val == 0){
         // 定时
-        obj = {
-          "conditionOpType": 0,
-          "conditionType": val,
-          "resourceId": "",
-          "conditionProps": [{
-            "propertyName": "appoint_time",
-            "compareType": 0,
-            "compareValue": "",
+        classify = 'trigger_condition_time'
+
+        let obj = {
+          conditionOpType: 0,
+          conditionType: val,
+          resourceId: "",
+          conditionProps: [{
+            propertyName: "appoint_time",
+            compareType: 0,
+            compareValue: "",
           },
           {
-            "propertyName": "appoint_date",
-            "compareType": 0,
-            "compareValue": "",
+            propertyName: "appoint_date",
+            compareType: 0,
+            compareValue: "",
           }]
         }
 
         this.form.condition.splice(index, 1, obj)
       }else if(val == 2){
-        obj = {
-          "conditionOpType": 0,
-          "conditionType": val,
-          "resourceId": "",
-          "conditionProps": [{
-            "propertyName": "security_status",
-            "compareType": "",
-            "compareValue": "",
+        // 安防
+        classify = 'trigger_condition_safe'
+
+        let obj = {
+          conditionOpType: 0,
+          conditionType: val,
+          resourceId: "",
+          conditionProps: [{
+            propertyName: "security_status",
+            compareType: "",
+            compareValue: "",
           }]
         }
 
         this.form.condition.splice(index, 1, obj)
       }
 
+      if(classify){
+        var res = ''
+        this.conditionImgs.forEach(item => {
+          if(item.classIdentityName == classify){
+            res = item
+          }
+        })
+
+        if(res){
+          this.modelCondition[index].unFacilityIcon.push(res)
+        }
+      }
     },
     // 选择执行动作
     seleceExecute(index, val){
-      let obj = {
-        "actionOpType": 0,
-        "actionType": val,
-        "resourceId": "",
-        "sort": 0,
-        "actionProps": [{	
-            "businessId": "",
-            "categoryId": "",
-            "categoryName": "",
-            "propertyName": "",
-            "compareType": "",
-            "compareValue": "",
-            "deviceUuid": "",
-            "subCategoryId": "",
-            "subCategoryName": ""
-        }]
-      }
-
       this.modelAction[index].facilityIcon = []
       this.modelAction[index].unfacilityIcon = []
 
       if(val == 1){
         // 设备
+        let obj = {
+          actionOpType: 0,
+          actionType: val,
+          resourceId: "",
+          sort: 0,
+          actionProps: [{	
+              businessId: "",
+              categoryId: "",
+              categoryName: "",
+              propertyName: "",
+              compareType: "",
+              compareValue: "",
+              deviceUuid: "",
+              subCategoryId: "",
+              subCategoryName: ""
+          }]
+        }
+
         this.form.action.splice(index, 1, obj)
       }else if(val == 0){
-        obj = {
-          "actionOpType": 0,
-          "actionType": val,
-          "resourceId": "",
-          "actionProps": [{
-            "propertyName": "security_status",
-            "compareType": "",
-            "compareValue": "",
+        let obj = {
+          actionOpType: 0,
+          actionType: val,
+          resourceId: "",
+          actionProps: [{
+            propertyName: "security_status",
+            compareType: "",
+            compareValue: "",
           }]
         }
 
@@ -878,7 +901,10 @@ export default {
 
       // 切换时清空子品类
       this.form.condition[index].conditionProps[0].categoryId = num
-      this.form.condition[index].conditionProps[0].subCategoryId = ''
+      this.form.condition[index].conditionProps[0].subCategoryId = 0
+      this.form.condition[index].conditionProps[0].businessId = 0
+      this.form.condition[index].conditionProps[0].deviceUuid = 0
+      this.form.condition[index].conditionProps[0].subCategoryName = ''
       this.form.condition[index].conditionProps[0].length = 1
       this.form.condition[index].conditionProps[0].propertyName = ''
       this.form.condition[index].conditionProps[0].compareType = ''
@@ -924,7 +950,10 @@ export default {
 
       // 切换时清空子品类
       this.form.action[index].actionProps[0].categoryId = num
-      this.form.action[index].actionProps[0].subCategoryId = ''
+      this.form.action[index].actionProps[0].subCategoryId = 0
+      this.form.action[index].actionProps[0].businessId = 0
+      this.form.action[index].actionProps[0].deviceUuid = 0
+      this.form.action[index].actionProps[0].subCategoryName = ''
       this.form.action[index].actionProps[0].length = 1
       this.form.action[index].actionProps[0].propertyName = ''
       this.form.action[index].actionProps[0].compareType = ''
@@ -1004,7 +1033,7 @@ export default {
       this.form.condition[index].conditionProps[0].propertyName = ''
       this.form.condition[index].conditionProps[0].compareType = ''
       this.form.condition[index].conditionProps[0].compareValue = ''
-      this.form.condition[index].conditionProps[0].businessId = ''
+      this.form.condition[index].conditionProps[0].businessId = 0
       this.form.condition[index].resourceId = ''
 
       this.modelCondition[index].facilityIcon = []
@@ -1055,7 +1084,7 @@ export default {
       this.form.action[index].actionProps[0].propertyName = ''
       this.form.action[index].actionProps[0].compareType = ''
       this.form.action[index].actionProps[0].compareValue = ''
-      this.form.action[index].actionProps[0].businessId = ''
+      this.form.action[index].actionProps[0].businessId = 0
       this.form.action[index].resourceId = ''
 
       this.modelAction[index].facilityIcon = []
@@ -1158,25 +1187,16 @@ export default {
           this.form.sort = data.sort
           this.form.sceneName = data.sceneName
           this.form.sceneType = Number(data.sceneType)
+          this.form.sceneBgIconId = Number(data.sceneBgIconId)
+          this.form.sceneIconId = Number(data.sceneIconId)
           this.form.typeId = data.typeId
           this.form.sceneDesc = data.sceneDesc
           this.form.sceneIntroduce = data.sceneIntroduce
 
           if(data.condition.length){
-            this.condition = data.condition[0].conditionOpType+''
+            this.condition = data.condition[0].conditionOpType
           }else{
-            this.condition = data.action[0].actionOpType+''
-          }
-
-          var sceneBgIcon = data.sceneBgIconId,
-              sceneIcon = data.sceneIconId;
-
-          if(sceneBgIcon && sceneBgIcon.indexOf('oss_temp') != -1){
-            this.form.sceneBgIconId = sceneBgIcon.slice(sceneBgIcon.indexOf('oss_temp'))
-          }
-
-          if(sceneIcon && sceneIcon.indexOf('oss_temp') != -1){
-            this.form.sceneIconId = sceneIcon.slice(sceneIcon.indexOf('oss_temp'))
+            this.condition = data.action[0].actionOpType
           }
 
           this.form.condition = []
@@ -1184,12 +1204,46 @@ export default {
           let conditionProps = []
 
           // 触发条件回显
+
+          //       -- 触发条件图标分类
+          //     0定时   trigger_condition_time
+          //     1设备   trigger_condition_device 
+          //     2安防   trigger_condition_safe
+          //     3延时   trigger_condition_delay
+          //     4天气   trigger_condition_weather
+          //     5场景   trigger_condition_scene
+          //     6其它   trigger_condition_other
+
+          var classify = ''
+
           data.condition.forEach((item, i) => {
             conditionProps = JSON.parse(item.conditionProps)
 
-            let tem = '',
+            let tem = {
+                  conditionOpType: 0,
+                  conditionType: "",
+                  resourceId: "",
+                  conditionProps: [{
+                      businessId: 0,
+                      categoryId: "",
+                      categoryName: "",
+                      propertyName: "",
+                      compareType: "",
+                      compareValue: "",
+                      deviceUuid: 0,
+                      subCategoryId: 0,
+                      subCategoryName: ""
+                  },
+                  {
+                    propertyName: "",
+                    compareType: "",
+                    compareValue: ""
+                  }]
+                },
+
                 model = {
                   facilityIcon: [],
+                  unFacilityIcon: [],
                   facilityChild: [],   // 设备子品类
                   attribute: [],       // 属性
                   comparison: ['大于', '等于', '小于'],
@@ -1201,10 +1255,12 @@ export default {
 
             if(item.conditionType == 0){
               // 时间
+              classify = 'trigger_condition_time'
+
               tem = {
                 conditionOpType: item.conditionOpType,
                 conditionType: item.conditionType,
-                resourceId: item.resourceId,
+                resourceId: Number(item.resourceId),
                 conditionProps: [{
                   propertyName: conditionProps[0].propertyName,
                   compareType: Number(conditionProps[0].compareType),
@@ -1227,6 +1283,8 @@ export default {
               }
             }else if(item.conditionType == 1){
               // 触发设备
+              classify = 'trigger_condition_device'
+
               tem = {
                 conditionOpType: item.conditionOpType,
                 conditionType: item.conditionType,
@@ -1245,6 +1303,8 @@ export default {
               }
             }else if(item.conditionType == 2){
               // 安防
+              classify = 'trigger_condition_safe'
+
               tem = {
                 conditionOpType: item.conditionOpType,
                 conditionType: item.conditionType,
@@ -1339,6 +1399,20 @@ export default {
 
                 this.form.condition[i].conditionProps.push(attr)
               }
+            }else if(item.conditionType ==0){
+            }
+
+            if(classify){
+              var res = ''
+              this.conditionImgs.forEach(item => {
+                if(item.classIdentityName == classify){
+                  res = item
+                }
+              })
+
+              if(res){
+                this.modelCondition[i].unFacilityIcon.push(res)
+              }
             }
           })
 
@@ -1350,7 +1424,24 @@ export default {
           data.action.forEach((item, i) => {
             actionProps = JSON.parse(item.actionProps)
 
-            let tem = '',
+            let tem = {
+                  actionOpType: 0,          // Y 关系类型（0：or 1：and）
+                  actionType: "",            // Y 条件类型（0定时 1设备 2安防 3面板 4手动场景）
+                  resourceId: "",            // Y 图片资源id
+                  sort: 0,                  // Y 排序
+                  actionProps: [{                 // N 条件/动作物模型json	
+                      businessId: "",      // N 设备所属厂商ID
+                      categoryId: "",       // N 设备所属品类ID
+                      categoryName: "",
+                      subCategoryName: "",
+                      propertyName: "",     // N 属性名称
+                      compareType: "0",          // N 比较类型
+                      compareValue: "",         // N 比较的值
+                      deviceUuid: "",       // N 设备ID
+                      subCategoryId: ""    // N 设备所属子品类ID
+                  }]
+                },
+
                 model = {
                   facilityIcon: [],
                   unFacilityIcon: [],
@@ -1366,7 +1457,7 @@ export default {
               tem = {
                 actionOpType: item.actionOpType,
                 actionType: item.actionType,
-                resourceId: item.resourceId,
+                resourceId: Number(item.resourceId),
                 actionProps: [{
                   propertyName: actionProps[0].propertyName,
                   compareType: Number(actionProps[0].compareType),
@@ -1532,19 +1623,19 @@ export default {
     // 添加触发条件
     addCondition() {
       let tem = {
-        "conditionOpType": 1,
-        "conditionType": "",
-        "resourceId": "",
-        "conditionProps": [{
-            "businessId": "",
-            "categoryId": "",
-            "propertyName": "",
-            "categoryName": "",
-            "compareType": "",
-            "compareValue": "",
-            "deviceUuid": "",
-            "subCategoryId": "",
-            "subCategoryName": ""
+        conditionOpType: 1,
+        conditionType: "",
+        resourceId: "",
+        conditionProps: [{
+            businessId: "",
+            categoryId: "",
+            propertyName: "",
+            categoryName: "",
+            compareType: "",
+            compareValue: "",
+            deviceUuid: "",
+            subCategoryId: "",
+            subCategoryName: ""
         }]
       }
 
@@ -1571,20 +1662,20 @@ export default {
     // 添加执行动作
     addMotion() {
       let tem = {
-        "actionOpType": 1,
-        "actionType": "",
-        "resourceId": "",
-        "sort": 0,
-        "actionProps": [{	
-            "businessId": "",
-            "categoryId": "",
-            "categoryName": "",
-            "propertyName": "",
-            "compareType": "",
-            "compareValue": "",
-            "deviceUuid": "",
-            "subCategoryId": "",
-            "subCategoryName": ""
+        actionOpType: 1,
+        actionType: "",
+        resourceId: "",
+        sort: 0,
+        actionProps: [{	
+            businessId: "",
+            categoryId: "",
+            categoryName: "",
+            propertyName: "",
+            compareType: "",
+            compareValue: "",
+            deviceUuid: "",
+            subCategoryId: "",
+            subCategoryName: ""
         }]
       }
 
@@ -1613,63 +1704,71 @@ export default {
         this.dialogShow = false
         return
       }
-
+     
       this.$refs.permissionForm.validate(valid => {
         if (valid) {
-          // 判断触发条件的关系（‘或’或者‘与’）
-          if(this.condition == 9){
-            // 未选择
-            var res = this.form.condition.every(o => {
-              return o.conditionType == 1
+          var ifCondition = this.form.condition.some(o => {
+              return o.conditionType !== ''
             })
 
-            if(res){
-              this.dialogType = 2;
-              this.dialogVisible = true;
-              this.dialogContent = '请选择触发条件的关系'
+          if(ifCondition){
+            // 有使用触发,判断触发条件的关系（‘或’或者‘与’）
+            if(this.condition == 9){
+              // 未选择触发条件
+              var res = this.form.condition.every(o => {
+                return o.conditionType == 1
+              })
+
+              if(res){
+                this.dialogType = 2;
+                this.dialogVisible = true;
+                this.dialogContent = '请选择触发条件的关系'
+              }else{
+                this.dialogType = 3;
+                this.dialogVisible = true;
+                this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
+              }
+            }else if(this.condition == 1){
+              // 已选择与关系
+              var res = this.form.condition.every(o => {
+                return o.conditionType == 1
+              })
+
+              if(res){
+                if(this.type == 1){
+                  this.addTemplate()
+                }else if(this.type ==3){
+                  this.editTemplate()
+                }
+              }else{
+                this.dialogType = 3;
+                this.dialogVisible = true;
+                this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
+              }
             }else{
-              this.dialogType = 3;
-              this.dialogVisible = true;
-              this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
-            }
-          }else if(this.condition == 1){
-            // 与
-            var res = this.form.condition.every(o => {
-              return o.conditionType == 1
-            })
-
-            if(res){
               if(this.type == 1){
                 this.addTemplate()
               }else if(this.type ==3){
                 this.editTemplate()
               }
-            }else{
-              this.dialogType = 3;
-              this.dialogVisible = true;
-              this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
             }
           }else{
-              // 或
-              if(this.type == 1){
-                this.addTemplate()
-              }else if(this.type ==3){
-                this.editTemplate()
-              }
+            // 未使用触发条件
+            if(this.type == 1){
+              this.addTemplate()
+            }else if(this.type ==3){
+              this.editTemplate()
+            }
           }
-
         } else {
           console.log('error submit!!')
           return false
         }
       })
-
-    
-      // this.addTemplate()
     },
     // 添加模板
     addTemplate() {
-      // console.log(121212, this.form)
+      console.log('this.form', this.form)
       // return
       this.form.condition.forEach(item => {
         item.conditionOpType = this.condition
@@ -1696,12 +1795,16 @@ export default {
     },
     // 编辑模板
     editTemplate() {
-      this.form.condition.forEach(item => {
-        item.conditionOpType = this.condition
+      this.form.condition.forEach((item, i) => {
+        if(item){
+          this.form.condition[i].conditionOpType = this.condition
+        }
       })
 
-      this.form.action.forEach(item => {
-        item.conditionOpType = this.condition
+      this.form.action.forEach((item, i) => {
+        if(item){
+          this.form.action[i].actionOpType = this.condition
+        }
       })
 
       let params = {'params': Object.assign({}, this.form)} 
@@ -1717,6 +1820,9 @@ export default {
     changePage(val) {
       this.listQuery = val
       this.getList()
+    },
+    closeDialog() {
+      this.$refs.permissionForm.resetFields()
     }
   }
 }
@@ -1760,8 +1866,8 @@ export default {
   .position{
     // 触发条件图标样式
     /deep/ .el-select-dropdown{
-        transform: translateX(-200px);
-        width: 400px;
+      // transform: translateX(-200px);
+      width: 400px;
 
       /deep/ .el-select-dropdown__item{
         margin-top: 0;
@@ -1770,10 +1876,16 @@ export default {
       /deep/ .el-select-dropdown__item:nth-child(n+6){
         margin-top: 10px;
       }
-    }
 
-    /deep/ .popper__arrow{
-      left: 226px !important;
+      /deep/ .popper__arrow{
+        left: 226px !important;
+      }
+    }
+  }
+
+  .position_left{
+    /deep/ .el-select-dropdown{
+      transform: translateX(-200px);
     }
   }
 

@@ -285,7 +285,7 @@
                     <el-select v-if="item.actionType === 0" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position position_left">
                       <el-option v-for="(item, idx) in modelAction[index].unFacilityIcon" :label="item.displayName" :key="idx" :value="item.id">
                         <el-image
-                          style="width: 100px; height: 100px"
+                          style="width: 100%; height: 100%"
                           :src="item.fileUrl"
                           fit="fit"></el-image>
                       </el-option>
@@ -312,8 +312,8 @@
                     </el-select>
 
                     <!-- 设备图标 -->
-                    <el-select v-if="item.actionType === 1" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position" :class="{position_left: item.conditionProps[0].subCategoryId != 0}">
-                      <el-option v-for="(item, index) in modelAction[index].facilityIcon" :label="item.fileName" :key="index" :value="item.picId">
+                    <el-select v-if="item.actionType === 1" v-model="item.resourceId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select position" :class="{position_left: item.actionProps[0].subCategoryId != 0}">
+                      <el-option v-for="(item, ind) in modelAction[index].facilityIcon" :label="item.fileName" :key="ind" :value="item.picId">
                         <el-image
                           class="img"
                           style="width: 100%; height: 100%" 
@@ -361,11 +361,6 @@
                         :value="idx">
                       </el-option>
                     </el-select>
-
-                    <!-- <el-select v-if="item.actionType === 0" v-model="item.actionProps[0].compareValue" placeholder="请选择操作">
-                      <el-option label="启用" value="1" ></el-option>
-                      <el-option label="停用" value="0" ></el-option>
-                    </el-select> -->
                   </div>
                 </el-col>
 
@@ -575,6 +570,8 @@ export default {
       manualType: ['家庭安防','设备'],
       facility: [],        // 设备大品类
       conditionImgs: [],   //触发条件图片集合（定时，设备，安防）
+      actionManualImgs: [],      //执行动作图片集合-手动 (家庭安防, 设备)
+      actionAutoImgs: [],      //执行动作图片集合-自动 (家庭安防, 设备)
 
       condition: 9,           // 触发条件 0或 1与
       isToModify: false,
@@ -636,14 +633,14 @@ export default {
             sort: 0,
             actionProps: [{	
               businessId: 0,
-                categoryId: "",
-                categoryName: "",
-                propertyName: "",
-                compareType: "",
-                compareValue: "",
-                deviceUuid: 0,
-                subCategoryId: 0,
-                subCategoryName: ""
+              categoryId: "",
+              categoryName: "",
+              propertyName: "",
+              compareType: "",
+              compareValue: "",
+              deviceUuid: 0,
+              subCategoryId: 0,
+              subCategoryName: ""
             }]
           }
         ],
@@ -653,15 +650,15 @@ export default {
             conditionType: "",
             resourceId: "",
             conditionProps: [{
-                businessId: 0,
-                categoryId: "",
-                categoryName: "",
-                propertyName: "",
-                compareType: "",
-                compareValue: "",
-                deviceUuid: 0,
-                subCategoryId: 0,
-                subCategoryName: ""
+              businessId: 0,
+              categoryId: "",
+              categoryName: "",
+              propertyName: "",
+              compareType: "",
+              compareValue: "",
+              deviceUuid: 0,
+              subCategoryId: 0,
+              subCategoryName: ""
             },
             {
               propertyName: "",
@@ -725,9 +722,16 @@ export default {
 
       getByClass({ identityName: 'trigger_condition_icon' }).then((res) => {
         this.conditionImgs = res.data
-        this.conditionImgs.forEach((item, index) => {
-          this.conditionImgs[index].fileUrl = imgPath + item.pathKey
-        })
+      })
+
+      // 执行动作icon(手动)
+      getByClass({ identityName: 'trigger_task_man_icon' }).then((res) => {
+        this.actionManualImgs = res.data
+      })
+
+      // 执行动作icon(自动)
+      getByClass({ identityName: 'trigger_task_auto_icon' }).then((res) => {
+        this.actionAutoImgs = res.data
       })
     },
     // 获取大品类列表
@@ -818,6 +822,7 @@ export default {
         this.form.condition.splice(index, 1, obj)
       }
 
+      // 按分类筛选触发图标
       if(classify){
         var res = ''
         this.conditionImgs.forEach(item => {
@@ -834,10 +839,24 @@ export default {
     // 选择执行动作
     seleceExecute(index, val){
       this.modelAction[index].facilityIcon = []
-      this.modelAction[index].unfacilityIcon = []
+      this.modelAction[index].unFacilityIcon = []
+
+      //       -- 执行动作图标分类-自动
+//     1设备   trigger_condition_device 
+//     2天气   trigger_condition_weather
+//     3家庭安防   trigger_condition_safe
+
+      //       -- 执行动作图标分类-手动
+//     1安防   trigger_condition_safe 
+//     3场景   trigger_condition_scene
+//     3设备   trigger_condition_device
+
+      var classify = ''
 
       if(val == 1){
         // 设备
+        classify = 'trigger_condition_device'
+
         let obj = {
           actionOpType: 0,
           actionType: val,
@@ -858,6 +877,9 @@ export default {
 
         this.form.action.splice(index, 1, obj)
       }else if(val == 0){
+        // 家庭安防
+        classify = 'trigger_condition_safe'
+
         let obj = {
           actionOpType: 0,
           actionType: val,
@@ -872,6 +894,28 @@ export default {
         this.form.action.splice(index, 1, obj)
       }
 
+      // 按分类筛选触发图标
+      if(classify){
+        var res = ''
+
+        if(this.form.sceneType == 0){
+          this.actionManualImgs.forEach(item => {
+            if(item.classIdentityName == classify){
+              res = item
+            }
+          })
+        }else{
+          this.actionAutoImgs.forEach(item => {
+            if(item.classIdentityName == classify){
+              res = item
+            }
+          })
+        }
+
+        if(res){
+          this.modelAction[index].unFacilityIcon.push(res)
+        }
+      }
     },
     // 切换定时时执行方法
     changeTimeType(index, val){
@@ -1421,6 +1465,18 @@ export default {
           this.modelAction = []
           let actionProps = []
 
+                //       -- 执行动作图标分类-自动
+          //     1设备   trigger_condition_device 
+          //     2天气   trigger_condition_weather
+          //     3家庭安防   trigger_condition_safe
+
+                //       -- 执行动作图标分类-手动
+          //     1安防   trigger_condition_safe 
+          //     3场景   trigger_condition_scene
+          //     3设备   trigger_condition_device
+
+                var classify = ''
+
           data.action.forEach((item, i) => {
             actionProps = JSON.parse(item.actionProps)
 
@@ -1454,6 +1510,8 @@ export default {
 
             if(item.actionType == 0){
               // 安防
+              classify = 'trigger_condition_safe'
+
               tem = {
                 actionOpType: item.actionOpType,
                 actionType: item.actionType,
@@ -1466,6 +1524,8 @@ export default {
               }
             }else if(item.actionType == 1){
               // 执行动作设备
+              classify = 'trigger_condition_device'
+
               tem = {
                 actionOpType: item.actionOpType,
                 actionType: item.actionType,
@@ -1566,6 +1626,28 @@ export default {
                 }
 
                 this.form.action[i].actionProps.push(attr)
+              }
+            }
+
+            if(classify){
+              var res = ''
+
+              if(this.form.sceneType == 0){
+                this.actionManualImgs.forEach(item => {
+                  if(item.classIdentityName == classify){
+                    res = item
+                  }
+                })
+              }else{
+                this.actionAutoImgs.forEach(item => {
+                  if(item.classIdentityName == classify){
+                    res = item
+                  }
+                })
+              }
+
+              if(res){
+                this.modelAction[i].unFacilityIcon.push(res)
               }
             }
           })

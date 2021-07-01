@@ -530,28 +530,7 @@ export default {
         typeId: [{ required: true, validator: validateSceneType, trigger: 'change'}],
         // sceneDesc: [{ required: false, validator: '', trigger: 'blur'}],
         // sceneIntroduce: [{ required: false, validator: '', trigger: 'blur'}],
-      },
-
-
-      // pickerOptions: { //大于当前月分的日期不可选
-      //   disabledDate: (time) => {
-      //       var date = new Date();
-      //       var year = date.getFullYear();
-      //       var month = date.getMonth() + 1;
-      //       if (month >= 1 && month <= 9) {
-      //           month = "0" + month;
-      //       }
-      //       var currentdate = year.toString()  + month.toString();
-
-      //       var timeyear = time.getFullYear();
-      //       var timemonth = time.getMonth() + 1;
-      //       if (timemonth >= 1 && timemonth <= 9) {
-      //           timemonth = "0" + timemonth;
-      //       }
-      //       var timedate = timeyear.toString() + timemonth.toString();
-      //       return currentdate < timedate;
-      //   }
-      // }
+      }
     }
   },
   created() {
@@ -949,21 +928,18 @@ export default {
         getSonModels({ params: [Number(sunNum)] }).then((res) => {
           if(res.data.code == 200){
             this.modelCondition[index].facilityIcon = res.data.data[0].fileList
-            this.form.condition[index].conditionProps[0].businessId = Number(res.data.data.brandId)
-            params.brandId = Number(res.data.data.brandId)
+            this.form.condition[index].conditionProps[0].businessId = Number(res.data.data[0].brandId)
+            params.brandId = Number(res.data.data[0].brandId)
+
+            getSonModel({ params }).then((res) => {
+              if(res.data.code == 200){
+                // 拿到子品类物模型，赋值
+                this.modelCondition[index].attribute = res.data.data.thingModel.properties
+                this.hasAction('condition', index)
+              }
+            })
           }
         })
-
-        if(params.brandId){
-          getSonModel({ params }).then((res) => {
-            if(res.data.code == 200){
-              // 拿到子品类物模型，赋值
-              // this.form.condition[index].conditionProps[0].businessId = Number(res.data.data.brandId)
-              this.modelCondition[index].attribute = res.data.data.thingModel.properties
-              this.hasAction('condition', index)
-            }
-          })
-        }
       }
     },
     // 切换子品类,获取子品类物模型（执行动作）
@@ -1000,21 +976,18 @@ export default {
         getSonModels({ params: [Number(sunNum)] }).then((res) => {
           if(res.data.code == 200){
             this.modelAction[index].facilityIcon = res.data.data[0].fileList
-            this.form.action[index].actionProps[0].businessId = Number(res.data.data.brandId)
-            params.brandId = Number(res.data.data.brandId)
+            this.form.action[index].actionProps[0].businessId = Number(res.data.data[0].brandId)
+            params.brandId = Number(res.data.data[0].brandId)
+
+            getSonModel({ params }).then((res) => {
+              if(res.data.code == 200){
+                // 拿到子品类物模型，赋值
+                this.modelAction[index].attribute = res.data.data.thingModel.properties
+                this.hasAction('action', index)
+              }
+            })
           }
         })
-
-        if(params.brandId){
-          getSonModel({ params }).then((res) => {
-            if(res.data.code == 200){
-              // 拿到子品类物模型，赋值
-              // this.form.action[index].actionProps[0].businessId = Number(res.data.data.brandId)
-              this.modelAction[index].attribute = res.data.data.thingModel.properties
-              this.hasAction('action', index)
-            }
-          })
-        }
       }
     },
     // 操作属性,判断action和是否有开关
@@ -1132,7 +1105,7 @@ export default {
       this.modelAction.splice(i, 1)
     },
 
-    // 编辑查看模板
+    // 查看编辑模板
     editScene(type, id) {
       const params = {
         id: id
@@ -1644,8 +1617,8 @@ export default {
     },
     // 添加模板
     addTemplate() {
-      // console.log('this.form', this.form)
-      // return
+      console.log('this.form', this.form)
+      return
       this.form.condition.forEach(item => {
         item.conditionOpType = this.condition
       })

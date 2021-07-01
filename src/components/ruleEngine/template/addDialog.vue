@@ -534,14 +534,25 @@ export default {
     }
   },
   created() {
+    // this.getCategory()
     this.getSenceSelect()
-    this.getCategory()
     this.getSceneImage()
 
-    if(this.dialogType == 2 || this.dialogType == 3){
-      this.loading = true
-      this.editScene(this.dialogType, this.editId)
+    // 获取大品类
+    const params = {
+      pageNumber: this.listQuery.page,
+      pageSize: 9999,
+      categoryName: ""
     }
+
+    subCategory({ params }).then((res) => {
+      this.facility = res.data.data.list
+
+      if(this.dialogType == 2 || this.dialogType == 3){
+        this.loading = true
+        this.editScene(this.editId)
+      }
+    })
   },
   methods: {
     // 获取模板类型列表
@@ -882,7 +893,8 @@ export default {
             }else{
               this.modelAction[index].attribute = res.data.data.thingModel.properties
             }
-          this.hasAction(type, index)
+
+            this.hasAction(type, index)
           }
         })
 
@@ -1106,7 +1118,7 @@ export default {
     },
 
     // 查看编辑模板
-    editScene(type, id) {
+    editScene(id) {
       const params = {
         id: id
       }
@@ -1224,13 +1236,13 @@ export default {
                 conditionProps: [{
                   businessId: conditionProps[0].businessId,
                   categoryId: Number(conditionProps[0].categoryId),
-                  propertyName: conditionProps[0].propertyName,
                   categoryName: conditionProps[0].categoryName,
+                  subCategoryName: conditionProps[0].subCategoryName,
+                  propertyName: conditionProps[0].propertyName,
                   compareType: Number(conditionProps[0].compareType),
                   compareValue: conditionProps[0].compareValue,
                   deviceUuid: conditionProps[0].deviceUuid,
-                  subCategoryId: Number(conditionProps[0].subCategoryId),
-                  subCategoryName: conditionProps[0].subCategoryName
+                  subCategoryId: Number(conditionProps[0].subCategoryId)
                 }]
               }
             }else if(item.conditionType == 2){
@@ -1290,27 +1302,25 @@ export default {
                 getSonModels({ params: [sunNum] }).then((res) => {
                   if(res.data.code == 200){
                     this.modelCondition[i].facilityIcon = res.data.data[0].fileList
-                    this.form.condition[i].conditionProps[0].businessId = Number(res.data.data.brandId)
-                    params.brandId = Number(res.data.data.brandId)
+                    this.form.condition[i].conditionProps[0].businessId = Number(res.data.data[0].brandId)
+                    params.brandId = Number(res.data.data[0].brandId)
+
+                    getSonModel({ params }).then((res) => { 
+                      if(res.data.code == 200){
+                        // 拿到子品类物模型，赋值
+                        this.modelCondition[i].attribute = res.data.data.thingModel.properties
+                        this.hasAction('condition', i)
+                      }
+                    })
                   }
                 })
-
-                if(params.brandId){
-                  getSonModel({ params }).then((res) => {
-                    if(res.data.code == 200){
-                      // 拿到子品类物模型，赋值
-                      this.modelCondition[i].attribute = res.data.data.thingModel.properties
-                      this.hasAction('condition', i)
-                    }
-                  })
-                }
               }else{
                 // 没有子品类获取大品类物模型
                 getModel({ params }).then((res) => {
                   if(res.data.code == 200){
                     // 拿到大品类物模型，赋值
                     this.modelCondition[i].attribute = res.data.data.thingModel.properties
-                    this.hasAction(type, i)
+                    this.hasAction('condition', i)
                   }
                 })
 
@@ -1363,7 +1373,7 @@ export default {
           //     3场景   trigger_condition_scene
           //     3设备   trigger_condition_device
 
-                var classify = ''
+          var classify = ''
 
           data.action.forEach((item, i) => {
             actionProps = JSON.parse(item.actionProps)
@@ -1428,7 +1438,7 @@ export default {
                     compareType: Number(actionProps[0].compareType),
                     compareValue: actionProps[0].compareValue,
                     deviceUuid: actionProps[0].deviceUuid,
-                    subCategoryId: actionProps[0].subCategoryName
+                    subCategoryId: Number(actionProps[0].subCategoryId)
                 }]
               }
             }
@@ -1474,27 +1484,25 @@ export default {
                 getSonModels({ params: [sunNum] }).then((res) => {
                   if(res.data.code == 200){
                     this.modelAction[i].facilityIcon = res.data.data[0].fileList
-                    this.form.action[i].actionProps[0].businessId = Number(res.data.data.brandId)
-                    params.brandId = Number(res.data.data.brandId)
+                    this.form.action[i].actionProps[0].businessId = Number(res.data.data[0].brandId)
+                    params.brandId = Number(res.data.data[0].brandId)
+
+                    getSonModel({ params }).then((res) => {
+                      if(res.data.code == 200){
+                        // 拿到子品类物模型，赋值
+                        this.modelAction[i].attribute = res.data.data.thingModel.properties
+                        this.hasAction('action', i)
+                      }
+                    })
                   }
                 })
-
-                if(params.brandId){
-                  getSonModel({ params }).then((res) => {
-                    if(res.data.code == 200){
-                      // 拿到子品类物模型，赋值
-                      this.modelAction[i].attribute = res.data.data.thingModel.properties
-                      this.hasAction('condition', i)
-                    }
-                  })
-                }
               }else{
                 // 没有子品类获取大品类物模型
                 getModel({ params }).then((res) => {
                   if(res.data.code == 200){
                     // 拿到大品类物模型，赋值
                     this.modelAction[i].attribute = res.data.data.thingModel.properties
-                    this.hasAction(type, i)
+                    this.hasAction('action', i)
                   }
                 })
 
@@ -1617,8 +1625,8 @@ export default {
     },
     // 添加模板
     addTemplate() {
-      console.log('this.form', this.form)
-      return
+      // console.log('this.form', this.form)
+      // return
       this.form.condition.forEach(item => {
         item.conditionOpType = this.condition
       })

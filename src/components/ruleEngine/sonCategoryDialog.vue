@@ -257,25 +257,25 @@ export default {
       jsonFileList: [],
       fileList: [
         {
-          fileKey: '',
+          objectId: '',
           fileUrl: '',
           fileDesc: 'highLight',
           fileName: ''
         },
         {
-          fileKey: '',
+          objectId: '',
           fileUrl: '',
           fileDesc: 'normalSmall',
           fileName: ''
         },
         {
-          fileKey: '',
+          objectId: '',
           fileUrl: '',
           fileDesc: 'normalBig',
           fileName: ''
         },
         {
-          fileKey: '',
+          objectId: '',
           fileUrl: '',
           fileDesc: 'disabled',
           fileName: ''
@@ -344,9 +344,10 @@ export default {
             res.data.data.fileList.forEach((e, index) => {
               this.fileList.forEach((ele, i) => {
                 if (e.fileDesc === ele.fileDesc) {
-                  ele.fileKey = e.fileKey
+                  ele.objectId = e.objectId
                   ele.fileUrl = e.fileUrl
                   ele.fileName = e.fileName
+                  if(e.picId) ele.picId = e.picId
                 }
               })
             })
@@ -377,9 +378,9 @@ export default {
         this.$message.error('上传出错，请重新上传')
         return
       }
-      console.log(res.result)
+      if(this.fileList[obj].picId) delete this.fileList[obj].picId
       this.fileList[obj].fileUrl = res.result.url
-      this.fileList[obj].fileKey = res.result.object
+      this.fileList[obj].objectId = res.result.object
       this.fileList[obj].fileName = res.result.filename
       /* switch (obj) {
         case 0:
@@ -420,7 +421,7 @@ export default {
           }
           const list = this.fileList.filter((e) => {
             console.log(e)
-            return e.fileKey !== ''
+            return e.objectId !== ''
           })
           this.form.fileList = list
           if (this.propData.status) {

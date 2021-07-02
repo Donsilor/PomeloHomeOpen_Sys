@@ -118,7 +118,16 @@ export function getByClass(params){
 //根据pathKey列表获取
 export function getByPathKeyList(params){
   return fetch({
-    url: '/icon/details/getByPathKeyList',
+    url: '/api2/resources-service/icon/details/getByPathKeyList',
+    method: 'post',
+    data:params
+  })
+}
+
+//根据多个分类标识符获取
+export function getByClasses(params){
+  return fetch({
+    url: '/api2/resources-service/icon/details/getByClasses',
     method: 'post',
     data:params
   })

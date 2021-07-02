@@ -55,7 +55,7 @@
           <el-input v-model="form.sceneIntroduce" placeholder="详细介绍"></el-input>
         </el-form-item>
 
-        <div v-if="form.sceneType != '2'" class="scene_details">
+        <div class="scene_details">
           <div class="name">场景详情</div>
           <div class="content">
             <div v-if="form.sceneType == '1'" class="relation">

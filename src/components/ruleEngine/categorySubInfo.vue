@@ -187,25 +187,25 @@ export default {
       addDialogVisible: false,
       fileList: [
         {
-          fileKey: '',
+          objectId: '',
           fileUrl: '',
           fileDesc: 'highLight',
           fileName: ''
         },
         {
-          fileKey: '',
+          objectId: '',
           fileUrl: '',
           fileDesc: 'normalSmall',
           fileName: ''
         },
         {
-          fileKey: '',
+          objectId: '',
           fileUrl: '',
           fileDesc: 'normalBig',
           fileName: ''
         },
         {
-          fileKey: '',
+          objectId: '',
           fileUrl: '',
           fileDesc: 'disabled',
           fileName: ''
@@ -261,7 +261,7 @@ export default {
             res.data.data.fileList.forEach((e, index) => {
               this.fileList.forEach((ele, i) => {
                 if (e.fileDesc === ele.fileDesc) {
-                  ele.fileKey = e.fileKey
+                  ele.objectId = e.objectId
                   ele.fileUrl = e.fileUrl
                   ele.fileName = e.fileName
                 }

@@ -120,7 +120,7 @@
                         </el-option>
                       </el-select>
 
-                      <el-select v-if="item.conditionType === 1" v-model="item.conditionProps[0].propertyName" placeholder="请选择属性">
+                      <el-select v-if="item.conditionType === 1" v-model="item.conditionProps[0].propertyName" @change="changeAttrCondition(index, item.conditionProps[0].propertyName)" placeholder="请选择属性">
                         <el-option
                           v-for="(attr, idx) in modelCondition[index].attribute"
                           :key="idx"
@@ -138,7 +138,17 @@
                         </el-option>
                       </el-select>
 
-                      <el-input v-if="item.conditionType === 1" class="width200" v-model="item.conditionProps[0].compareValue" placeholder="请输入内容"></el-input>
+                      <el-select 
+                        v-if="item.conditionType === 1 && modelCondition[index].ifShowSpecs" v-model="item.actionProps[0].compareValue" placeholder="请选择属性值">
+                        <el-option
+                          v-for="(com, idx) in modelCondition[index].specs"
+                          :key="idx"
+                          :label="com"
+                          :value="idx">
+                        </el-option>
+                      </el-select>
+
+                      <el-input v-if="item.conditionType === 1 && modelCondition[index].ifShowInput" class="width200" v-model="item.conditionProps[0].compareValue" placeholder="请输入内容"></el-input>
 
                       <!-- -------时间------- -->
 
@@ -264,7 +274,7 @@
                       </el-option>
                     </el-select>
 
-                    <el-select v-if="item.actionType === 1" v-model="item.actionProps[0].propertyName" placeholder="请选择属性">
+                    <el-select v-if="item.actionType === 1" v-model="item.actionProps[0].propertyName" @change="changeAttrAction(index, item.actionProps[0].propertyName)" placeholder="请选择属性">
                       <el-option
                         v-for="(attr, idx) in modelAction[index].attribute"
                         :key="idx"
@@ -282,7 +292,17 @@
                       </el-option>
                     </el-select>
 
-                    <el-input v-if="item.actionType === 1" class="width200" v-model="item.actionProps[0].compareValue" placeholder="请输入内容"></el-input>
+                    <el-select 
+                        v-if="item.actionType === 1 && modelAction[index].ifShowSpecs" v-model="item.actionProps[0].compareValue" placeholder="请选择属性值">
+                      <el-option
+                        v-for="(com, idx) in modelAction[index].specs"
+                        :key="idx"
+                        :label="com"
+                        :value="idx">
+                      </el-option>
+                    </el-select>
+
+                    <el-input v-if="item.actionType === 1 && modelAction[index].ifShowInput" class="width200" v-model="item.actionProps[0].compareValue" placeholder="请输入内容"></el-input>
 
                     <!-- -------家庭安防------- -->
 
@@ -488,6 +508,9 @@ export default {
           unFacilityIcon: [],  // 非设备图片
           facilityChild: [],   // 设备子品类
           attribute: [],       // 属性
+          specs: [],        // 属性值集合
+          ifShowSpecs: false,
+          ifShowInput: false,
           comparison: ['大于', '等于', '小于'],
           executeMode: ['只执行一次','指定日期','每周'],
           weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
@@ -503,6 +526,9 @@ export default {
           unFacilityIcon: [],  // 非设备图片
           facilityChild: [],   // 设备子品类
           attribute: [],       // 属性
+          specs: [],        // 属性值集合
+          ifShowSpecs: false,
+          ifShowInput: false,
           comparison: ['大于', '等于', '小于'],
           operation: ['报警', '在家安防', '离家安防', '撤防'],
           autoExecute: ['回家', '离家']
@@ -1036,6 +1062,47 @@ export default {
           this.form.action[index].actionProps.push(attr)
         }
       }
+    },
+    // 选择属性值(触发条件)
+    changeAttrCondition(index, name) {
+      console.log(123)
+      this.modelCondition[index].attribute.forEach((item, i) => {
+        if(item.identifier == name){
+      console.log(656)
+          
+          this.modelCondition[index].specs = item.dataType.specs
+      console.log(779, this.modelCondition[index])
+
+          if(JSON.stringify(this.modelCondition[index].specs) != '{}'&&
+            (item.dataType.type == 'enum' ||
+            item.dataType.type == 'bool')){
+              this.modelCondition[index].ifShowSpecs = true
+              this.modelCondition[index].ifShowInput = false
+          }else{
+              this.modelCondition[index].ifShowSpecs = false
+              this.modelCondition[index].ifShowInput = true
+          }
+        }
+      })
+    },
+    // 选择属性值(执行动作)
+    changeAttrAction(index, name) {
+      this.modelAction[index].attribute.forEach((item, i) => {
+        if(item.identifier == name){
+          
+          this.modelAction[index].specs = item.dataType.specs
+
+          if(JSON.stringify(this.modelAction[index].specs) != '{}'&&
+            (item.dataType.type == 'enum' ||
+            item.dataType.type == 'bool')){
+              this.modelAction[index].ifShowSpecs = true
+              this.modelAction[index].ifShowInput = false
+          }else{
+              this.modelAction[index].ifShowSpecs = false
+              this.modelAction[index].ifShowInput = true
+          }
+        }
+      })
     },
 
     // 添加触发条件

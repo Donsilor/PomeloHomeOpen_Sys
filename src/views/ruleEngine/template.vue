@@ -129,13 +129,15 @@ export default {
     },
     // 搜索
     search() {
+      console.log(8989)
+      this.getList(this.searchVal)
     },
     // 获取场景列表
-    getList() {
+    getList(val) {
       const params = {
         pageNumber: this.listQuery.page,
         pageSize: this.listQuery.limit,
-        sceneName: ""
+        sceneName: val ? val : ''
       }
       getSenceTemplate({ params }).then((res) => {
         const resData = res.data

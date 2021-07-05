@@ -67,7 +67,7 @@
               <div class="trigger" v-for="(item, index) in form.condition" :key="index+'a'">
                 <el-row class="trigger_row">
                   <el-col :span="19">
-                    <div>触发条件{{+index+1}}</div>
+                    <div><span class="star">*</span>触发条件{{+index+1}}</div>
 
                     <div style="margin-top: 4px">
                       <el-select v-model="item.conditionType" placeholder="请选择触发条件" @change="seleceTouch(index, item.conditionType)">
@@ -139,7 +139,7 @@
                       </el-select>
 
                       <el-select 
-                        v-if="item.conditionType === 1 && modelCondition[index].ifShowSpecs" v-model="item.actionProps[0].compareValue" placeholder="请选择属性值">
+                        v-if="item.conditionType === 1 && modelCondition[index].ifShowSpecs" v-model="item.conditionProps[0].compareValue" placeholder="请选择属性值">
                         <el-option
                           v-for="(com, idx) in modelCondition[index].specs"
                           :key="idx"
@@ -221,7 +221,7 @@
             <div class="trigger" v-for="(item, index) in form.action" :key="index+'b'">
               <el-row class="trigger_row">
                 <el-col :span="19">
-                  <div>执行动作{{+index+1}}</div>
+                  <div><span class="star">*</span>执行动作{{+index+1}}</div>
 
                   <div style="margin-top: 4px">
                     <el-select v-model="item.actionType" placeholder="请选择执行动作" @change="seleceExecute(index, item.actionType)">
@@ -509,6 +509,9 @@ export default {
           facilityChild: [],   // 设备子品类
           attribute: [],       // 属性
           specs: [],        // 属性值集合
+          type: '',
+          max: '',
+          min: '', 
           ifShowSpecs: false,
           ifShowInput: false,
           comparison: ['大于', '等于', '小于'],
@@ -619,6 +622,14 @@ export default {
     seleceTouch(index, val){
       this.modelCondition[index].facilityIcon = []
       this.modelCondition[index].unFacilityIcon = []
+
+      // this.modelCondition[index].facilityChild = []
+      // this.modelCondition[index].attribute = []
+      // this.modelCondition[index].facilityIcon = []
+      // this.modelCondition[index].unFacilityIcon = []
+      // this.modelCondition[index].specs = []
+      // this.modelCondition[index].ifShowSpecs = false
+      // this.modelCondition[index].ifShowInput = false
 
       //       -- 触发条件图标分类
       //     0定时   trigger_condition_time
@@ -828,6 +839,10 @@ export default {
       this.modelCondition[index].attribute = []
       this.modelCondition[index].facilityIcon = []
       this.modelCondition[index].unFacilityIcon = []
+      this.modelCondition[index].specs = []
+      this.modelCondition[index].ifShowSpecs = false
+      this.modelCondition[index].ifShowInput = false
+
 
       const params = {
         categoryId: id,
@@ -877,6 +892,9 @@ export default {
       this.modelAction[index].attribute = []
       this.modelAction[index].facilityIcon = []
       this.modelAction[index].unFacilityIcon = []
+      this.modelAction[index].specs = []
+      this.modelAction[index].ifShowSpecs = false
+      this.modelAction[index].ifShowInput = false
 
       const params = {
         categoryId: id,
@@ -950,9 +968,12 @@ export default {
       this.form.condition[index].conditionProps[0].businessId = 0
       this.form.condition[index].resourceId = ''
 
+      this.modelCondition[index].attribute = []
       this.modelCondition[index].facilityIcon = []
       this.modelCondition[index].unFacilityIcon = []
-      this.modelCondition[index].attribute = []
+      this.modelCondition[index].specs = []
+      this.modelCondition[index].ifShowSpecs = false
+      this.modelCondition[index].ifShowInput = false
 
       const params = {
         deviceCategoryId: Number(num),
@@ -998,9 +1019,12 @@ export default {
       this.form.action[index].actionProps[0].businessId = 0
       this.form.action[index].resourceId = ''
 
+      this.modelAction[index].attribute = []
       this.modelAction[index].facilityIcon = []
       this.modelAction[index].unFacilityIcon = []
-      this.modelAction[index].attribute = []
+      this.modelAction[index].specs = []
+      this.modelAction[index].ifShowSpecs = false
+      this.modelAction[index].ifShowInput = false
 
       const params = {
         deviceCategoryId: Number(num),
@@ -1065,14 +1089,12 @@ export default {
     },
     // 选择属性值(触发条件)
     changeAttrCondition(index, name) {
-      console.log(123)
       this.modelCondition[index].attribute.forEach((item, i) => {
         if(item.identifier == name){
-      console.log(656)
-          
           this.modelCondition[index].specs = item.dataType.specs
-      console.log(779, this.modelCondition[index])
+          this.modelCondition[index].type = item.dataType.type
 
+          // 判断显示枚举还是输入框
           if(JSON.stringify(this.modelCondition[index].specs) != '{}'&&
             (item.dataType.type == 'enum' ||
             item.dataType.type == 'bool')){
@@ -1081,6 +1103,11 @@ export default {
           }else{
               this.modelCondition[index].ifShowSpecs = false
               this.modelCondition[index].ifShowInput = true
+          }
+
+          if(this.modelCondition[index].type == 'int'){
+            this.modelCondition[index].max = item.dataType.specs.max
+            this.modelCondition[index].min = item.dataType.specs.min
           }
         }
       })
@@ -1408,7 +1435,7 @@ export default {
 
                 this.form.condition[i].conditionProps.push(attr)
               }
-            }else if(item.conditionType ==0){
+            }else if(item.conditionType == 0){
             }
 
             if(classify){
@@ -1624,90 +1651,159 @@ export default {
     // 确认添加模板
     addOrEdit() {
       if(this.dialogType == 2){
+        // 关闭查看
         this.resetForm()
         return
       }
      
-      this.$refs.permissionForm.validate(valid => {
-        if (valid) {
-          var ifCondition = this.form.condition.some(o => {
-              return o.conditionType !== ''
-            })
+      //  弹窗校验
+      // this.$refs.permissionForm.validate(valid => {
+      //   if (valid) {
+      //     var ifCondition = this.form.condition.some(o => {
+      //         return o.conditionType !== ''
+      //       })
 
-          if(ifCondition){
-            // 有使用触发,判断触发条件的关系（‘或’或者‘与’）
-            if(this.condition == 9){
-              // 未选择触发条件
-              var res = this.form.condition.every(o => {
-                return o.conditionType == 1
-              })
+      //     if(ifCondition){
+      //       // 有使用触发,判断触发条件的关系（‘或’或者‘与’）
+      //       if(this.condition == 9){
+      //         // 未选择触发条件
+      //         var res = this.form.condition.every(o => {
+      //           return o.conditionType == 1
+      //         })
 
-              if(res){
-                this.affirmType = 2;
-                this.dialogVisible = true;
-                this.dialogContent = '请选择触发条件的关系'
-              }else{
-                this.affirmType = 3;
-                this.dialogVisible = true;
-                this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
-              }
-            }else if(this.condition == 1){
-              // 已选择与关系
-              var res = this.form.condition.every(o => {
-                return o.conditionType == 1
-              })
+      //         if(res){
+      //           this.affirmType = 2;
+      //           this.dialogVisible = true;
+      //           this.dialogContent = '请选择触发条件的关系'
+      //         }else{
+      //           this.affirmType = 3;
+      //           this.dialogVisible = true;
+      //           this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
+      //         }
+      //       }else if(this.condition == 1){
+      //         // 已选择与关系
+      //         var res = this.form.condition.every(o => {
+      //           return o.conditionType == 1
+      //         })
 
-              if(res){
-                if(this.dialogType == 1){
-                  this.addTemplate()
-                }else if(this.dialogType ==3){
-                  this.editTemplate()
-                }
-              }else{
-                this.affirmType = 3;
-                this.dialogVisible = true;
-                this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
-              }
-            }else{
-              // 已选择或关系
-              if(this.dialogType == 1){
-                this.addTemplate()
-              }else if(this.dialogType ==3){
-                this.editTemplate()
-              }
-            }
-          }else{
-            // 未使用触发条件
-            if(this.dialogType == 1){
-              this.addTemplate()
-            }else if(this.dialogType ==3){
-              this.editTemplate()
-            }
+      //         if(res){
+                    // this.dealWithForm()
+   
+      //         }else{
+      //           this.affirmType = 3;
+      //           this.dialogVisible = true;
+      //           this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
+      //         }
+      //       }else{
+      //         // 已选择或关系
+                    // this.dealWithForm()
+      //       }
+      //     }else{
+      //       // 未使用触发条件
+              // this.dealWithForm()
+      //     }
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
+
+      this.dealWithForm()
+    },
+    // 数据处理
+    dealWithForm() {
+      // 校验执行动作
+      // this.form.action.forEach((item, i) => {
+        // item.actionOpType = 0
+
+      //   // 转换星期数据类型
+      //   if(item.conditionProps.length == 2 && item.conditionProps[1].propertyName == 'weeks'){
+      //     item.conditionProps[1].compareValue = item.conditionProps[1].compareValue.join()
+      //   }
+
+      //     console.log(78798, item)
+
+      //   if(!item.resourceId){
+      //     this.dialogVisible = true
+      //     this.dialogContent = '“触发条件' +(+1+i)+ '”的图片不能为空，请重新选择或填写！'
+      //     return
+      //   }
+
+      //   if(!item.conditionProps[0].propertyName){
+      //     this.dialogVisible = true
+      //     this.dialogContent = '“触发条件' +(+1+i)+ '”的属性不能为空，请重新选择！'
+      //     return
+      //   }
+
+      //   if(!item.conditionProps[0].compareType){
+      //     this.dialogVisible = true
+      //     this.dialogContent = '“触发条件' +(+1+i)+ '”的比较值不能为空，请重新选择！'
+      //     return
+      //   }
+
+      //   if(!item.conditionProps[0].compareValue){
+      //     this.dialogVisible = true
+      //     this.dialogContent = '“触发条件' +(+1+i)+ '”的属性值不能为空，请重新选择或填写！'
+      //     return
+      //   }
+      // })
+      
+      // 自动类型校验触发条件
+      if(this.form.sceneType == 1){
+        this.form.condition.forEach((item, i) => {
+          // 关系类型
+          item.conditionOpType = this.condition
+
+          // 转换星期数据类型
+          if(item.conditionProps.length == 2 && item.conditionProps[1].propertyName == 'weeks'){
+            item.conditionProps[1].compareValue = item.conditionProps[1].compareValue.join()
           }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+
+          console.log(1233, item)
+          console.log(5435, this.modelCondition[i])
+
+
+          if(!item.resourceId){
+            this.dialogVisible = true
+            this.dialogContent = '“触发条件' +(+1+i)+ '”的图片不能为空，请重新选择！'
+            return
+          }
+
+          if(!item.conditionProps[0].propertyName){
+            this.dialogVisible = true
+            this.dialogContent = '“触发条件' +(+1+i)+ '”的属性不能为空，请重新选择！'
+            return
+          }
+
+          if(!item.conditionProps[0].compareType){
+            this.dialogVisible = true
+            this.dialogContent = '“触发条件' +(+1+i)+ '”的比较值不能为空，请重新选择！'
+            return
+          }
+
+          if(!item.conditionProps[0].compareValue){
+            this.dialogVisible = true
+            this.dialogContent = '“触发条件' +(+1+i)+ '”的属性值不能为空，请重新选择或填写！'
+            return
+          }
+
+          if(this.modelCondition[i].type == 'int' && (item.conditionProps[1].compareValue <))
+
+          console.log(1233, item)
+
+        })
+      }
+
+      return
+
+      if(this.dialogType == 1){
+        this.addTemplate()
+      }else if(this.dialogType ==3){
+        this.editTemplate()
+      }
     },
     // 添加模板
     addTemplate() {
-      // console.log('this.form', this.form)
-      // return
-      this.form.condition.forEach(item => {
-        item.conditionOpType = this.condition
-      })
-
-      this.form.action.forEach(item => {
-        item.actionOpType = this.condition
-      })
-
-      this.form.condition.forEach((item, i) => {
-        if(item.conditionProps.length == 2 && item.conditionProps[1].propertyName == 'weeks'){
-          item.conditionProps[1].compareValue = item.conditionProps[1].compareValue.join()
-        }
-      })
-
       let params = {'params': Object.assign({}, this.form)} 
       addSenceTemplate(params).then(res=>{
         if(res.code == 200){
@@ -1716,28 +1812,9 @@ export default {
         }
       })
     },
+
     // 编辑模板
     editTemplate() {
-      // console.log('edit', this.form)
-      // return
-      this.form.condition.forEach((item, i) => {
-        if(item){
-          this.form.condition[i].conditionOpType = this.condition
-        }
-      })
-
-      this.form.action.forEach((item, i) => {
-        if(item){
-          this.form.action[i].actionOpType = this.condition
-        }
-      })
-
-      this.form.condition.forEach((item, i) => {
-        if(item.conditionProps.length == 2 && item.conditionProps[1].propertyName == 'weeks'){
-          item.conditionProps[1].compareValue = item.conditionProps[1].compareValue.join()
-        }
-      })
-
       let params = {'params': Object.assign({}, this.form)} 
       editSenceTemplate(params).then(res=>{
         if(res.code == 200){
@@ -1871,6 +1948,11 @@ export default {
     /deep/ .el-select-dropdown{
       transform: translateX(-200px);
     }
+  }
+
+  .star{
+    color: red;
+    margin-right: 4px;
   }
 
 </style>

@@ -28,7 +28,7 @@ service.interceptors.request.use(
       //老接口，需要添加前缀
       config['url'] = '/api/index.php'+config['url']
     } */
-    if(!(config.data instanceof FormData) && config['url'].indexOf('/icon') === -1){
+    if(!(config.data instanceof FormData) && config['url'].indexOf('/icon') === -1 &&  config['url'].indexOf('/product_agreement/versionadd')  === -1){
       config.data = Object.assign(defaultParams, config.data)
     }
     

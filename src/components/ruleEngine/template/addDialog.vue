@@ -512,9 +512,9 @@ export default {
           type: '',
           max: '',
           min: '',
-          hasSwitch: false,
           ifShowSpecs: false,
           ifShowInput: false,
+          hasSwitch: false,
           comparison: ['大于', '等于', '小于'],
           executeMode: ['只执行一次','指定日期','每周'],
           weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
@@ -534,9 +534,9 @@ export default {
           type: '',
           max: '',
           min: '',
-          hasSwitch: false,
           ifShowSpecs: false,
           ifShowInput: false,
+          hasSwitch: false,
           comparison: ['大于', '等于', '小于'],
           operation: ['报警', '在家安防', '离家安防', '撤防'],
           autoExecute: ['回家', '离家']
@@ -1122,7 +1122,7 @@ export default {
           this.modelCondition[index].type = item.dataType.type
 
           // 判断显示枚举还是输入框
-          if(JSON.stringify(this.modelCondition[index].specs) != '{}'&&
+          if(JSON.stringify(this.modelCondition[index].specs) != '{}' &&
             (item.dataType.type == 'enum' ||
             item.dataType.type == 'bool')){
               this.modelCondition[index].ifShowSpecs = true
@@ -1143,10 +1143,10 @@ export default {
     changeAttrAction(index, name) {
       this.modelAction[index].attribute.forEach((item, i) => {
         if(item.identifier == name){
-          
           this.modelAction[index].specs = item.dataType.specs
+          this.modelAction[index].type = item.dataType.type
 
-          if(JSON.stringify(this.modelAction[index].specs) != '{}'&&
+          if(JSON.stringify(this.modelAction[index].specs) != '{}' &&
             (item.dataType.type == 'enum' ||
             item.dataType.type == 'bool')){
               this.modelAction[index].ifShowSpecs = true
@@ -1154,6 +1154,11 @@ export default {
           }else{
               this.modelAction[index].ifShowSpecs = false
               this.modelAction[index].ifShowInput = true
+          }
+
+          if(this.modelCondition[index].type == 'int'){
+            this.modelCondition[index].max = item.dataType.specs.max
+            this.modelCondition[index].min = item.dataType.specs.min
           }
         }
       })
@@ -1299,38 +1304,45 @@ export default {
             conditionProps = JSON.parse(item.conditionProps)
 
             let tem = {
-                  conditionOpType: 0,
-                  conditionType: "",
-                  resourceId: "",
-                  conditionProps: [{
-                    businessId: 0,
-                    categoryId: "",
-                    categoryName: "",
-                    propertyName: "",
-                    compareType: "",
-                    compareValue: "",
-                    deviceUuid: 0,
-                    subCategoryId: 0,
-                    subCategoryName: ""
-                  },
-                  {
-                    propertyName: "",
-                    compareType: "",
-                    compareValue: ""
-                  }]
-                },
+              conditionOpType: 0,
+              conditionType: "",
+              resourceId: "",
+              conditionProps: [{
+                businessId: 0,
+                categoryId: "",
+                categoryName: "",
+                propertyName: "",
+                compareType: "",
+                compareValue: "",
+                deviceUuid: 0,
+                subCategoryId: 0,
+                subCategoryName: ""
+              },
+              {
+                propertyName: "",
+                compareType: "",
+                compareValue: ""
+              }]
+            },
 
-                model = {
-                  facilityIcon: [],
-                  unFacilityIcon: [],
-                  facilityChild: [],
-                  attribute: [],
-                  comparison: ['大于', '等于', '小于'],
-                  executeMode: ['只执行一次','指定日期','每周'],
-                  weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
-                  operation: ['报警', '在家安防', '离家安防', '撤防'],
-                  autoExecute: ['回家', '离家']
-                }
+            model = {
+              facilityIcon: [],
+              unFacilityIcon: [],
+              facilityChild: [],
+              attribute: [],
+              specs: [],
+              type: '',
+              max: '',
+              min: '',
+              ifShowSpecs: false,
+              ifShowInput: false,
+              hasSwitch: false,
+              comparison: ['大于', '等于', '小于'],
+              executeMode: ['只执行一次','指定日期','每周'],
+              weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
+              operation: ['报警', '在家安防', '离家安防', '撤防'],
+              autoExecute: ['回家', '离家']
+            }
 
             if(item.conditionType == 0){
               // 时间
@@ -1363,6 +1375,11 @@ export default {
             }else if(item.conditionType == 1){
               // 触发设备
               classify = 'trigger_condition_device'
+
+              if(conditionProps.length == 2){
+                model.hasSwitch = true
+                conditionProps.splice(0, 1)
+              }
 
               tem = {
                 conditionOpType: item.conditionOpType,
@@ -1466,16 +1483,28 @@ export default {
                 })
               }
 
-              if(conditionProps.length > 1){
-                // 有开关
-                let attr = {
-                  "propertyName": "switch",
-                  "compareType": "==",
-                  "compareValue": "1"
-                }
+              this.modelCondition[i].attribute.forEach((item, j) => {
+                if(item.identifier == conditionProps[0].propertyName){
+                  this.modelCondition[i].specs = item.dataType.specs
+                  this.modelCondition[i].type = item.dataType.type
 
-                this.form.condition[i].conditionProps.push(attr)
-              }
+                  // 判断显示枚举还是输入框
+                  if(JSON.stringify(this.modelCondition[i].specs) != '{}' &&
+                    (item.dataType.type == 'enum' ||
+                    item.dataType.type == 'bool')){
+                      this.modelCondition[i].ifShowSpecs = true
+                      this.modelCondition[i].ifShowInput = false
+                  }else{
+                      this.modelCondition[i].ifShowSpecs = false
+                      this.modelCondition[i].ifShowInput = true
+                  }
+
+                  if(this.modelCondition[i].type == 'int'){
+                    this.modelCondition[i].max = item.dataType.specs.max
+                    this.modelCondition[i].min = item.dataType.specs.min
+                  }
+                }
+              })
             }else if(item.conditionType == 0){
             }
 
@@ -1514,32 +1543,39 @@ export default {
             actionProps = JSON.parse(item.actionProps)
 
             let tem = {
-                  actionOpType: 0,
-                  actionType: "",
-                  resourceId: "",
-                  sort: 0,
-                  actionProps: [{
-                    businessId: "",
-                    categoryId: "",
-                    categoryName: "",
-                    subCategoryName: "",
-                    propertyName: "",
-                    compareType: "0",
-                    compareValue: "",
-                    deviceUuid: "",
-                    subCategoryId: ""
-                  }]
-                },
+              actionOpType: 0,
+              actionType: "",
+              resourceId: "",
+              sort: 0,
+              actionProps: [{
+                businessId: "",
+                categoryId: "",
+                categoryName: "",
+                subCategoryName: "",
+                propertyName: "",
+                compareType: "0",
+                compareValue: "",
+                deviceUuid: "",
+                subCategoryId: ""
+              }]
+            },
 
-                model = {
-                  facilityIcon: [],
-                  unFacilityIcon: [],
-                  facilityChild: [],
-                  attribute: [],
-                  comparison: ['大于', '等于', '小于'],
-                  operation: ['报警', '在家安防', '离家安防', '撤防'],
-                  autoExecute: ['回家', '离家']
-                }
+            model = {
+              facilityIcon: [],
+              unFacilityIcon: [],
+              facilityChild: [],
+              attribute: [],
+              specs: [],
+              type: '',
+              max: '',
+              min: '',
+              ifShowSpecs: false,
+              ifShowInput: false,
+              hasSwitch: false,
+              comparison: ['大于', '等于', '小于'],
+              operation: ['报警', '在家安防', '离家安防', '撤防'],
+              autoExecute: ['回家', '离家']
+            }
 
             if(item.actionType == 0){
               // 安防
@@ -1559,21 +1595,26 @@ export default {
               // 执行动作设备
               classify = 'trigger_condition_device'
 
+              if(actionProps.length == 2){
+                model.hasSwitch = true
+                actionProps.splice(0, 1)
+              }
+
               tem = {
                 actionOpType: item.actionOpType,
                 actionType: item.actionType,
                 resourceId: item.resourceId,
                 sort: 0,
                 actionProps: [{
-                    businessId: actionProps[0].businessId,
-                    categoryId: Number(actionProps[0].categoryId),
-                    categoryName: actionProps[0].categoryName,
-                    subCategoryName: actionProps[0].subCategoryName,
-                    propertyName: actionProps[0].propertyName,
-                    compareType: Number(actionProps[0].compareType),
-                    compareValue: actionProps[0].compareValue,
-                    deviceUuid: actionProps[0].deviceUuid,
-                    subCategoryId: Number(actionProps[0].subCategoryId)
+                  businessId: actionProps[0].businessId,
+                  categoryId: Number(actionProps[0].categoryId),
+                  categoryName: actionProps[0].categoryName,
+                  subCategoryName: actionProps[0].subCategoryName,
+                  propertyName: actionProps[0].propertyName,
+                  compareType: Number(actionProps[0].compareType),
+                  compareValue: actionProps[0].compareValue,
+                  deviceUuid: actionProps[0].deviceUuid,
+                  subCategoryId: Number(actionProps[0].subCategoryId)
                 }]
               }
             }
@@ -1648,16 +1689,27 @@ export default {
                 })
               }
 
-              if(actionProps.length > 1){
-                // 有开关
-                let attr = {
-                  "propertyName": "switch",
-                  "compareType": "==",
-                  "compareValue": "1"
-                }
+              this.modelAction[i].attribute.forEach((item, j) => {
+                if(item.identifier == actionProps[0].propertyName){
+                  this.modelAction[i].specs = item.dataType.specs
+                  this.modelAction[i].type = item.dataType.type
 
-                this.form.action[i].actionProps.push(attr)
-              }
+                  if(JSON.stringify(this.modelAction[index].specs) != '{}' &&
+                    (item.dataType.type == 'enum' ||
+                    item.dataType.type == 'bool')){
+                      this.modelAction[i].ifShowSpecs = true
+                      this.modelAction[i].ifShowInput = false
+                  }else{
+                      this.modelAction[i].ifShowSpecs = false
+                      this.modelAction[i].ifShowInput = true
+                  }
+
+                  if(this.modelCondition[i].type == 'int'){
+                    this.modelCondition[i].max = item.dataType.specs.max
+                    this.modelCondition[i].min = item.dataType.specs.min
+                  }
+                }
+              })
             }
 
             if(classify){
@@ -1696,9 +1748,6 @@ export default {
         this.resetForm()
         return
       }
-
-          this.dealWithForm()     
-return
      
       //  弹窗校验
       this.$refs.permissionForm.validate(valid => {
@@ -1713,8 +1762,6 @@ return
     },
     // 数据处理
     dealWithForm() {
-      this.addSwitch()
-      return
       // 自动类型校验触发条件
       if(this.form.sceneType == 1){
         var cond = this.form.condition;
@@ -1804,7 +1851,7 @@ return
 
         if(item.actionType === 1 && item.actionProps[0].subCategoryId === '' && this.modelAction[i].facilityChild.length){
           this.dialogVisible = true
-          this.dialogContent = '“触发条件' +(+1+i)+ '”未选择子品类设备，请选择！'
+          this.dialogContent = '“执行动作' +(+1+i)+ '”未选择子品类设备，请选择！'
           return
         }
 
@@ -1877,6 +1924,7 @@ return
         this.addSwitch()
       }
     },
+    // 有按钮属性的添加switch
     addSwitch() {
       let params = {'params': Object.assign({}, this.form)},
           attr = {
@@ -1887,26 +1935,15 @@ return
 
       this.modelCondition.forEach((item, i) => {
         if(item.hasSwitch){
-          console.log(8978, params.params.condtion[i])
-          // let arr = []
-          // params.params.condtion[i].conditionProps.unshift(attr)
-          //   console.log(666, child)
-          //   arr[j] = child            
-          // })
-
-          // arr.unshift(attr)
-          // params.condition[i].conditionProps = arr
+          params.params.condition[i].conditionProps.unshift(attr)
         }
       })
 
-      // this.modelAction.forEach((item, i) => {
-      //   if(item.hasSwitch){
-      //     params.params.action[i].actionProps.unshift(attr)
-      //   }
-      // })
-
-      console.log(897899, params)
-      return
+      this.modelAction.forEach((item, i) => {
+        if(item.hasSwitch){
+          params.params.action[i].actionProps.unshift(attr)
+        }
+      })
 
       if(this.dialogType == 1){
         this.addTemplate(params)
@@ -1916,6 +1953,7 @@ return
     },
     // 添加模板
     addTemplate(params) {
+      console.log('params777', params)
       addSenceTemplate(params).then(res=>{
         if(res.code == 200){
           this.$message.success('新增成功')
@@ -1926,6 +1964,7 @@ return
 
     // 编辑模板
     editTemplate(params) {
+      console.log('params666', params)
       editSenceTemplate(params).then(res=>{
         if(res.code == 200){
           this.$message.success('编辑成功')

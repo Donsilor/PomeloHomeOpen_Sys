@@ -1787,7 +1787,7 @@ export default {
             return
           }
 
-          if(this.modelCondition[i].type == 'int' && (item.conditionProps[1].compareValue <))
+          if(this.modelCondition[i].type == 'int' && (item.conditionProps[1].compareValue))
 
           console.log(1233, item)
 

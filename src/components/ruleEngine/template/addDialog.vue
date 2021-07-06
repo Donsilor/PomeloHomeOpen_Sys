@@ -511,7 +511,8 @@ export default {
           specs: [],        // 属性值集合
           type: '',
           max: '',
-          min: '', 
+          min: '',
+          hasSwitch: false,
           ifShowSpecs: false,
           ifShowInput: false,
           comparison: ['大于', '等于', '小于'],
@@ -530,6 +531,10 @@ export default {
           facilityChild: [],   // 设备子品类
           attribute: [],       // 属性
           specs: [],        // 属性值集合
+          type: '',
+          max: '',
+          min: '',
+          hasSwitch: false,
           ifShowSpecs: false,
           ifShowInput: false,
           comparison: ['大于', '等于', '小于'],
@@ -840,6 +845,10 @@ export default {
       this.modelCondition[index].facilityIcon = []
       this.modelCondition[index].unFacilityIcon = []
       this.modelCondition[index].specs = []
+      this.modelCondition[index].type = ''
+      this.modelCondition[index].max = ''
+      this.modelCondition[index].min = ''
+      this.modelCondition[index].hasSwitch = false
       this.modelCondition[index].ifShowSpecs = false
       this.modelCondition[index].ifShowInput = false
 
@@ -868,7 +877,6 @@ export default {
 
     // 切换大品类，获取子品类（执行动作）
     changeAction(index, num) {
-      console.log(1212, index ,num)
       var id = ''
       this.facility.forEach((o, i) => {
         if(o.categoryNumber == num){
@@ -894,6 +902,10 @@ export default {
       this.modelAction[index].facilityIcon = []
       this.modelAction[index].unFacilityIcon = []
       this.modelAction[index].specs = []
+      this.modelAction[index].type = ''
+      this.modelAction[index].max = ''
+      this.modelAction[index].min = ''
+      this.modelAction[index].hasSwitch = false
       this.modelAction[index].ifShowSpecs = false
       this.modelAction[index].ifShowInput = false
 
@@ -973,6 +985,10 @@ export default {
       this.modelCondition[index].facilityIcon = []
       this.modelCondition[index].unFacilityIcon = []
       this.modelCondition[index].specs = []
+      this.modelCondition[index].type = ''
+      this.modelCondition[index].max = ''
+      this.modelCondition[index].min = ''
+      this.modelCondition[index].hasSwitch = false
       this.modelCondition[index].ifShowSpecs = false
       this.modelCondition[index].ifShowInput = false
 
@@ -1005,7 +1021,6 @@ export default {
     // 切换子品类,获取子品类物模型（执行动作）
     getSubModelAction(index, num, sunNum) {
       this.modelAction[index].facilityChild.forEach((o, i) => {
-        console.log(o, sunNum)
         if(o.subCategoryNumber == sunNum){
           this.form.action[index].actionProps[0].subCategoryName = this.modelAction[index].facilityChild[i].subCategoryName
         }
@@ -1022,6 +1037,10 @@ export default {
       this.modelAction[index].facilityIcon = []
       this.modelAction[index].unFacilityIcon = []
       this.modelAction[index].specs = []
+      this.modelAction[index].type = ''
+      this.modelAction[index].max = ''
+      this.modelAction[index].min = ''
+      this.modelAction[index].hasSwitch = false
       this.modelAction[index].ifShowSpecs = false
       this.modelAction[index].ifShowInput = false
 
@@ -1051,40 +1070,49 @@ export default {
         })
       }
     },
-    // 操作属性,判断action和是否有开关
+    // 判断action属性
     hasAction(type, index) {
-      // action: 0:触发条件, 1:执行动作, 2:触发条件和执行动作, 3:非出发条件和执行动作
+      // action: 0:触发条件和执行动作, 1:触发条件, 2:执行动作, 3:非出发条件和执行动作
       let newAttr = [];
       if(type == 'condition'){
         // 自动场景筛选action为0和2的属性
         newAttr = this.modelCondition[index].attribute.filter((o, i) => {
-          return o.action == 0 || o.action == 2
+          return o.action == 0 || o.action == 1
         })
 
         this.modelCondition[index].attribute = newAttr
       }else{
         // 手动场景筛选action为1和2的属性
         newAttr = this.modelAction[index].attribute.filter((o, i) => {
-          return o.action == 1 || o.action == 2
+          return o.action == 0 || o.action == 2
         })
 
         this.modelAction[index].attribute = newAttr
       }
 
-      // 如果属性有开关,则加开关属性
       let hasSwitch = newAttr.some(item => item.identifier == 'switch')
       if(hasSwitch){
-        let attr = {
-          "propertyName": "switch",
-          "compareType": "==",
-          "compareValue": "1",
-        }
         if(type == 'condition'){
-          this.form.condition[index].conditionProps.push(attr)
+          this.modelCondition[index].hasSwitch = true
         }else{
-          this.form.action[index].actionProps.push(attr)
+          this.modelAction[index].hasSwitch = true
         }
       }
+
+      // // 如果属性有开关,则加开关属性
+      // let hasSwitch = newAttr.some(item => item.identifier == 'switch')
+      // if(hasSwitch){
+      //   let attr = {
+      //     "propertyName": "switch",
+      //     "compareType": "==",
+      //     "compareValue": "1",
+      //   }
+      //   if(type == 'condition'){
+      //     this.form.condition[index].conditionProps.unshift(attr)
+      //   }else{
+      //     this.form.action[index].actionProps.unshift(attr)
+      //   }
+      // }
     },
     // 选择属性值(触发条件)
     changeAttrCondition(index, name) {
@@ -1668,6 +1696,9 @@ export default {
         this.resetForm()
         return
       }
+
+          this.dealWithForm()     
+return
      
       //  弹窗校验
       this.$refs.permissionForm.validate(valid => {
@@ -1682,6 +1713,8 @@ export default {
     },
     // 数据处理
     dealWithForm() {
+      this.addSwitch()
+      return
       // 自动类型校验触发条件
       if(this.form.sceneType == 1){
         var cond = this.form.condition;
@@ -1690,15 +1723,15 @@ export default {
           // 关系类型
           this.affirmType = 2;
 
-          // 转换星期数据类型
-          if(item.conditionProps.length == 2 && item.conditionProps[1].propertyName == 'weeks'){
-            item.conditionProps[1].compareValue = item.conditionProps[1].compareValue.join()
-          }
-
           if(item.conditionType === ''){
             this.dialogVisible = true
-            this.dialogContent = '“触发条件' +(+1+i)+ '”未选择触发条件，请选择或删除！'
+            this.dialogContent = '“触发条件' +(+1+i)+ '”未选择触发条件，请选择！'
             return
+          }
+
+          // 转换星期数据类型
+          if(item.conditionType === 0 && item.conditionProps.length == 2 && item.conditionProps[1].propertyName == 'weeks'){
+            item.conditionProps[1].compareValue = item.conditionProps[1].compareValue.join()
           }
 
           if(item.conditionType === 1 && item.conditionProps[0].categoryId === ''){
@@ -1759,7 +1792,7 @@ export default {
 
         if(item.actionType === ''){
           this.dialogVisible = true
-          this.dialogContent = '“执行动作' +(+1+i)+ '”未选择执行动作，请选择或删除！'
+          this.dialogContent = '“执行动作' +(+1+i)+ '”未选择执行动作，请选择！'
           return
         }
 
@@ -1820,11 +1853,11 @@ export default {
         if(res){
           this.affirmType = 2;
           this.dialogVisible = true;
-          this.dialogContent = '请选择触发条件的关系'
+          this.dialogContent = '请选择触发条件关系'
         }else{
           this.affirmType = 3;
           this.dialogVisible = true;
-          this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
+          this.dialogContent = '请选择触发条件关系，当前关系只能为\'或\'关系';
         }
       }else if(this.condition == 1){
         // 已选择与关系
@@ -1833,28 +1866,56 @@ export default {
         })
 
         if(res){
-          if(this.dialogType == 1){
-            this.addTemplate()
-          }else if(this.dialogType == 3){
-            this.editTemplate()
-          }
+          this.addSwitch()
         }else{
           this.affirmType = 3;
           this.dialogVisible = true;
-          this.dialogContent = '请选择触发条件的关系，当前关系只能为\'或\'关系';
+          this.dialogContent = '请选择触发条件关系，当前关系只能为\'或\'关系';
         }
       }else{
         // 已选择或关系
-        if(this.dialogType == 1){
-          this.addTemplate()
-        }else if(this.dialogType == 3){
-          this.editTemplate()
+        this.addSwitch()
+      }
+    },
+    addSwitch() {
+      let params = {'params': Object.assign({}, this.form)},
+          attr = {
+            "propertyName": "switch",
+            "compareType": "==",
+            "compareValue": "1",
+          }
+
+      this.modelCondition.forEach((item, i) => {
+        if(item.hasSwitch){
+          console.log(8978, params.params.condtion[i])
+          // let arr = []
+          // params.params.condtion[i].conditionProps.unshift(attr)
+          //   console.log(666, child)
+          //   arr[j] = child            
+          // })
+
+          // arr.unshift(attr)
+          // params.condition[i].conditionProps = arr
         }
+      })
+
+      // this.modelAction.forEach((item, i) => {
+      //   if(item.hasSwitch){
+      //     params.params.action[i].actionProps.unshift(attr)
+      //   }
+      // })
+
+      console.log(897899, params)
+      return
+
+      if(this.dialogType == 1){
+        this.addTemplate(params)
+      }else if(this.dialogType == 3){
+        this.editTemplate(params)
       }
     },
     // 添加模板
-    addTemplate() {
-      let params = {'params': Object.assign({}, this.form)} 
+    addTemplate(params) {
       addSenceTemplate(params).then(res=>{
         if(res.code == 200){
           this.$message.success('新增成功')
@@ -1864,8 +1925,7 @@ export default {
     },
 
     // 编辑模板
-    editTemplate() {
-      let params = {'params': Object.assign({}, this.form)} 
+    editTemplate(params) {
       editSenceTemplate(params).then(res=>{
         if(res.code == 200){
           this.$message.success('编辑成功')

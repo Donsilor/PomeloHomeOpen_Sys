@@ -13,11 +13,13 @@
           <el-input 
             v-model="sceneName" 
             placeholder="请输入场景名称" 
+            @keyup.enter.native="search"
             class="input-with-select" >
+            
             <el-button 
               slot="append" 
               icon="el-icon-search" 
-              @click="sel"/>
+              @click="search"/>
           </el-input>
         </el-col>
       </el-row>
@@ -64,7 +66,7 @@
                   @click="handlerClick('edit',scope.row)">编辑</el-button>
                 
                 <el-button
-                  :type= "scope.row.isEnable == 1 ? 'warning' : 'primary'"
+                  :type= "scope.row.isEnable == 1 ? 'primary' : 'warning'"
                   size="mini" 
                   @click="handlerClick('ifEnable',scope.row)">{{scope.row.isEnable == 1 ? '启用' : '禁用'}}</el-button>
 
@@ -150,16 +152,17 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
-    sel() {
+    search() {
       this.listQuery.page = 1
-      this.getList()
+      this.getList(this.sceneName)
     },
-    getList() {
+    getList(val) {
       const params = {
         pageNumber: this.listQuery.page,
         pageSize: this.listQuery.limit,
-        typeName: ""
+        typeName: val ? val : ""
       }
+
       getSenceList({ params }).then((res) => {
         const resData = res.data
         this.total = resData.total

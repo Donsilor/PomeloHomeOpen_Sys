@@ -490,7 +490,20 @@ export const constantRouterMap = [
             component: _import('ScreenManageMent/ScreenEdite')
           }
         ]
-      }
+      },
+      {
+        path: 'messageDistribution',
+        name: '消息分发',
+        component: _import('messageDistribution/index'),
+        redirect: '/messageDistribution/list',
+        children: [
+          {
+            path: 'list',
+            name: 'list',
+            component: _import('messageDistribution/list')
+          }
+        ]
+      },
     ]
   },
 

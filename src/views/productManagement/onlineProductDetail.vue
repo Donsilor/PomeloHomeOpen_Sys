@@ -1200,19 +1200,22 @@ export default {
       accessType:[
         {
           value: 0,
-          label: '中控接入'
+          label: '0、中控接入'
         }, {
           value: 1,
-          label: '云云对接'
+          label: '1、云云对接'
         }, {
           value: 2,
-          label: 'APP对接'
+          label: '2、APP对接'
         }, {
           value: 3,
-          label: '云中控接入'
+          label: '3、云中控接入'
+        },{
+          value: 4,
+          label: '4、Auth2.0'
         },{
           value: 5,
-          label: '涂鸦接入'
+          label: '5、涂鸦接入'
         }
       ],
       controlMode:[

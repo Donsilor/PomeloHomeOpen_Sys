@@ -1177,7 +1177,7 @@ export default {
   data() {
     var checkPhone = (rule, value, callback) => {
       // const reg = /^1\d{10}$/
-      const reg = /^[0-9\-]{3,20}$/ // 3-20位 数字或者 - 固定电话
+      const reg = /^[0-9-]{3,20}$/ // 3-20位 数字或者 - 固定电话
       if (reg.test(value)) {
         callback()
       } else {
@@ -1210,7 +1210,10 @@ export default {
         }, {
           value: 3,
           label: '云中控接入'
-        },
+        },{
+          value: 5,
+          label: '涂鸦接入'
+        }
       ],
       controlMode:[
         {

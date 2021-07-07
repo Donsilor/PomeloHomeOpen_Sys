@@ -46,7 +46,6 @@
           label="品牌"
           prop="brandId">
           <el-select 
-            :disabled="propData.status===2"
             v-model="form.brandId" 
             style="width:100%" 
             placeholder="请选择品牌">

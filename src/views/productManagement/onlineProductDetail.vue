@@ -1211,6 +1211,9 @@ export default {
           value: 3,
           label: '云中控接入'
         },{
+          value: 4,
+          label: 'Auth2.0'
+        },{
           value: 5,
           label: '涂鸦接入'
         }

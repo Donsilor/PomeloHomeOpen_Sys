@@ -64,6 +64,7 @@ module.exports = {
       }, */
       '/api2/':{
         target:'http://opencheck-uat.evergrande.cn',
+        // target:'http://betaphoau.evergrande.me/',
         changeOrigin: true,
       }
       // 192.168.1.12:8181      徐

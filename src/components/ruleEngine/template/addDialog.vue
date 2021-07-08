@@ -545,8 +545,10 @@ export default {
       
       sceneType: ['手动','自动','安防'],
       detailsType: ['定时','设备','安防'],
-      manualType: ['家庭安防','设备'],
+      manualType: ['安防','设备'],
       facility: [],               // 设备大品类
+      operationCondition: [],     // 触发安防
+      operationAction: [],        // 手动安防
 
       condition: 9,               // 触发条件 0或 1与
       isToModify: false,
@@ -571,7 +573,8 @@ export default {
     // this.getCategory()
     this.getSenceSelect()
     this.getSceneImage()
-
+    this.getSafety()
+    
     // 获取大品类列表
     subAllCategory({ params: {} }).then((res) => {
       this.facility = res.data.data.filter(item => item.categoryNumber != 10000)
@@ -581,8 +584,28 @@ export default {
         this.editScene(this.editId)
       }
     })
+
+    
   },
   methods: {
+    // 获取安防
+    getSafety() {
+      const params = {
+        deviceCategoryId: 10000,
+        deviceSubCategoryId: 0,
+        key: '',
+        modeType: 2,
+        brandId: ''
+      }
+
+      getModel({ params }).then((res) => {
+        if(res.data.code == 200){
+          var operation = res.data.data.thingModel.properties
+          this.operationCondition = operation.filter(item => (item.action == 0 || item.action == 1))
+          this.operationAction = operation.filter(item => (item.action == 0 || item.action == 2))
+        }
+      })
+    },
     // 获取模板类型列表
     getSenceSelect() {
       getSenceSelectList({ params: {} }).then((res) => {
@@ -698,26 +721,11 @@ export default {
         }
 
         this.form.condition.splice(index, 1, obj)
+        this.modelCondition[index].operation = this.operationCondition
 
-        const params = {
-          deviceCategoryId: 10000,
-          deviceSubCategoryId: 0,
-          key: '',
-          modeType: val,
-          brandId: ''
-        }
-
-        getModel({ params }).then((res) => {
-          if(res.data.code == 200){
-            var operation = res.data.data.thingModel.properties
-            this.modelCondition[index].operation = operation.filter(item => (item.action == 0 || item.action == 1))
-
-            // if(this.modelCondition[index].operation.length == 1){
-            //   this.form.condition[index].conditionProps[0].compareType = 0
-            // }
-          }
-        })
-
+        // if(this.modelCondition[index].operation.length == 1){
+        //   this.form.condition[index].conditionProps[0].compareType = 0
+        // }
       }
 
       // 按分类筛选触发图标
@@ -790,21 +798,7 @@ export default {
         }
 
         this.form.action.splice(index, 1, obj)
-
-        const params = {
-          deviceCategoryId: 10000,
-          deviceSubCategoryId: 0,
-          key: '',
-          modeType: val,
-          brandId: ''
-        }
-
-        getModel({ params }).then((res) => {
-          if(res.data.code == 200){
-            var operation = res.data.data.thingModel.properties
-            this.modelAction[index].operation = operation.filter(item => (item.action == 0 || item.action == 2))
-          }
-        })
+        this.modelAction[index].operation = this.operationAction
       }
 
       // 按分类筛选触发图标
@@ -1393,7 +1387,7 @@ export default {
               executeMode: ['只执行一次','指定日期','每周'],
               weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
               operation: [],
-              autoExecute: ['回家', '离家']
+              autoExecute: []
             }
 
             if(item.conditionType == 0){
@@ -1432,7 +1426,7 @@ export default {
                 model.hasSwitch = true
                 conditionProps.splice(0, 1)
               }
-console.log(2323, conditionProps)
+
               tem = {
                 conditionOpType: item.conditionOpType,
                 conditionType: item.conditionType,
@@ -1460,9 +1454,17 @@ console.log(2323, conditionProps)
                 conditionProps: [{
                   propertyName: conditionProps[0].propertyName,
                   compareType: Number(conditionProps[0].compareType),
-                  compareValue: Number(conditionProps[0].compareValue)
+                  compareValue: conditionProps[0].compareValue
                 }]
               }
+
+              model.operation = this.operationCondition
+
+              model.operation.forEach(item => {
+                if(item.identifier == conditionProps[0].propertyName){
+                  model.autoExecute = item.dataType.specs
+                }
+              })
             }
 
             this.form.condition.push(tem)
@@ -1482,7 +1484,7 @@ console.log(2323, conditionProps)
             }
           })
 
-          this.form.condition.forEach((item,j) => {
+          this.form.condition.forEach((item, j) => {
             if(item.conditionType == 1){
               // 设备获取物模型
               var sunNum = Number(item.conditionProps[0].subCategoryId)
@@ -1491,7 +1493,7 @@ console.log(2323, conditionProps)
                 deviceSubCategoryId: 0,
                 key: '',
                 modeType: item.conditionType,
-                brandId: ''
+                brandId: Number(item.conditionProps[0].businessId)
               }
 
               if(sunNum){
@@ -1518,42 +1520,42 @@ console.log(2323, conditionProps)
 
                 params.deviceSubCategoryId = sunNum
 
-                getSonModels({ params: [sunNum] }).then((res) => {
+                // getSonModels({ params: [sunNum] }).then((res) => {
+                //   if(res.data.code == 200){
+                //     this.modelCondition[j].facilityIcon = res.data.data[0].fileList
+                //     this.form.condition[j].conditionProps[0].businessId = Number(res.data.data[0].brandId)
+                //     params.brandId = Number(res.data.data[0].brandId)
+                //   }
+                // })
+
+                getSonModel({ params }).then((res) => { 
                   if(res.data.code == 200){
-                    this.modelCondition[j].facilityIcon = res.data.data[0].fileList
-                    this.form.condition[j].conditionProps[0].businessId = Number(res.data.data[0].brandId)
-                    params.brandId = Number(res.data.data[0].brandId)
+                    // 拿到子品类物模型，赋值
+                    this.modelCondition[j].attribute = res.data.data.thingModel.properties
 
-                    getSonModel({ params }).then((res) => { 
-                      if(res.data.code == 200){
-                        // 拿到子品类物模型，赋值
-                        this.modelCondition[j].attribute = res.data.data.thingModel.properties
+                    this.modelCondition[j].attribute.forEach((attr, k) => {
+                      if(attr.identifier == item.conditionProps[0].propertyName){
+                        this.modelCondition[j].specs = attr.dataType.specs
+                        this.modelCondition[j].type = attr.dataType.type
 
-                        this.modelCondition[j].attribute.forEach((attr, k) => {
-                          if(attr.identifier == item.conditionProps[0].propertyName){
-                            this.modelCondition[j].specs = attr.dataType.specs
-                            this.modelCondition[j].type = attr.dataType.type
+                        // 判断显示枚举还是输入框
+                        if(JSON.stringify(this.modelCondition[j].specs) != '{}' &&
+                          (attr.dataType.type == 'enum' || attr.dataType.type == 'bool')){
+                          this.modelCondition[j].ifShowSpecs = true
+                          this.modelCondition[j].ifShowInput = false
+                        }else{
+                          this.modelCondition[j].ifShowSpecs = false
+                          this.modelCondition[j].ifShowInput = true
+                        }
 
-                            // 判断显示枚举还是输入框
-                            if(JSON.stringify(this.modelCondition[j].specs) != '{}' &&
-                              (attr.dataType.type == 'enum' || attr.dataType.type == 'bool')){
-                              this.modelCondition[j].ifShowSpecs = true
-                              this.modelCondition[j].ifShowInput = false
-                            }else{
-                              this.modelCondition[j].ifShowSpecs = false
-                              this.modelCondition[j].ifShowInput = true
-                            }
-
-                            if(this.modelCondition[j].type == 'int'){
-                              this.modelCondition[j].max = attr.dataType.specs.max
-                              this.modelCondition[j].min = attr.dataType.specs.min
-                            }
-                          }
-                        })
-
-                        this.hasAction('condition', j)
+                        if(this.modelCondition[j].type == 'int'){
+                          this.modelCondition[j].max = attr.dataType.specs.max
+                          this.modelCondition[j].min = attr.dataType.specs.min
+                        }
                       }
                     })
+
+                    this.hasAction('condition', j)
                   }
                 })
               }else{
@@ -1561,39 +1563,39 @@ console.log(2323, conditionProps)
                 getModel({ params }).then((res) => {
                   if(res.data.code == 200){
                     // 拿到大品类物模型，赋值
-                    this.modelCondition[i].attribute = res.data.data.thingModel.properties
+                    this.modelCondition[j].attribute = res.data.data.thingModel.properties
 
-                    this.modelCondition[i].attribute.forEach((item, j) => {
+                    this.modelCondition[j].attribute.forEach((item, m) => {
                       if(item.identifier == conditionProps[0].propertyName){
-                        this.modelCondition[i].specs = item.dataType.specs
-                        this.modelCondition[i].type = item.dataType.type
+                        this.modelCondition[j].specs = item.dataType.specs
+                        this.modelCondition[j].type = item.dataType.type
 
                         // 判断显示枚举还是输入框
-                        if(JSON.stringify(this.modelCondition[i].specs) != '{}' &&
+                        if(JSON.stringify(this.modelCondition[j].specs) != '{}' &&
                           (item.dataType.type == 'enum' || item.dataType.type == 'bool')){
-                          this.modelCondition[i].ifShowSpecs = true
-                          this.modelCondition[i].ifShowInput = false
+                          this.modelCondition[j].ifShowSpecs = true
+                          this.modelCondition[j].ifShowInput = false
                         }else{
-                          this.modelCondition[i].ifShowSpecs = false
-                          this.modelCondition[i].ifShowInput = true
+                          this.modelCondition[j].ifShowSpecs = false
+                          this.modelCondition[j].ifShowInput = true
                         }
 
-                        if(this.modelCondition[i].type == 'int'){
-                          this.modelCondition[i].max = item.dataType.specs.max
-                          this.modelCondition[i].min = item.dataType.specs.min
+                        if(this.modelCondition[j].type == 'int'){
+                          this.modelCondition[j].max = item.dataType.specs.max
+                          this.modelCondition[j].min = item.dataType.specs.min
                         }
                       }
                     })
 
-                    this.hasAction('condition', i)
+                    this.hasAction('condition', j)
                   }
                 })
 
-                getModels({ params: [conditionProps[0].categoryId] }).then((res) => {
-                  if(res.data.code == 200){
-                    this.modelCondition[i].facilityIcon = res.data.data[0].fileList
-                  }
-                })
+                // getModels({ params: [conditionProps[0].categoryId] }).then((res) => {
+                //   if(res.data.code == 200){
+                //     this.modelCondition[j].facilityIcon = res.data.data[0].fileList
+                //   }
+                // })
               }
             }
           })
@@ -1650,7 +1652,7 @@ console.log(2323, conditionProps)
               hasSwitch: false,
               comparison: ['大于', '等于', '小于'],
               operation: [],
-              autoExecute: ['回家', '离家']
+              autoExecute: []
             }
 
             if(item.actionType == 0){
@@ -1664,9 +1666,17 @@ console.log(2323, conditionProps)
                 actionProps: [{
                   propertyName: actionProps[0].propertyName,
                   compareType: Number(actionProps[0].compareType),
-                  compareValue: Number(actionProps[0].compareValue)
+                  compareValue: actionProps[0].compareValue
                 }]
               }
+
+              model.operation = this.operationAction
+
+              model.operation.forEach(item => {
+                if(item.identifier == actionProps[0].propertyName){
+                  model.autoExecute = item.dataType.specs
+                }
+              })
             }else if(item.actionType == 1){
               // 执行动作设备
               classify = 'trigger_condition_device'
@@ -1721,16 +1731,17 @@ console.log(2323, conditionProps)
             }
           })
 
-          this.form.action.forEach((item,j) => {
+          this.form.action.forEach((item, j) => {
             if(item.actionType == 1){
               // 设备获取物模型
               var sunNum = Number(item.actionProps[0].subCategoryId)
+
               const params = {
                 deviceCategoryId: Number(item.actionProps[0].categoryId),
                 deviceSubCategoryId: 0,
                 key: '',
                 modeType: item.actionType,
-                brandId: ''
+                brandId: Number(item.actionProps[0].businessId)
               }
 
               if(sunNum){
@@ -1757,42 +1768,41 @@ console.log(2323, conditionProps)
 
                 params.deviceSubCategoryId = sunNum
 
-                getSonModels({ params: [sunNum] }).then((res) => {
+                // getSonModels({ params: [sunNum] }).then((res) => {
+                //   if(res.data.code == 200){
+                //     this.modelAction[j].facilityIcon = res.data.data[0].fileList
+                //     this.form.action[j].actionProps[0].businessId = Number(res.data.data[0].brandId)
+                //   }
+                // })
+
+                getSonModel({ params }).then((res) => { 
                   if(res.data.code == 200){
-                    this.modelAction[j].facilityIcon = res.data.data[0].fileList
-                    this.form.action[j].actionProps[0].businessId = Number(res.data.data[0].brandId)
-                    params.brandId = Number(res.data.data[0].brandId)
+                    // 拿到子品类物模型，赋值
+                    this.modelAction[j].attribute = res.data.data.thingModel.properties
 
-                    getSonModel({ params }).then((res) => { 
-                      if(res.data.code == 200){
-                        // 拿到子品类物模型，赋值
-                        this.modelAction[j].attribute = res.data.data.thingModel.properties
+                    this.modelAction[j].attribute.forEach((attr, k) => {
+                      if(attr.identifier == item.actionProps[0].propertyName){
+                        this.modelAction[j].specs = attr.dataType.specs
+                        this.modelAction[j].type = attr.dataType.type
 
-                        this.modelAction[j].attribute.forEach((attr, k) => {
-                          if(attr.identifier == item.actionProps[0].propertyName){
-                            this.modelAction[j].specs = attr.dataType.specs
-                            this.modelAction[j].type = attr.dataType.type
+                        // 判断显示枚举还是输入框
+                        if(JSON.stringify(this.modelAction[j].specs) != '{}' &&
+                          (attr.dataType.type == 'enum' || attr.dataType.type == 'bool')){
+                          this.modelAction[j].ifShowSpecs = true
+                          this.modelAction[j].ifShowInput = false
+                        }else{
+                          this.modelAction[j].ifShowSpecs = false
+                          this.modelAction[j].ifShowInput = true
+                        }
 
-                            // 判断显示枚举还是输入框
-                            if(JSON.stringify(this.modelAction[j].specs) != '{}' &&
-                              (attr.dataType.type == 'enum' || attr.dataType.type == 'bool')){
-                              this.modelAction[j].ifShowSpecs = true
-                              this.modelAction[j].ifShowInput = false
-                            }else{
-                              this.modelAction[j].ifShowSpecs = false
-                              this.modelAction[j].ifShowInput = true
-                            }
-
-                            if(this.modelAction[j].type == 'int'){
-                              this.modelAction[j].max = attr.dataType.specs.max
-                              this.modelAction[j].min = attr.dataType.specs.min
-                            }
-                          }
-                        })
-
-                        this.hasAction('condition', j)
+                        if(this.modelAction[j].type == 'int'){
+                          this.modelAction[j].max = attr.dataType.specs.max
+                          this.modelAction[j].min = attr.dataType.specs.min
+                        }
                       }
                     })
+
+                    this.hasAction('action', j)
                   }
                 })
               }else{
@@ -1800,39 +1810,39 @@ console.log(2323, conditionProps)
                 getModel({ params }).then((res) => {
                   if(res.data.code == 200){
                     // 拿到大品类物模型，赋值
-                    this.modelCondition[i].attribute = res.data.data.thingModel.properties
+                    this.modelAction[j].attribute = res.data.data.thingModel.properties
 
-                    this.modelCondition[i].attribute.forEach((item, j) => {
-                      if(item.identifier == conditionProps[0].propertyName){
-                        this.modelCondition[i].specs = item.dataType.specs
-                        this.modelCondition[i].type = item.dataType.type
+                    this.modelAction[j].attribute.forEach((item, n) => {
+                      if(item.identifier == actionProps[0].propertyName){
+                        this.modelAction[j].specs = item.dataType.specs
+                        this.modelAction[j].type = item.dataType.type
 
                         // 判断显示枚举还是输入框
-                        if(JSON.stringify(this.modelCondition[i].specs) != '{}' &&
+                        if(JSON.stringify(this.modelAction[j].specs) != '{}' &&
                           (item.dataType.type == 'enum' || item.dataType.type == 'bool')){
-                          this.modelCondition[i].ifShowSpecs = true
-                          this.modelCondition[i].ifShowInput = false
+                          this.modelAction[j].ifShowSpecs = true
+                          this.modelAction[j].ifShowInput = false
                         }else{
-                          this.modelCondition[i].ifShowSpecs = false
-                          this.modelCondition[i].ifShowInput = true
+                          this.modelAction[j].ifShowSpecs = false
+                          this.modelAction[j].ifShowInput = true
                         }
 
-                        if(this.modelCondition[i].type == 'int'){
-                          this.modelCondition[i].max = item.dataType.specs.max
-                          this.modelCondition[i].min = item.dataType.specs.min
+                        if(this.modelAction[j].type == 'int'){
+                          this.modelAction[j].max = item.dataType.specs.max
+                          this.modelAction[j].min = item.dataType.specs.min
                         }
                       }
                     })
 
-                    this.hasAction('condition', i)
+                    this.hasAction('action', j)
                   }
                 })
 
-                getModels({ params: [conditionProps[0].categoryId] }).then((res) => {
-                  if(res.data.code == 200){
-                    this.modelCondition[i].facilityIcon = res.data.data[0].fileList
-                  }
-                })
+                // getModels({ params: [conditionProps[0].categoryId] }).then((res) => {
+                //   if(res.data.code == 200){
+                //     this.modelCondition[j].facilityIcon = res.data.data[0].fileList
+                //   }
+                // })
               }
             }
           })
@@ -1984,7 +1994,7 @@ console.log(2323, conditionProps)
           this.dialogContent = '“执行动作' +(+1+i)+ '”的属性值不能为空，请重新选择或填写！'
           return
         }
-console.log(56565,item.actionProps[0].compareValue, this.modelAction[i].min, this.modelAction[i].max )
+
         if(this.modelAction[i].type === 'int' && ((item.actionProps[0].compareValue-this.modelAction[i].min<0) || (item.actionProps[0].compareValue-this.modelAction[i].max>0))){
           this.dialogVisible = true
           this.dialogContent = '“执行动作' +(+1+i)+ '”的属性值取值范围不对，请重新填写（提示：' + this.modelAction[i].min + ' - ' + this.modelAction[i].max + '）！'
@@ -2079,7 +2089,7 @@ console.log(56565,item.actionProps[0].compareValue, this.modelAction[i].min, thi
     },
     // 添加模板
     addTemplate(params) {
-      console.log('params777', params)
+      console.log('params-add', params)
       addSenceTemplate(params).then(res=>{
         if(res.code == 200){
           this.$message.success('新增成功')
@@ -2090,7 +2100,7 @@ console.log(56565,item.actionProps[0].compareValue, this.modelAction[i].min, thi
 
     // 编辑模板
     editTemplate(params) {
-      console.log('params666', params)
+      console.log('params-edit', params)
       editSenceTemplate(params).then(res=>{
         if(res.code == 200){
           this.$message.success('编辑成功')

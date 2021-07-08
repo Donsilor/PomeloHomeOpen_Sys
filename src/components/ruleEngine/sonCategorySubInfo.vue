@@ -175,6 +175,10 @@ export default {
     subCategoryId: {
       type: String,
       default: ''
+    },
+    deviceCategoryId:{
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -304,6 +308,7 @@ export default {
       this.addDialogVisible = true
       this.propData.subCategoryId = this.subCategoryId
       this.routeData.subCategoryName = this.belongCategory
+      this.propData.deviceCategoryId = this.deviceCategoryId
     },
     closeAddDialog(val) {
       this.addDialogVisible = false

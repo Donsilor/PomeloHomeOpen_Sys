@@ -204,9 +204,11 @@ export default {
           cancelButtonText: '取消',
           type: 'error'
         }).then(() => {
+          console.log(row)
           const params = {
             subCategoryId: row.subCategoryId,
             brandId: row.brandId,
+            deviceSubCategoryId: row.subCategoryNumber,
             deviceCategoryId: Number(this.$route.query.deviceCategoryId)
           }
           delSonCategory({ params }).then((res) => {

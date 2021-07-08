@@ -190,6 +190,7 @@ export default {
             subCategoryId: row.subCategoryId,
             subCategoryName: row.subCategoryName,
             deviceSubCategoryId: row.subCategoryNumber,
+            deviceCategoryId: this.$route.query.deviceCategoryId,
             brandId: row.brandId
           }
         })
@@ -205,7 +206,8 @@ export default {
         }).then(() => {
           const params = {
             subCategoryId: row.subCategoryId,
-            brandId: row.brandId
+            brandId: row.brandId,
+            deviceCategoryId: Number(this.$route.query.deviceCategoryId)
           }
           delSonCategory({ params }).then((res) => {
             if (res.data.code === 200 || res.data.code === 0) {

@@ -790,6 +790,7 @@ export default {
               params.params.subCategoryId = this.proParams.prokey
               params.params.deviceSubCategoryId =  this.proParams.deviceSubCategoryId
               params.params.brandId =  this.proParams.brandId
+              params.params.deviceCategoryId =  this.proParams.deviceCategoryId
               console.log(params)
               addSonModel(params).then((res) => {
                 if (res.data.code === 200) {

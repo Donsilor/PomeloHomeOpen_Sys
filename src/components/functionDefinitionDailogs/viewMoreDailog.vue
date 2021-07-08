@@ -800,6 +800,7 @@ export default {
           if(this.proParams.type === 'category'){
             if(this.proParams.val === 'son'){
               delete params.params.categoryId
+              params.params.deviceCategoryId =  this.proParams.deviceCategoryId
               params.params.subCategoryId = this.proParams.prokey
               params.params.deviceSubCategoryId = this.proParams.deviceSubCategoryId
               params.params.brandId = this.proParams.brandId           

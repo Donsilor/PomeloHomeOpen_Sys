@@ -12,28 +12,30 @@ export const statusFilter = function(status) {
 }
 export function brandName(val) {
   switch (val) {
-  case 142:
+  case 4:
     return '豪恩'
-  case 55:
+  case 0:
     return '星络'
-  case 129:
+  case 2:
     return '海尔'
-  case 62:
+  case 31:
     return '万和'
-  case 208:
+  case 38:
     return '凯迪士'
-  case 190:
+  case 28:
     return '晾霸'
-  case 53:
+  case 20:
     return '三雄'
-  case 158:
+  case 103:
     return '鸿雁'
-  case 127:
+  case 26:
     return '雷士'
-  case 126:
+  case 33:
     return 'TCL'
-  case 52:
+  case 44:
     return '杜亚'
+  case 24:
+    return '万家乐'
   default:
     return ''
   }

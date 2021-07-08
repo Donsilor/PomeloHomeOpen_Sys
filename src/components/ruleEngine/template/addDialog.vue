@@ -190,12 +190,12 @@
 
                       <!-- -------在家安防------- -->
 
-                      <el-select v-if="item.conditionType === 2" v-model="item.conditionProps[0].compareType" placeholder="请选择操作">
+                      <el-select v-if="item.conditionType === 2" v-model="item.conditionProps[0].propertyName" @change="changeOperation(index, 'condition', item.conditionProps[0].propertyName)" placeholder="请选择安防">
                         <el-option
                           v-for="(ope, idx) in modelCondition[index].operation"
                           :key="idx"
-                          :label="ope"
-                          :value="idx">
+                          :label="ope.name"
+                          :value="ope.identifier">
                         </el-option>
                       </el-select>
 
@@ -306,12 +306,12 @@
 
                     <!-- -------家庭安防------- -->
 
-                    <el-select v-if="item.actionType === 0" v-model="item.actionProps[0].compareType" placeholder="请选择安防">
+                    <el-select v-if="item.actionType === 0" v-model="item.actionProps[0].propertyName" @change="changeOperation(index, 'action', item.actionProps[0].propertyName)" placeholder="请选择安防">
                       <el-option
                         v-for="(ope, idx) in modelAction[index].operation"
                         :key="idx"
-                        :label="ope"
-                        :value="idx">
+                        :label="ope.name"
+                        :value="ope.identifier">
                       </el-option>
                     </el-select>
 
@@ -518,8 +518,8 @@ export default {
           comparison: ['大于', '等于', '小于'],
           executeMode: ['只执行一次','指定日期','每周'],
           weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
-          operation: [],
-          autoExecute: ['回家', '离家']
+          operation: [],     // 安防物模型
+          autoExecute: []
         }
       ],
 
@@ -539,7 +539,7 @@ export default {
           hasSwitch: false,
           comparison: ['大于', '等于', '小于'],
           operation: [],
-          autoExecute: ['回家', '离家']
+          autoExecute: []
         }
       ],
       
@@ -574,7 +574,7 @@ export default {
 
     // 获取大品类列表
     subAllCategory({ params: {} }).then((res) => {
-      this.facility = res.data.data
+      this.facility = res.data.data.filter(item => item.categoryNumber != 10000)
 
       if(this.dialogType == 2 || this.dialogType == 3){
         this.loading = true
@@ -691,7 +691,7 @@ export default {
           conditionType: val,
           resourceId: "",
           conditionProps: [{
-            propertyName: "security_status",
+            propertyName: "",
             compareType: "",
             compareValue: "",
           }]
@@ -699,70 +699,25 @@ export default {
 
         this.form.condition.splice(index, 1, obj)
 
-        var id = ''
-        this.facility.forEach((o, i) => {
-          if(o.categoryNumber == 10000){
-            id = this.facility[i].categoryId
-          }
-        })
-
-        // this.modelCondition[index].facilityChild = []
-        // this.modelCondition[index].attribute = []
-        // this.modelCondition[index].facilityIcon = []
-        // this.modelCondition[index].unFacilityIcon = []
-        // this.modelCondition[index].specs = []
-        // this.modelCondition[index].type = ''
-        // this.modelCondition[index].max = ''
-        // this.modelCondition[index].min = ''
-        // this.modelCondition[index].hasSwitch = false
-        // this.modelCondition[index].ifShowSpecs = false
-        // this.modelCondition[index].ifShowInput = false
-
         const params = {
-          categoryId: id,
-          subCategoryName: '',
-          pageNumber: this.listQuery.page,
-          pageSize: 9999
+          deviceCategoryId: 10000,
+          deviceSubCategoryId: 0,
+          key: '',
+          modeType: val,
+          brandId: ''
         }
 
-        sonCategory({ params }).then((res) => {
+        getModel({ params }).then((res) => {
           if(res.data.code == 200){
-            console.log(1212, res.data.data.list)
-            this.modelCondition[index].operation = res.data.data.list
-          }
-          return
+            var operation = res.data.data.thingModel.properties
+            this.modelCondition[index].operation = operation.filter(item => (item.action == 0 || item.action == 1))
 
-          // 没有子品类直接调大品类物模型
-          if(!this.modelCondition[index].facilityChild.length){
-            this.getModelData('condition', index, num)
-            // 只有一个子品类，直接调子品类物模型
-          }else if(this.modelCondition[index].facilityChild.length == 1){
-            this.getSubModelCondition(index, this.form.condition[index].conditionProps[0].categoryId, this.modelCondition[index].facilityChild[0].subCategoryNumber)
-          }
-
-          const params = {
-            deviceCategoryId: Number(num),
-            deviceSubCategoryId: 0,
-            key: '',
-            modeType: this.form.condition[index].conditionType,
-            brandId: ''
-          }
-
-          if(num){
-            getModel({ params }).then((res) => {
-              if(res.data.code == 200){
-                // 拿到大品类物模型，赋值
-                if(type == 'condition'){
-                  this.modelCondition[index].attribute = res.data.data.thingModel.properties
-                }else{
-                  this.modelAction[index].attribute = res.data.data.thingModel.properties
-                }
-
-                this.hasAction(type, index)
-              }
-            })
+            // if(this.modelCondition[index].operation.length == 1){
+            //   this.form.condition[index].conditionProps[0].compareType = 0
+            // }
           }
         })
+
       }
 
       // 按分类筛选触发图标
@@ -828,13 +783,28 @@ export default {
           actionType: val,
           resourceId: "",
           actionProps: [{
-            propertyName: "security_status",
+            propertyName: "",
             compareType: "",
             compareValue: "",
           }]
         }
 
         this.form.action.splice(index, 1, obj)
+
+        const params = {
+          deviceCategoryId: 10000,
+          deviceSubCategoryId: 0,
+          key: '',
+          modeType: val,
+          brandId: ''
+        }
+
+        getModel({ params }).then((res) => {
+          if(res.data.code == 200){
+            var operation = res.data.data.thingModel.properties
+            this.modelAction[index].operation = operation.filter(item => (item.action == 0 || item.action == 2))
+          }
+        })
       }
 
       // 按分类筛选触发图标
@@ -1226,6 +1196,24 @@ export default {
           }
         }
       })
+    },
+    // 选择安防
+    changeOperation(index, type, name){
+      if(type == 'condition'){
+        this.modelCondition[index].operation.forEach((item, i) => {
+          if(item.identifier == name){
+            this.modelCondition[index].autoExecute = item.dataType.specs
+            this.form.condition[index].conditionProps[0].compareType = i
+          }
+        })
+      }else{
+        this.modelAction[index].operation.forEach((item, i) => {
+          if(item.identifier == name){
+            this.modelAction[index].autoExecute = item.dataType.specs
+            this.form.action[index].actionProps[0].compareType = i
+          }
+        })
+      }
     },
 
     // 添加触发条件
@@ -1911,11 +1899,11 @@ console.log(2323, conditionProps)
             this.form.condition[i].conditionProps[0].subCategoryId = 0
           }
 
-          if(item.resourceId === ''){
-            this.dialogVisible = true
-            this.dialogContent = '“触发条件' +(+1+i)+ '”的图片不能为空，请选择！'
-            return
-          }
+          // if(item.resourceId === ''){
+          //   this.dialogVisible = true
+          //   this.dialogContent = '“触发条件' +(+1+i)+ '”的图片不能为空，请选择！'
+          //   return
+          // }
 
           if(item.conditionProps[0].propertyName === ''){
             this.dialogVisible = true
@@ -1973,11 +1961,11 @@ console.log(2323, conditionProps)
           this.form.action[i].actionProps[0].subCategoryId = 0
         }
 
-        if(item.resourceId === ''){
-          this.dialogVisible = true
-          this.dialogContent = '“执行动作' +(+1+i)+ '”的图片不能为空，请重新选择！'
-          return
-        }
+        // if(item.resourceId === ''){
+        //   this.dialogVisible = true
+        //   this.dialogContent = '“执行动作' +(+1+i)+ '”的图片不能为空，请重新选择！'
+        //   return
+        // }
 
         if(item.actionProps[0].propertyName === ''){
           this.dialogVisible = true
@@ -2046,6 +2034,12 @@ console.log(2323, conditionProps)
     addSwitch() {
       let params = {'params': Object.assign({}, this.form)},
           attr = {
+            "businessId": "",
+            "categoryId": "",
+            "categoryName": "",
+            "subCategoryName": "",
+            "deviceUuid": "",
+            "subCategoryId": "",
             "propertyName": "switch",
             "compareType": "==",
             "compareValue": "1",
@@ -2053,12 +2047,26 @@ console.log(2323, conditionProps)
 
       this.modelCondition.forEach((item, i) => {
         if(item.hasSwitch){
+          arr.businessId = params.params.condition[i].conditionProps[0].businessId
+          arr.categoryId = params.params.condition[i].conditionProps[0].categoryId
+          arr.categoryName = params.params.condition[i].conditionProps[0].categoryName
+          arr.subCategoryName = params.params.condition[i].conditionProps[0].subCategoryName
+          arr.deviceUuid = params.params.condition[i].conditionProps[0].deviceUuid
+          arr.subCategoryId = params.params.condition[i].conditionProps[0].subCategoryId
+
           params.params.condition[i].conditionProps.unshift(attr)
         }
       })
 
       this.modelAction.forEach((item, i) => {
         if(item.hasSwitch){
+          arr.businessId = params.params.action[i].actionProps[0].businessId
+          arr.categoryId = params.params.action[i].actionProps[0].categoryId
+          arr.categoryName = params.params.action[i].actionProps[0].categoryName
+          arr.subCategoryName = params.params.action[i].actionProps[0].subCategoryName
+          arr.deviceUuid = params.params.action[i].actionProps[0].deviceUuid
+          arr.subCategoryId = params.params.action[i].actionProps[0].subCategoryId
+
           params.params.action[i].actionProps.unshift(attr)
         }
       })

@@ -109,7 +109,11 @@ export default {
     brandId: {
       type: String,
       default: ''
-    }
+    },
+    deviceCategoryId:{
+      type: String,
+      default: ''
+    },
   },
   data() {
     return {
@@ -144,10 +148,12 @@ export default {
     },
     // 获取modelData
     getDraftModelData(val) {
+      console.log(this.deviceCategoryId)
       this.tableData = []
       const params = {
         params: {
           deviceSubCategoryId: this.deviceSubCategoryId,
+          deviceCategoryId: this.deviceCategoryId,
           brandId: this.brandId,
           subCategoryId: this.subCategoryId,
           key:''
@@ -214,6 +220,7 @@ export default {
         this.proParams.val = 'son' // 子类标识
         this.proParams.prokey = this.subCategoryId
         this.proParams.deviceSubCategoryId = this.deviceSubCategoryId
+        this.proParams.deviceCategoryId = this.deviceCategoryId //父级标识
         this.proParams.brandId = this.brandId
         this.addCustomDialogVisible = true
         break
@@ -221,6 +228,7 @@ export default {
         this.importPhydata.date = Date.parse(new Date())
         this.importPhydata.beforeKey = this.subCategoryId
         this.importPhydata.deviceSubCategoryId = this.deviceSubCategoryId
+        this.importPhydata.deviceCategoryId = this.deviceCategoryId //父级标识
         this.importPhydata.brandId = this.brandId
         this.importPhydata.val = 'son'
         this.showImportModel.show = true
@@ -236,6 +244,7 @@ export default {
       this.proParams.val = 'son'
       this.proParams.prokey = this.subCategoryId
       this.proParams.deviceSubCategoryId = this.deviceSubCategoryId
+      this.proParams.deviceCategoryId = this.deviceCategoryId //父级标识
       this.proParams.brandId = this.brandId
       this.infosDialogVisible = true
       row.status = 'edit'
@@ -252,6 +261,7 @@ export default {
         console.log(row)
         const params = {
           params: {
+            deviceCategoryId : this.deviceCategoryId, //父级标识
             deviceSubCategoryId: this.deviceSubCategoryId,
             brandId: this.brandId,
             subCategoryId: this.subCategoryId,

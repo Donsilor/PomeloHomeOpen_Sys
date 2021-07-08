@@ -1190,9 +1190,9 @@ export default {
             this.modelAction[index].ifShowInput = true
           }
 
-          if(this.modelCondition[index].type == 'int'){
-            this.modelCondition[index].max = item.dataType.specs.max
-            this.modelCondition[index].min = item.dataType.specs.min
+          if(this.modelAction[index].type == 'int'){
+            this.modelAction[index].max = item.dataType.specs.max
+            this.modelAction[index].min = item.dataType.specs.min
           }
         }
       })
@@ -1984,8 +1984,8 @@ console.log(2323, conditionProps)
           this.dialogContent = '“执行动作' +(+1+i)+ '”的属性值不能为空，请重新选择或填写！'
           return
         }
-
-        if(this.modelAction[i].type === 'int' && (item.actionProps[0].compareValue < this.modelAction[i].min || item.actionProps[0].compareValue > this.modelAction[i].max)){
+console.log(56565,item.actionProps[0].compareValue, this.modelAction[i].min, this.modelAction[i].max )
+        if(this.modelAction[i].type === 'int' && ((item.actionProps[0].compareValue-this.modelAction[i].min<0) || (item.actionProps[0].compareValue-this.modelAction[i].max>0))){
           this.dialogVisible = true
           this.dialogContent = '“执行动作' +(+1+i)+ '”的属性值取值范围不对，请重新填写（提示：' + this.modelAction[i].min + ' - ' + this.modelAction[i].max + '）！'
           return
@@ -2047,12 +2047,12 @@ console.log(2323, conditionProps)
 
       this.modelCondition.forEach((item, i) => {
         if(item.hasSwitch){
-          arr.businessId = params.params.condition[i].conditionProps[0].businessId
-          arr.categoryId = params.params.condition[i].conditionProps[0].categoryId
-          arr.categoryName = params.params.condition[i].conditionProps[0].categoryName
-          arr.subCategoryName = params.params.condition[i].conditionProps[0].subCategoryName
-          arr.deviceUuid = params.params.condition[i].conditionProps[0].deviceUuid
-          arr.subCategoryId = params.params.condition[i].conditionProps[0].subCategoryId
+          attr.businessId = params.params.condition[i].conditionProps[0].businessId
+          attr.categoryId = params.params.condition[i].conditionProps[0].categoryId
+          attr.categoryName = params.params.condition[i].conditionProps[0].categoryName
+          attr.subCategoryName = params.params.condition[i].conditionProps[0].subCategoryName
+          attr.deviceUuid = params.params.condition[i].conditionProps[0].deviceUuid
+          attr.subCategoryId = params.params.condition[i].conditionProps[0].subCategoryId
 
           params.params.condition[i].conditionProps.unshift(attr)
         }
@@ -2060,12 +2060,12 @@ console.log(2323, conditionProps)
 
       this.modelAction.forEach((item, i) => {
         if(item.hasSwitch){
-          arr.businessId = params.params.action[i].actionProps[0].businessId
-          arr.categoryId = params.params.action[i].actionProps[0].categoryId
-          arr.categoryName = params.params.action[i].actionProps[0].categoryName
-          arr.subCategoryName = params.params.action[i].actionProps[0].subCategoryName
-          arr.deviceUuid = params.params.action[i].actionProps[0].deviceUuid
-          arr.subCategoryId = params.params.action[i].actionProps[0].subCategoryId
+          attr.businessId = params.params.action[i].actionProps[0].businessId
+          attr.categoryId = params.params.action[i].actionProps[0].categoryId
+          attr.categoryName = params.params.action[i].actionProps[0].categoryName
+          attr.subCategoryName = params.params.action[i].actionProps[0].subCategoryName
+          attr.deviceUuid = params.params.action[i].actionProps[0].deviceUuid
+          attr.subCategoryId = params.params.action[i].actionProps[0].subCategoryId
 
           params.params.action[i].actionProps.unshift(attr)
         }

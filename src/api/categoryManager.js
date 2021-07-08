@@ -50,6 +50,14 @@ export function selectSubCategory(params) {
   })
 }
 /* --============================================================================== */
+// 获取品类列表(新)
+export function subAllCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.GET_ALL_CATEGORY,
+    method: 'post',
+    data: params
+  })
+}
 // 获取品类列表
 export function subCategory(params) {
   return axios({

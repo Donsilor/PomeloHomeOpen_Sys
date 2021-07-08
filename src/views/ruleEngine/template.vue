@@ -129,7 +129,6 @@ export default {
     },
     // 搜索
     search() {
-      console.log(8989)
       this.getList(this.searchVal)
     },
     // 获取场景列表

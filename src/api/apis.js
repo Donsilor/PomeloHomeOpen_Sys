@@ -85,6 +85,7 @@ export const ANALYSIS_DATA_SERVICE_API = {
 // 品类管理
 export const CATEGORY_MANAGE_SERVICE_API = {
   GET_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/list`, // 获取大品类列表   fixed 
+  GET_ALL_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/getAllCategoryDetails`, // 获取大品类列表(新)
   DETAIL_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/detail`, // 获取大品类详情  fixed
   ADD_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/add`, // 添加大品类列表   fixed
   EDIT_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/category/edit`, // 编辑大品类列表 fixed

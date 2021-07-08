@@ -1923,7 +1923,7 @@ console.log(2323, conditionProps)
             return
           }
 
-          if(this.modelCondition[i].type === 'int' && (item.conditionProps[0].compareValue < this.modelCondition[i].min || item.conditionProps[0].compareValue > this.modelCondition[i].max)){
+          if(this.modelCondition[i].type === 'int' && ((item.conditionProps[0].compareValue-this.modelCondition[i].min<0) || (item.conditionProps[0].compareValue-this.modelCondition[i].max>0))){
             this.dialogVisible = true
             this.dialogContent = '“触发条件' +(+1+i)+ '”的属性值取值范围不对，请重新填写（提示：' + this.modelCondition[i].min + ' - ' + this.modelCondition[i].max + '）！'
             return

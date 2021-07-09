@@ -22,7 +22,13 @@
       </el-col>
     </el-row>
 
-    <el-table :data="tableData" v-loading="listLoading" element-loading-text="给我一点时间" stripe fit highlight-current-row style="width: 100%; marginTop: 20px">
+    <el-table
+        :data="tableData"
+        :cell-style="acellStyle"
+        :header-cell-style="headCellStyle"
+        border
+        tooltip-effect="dark"
+        style="width: 100%">
       <el-table-column align="center" label="序号" prop="sort">
       </el-table-column>
       <el-table-column align="center" label="触发类型" prop="">
@@ -30,11 +36,11 @@
           <div>{{ scope.row.sceneType == 0 ? '手动' : scope.row.sceneType == 1 ? '自动' : '安防' }}</div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="场景名称" prop="sceneName">
+      <el-table-column align="center" label="模板名称" prop="sceneName">
       </el-table-column>
-      <el-table-column align="center" label="类型" prop="typeName">
+      <el-table-column align="center" label="模板类型" prop="typeName">
       </el-table-column>
-      <el-table-column align="center" label="简介" prop="sceneDesc">
+      <el-table-column align="center" label="模板简介" prop="sceneDesc">
       </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createdTime">
       </el-table-column>
@@ -107,7 +113,10 @@ export default {
       listQuery: {
         page: 1,
         limit: 5
-      }
+      },
+      // 设置表格的样式
+      acellStyle: { 'text-align': 'center' },
+      headCellStyle: { 'text-align': 'center', 'font-weight': 'bold', 'font-size': '17px', color: 'black', 'background-color': '#f4f5f7' },
     }
   },
   created() {

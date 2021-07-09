@@ -12,7 +12,7 @@
         <el-col :span="12">
           <el-input 
             v-model="sceneName" 
-            placeholder="请输入场景名称" 
+            placeholder="请输入类型名称" 
             @keyup.enter.native="search"
             class="input-with-select" >
             
@@ -39,7 +39,7 @@
             label="序号"/>
           <el-table-column
             prop="typeName"
-            label="场景名称"/>
+            label="场景类型"/>
           <el-table-column
             prop="typeCode"
             label="标识符"/>

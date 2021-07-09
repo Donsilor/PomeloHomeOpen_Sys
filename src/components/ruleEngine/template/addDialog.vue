@@ -33,7 +33,7 @@
           <el-select v-model="form.sceneIconId" :popper-append-to-body="false" placeholder="请选择图标" class="dialog_select width540">
             <el-option v-for="(item, index) in sceneIcon" :label="item.displayName" :key="index" :value="item.id">
               <el-image
-                style="width: 100px; height: 100px"
+                style="width: 100%; height: 100%"
                 :src="item.fileUrl"
                 fit="fit"></el-image>
             </el-option>
@@ -2072,7 +2072,7 @@ export default {
           }
 
       this.modelCondition.forEach((item, i) => {
-        if(item.hasSwitch){
+        if(item.hasSwitch && params.params.condition[i].conditionProps[0].propertyName != 'switch'){
           attr.businessId = params.params.condition[i].conditionProps[0].businessId
           attr.categoryId = params.params.condition[i].conditionProps[0].categoryId
           attr.categoryName = params.params.condition[i].conditionProps[0].categoryName
@@ -2085,7 +2085,7 @@ export default {
       })
 
       this.modelAction.forEach((item, i) => {
-        if(item.hasSwitch){
+        if(item.hasSwitch && params.params.action[i].actionProps[0].propertyName != 'switch'){
           attr.businessId = params.params.action[i].actionProps[0].businessId
           attr.categoryId = params.params.action[i].actionProps[0].categoryId
           attr.categoryName = params.params.action[i].actionProps[0].categoryName
@@ -2097,6 +2097,9 @@ export default {
         }
       })
 
+      console.log('----form----', params)
+      // return
+
       if(this.dialogType == 1){
         this.addTemplate(params)
       }else if(this.dialogType == 3){
@@ -2105,7 +2108,6 @@ export default {
     },
     // 添加模板
     addTemplate(params) {
-      console.log('params-add', params)
       addSenceTemplate(params).then(res=>{
         if(res.code == 200){
           this.$message.success('新增成功')
@@ -2116,7 +2118,6 @@ export default {
 
     // 编辑模板
     editTemplate(params) {
-      console.log('params-edit', params)
       editSenceTemplate(params).then(res=>{
         if(res.code == 200){
           this.$message.success('编辑成功')

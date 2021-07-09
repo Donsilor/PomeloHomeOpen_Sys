@@ -584,8 +584,6 @@ export default {
         this.editScene(this.editId)
       }
     })
-
-    
   },
   methods: {
     // 获取安防
@@ -1909,11 +1907,11 @@ export default {
             this.form.condition[i].conditionProps[0].subCategoryId = 0
           }
 
-          // if(item.resourceId === ''){
-          //   this.dialogVisible = true
-          //   this.dialogContent = '“触发条件' +(+1+i)+ '”的图片不能为空，请选择！'
-          //   return
-          // }
+          if(item.conditionType != 1 && item.resourceId === ''){
+            this.dialogVisible = true
+            this.dialogContent = '“触发条件' +(+1+i)+ '”的图片不能为空，请选择！'
+            return
+          }
 
           if(item.conditionProps[0].propertyName === ''){
             this.dialogVisible = true
@@ -1930,6 +1928,24 @@ export default {
           if(item.conditionProps[0].compareValue === ''){
             this.dialogVisible = true
             this.dialogContent = '“触发条件' +(+1+i)+ '”的属性值不能为空，请选择或填写！'
+            return
+          }
+
+          if(item.conditionType == 0 && item.conditionProps[1].propertyName === ''){
+            this.dialogVisible = true
+            this.dialogContent = '“触发条件' +(+1+i)+ '”的属性二不能为空，请选择！'
+            return
+          }
+
+          if(item.conditionType == 0 && item.conditionProps[1].compareType === ''){
+            this.dialogVisible = true
+            this.dialogContent = '“触发条件' +(+1+i)+ '”的比较值二不能为空，请选择！'
+            return
+          }
+
+          if(item.conditionType == 0 && item.conditionProps[1].compareValue === ''){
+            this.dialogVisible = true
+            this.dialogContent = '“触发条件' +(+1+i)+ '”的属性值二不能为空，请选择或填写！'
             return
           }
 
@@ -1971,11 +1987,11 @@ export default {
           this.form.action[i].actionProps[0].subCategoryId = 0
         }
 
-        // if(item.resourceId === ''){
-        //   this.dialogVisible = true
-        //   this.dialogContent = '“执行动作' +(+1+i)+ '”的图片不能为空，请重新选择！'
-        //   return
-        // }
+        if(item.actionType === 0 && item.resourceId === ''){
+          this.dialogVisible = true
+          this.dialogContent = '“执行动作' +(+1+i)+ '”的图片不能为空，请重新选择！'
+          return
+        }
 
         if(item.actionProps[0].propertyName === ''){
           this.dialogVisible = true

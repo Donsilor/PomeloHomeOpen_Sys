@@ -115,11 +115,12 @@ export default {
     },
     fileRequest(item) {
       if (this.importPhydata.type === 'category') {
+        console.log(this.importPhydata)
         const formData = new FormData()
         formData.append('file', item.file)
         if(this.importPhydata.val === 'son'){
           formData.append('subCategoryId', this.importPhydata.deviceSubCategoryId) 
-          formData.append('deviceCategoryId', this.importPhydata.deviceCategoryId) 
+          formData.append('categoryId', this.importPhydata.deviceCategoryId) 
           formData.append('brandId', this.importPhydata.brandId) 
         } else{
           formData.append('categoryId', this.importPhydata.deviceCategoryId)

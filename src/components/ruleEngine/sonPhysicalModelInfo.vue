@@ -103,16 +103,16 @@ export default {
       default: ''
     },
     deviceSubCategoryId: {
-      type: String,
-      default: ''
+      type: Number,
+      default: 0
     },
     brandId: {
-      type: String,
-      default: ''
+      type: Number,
+      default: 0
     },
     deviceCategoryId:{
-      type: String,
-      default: ''
+      type: Number,
+      default: 0
     },
   },
   data() {
@@ -137,6 +137,7 @@ export default {
   },
   created() {
     // this.sRow = JSON.parse(this.$route.query.sRow)
+    console.log(this.subCategoryId)
     this.getDraftModelData()
     this.getUnitsName()
   },
@@ -148,7 +149,6 @@ export default {
     },
     // 获取modelData
     getDraftModelData(val) {
-      console.log(this.deviceCategoryId)
       this.tableData = []
       const params = {
         params: {
@@ -214,6 +214,7 @@ export default {
       }) */
     },
     handlerClick(val) {
+      console.log(this.deviceCategoryId)
       switch (val) {
       case 'addCustom':
         this.proParams.type = 'category'
@@ -258,7 +259,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(row)
+        console.log(row,this.subCategoryId)
         const params = {
           params: {
             deviceCategoryId : this.deviceCategoryId, //父级标识

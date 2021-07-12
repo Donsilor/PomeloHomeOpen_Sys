@@ -415,6 +415,7 @@ export default {
       } */
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          console.log(this.propData)
           if (this.form.modelType === 1) {
             this.form.jsonObject = this.jsonObject
           }
@@ -425,9 +426,9 @@ export default {
           this.form.fileList = list
           if (this.propData.status) {
             this.form.subCategoryId = this.propData.subCategoryId
-            this.form.categoryNumber = this.propData.categoryNumber
+            // this.form.categoryNumber = this.propData.categoryNumber
             const params = Object.assign({}, this.form)
-            params.deviceCategoryId = Number(this.propData.deviceCategoryId)
+            params.categoryNumber = Number(this.propData.deviceCategoryId)
             editSonCategory({ params }).then((res) => {
               if (res.data.code === 200 || res.data.code === 0) {
                 this.$message({

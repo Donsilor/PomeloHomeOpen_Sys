@@ -190,7 +190,7 @@ export default {
             subCategoryId: row.subCategoryId,
             subCategoryName: row.subCategoryName,
             deviceSubCategoryId: row.subCategoryNumber,
-            deviceCategoryId: this.$route.query.deviceCategoryId,
+            categoryNumber: this.$route.query.deviceCategoryId,
             brandId: row.brandId
           }
         })

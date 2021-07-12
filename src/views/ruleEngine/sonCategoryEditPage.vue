@@ -63,9 +63,9 @@ export default {
     console.log(this.$route.query.subCategoryId)
     this.subCategoryId = this.$route.query.subCategoryId
     this.subCategoryName = this.$route.query.subCategoryName
-    this.deviceSubCategoryId = this.$route.query.deviceSubCategoryId
-    this.brandId = this.$route.query.brandId
-    this.deviceCategoryId = this.$route.query.deviceCategoryId
+    this.deviceSubCategoryId = Number(this.$route.query.deviceSubCategoryId)
+    this.brandId = Number(this.$route.query.brandId)
+    this.deviceCategoryId = Number(this.$route.query.categoryNumber)
     this.getActiveName()
   },
   methods: {

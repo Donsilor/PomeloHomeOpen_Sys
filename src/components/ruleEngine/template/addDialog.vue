@@ -105,7 +105,7 @@
                           v-for="(faci, idx) in modelCondition[index].facilityChild"
                           :key="idx"
                           :label="faci.subCategoryName"
-                          :value="faci.subCategoryNumber">
+                          :value="faci.subCategoryId">
                         </el-option>
                       </el-select>
 
@@ -259,7 +259,7 @@
                         v-for="(faci, idx) in modelAction[index].facilityChild"
                         :key="idx"
                         :label="faci.subCategoryName"
-                        :value="faci.subCategoryNumber">
+                        :value="faci.subCategoryId">
                       </el-option>
                     </el-select>
 
@@ -882,7 +882,28 @@ export default {
 
       sonCategory({ params }).then((res) => {
         if(res.data.code == 200){
-          this.modelCondition[index].facilityChild = res.data.data.list
+          let arr = res.data.data.list
+
+          let brand = {
+            4: '豪恩',
+            0: '星络',
+            2: '海尔',
+            31: '万和',
+            38: '凯迪士',
+            28: '晾霸',
+            20: '三雄',
+            103: '鸿雁',
+            26: '雷士',
+            33: 'TCL',
+            44: '杜亚',
+            24: '万家乐'
+          }
+
+          for(let k=0; k<arr.length; k++){
+            arr[k].subCategoryName = arr[k].subCategoryName + ' (' + brand[arr[k].brandId] + ')'
+          }
+
+          this.modelCondition[index].facilityChild = arr
         }
 
         // 没有子品类直接调大品类物模型
@@ -890,7 +911,7 @@ export default {
           this.getModelData('condition', index, num)
           // 只有一个子品类，直接调子品类物模型
         }else if(this.modelCondition[index].facilityChild.length == 1){
-          this.getSubModelCondition(index, this.form.condition[index].conditionProps[0].categoryId, this.modelCondition[index].facilityChild[0].subCategoryNumber)
+          this.getSubModelCondition(index, this.form.condition[index].conditionProps[0].categoryId, this.modelCondition[index].facilityChild[0].getSubModelCondition)
         }
       })
     },
@@ -938,7 +959,28 @@ export default {
 
       sonCategory({ params }).then((res) => {
         if(res.data.code == 200){
-          this.modelAction[index].facilityChild = res.data.data.list
+          let arr = res.data.data.list
+
+          let brand = {
+            4: '豪恩',
+            0: '星络',
+            2: '海尔',
+            31: '万和',
+            38: '凯迪士',
+            28: '晾霸',
+            20: '三雄',
+            103: '鸿雁',
+            26: '雷士',
+            33: 'TCL',
+            44: '杜亚',
+            24: '万家乐'
+          }
+
+          for(let k=0; k<arr.length; k++){
+            arr[k].subCategoryName = arr[k].subCategoryName + ' (' + brand[arr[k].brandId] + ')'
+          }
+
+          this.modelAction[index].facilityChild = arr
         }
 
         // 没有子品类直接调大品类物模型
@@ -946,7 +988,7 @@ export default {
           this.getModelData('action', index, num)
           // 只有一个子品类，直接调子品类物模型
         }else if(this.modelAction[index].facilityChild.length == 1){
-          this.getSubModelAction(index, this.form.action[index].actionProps[0].categoryId, this.modelAction[index].facilityChild[0].subCategoryNumber)
+          this.getSubModelAction(index, this.form.action[index].actionProps[0].categoryId, this.modelAction[index].facilityChild[0].subCategoryId)
         }
       })
     },
@@ -987,15 +1029,17 @@ export default {
       }
     },
     // 切换子品类,获取子品类物模型（触发条件）
-    getSubModelCondition(index, num, sunNum) {
+    getSubModelCondition(index, num, sunId) {
+      let subNumber = 0
       this.modelCondition[index].facilityChild.forEach((o, i) => {
-        if(o.subCategoryNumber == sunNum){
+        if(o.subCategoryId == sunId){
           this.form.condition[index].conditionProps[0].subCategoryName = o.subCategoryName
           this.form.condition[index].conditionProps[0].businessId = o.brandId
+          subNumber = o.subCategoryNumber
         }
       })
 
-      this.form.condition[index].conditionProps[0].subCategoryId = Number(sunNum)
+      // this.form.condition[index].conditionProps[0].subCategoryId = Number(subNumber)
       this.form.condition[index].conditionProps[0].propertyName = ''
       this.form.condition[index].conditionProps[0].compareType = ''
       this.form.condition[index].conditionProps[0].compareValue = ''
@@ -1014,7 +1058,7 @@ export default {
 
       const params = {
         deviceCategoryId: Number(num),
-        deviceSubCategoryId: Number(sunNum),
+        deviceSubCategoryId: Number(subNumber),
         key: '',
         modeType: this.form.condition[index].conditionType,
         brandId: this.form.condition[index].conditionProps[0].businessId
@@ -1026,7 +1070,7 @@ export default {
       //   brandId: this.form.condition[index].conditionProps[0].businessId
       // }
 
-      if(sunNum){
+      if(subNumber){
         getSonModel({ params }).then((res) => {
           if(res.data.code == 200){
             // 拿到子品类物模型，赋值
@@ -1043,15 +1087,17 @@ export default {
       }
     },
     // 切换子品类,获取子品类物模型（执行动作）
-    getSubModelAction(index, num, sunNum) {
+    getSubModelAction(index, num, sunId) {
+      let subNumber = 0
       this.modelAction[index].facilityChild.forEach((o, i) => {
-        if(o.subCategoryNumber == sunNum){
+        if(o.subCategoryId == sunId){
           this.form.action[index].actionProps[0].subCategoryName = o.subCategoryName
           this.form.action[index].actionProps[0].businessId = o.brandId
+          subNumber = o.subCategoryNumber
         }
       })
 
-      this.form.action[index].actionProps[0].subCategoryId = Number(sunNum)
+      // this.form.action[index].actionProps[0].subCategoryId = Number(subNumber)
       this.form.action[index].actionProps[0].propertyName = ''
       this.form.action[index].actionProps[0].compareType = ''
       this.form.action[index].actionProps[0].compareValue = ''
@@ -1070,7 +1116,7 @@ export default {
 
       const params = {
         deviceCategoryId: Number(num),
-        deviceSubCategoryId: Number(sunNum),
+        deviceSubCategoryId: Number(subNumber),
         key: '',
         modeType: this.form.action[index].actionType,
         brandId: this.form.action[index].actionProps[0].businessId
@@ -1078,11 +1124,11 @@ export default {
 
       const params2 = {
         deviceCategoryId: Number(num),
-        deviceSubCategoryId: Number(sunNum),
+        deviceSubCategoryId: Number(subNumber),
         brandId: this.form.action[index].actionProps[0].businessId
       }
 
-      if(sunNum){
+      if(subNumber){
         getSonModel({ params }).then((res) => {
           if(res.data.code == 200){
             // 拿到子品类物模型，赋值
@@ -1907,6 +1953,12 @@ export default {
             this.form.condition[i].conditionProps[0].subCategoryId = 0
           }
 
+          for(let n=0, child = this.modelCondition[i].facilityChild; n<child.length; n++){
+            if(child[n].subCategoryId = item.conditionProps[0].subCategoryId){
+              this.form.condition[i].conditionProps[0].subCategoryId = child[n].subCategoryNumber
+            }
+          }
+
           if(item.conditionType != 1 && item.resourceId === ''){
             this.dialogVisible = true
             this.dialogContent = '“触发条件' +(+1+i)+ '”的图片不能为空，请选择！'
@@ -1985,6 +2037,12 @@ export default {
 
         if(item.actionType === 1 && item.actionProps[0].subCategoryId === '' && this.modelAction[i].facilityChild.length == 0){
           this.form.action[i].actionProps[0].subCategoryId = 0
+        }
+
+        for(let n=0, child = this.modelAction[i].facilityChild; n<child.length; n++){
+          if(child[n].subCategoryId = item.actionProps[0].subCategoryId){
+            this.form.action[i].actionProps[0].subCategoryId = child[n].subCategoryNumber
+          }
         }
 
         if(item.actionType === 0 && item.resourceId === ''){
@@ -2067,7 +2125,7 @@ export default {
             "deviceUuid": "",
             "subCategoryId": "",
             "propertyName": "switch",
-            "compareType": "==",
+            "compareType": "1",
             "compareValue": "1",
           }
 

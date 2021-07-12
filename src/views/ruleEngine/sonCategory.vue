@@ -53,13 +53,13 @@
           style="width: 100%">
           <el-table-column
             prop="subCategoryNumber"
-            label="序号"/>
+            label="子品类ID"/>
           <el-table-column
             prop="subCategoryName"
-            label="品类名称"/>
+            label="子品类名称"/>
           <el-table-column
             prop="subCategoryNameE"
-            label="品类英文名"/>
+            label="子品类英文名"/>
           <el-table-column
             prop="brandId"
             label="品牌">

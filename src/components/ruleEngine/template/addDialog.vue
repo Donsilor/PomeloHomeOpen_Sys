@@ -1558,7 +1558,11 @@ export default {
 
                 sonCategory({ params: obj }).then((res) => {
                   if(res.data.code == 200){
-                    this.modelCondition[j].facilityChild = res.data.data.list
+                    let list = res.data.data.list
+                    this.modelCondition[j].facilityChild = list
+
+                    let child = list.filter(ite => ite.subCategoryNumber == item.conditionProps[0].subCategoryId && ite.brandId == item.conditionProps[0].businessId)
+                    this.form.condition[j].conditionProps[0].subCategoryId = child[0].subCategoryId
                   }
                 })
 
@@ -1806,7 +1810,11 @@ export default {
 
                 sonCategory({ params: obj }).then((res) => {
                   if(res.data.code == 200){
-                    this.modelAction[j].facilityChild = res.data.data.list
+                    let list = res.data.data.list
+                    this.modelAction[j].facilityChild = list
+
+                    let child = list.filter(ite => ite.subCategoryNumber == item.actionProps[0].subCategoryId && ite.brandId == item.actionProps[0].businessId)
+                    this.form.action[j].actionProps[0].subCategoryId = child[0].subCategoryId
                   }
                 })
 
@@ -2257,6 +2265,12 @@ export default {
     width: 540px;
   }
 
+  .dialog_select.width540{
+    /deep/ .el-select-dropdown{
+      width: 540px;
+    }
+  }
+
   .dialog_select{
     // 场景图标样式
     /deep/ .el-select-dropdown__list{
@@ -2271,8 +2285,8 @@ export default {
       padding: 0;
     }
 
-    /deep/ .el-select-dropdown__item:not(:nth-child(5n)){
-      margin-right: 10px;
+    /deep/ .el-select-dropdown__item:not(:nth-child(7n)){
+      margin-right: 16px;
     }
 
     /deep/ .el-select-dropdown__item:nth-child(n+9){

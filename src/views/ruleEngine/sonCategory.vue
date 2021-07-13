@@ -94,7 +94,8 @@
         </el-table>
       </div>
       <Paging 
-        :total="total" 
+        :total="total"
+        :pageQuery="listQuery"
         @changePage="changePage"/>
       <!-- 新增品类dialog -->
       <AddSubDialog 
@@ -131,7 +132,7 @@ export default {
       total: 0, // 到时候从后台获取
       listQuery: {
         page: 1,
-        limit: 5
+        limit: 15
       },
       // ------------
       tableData: [],

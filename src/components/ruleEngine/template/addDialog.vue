@@ -1558,10 +1558,30 @@ export default {
 
                 sonCategory({ params: obj }).then((res) => {
                   if(res.data.code == 200){
-                    let list = res.data.data.list
-                    this.modelCondition[j].facilityChild = list
+                    let arr = res.data.data.list
 
-                    let child = list.filter(ite => ite.subCategoryNumber == item.conditionProps[0].subCategoryId && ite.brandId == item.conditionProps[0].businessId)
+                    let brand = {
+                      4: '豪恩',
+                      0: '星络',
+                      2: '海尔',
+                      31: '万和',
+                      38: '凯迪士',
+                      28: '晾霸',
+                      20: '三雄',
+                      103: '鸿雁',
+                      26: '雷士',
+                      33: 'TCL',
+                      44: '杜亚',
+                      24: '万家乐'
+                    }
+
+                    for(let k=0; k<arr.length; k++){
+                      arr[k].subCategoryName = arr[k].subCategoryName + ' (' + brand[arr[k].brandId] + ')'
+                    }
+
+                    this.modelCondition[j].facilityChild = arr
+
+                    let child = arr.filter(ite => ite.subCategoryNumber == item.conditionProps[0].subCategoryId && ite.brandId == item.conditionProps[0].businessId)
                     this.form.condition[j].conditionProps[0].subCategoryId = child[0].subCategoryId
                   }
                 })
@@ -1810,10 +1830,31 @@ export default {
 
                 sonCategory({ params: obj }).then((res) => {
                   if(res.data.code == 200){
-                    let list = res.data.data.list
-                    this.modelAction[j].facilityChild = list
+                    let arr = res.data.data.list
 
-                    let child = list.filter(ite => ite.subCategoryNumber == item.actionProps[0].subCategoryId && ite.brandId == item.actionProps[0].businessId)
+                    let brand = {
+                      4: '豪恩',
+                      0: '星络',
+                      2: '海尔',
+                      31: '万和',
+                      38: '凯迪士',
+                      28: '晾霸',
+                      20: '三雄',
+                      103: '鸿雁',
+                      26: '雷士',
+                      33: 'TCL',
+                      44: '杜亚',
+                      24: '万家乐'
+                    }
+
+                    for(let k=0; k<arr.length; k++){
+                      arr[k].subCategoryName = arr[k].subCategoryName + ' (' + brand[arr[k].brandId] + ')'
+                    }
+
+                    this.modelAction[j].facilityChild = arr
+
+                    let child = arr.filter(ite => ite.subCategoryNumber == item.actionProps[0].subCategoryId && ite.brandId == item.actionProps[0].businessId)
+
                     this.form.action[j].actionProps[0].subCategoryId = child[0].subCategoryId
                   }
                 })
@@ -2150,18 +2191,18 @@ export default {
         }
       })
 
-      this.modelAction.forEach((item, i) => {
-        if(item.hasSwitch && params.params.action[i].actionProps[0].propertyName != 'switch'){
-          attr.businessId = params.params.action[i].actionProps[0].businessId
-          attr.categoryId = params.params.action[i].actionProps[0].categoryId
-          attr.categoryName = params.params.action[i].actionProps[0].categoryName
-          attr.subCategoryName = params.params.action[i].actionProps[0].subCategoryName
-          attr.deviceUuid = params.params.action[i].actionProps[0].deviceUuid
-          attr.subCategoryId = params.params.action[i].actionProps[0].subCategoryId
+      // this.modelAction.forEach((item, i) => {
+      //   if(item.hasSwitch && params.params.action[i].actionProps[0].propertyName != 'switch'){
+      //     attr.businessId = params.params.action[i].actionProps[0].businessId
+      //     attr.categoryId = params.params.action[i].actionProps[0].categoryId
+      //     attr.categoryName = params.params.action[i].actionProps[0].categoryName
+      //     attr.subCategoryName = params.params.action[i].actionProps[0].subCategoryName
+      //     attr.deviceUuid = params.params.action[i].actionProps[0].deviceUuid
+      //     attr.subCategoryId = params.params.action[i].actionProps[0].subCategoryId
 
-          params.params.action[i].actionProps.unshift(attr)
-        }
-      })
+      //     params.params.action[i].actionProps.unshift(attr)
+      //   }
+      // })
 
       console.log('----form----', params)
       // return

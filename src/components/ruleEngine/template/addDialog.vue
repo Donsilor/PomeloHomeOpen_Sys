@@ -166,7 +166,8 @@
                         v-if="item.conditionType === 0"
                         v-model="item.conditionProps[0].compareValue"
                         arrow-control
-                        value-format="HH:mm:ss"
+                        format="HH:mm"
+                        value-format="HH:mm"
                         :picker-options="{
                           selectableRange: '00:00:00 - 23:59:00'
                         }"

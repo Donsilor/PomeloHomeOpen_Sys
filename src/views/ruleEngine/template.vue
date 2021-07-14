@@ -84,7 +84,8 @@
     />
 
     <Paging 
-      :total="total" 
+      :total="total"
+      :pageQuery="listQuery"
       @changePage="changePage"/>
   </div>
 </template>
@@ -112,7 +113,7 @@ export default {
       total: 0, // 分页功能,从后台获取
       listQuery: {
         page: 1,
-        limit: 5
+        limit: 15
       },
       // 设置表格的样式
       acellStyle: { 'text-align': 'center' },

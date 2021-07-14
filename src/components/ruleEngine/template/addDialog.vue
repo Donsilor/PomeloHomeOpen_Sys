@@ -906,13 +906,16 @@ export default {
           this.modelCondition[index].facilityChild = arr
         }
 
-        // 没有子品类直接调大品类物模型
-        if(!this.modelCondition[index].facilityChild.length){
-          this.getModelData('condition', index, num)
-          // 只有一个子品类，直接调子品类物模型
-        }else if(this.modelCondition[index].facilityChild.length == 1){
-          this.getSubModelCondition(index, this.form.condition[index].conditionProps[0].categoryId, this.modelCondition[index].facilityChild[0].getSubModelCondition)
-        }
+        // // 没有子品类直接调大品类物模型
+        // if(!this.modelCondition[index].facilityChild.length){
+        //   this.getModelData('condition', index, num)
+        //   // 只有一个子品类，直接调子品类物模型
+        // }else if(this.modelCondition[index].facilityChild.length == 1){
+        //   this.getSubModelCondition(index, this.form.condition[index].conditionProps[0].categoryId, this.modelCondition[index].facilityChild[0].getSubModelCondition)
+        // }
+
+        // 根据需求需要可以选择大品类
+        this.getModelData('condition', index, num)
       })
     },
 
@@ -983,13 +986,15 @@ export default {
           this.modelAction[index].facilityChild = arr
         }
 
-        // 没有子品类直接调大品类物模型
-        if(!this.modelAction[index].facilityChild.length){
-          this.getModelData('action', index, num)
-          // 只有一个子品类，直接调子品类物模型
-        }else if(this.modelAction[index].facilityChild.length == 1){
-          this.getSubModelAction(index, this.form.action[index].actionProps[0].categoryId, this.modelAction[index].facilityChild[0].subCategoryId)
-        }
+        // // 没有子品类直接调大品类物模型
+        // if(!this.modelAction[index].facilityChild.length){
+        //   this.getModelData('action', index, num)
+        //   // 只有一个子品类，直接调子品类物模型
+        // }else if(this.modelAction[index].facilityChild.length == 1){
+        //   this.getSubModelAction(index, this.form.action[index].actionProps[0].categoryId, this.modelAction[index].facilityChild[0].subCategoryId)
+        // }
+
+        this.getModelData('action', index, num)
       })
     },
 
@@ -1853,8 +1858,10 @@ export default {
 
                     this.modelAction[j].facilityChild = arr
 
-                    let child = arr.filter(ite => ite.subCategoryNumber == item.actionProps[0].subCategoryId && ite.brandId == item.actionProps[0].businessId)
+                    console.log(444, arr)
+                    console.log(555, item)
 
+                    let child = arr.filter(ite => ite.subCategoryNumber == item.actionProps[0].subCategoryId && ite.brandId == item.actionProps[0].businessId)
                     this.form.action[j].actionProps[0].subCategoryId = child[0].subCategoryId
                   }
                 })
@@ -1992,11 +1999,11 @@ export default {
             return
           }
 
-          if(item.conditionType === 1 && item.conditionProps[0].subCategoryId === '' && this.modelCondition[i].facilityChild.length){
-            this.dialogVisible = true
-            this.dialogContent = '“触发条件' +(+1+i)+ '”未选择子品类设备，请选择！'
-            return
-          }
+          // if(item.conditionType === 1 && item.conditionProps[0].subCategoryId === '' && this.modelCondition[i].facilityChild.length){
+          //   this.dialogVisible = true
+          //   this.dialogContent = '“触发条件' +(+1+i)+ '”未选择子品类设备，请选择！'
+          //   return
+          // }
 
           if(item.conditionType === 1 && item.conditionProps[0].subCategoryId === '' && this.modelCondition[i].facilityChild.length == 0){
             this.form.condition[i].conditionProps[0].subCategoryId = 0
@@ -2078,11 +2085,11 @@ export default {
           return
         }
 
-        if(item.actionType === 1 && item.actionProps[0].subCategoryId === '' && this.modelAction[i].facilityChild.length){
-          this.dialogVisible = true
-          this.dialogContent = '“执行动作' +(+1+i)+ '”未选择子品类设备，请选择！'
-          return
-        }
+        // if(item.actionType === 1 && item.actionProps[0].subCategoryId === '' && this.modelAction[i].facilityChild.length){
+        //   this.dialogVisible = true
+        //   this.dialogContent = '“执行动作' +(+1+i)+ '”未选择子品类设备，请选择！'
+        //   return
+        // }
 
         if(item.actionType === 1 && item.actionProps[0].subCategoryId === '' && this.modelAction[i].facilityChild.length == 0){
           this.form.action[i].actionProps[0].subCategoryId = 0

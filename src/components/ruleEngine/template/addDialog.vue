@@ -1534,6 +1534,7 @@ export default {
           })
 
           this.form.condition.forEach((item, j) => {
+            console.log(888, item)
             if(item.conditionType == 1){
               // 设备获取物模型
               var sunNum = Number(item.conditionProps[0].subCategoryId)
@@ -1805,6 +1806,7 @@ export default {
           })
 
           this.form.action.forEach((item, j) => {
+            console.log(999, item)
             if(item.actionType == 1){
               // 设备获取物模型
               var sunNum = Number(item.actionProps[0].subCategoryId)
@@ -2010,7 +2012,7 @@ export default {
           }
 
           for(let n=0, child = this.modelCondition[i].facilityChild; n<child.length; n++){
-            if(child[n].subCategoryId = item.conditionProps[0].subCategoryId){
+            if(child[n].subCategoryId == item.conditionProps[0].subCategoryId){
               this.form.condition[i].conditionProps[0].subCategoryId = child[n].subCategoryNumber
             }
           }
@@ -2096,7 +2098,7 @@ export default {
         }
 
         for(let n=0, child = this.modelAction[i].facilityChild; n<child.length; n++){
-          if(child[n].subCategoryId = item.actionProps[0].subCategoryId){
+          if(child[n].subCategoryId == item.actionProps[0].subCategoryId){
             this.form.action[i].actionProps[0].subCategoryId = child[n].subCategoryNumber
           }
         }
@@ -2211,7 +2213,7 @@ export default {
       //   }
       // })
 
-      console.log('----form----', params)
+      console.log('7777----form----7777', params)
       // return
 
       if(this.dialogType == 1){

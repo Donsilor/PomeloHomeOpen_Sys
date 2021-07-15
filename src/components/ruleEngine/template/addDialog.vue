@@ -1973,25 +1973,19 @@ export default {
       })
 
     },
-    // 数据处理
+    // 详情校验
     dealWithForm() {
       // 自动类型校验触发条件
       if(this.form.sceneType == 1){
         var cond = this.form.condition;
         for(var i=0; i<cond.length; i++){
           var item = cond[i]
-          // 关系类型
           this.affirmType = 2;
 
           if(item.conditionType === ''){
             this.dialogVisible = true
             this.dialogContent = '“触发条件' +(+1+i)+ '”未选择触发条件，请选择！'
             return
-          }
-
-          // 转换星期数据类型
-          if(item.conditionType === 0 && item.conditionProps.length == 2 && item.conditionProps[1].propertyName == 'weeks'){
-            item.conditionProps[1].compareValue = item.conditionProps[1].compareValue.join()
           }
 
           if(item.conditionType === 1 && item.conditionProps[0].categoryId === ''){
@@ -2005,16 +1999,6 @@ export default {
           //   this.dialogContent = '“触发条件' +(+1+i)+ '”未选择子品类设备，请选择！'
           //   return
           // }
-
-          if(item.conditionType === 1 && item.conditionProps[0].subCategoryId === '' && this.modelCondition[i].facilityChild.length == 0){
-            this.form.condition[i].conditionProps[0].subCategoryId = 0
-          }
-
-          for(let n=0, child = this.modelCondition[i].facilityChild; n<child.length; n++){
-            if(child[n].subCategoryId == item.conditionProps[0].subCategoryId){
-              this.form.condition[i].conditionProps[0].subCategoryId = child[n].subCategoryNumber
-            }
-          }
 
           if(item.conditionType != 1 && item.resourceId === ''){
             this.dialogVisible = true
@@ -2092,16 +2076,6 @@ export default {
         //   return
         // }
 
-        if(item.actionType === 1 && item.actionProps[0].subCategoryId === '' && this.modelAction[i].facilityChild.length == 0){
-          this.form.action[i].actionProps[0].subCategoryId = 0
-        }
-
-        for(let n=0, child = this.modelAction[i].facilityChild; n<child.length; n++){
-          if(child[n].subCategoryId == item.actionProps[0].subCategoryId){
-            this.form.action[i].actionProps[0].subCategoryId = child[n].subCategoryNumber
-          }
-        }
-
         if(item.actionType === 0 && item.resourceId === ''){
           this.dialogVisible = true
           this.dialogContent = '“执行动作' +(+1+i)+ '”的图片不能为空，请重新选择！'
@@ -2173,7 +2147,7 @@ export default {
     },
     // 有按钮属性的添加switch
     addSwitch() {
-      let params = {'params': Object.assign({}, this.form)},
+      let params = {'params': JSON.parse(JSON.stringify(this.form))},
           attr = {
             "businessId": "",
             "categoryId": "",
@@ -2185,6 +2159,35 @@ export default {
             "compareType": "1",
             "compareValue": "1",
           }
+
+      for(var i=0, cond=params.params.condition; i<cond.length; i++){
+        // 转换星期数据类型
+        if(cond[i].conditionType === 0 && cond[i].conditionProps.length == 2 && cond[i].conditionProps[1].propertyName == 'weeks'){
+          cond[i].conditionProps[1].compareValue = cond[i].conditionProps[1].compareValue.join()
+        }
+
+        if(cond[i].conditionType === 1 && cond[i].conditionProps[0].subCategoryId === '' && this.modelCondition[i].facilityChild.length == 0){
+          cond[i].conditionProps[0].subCategoryId = 0
+        }
+
+        for(let n=0, child = this.modelCondition[i].facilityChild; n<child.length; n++){
+          if(child[n].subCategoryId == cond[i].conditionProps[0].subCategoryId){
+            cond[i].conditionProps[0].subCategoryId = child[n].subCategoryNumber
+          }
+        }
+      }
+
+      for(var i=0, acti=params.params.action; i<acti.length; i++){
+        if(acti[i].actionType === 1 && acti[i].actionProps[0].subCategoryId === '' && this.modelAction[i].facilityChild.length == 0){
+          acti[i].actionProps[0].subCategoryId = 0
+        }
+
+        for(let n=0, child = this.modelAction[i].facilityChild; n<child.length; n++){
+          if(child[n].subCategoryId == acti[i].actionProps[0].subCategoryId){
+            acti[i].actionProps[0].subCategoryId = child[n].subCategoryNumber
+          }
+        }
+      }
 
       this.modelCondition.forEach((item, i) => {
         if(item.hasSwitch && params.params.condition[i].conditionProps[0].propertyName != 'switch'){

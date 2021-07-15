@@ -100,7 +100,7 @@
                         </el-option>
                       </el-select>
 
-                      <el-select v-if="item.conditionType === 1 && modelCondition[index].facilityChild.length" v-model="item.conditionProps[0].subCategoryId" @change="getSubModelCondition(index, item.conditionProps[0].categoryId, item.conditionProps[0].subCategoryId)" placeholder="请选择子品类">
+                      <el-select v-if="item.conditionType === 1" v-model="item.conditionProps[0].subCategoryId" @change="getSubModelCondition(index, item.conditionProps[0].categoryId, item.conditionProps[0].subCategoryId)" placeholder="请选择子品类">
                         <el-option
                           v-for="(faci, idx) in modelCondition[index].facilityChild"
                           :key="idx"
@@ -1490,7 +1490,7 @@ export default {
                   compareType: Number(conditionProps[0].compareType),
                   compareValue: conditionProps[0].compareValue,
                   deviceUuid: conditionProps[0].deviceUuid,
-                  subCategoryId: Number(conditionProps[0].subCategoryId)
+                  subCategoryId: conditionProps[0].subCategoryId ? Number(conditionProps[0].subCategoryId) : ''
                 }]
               }
             }else if(item.conditionType == 2){
@@ -1535,7 +1535,6 @@ export default {
           })
 
           this.form.condition.forEach((item, j) => {
-            console.log(888, item)
             if(item.conditionType == 1){
               // 设备获取物模型
               var sunNum = Number(item.conditionProps[0].subCategoryId)
@@ -1547,9 +1546,7 @@ export default {
                 brandId: Number(item.conditionProps[0].businessId)
               }
 
-              if(sunNum){
-                //  如果有子品类，获取子品类设备和物模型
-                var id = ''    //通过Number获取大品类id
+              var id = ''    //通过Number获取大品类id
                 this.facility.forEach((ite, idx) => {
                   if(ite.categoryNumber == item.conditionProps[0].categoryId){
                     id = ite.categoryId
@@ -1595,6 +1592,10 @@ export default {
 
                 params.deviceSubCategoryId = sunNum
 
+              if(sunNum){
+                //  如果有子品类，获取子品类设备和物模型
+                
+  
                 // getSonModels({ params: [sunNum] }).then((res) => {
                 //   if(res.data.code == 200){
                 //     this.modelCondition[j].facilityIcon = res.data.data[0].fileList
@@ -1775,7 +1776,7 @@ export default {
                   compareType: Number(actionProps[0].compareType),
                   compareValue: actionProps[0].compareValue,
                   deviceUuid: actionProps[0].deviceUuid,
-                  subCategoryId: Number(actionProps[0].subCategoryId)
+                  subCategoryId: actionProps[0].subCategoryId ? Number(actionProps[0].subCategoryId) : ''
                 }]
               }
             }
@@ -1807,7 +1808,6 @@ export default {
           })
 
           this.form.action.forEach((item, j) => {
-            console.log(999, item)
             if(item.actionType == 1){
               // 设备获取物模型
               var sunNum = Number(item.actionProps[0].subCategoryId)
@@ -1820,57 +1820,55 @@ export default {
                 brandId: Number(item.actionProps[0].businessId)
               }
 
+              var id = ''    //通过Number获取大品类id
+              this.facility.forEach((ite, idx) => {
+                if(ite.categoryNumber == item.actionProps[0].categoryId){
+                  id = ite.categoryId
+                }
+              })
+
+              const obj = {
+                categoryId: id,
+                subCategoryName: '',
+                pageNumber: this.listQuery.page,
+                pageSize: 9999
+              }
+
+              sonCategory({ params: obj }).then((res) => {
+                if(res.data.code == 200){
+                  let arr = res.data.data.list
+
+                  let brand = {
+                    4: '豪恩',
+                    0: '星络',
+                    2: '海尔',
+                    31: '万和',
+                    38: '凯迪士',
+                    28: '晾霸',
+                    20: '三雄',
+                    103: '鸿雁',
+                    26: '雷士',
+                    33: 'TCL',
+                    44: '杜亚',
+                    24: '万家乐'
+                  }
+
+                  for(let k=0; k<arr.length; k++){
+                    arr[k].subCategoryName = arr[k].subCategoryName + ' (' + brand[arr[k].brandId] + ')'
+                  }
+
+                  this.modelAction[j].facilityChild = arr
+
+                  let child = arr.filter(ite => ite.subCategoryNumber == item.actionProps[0].subCategoryId && ite.brandId == item.actionProps[0].businessId)
+                  this.form.action[j].actionProps[0].subCategoryId = child[0].subCategoryId
+                }
+              })
+
+              params.deviceSubCategoryId = sunNum
+
               if(sunNum){
                 //  如果有子品类，获取子品类设备和物模型
-                var id = ''    //通过Number获取大品类id
-                this.facility.forEach((ite, idx) => {
-                  if(ite.categoryNumber == item.actionProps[0].categoryId){
-                    id = ite.categoryId
-                  }
-                })
-
-                const obj = {
-                  categoryId: id,
-                  subCategoryName: '',
-                  pageNumber: this.listQuery.page,
-                  pageSize: 9999
-                }
-
-                sonCategory({ params: obj }).then((res) => {
-                  if(res.data.code == 200){
-                    let arr = res.data.data.list
-
-                    let brand = {
-                      4: '豪恩',
-                      0: '星络',
-                      2: '海尔',
-                      31: '万和',
-                      38: '凯迪士',
-                      28: '晾霸',
-                      20: '三雄',
-                      103: '鸿雁',
-                      26: '雷士',
-                      33: 'TCL',
-                      44: '杜亚',
-                      24: '万家乐'
-                    }
-
-                    for(let k=0; k<arr.length; k++){
-                      arr[k].subCategoryName = arr[k].subCategoryName + ' (' + brand[arr[k].brandId] + ')'
-                    }
-
-                    this.modelAction[j].facilityChild = arr
-
-                    console.log(444, arr)
-                    console.log(555, item)
-
-                    let child = arr.filter(ite => ite.subCategoryNumber == item.actionProps[0].subCategoryId && ite.brandId == item.actionProps[0].businessId)
-                    this.form.action[j].actionProps[0].subCategoryId = child[0].subCategoryId
-                  }
-                })
-
-                params.deviceSubCategoryId = sunNum
-
+                
                 // getSonModels({ params: [sunNum] }).then((res) => {
                 //   if(res.data.code == 200){
                 //     this.modelAction[j].facilityIcon = res.data.data[0].fileList

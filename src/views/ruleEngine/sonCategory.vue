@@ -96,7 +96,7 @@
       </div>
       <Paging 
         :total="total"
-        :pageQuery="listQuery"
+        :page-query="listQuery"
         @changePage="changePage"/>
       <!-- 新增品类dialog -->
       <AddSubDialog 

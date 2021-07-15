@@ -435,6 +435,18 @@ export const constantRouterMap = [
             meta: {breadNumber: 1, notKeepAlive: true, key: 'category', isdetail: true}
           },
           {
+            path: 'secCategory',
+            name: 'secCategory',
+            component: _import('ruleEngine/secCategory'),
+            meta: {breadNumber: 1, notKeepAlive: true, key: 'category', isdetail: true}
+          },
+          {
+            path: 'secCategoryEditPage',
+            name: 'secCategoryEditPage',
+            component: _import('ruleEngine/secCategoryEditPage'),
+            meta: {breadNumber: 1, notKeepAlive: true, key: 'category', isdetail: true}
+          },
+          {
             path: 'sonCategory',
             name: 'sonCategory',
             component: _import('ruleEngine/sonCategory'),

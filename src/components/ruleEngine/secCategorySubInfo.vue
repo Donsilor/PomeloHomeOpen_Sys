@@ -15,47 +15,33 @@
       reset-fields 
       label-width="120px">
       <el-form-item 
-        label="二级品类序列号" 
+        label="子品类序列号" 
         prop="subCategoryNumber">
         <el-input 
           v-model.number="form.subCategoryNumber" 
           on-keypress="return (/[\d\.]/.test(String.fromCharCode(event.keyCode)))" 
           autocomplete="off" 
           type="number" 
-          placeholder="请输入二级品类序列号"/>
+          placeholder="请输入子品类序列号"/>
       </el-form-item>
       <el-form-item 
-        label="二级品类名称" 
+        label="子品类名称" 
         prop="subCategoryName">
         <el-input 
           v-model="form.subCategoryName" 
           autocomplete="off" 
-          placeholder="请输入二级品类名称"/>
+          placeholder="请输入子品类名称"/>
       </el-form-item>
       <el-form-item 
-        label="二级品类英文名" 
+        label="子品类英文名" 
         prop="subCategoryNameE">
         <el-input 
           v-model="form.subCategoryNameE" 
           autocomplete="off" 
-          placeholder="请输入二级品类英文名称"/>
+          placeholder="请输入子品类英文名称"/>
       </el-form-item>
-      <!--  <el-form-item 
-        label="品牌"
-        prop="brandId">
-        <el-select 
-          v-model="form.brandId" 
-          style="width:100%" 
-          placeholder="请选择品牌">
-          <el-option
-            v-for="item in brandOptions"
-            :key="item.id"
-            :label="item.brandName"
-            :value="item.brandId"/>
-        </el-select>
-      </el-form-item> -->
       <el-form-item 
-        label="二级品类图标" 
+        label="子品类图标" 
         prop="fileLists">
         <el-row type="flex">
           <!-- 高亮 -->
@@ -165,7 +151,7 @@
   </div>
 </template>
 <script>
-import { sonCategoryDetail,brandList } from '@/api/categoryManager'
+import { sonCategoryDetail } from '@/api/categoryManager'
 import AddSubDialog from '@/components/ruleEngine/secCategoryDialog'
 export default {
   components: {
@@ -203,7 +189,6 @@ export default {
       },
       routeData: {},
       addDialogVisible: false,
-      brandOptions: '',
       fileList: [
         {
           objectId: '',
@@ -262,7 +247,6 @@ export default {
     }
   },
   created() {
-    this.getBrand()
     this.getSubDetail()
   },
   methods: {
@@ -292,16 +276,6 @@ export default {
             console.log('我是已经有的', this.fileList)
           }
         })
-      })
-    },
-    getBrand(){
-      console.log(1)
-      const params = {
-        params: '1'
-      }
-      brandList(params).then((res)=>{
-        console.log(res)
-        this.brandOptions = res.data.data
       })
     },
     editBasInfo() {

@@ -59,7 +59,7 @@
 </template>
 <script>
 import { upLoadFile } from '@/api/productRegistration'
-import { upload,sonUpload } from '@/api/categoryManager'
+import { upload,sonUpload,secUpload } from '@/api/categoryManager'
 import { v4 as uuidv4 } from 'uuid'
 export default {
   props: {
@@ -122,7 +122,10 @@ export default {
           formData.append('subCategoryId', this.importPhydata.deviceSubCategoryId) 
           formData.append('categoryId', this.importPhydata.deviceCategoryId) 
           formData.append('brandId', this.importPhydata.brandId) 
-        } else{
+        } else if(this.importPhydata.val === 'sec'){
+          formData.append('subCategoryId', this.importPhydata.deviceSubCategoryId) 
+          formData.append('categoryId', this.importPhydata.deviceCategoryId)
+        }else{
           formData.append('categoryId', this.importPhydata.deviceCategoryId)
         } 
         formData.append('id', uuidv4())
@@ -144,19 +147,34 @@ export default {
               }
             })
           :
-          upload(formData)
-            .then(res => {
-              if (res.data.code === 200) {
-                this.$message.success('上传文件成功')
-                this.$emit('getImportPhyData', 1)
-                this.$emit('close-view')
-              // this.flag = false
-              } else {
-                this.$message.error(res.data.message)
-                this.flag = true
-                return false
-              }
-            })
+          this.importPhydata.val === 'sec'?
+            secUpload(formData)
+              .then(res => {
+                if (res.data.code === 200) {
+                  this.$message.success('上传文件成功')
+                  this.$emit('getImportPhyData', 1)
+                  this.$emit('close-view')
+                // this.flag = false
+                } else {
+                  this.$message.error(res.data.message)
+                  this.flag = true
+                  return false
+                }
+              })
+            :
+            upload(formData)
+              .then(res => {
+                if (res.data.code === 200) {
+                  this.$message.success('上传文件成功')
+                  this.$emit('getImportPhyData', 1)
+                  this.$emit('close-view')
+                // this.flag = false
+                } else {
+                  this.$message.error(res.data.message)
+                  this.flag = true
+                  return false
+                }
+              })
       } else {
         console.log(1)
         const formData = new FormData()

@@ -82,7 +82,7 @@
 </template>
 <script>
 // import { copy } from '@/utils'
-import { getSonModel, delSonModel } from '@/api/categoryManager'
+import { getSecModel, delSecModel } from '@/api/categoryManager'
 import { unitsName } from '@/api/productRegistration'
 import emptyView from '@/components/ruleEngine/empty'
 import modelDialog from '@/components/functionDefinitionDailogs/importModelDialog' // TODO:
@@ -103,10 +103,6 @@ export default {
       default: ''
     },
     deviceSubCategoryId: {
-      type: Number,
-      default: 0
-    },
-    brandId: {
       type: Number,
       default: 0
     },
@@ -154,12 +150,11 @@ export default {
         params: {
           deviceSubCategoryId: this.deviceSubCategoryId,
           deviceCategoryId: this.deviceCategoryId,
-          brandId: this.brandId,
           subCategoryId: this.subCategoryId,
           key:''
         }
       }
-      getSonModel(params).then(res => {
+      getSecModel(params).then(res => {
         console.log(res.data.data)
         this.resData = res.data.data.thingModel // 模型数据展示时需要profile'
         const physicalModelData = Object.assign({}, res.data.data.thingModel)
@@ -218,11 +213,10 @@ export default {
       switch (val) {
       case 'addCustom':
         this.proParams.type = 'category'
-        this.proParams.val = 'son' // 子类标识
+        this.proParams.val = 'sec' // 子类标识
         this.proParams.prokey = this.subCategoryId
         this.proParams.deviceSubCategoryId = this.deviceSubCategoryId
         this.proParams.deviceCategoryId = this.deviceCategoryId //父级标识
-        this.proParams.brandId = this.brandId
         this.addCustomDialogVisible = true
         break
       case 'into':
@@ -230,8 +224,7 @@ export default {
         this.importPhydata.beforeKey = this.subCategoryId
         this.importPhydata.deviceSubCategoryId = this.deviceSubCategoryId
         this.importPhydata.deviceCategoryId = this.deviceCategoryId //父级标识
-        this.importPhydata.brandId = this.brandId
-        this.importPhydata.val = 'son'
+        this.importPhydata.val = 'sec'
         this.showImportModel.show = true
         break
       case 'PhysicalModel':
@@ -242,11 +235,10 @@ export default {
     handlerEdit(index, row) {
       // this.proParams.prokey = this.sRow.productKey
       this.proParams.type = 'category'
-      this.proParams.val = 'son'
+      this.proParams.val = 'sec'
       this.proParams.prokey = this.subCategoryId
       this.proParams.deviceSubCategoryId = this.deviceSubCategoryId
       this.proParams.deviceCategoryId = this.deviceCategoryId //父级标识
-      this.proParams.brandId = this.brandId
       this.infosDialogVisible = true
       row.status = 'edit'
       row.index = index
@@ -264,14 +256,13 @@ export default {
           params: {
             deviceCategoryId : this.deviceCategoryId, //父级标识
             deviceSubCategoryId: this.deviceSubCategoryId,
-            brandId: this.brandId,
             subCategoryId: this.subCategoryId,
             identifier: row.identifier,
             abilityType: row.parentId === '服务' ? 2 : row.parentId === '事件' ? 3 : 1
           }
         }
         console.log('parans', params)
-        delSonModel(params).then((res) => {
+        delSecModel(params).then((res) => {
           if (res.data.code === 200) {
             this.$message.success('删除成功')
             this.getDraftModelData()

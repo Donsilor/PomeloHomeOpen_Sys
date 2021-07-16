@@ -466,7 +466,7 @@ import viewOrEditParamsDialog from '@/components/functionDefinitionDailogs/viewO
 import addDialog from '@/components/functionDefinitionDailogs/add1'
 import { funcName, arrStructVf, identifierReg } from '@/assets/js/validator'
 import { addModel } from '@/api/productRegistration'
-import { addSubModel, addSonModel } from '@/api/categoryManager'
+import { addSubModel, addSonModel,addSecModel } from '@/api/categoryManager'
 export default {
   components: {
     // addParamsDialog
@@ -793,6 +793,20 @@ export default {
               params.params.deviceCategoryId =  this.proParams.deviceCategoryId
               console.log(params)
               addSonModel(params).then((res) => {
+                if (res.data.code === 200) {
+                  this.$message.success('新增成功')
+                  this.closeAddDialog()
+                  setTimeout(() => {
+                    this.$parent.getDraftModelData()
+                  }, 0)
+                }
+              })
+            }else if(this.proParams.val === 'sec' ){
+              delete params.params.categoryId
+              params.params.subCategoryId = this.proParams.prokey
+              params.params.deviceSubCategoryId =  this.proParams.deviceSubCategoryId
+              params.params.deviceCategoryId =  this.proParams.deviceCategoryId
+              addSecModel(params).then((res) => {
                 if (res.data.code === 200) {
                   this.$message.success('新增成功')
                   this.closeAddDialog()

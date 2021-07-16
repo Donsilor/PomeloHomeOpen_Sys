@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog 
-      :title="propData.status === 0 ?'新增二级品类':propData.status === 2 ?'编辑二级品类':'查看二级品类'" 
+      :title="propData.status === 0 ?'新增子品类':propData.status === 2 ?'编辑子品类':'查看子品类'" 
       :visible.sync="addDialogVisible" 
       :before-close="resetForm" 
       :append-to-body="true" 
@@ -16,7 +16,7 @@
         reset-fields 
         label-width="120px">
         <el-form-item 
-          label="二级品类序列号" 
+          label="子品类序列号" 
           prop="subCategoryNumber">
           <el-input 
             v-model.number="form.subCategoryNumber" 
@@ -24,23 +24,23 @@
             on-keypress="return (/[\d\.]/.test(String.fromCharCode(event.keyCode)))" 
             autocomplete="off" 
             type="number" 
-            placeholder="请输入二级品类序列号"/>
+            placeholder="请输入子品类序列号"/>
         </el-form-item>
         <el-form-item 
-          label="二级品类名称" 
+          label="子品类名称" 
           prop="subCategoryName">
           <el-input 
             v-model="form.subCategoryName" 
             autocomplete="off" 
-            placeholder="请输入二级品类名称"/>
+            placeholder="请输入子品类名称"/>
         </el-form-item>
         <el-form-item 
-          label="二级品类英文名" 
+          label="子品类英文名" 
           prop="subCategoryNameE">
           <el-input 
             v-model="form.subCategoryNameE" 
             autocomplete="off" 
-            placeholder="请输入二级品类英文名称"/>
+            placeholder="请输入子品类英文名称"/>
         </el-form-item>
         <!-- <el-form-item 
           label="品牌"
@@ -58,7 +58,7 @@
           </el-select>
         </el-form-item> -->
         <el-form-item 
-          label="二级品类图标" 
+          label="子品类图标" 
           prop="fileLists">
           <el-row type="flex">
             <!-- 高亮 -->
@@ -232,9 +232,9 @@ export default {
     const categoryNum = (rule, value, callback) => {
       const reg = /^[1-9]\d*$/
       if (value === '') {
-        callback(new Error('二级品类序列号不能为空!'))
+        callback(new Error('子品类序列号不能为空!'))
       } else if (!reg.test(value)) {
-        callback(new Error('二级品类序列号格式错误! 只能为正整数'))
+        callback(new Error('子品类序列号格式错误! 只能为正整数'))
       } else {
         callback()
       }
@@ -302,14 +302,14 @@ export default {
           { required: true, message: '请选择物模型类别', trigger: 'change' }
         ],
         subCategoryNumber: [
-          // { required: true, message: '二级品类序列号不能为空', trigger: 'blur' }
+          // { required: true, message: '子品类序列号不能为空', trigger: 'blur' }
           { required: true, validator: categoryNum, trigger: 'blur' }
         ],
         subCategoryName: [
-          { required: true, message: '二级品类名称不能为空', trigger: 'blur' }
+          { required: true, message: '子品类名称不能为空', trigger: 'blur' }
         ],
         subCategoryNameE: [
-          { required: true, message: '二级品类英文名不能为空', trigger: 'blur' }
+          { required: true, message: '子品类英文名不能为空', trigger: 'blur' }
         ],
         /* brandId: [
           { required: true, message: '请选择品牌', trigger: 'blur' }

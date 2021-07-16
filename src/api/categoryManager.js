@@ -239,3 +239,53 @@ export function delSonModel(params) {
     data: params
   })
 }
+
+/* ==================================================二级品类物模型============================================== */
+// 上传二级品类物模型模块接口
+export function secUpload(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_UPLOAD,
+    method: 'post',
+    data: params
+  })
+}
+// 获取二级品类物模型模块接口
+export function getSecModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_GET_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+// 批量获取二级品类物模型（基本信息+图片）
+export function getSecModels(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_GET_MODELS,
+    method: 'post',
+    data: params
+  })
+}
+// 添加二级品类物模型模块接口
+export function addSecModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_ADD_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+// 编辑二级品类物模型模块接口
+export function editSecModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_EDIT_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+// 删除子品类物模型模块接口
+export function delSecModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_DELETE_MODEL,
+    method: 'post',
+    data: params
+  })
+}

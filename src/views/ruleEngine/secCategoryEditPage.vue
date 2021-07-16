@@ -23,7 +23,6 @@
             :is="item.content" 
             :category-name ="subCategoryName"
             :device-sub-category-id = "deviceSubCategoryId"
-            :brand-id="brandId"
             :device-category-id="deviceCategoryId"
             :sub-category-id="subCategoryId"/>
         </keep-alive>
@@ -43,7 +42,6 @@ export default {
       subCategoryId: '',
       deviceSubCategoryId:'',
       subCategoryName: '',
-      brandId: '',
       deviceCategoryId: '',
       tableOptions: [
         {
@@ -64,7 +62,6 @@ export default {
     this.subCategoryId = this.$route.query.subCategoryId
     this.subCategoryName = this.$route.query.subCategoryName
     this.deviceSubCategoryId = Number(this.$route.query.deviceSubCategoryId)
-    this.brandId = Number(this.$route.query.brandId)
     this.deviceCategoryId = Number(this.$route.query.categoryNumber)
     this.getActiveName()
   },

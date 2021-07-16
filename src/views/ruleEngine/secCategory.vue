@@ -26,12 +26,12 @@
           <el-button 
             type="primary" 
             class="first-btn" 
-            @click="addCategory">添加二级品类</el-button>
+            @click="addCategory">添加子品类</el-button>
         </el-col>
         <el-col :span="12">
           <el-input 
             v-model="subCategoryName" 
-            placeholder="请输入二级品类名称" 
+            placeholder="请输入子品类名称" 
             class="input-with-select" >
             <el-button 
               slot="append" 
@@ -53,22 +53,13 @@
           style="width: 100%">
           <el-table-column
             prop="subCategoryNumber"
-            label="二级品类ID"/>
+            label="子品类ID"/>
           <el-table-column
             prop="subCategoryName"
-            label="二级品类名称"/>
+            label="子品类名称"/>
           <el-table-column
             prop="subCategoryNameE"
-            label="二级品类英文名"/>
-          <el-table-column
-            prop="brandId"
-            label="品牌">
-            <template slot-scope="scope">
-              {{
-                scope.row.brandId | brandName
-              }}
-            </template>
-          </el-table-column>
+            label="子品类英文名"/>
           <el-table-column
             prop="createTime"
             label="创建时间 "/>
@@ -84,7 +75,7 @@
                 <el-button 
                   type="primary" 
                   size="mini" 
-                  @click="handlerClick('view',scope.row)">添加子品类</el-button>
+                  @click="handlerClick('view',scope.row)">添加品牌</el-button>
                 <el-button 
                   type="primary" 
                   size="mini" 
@@ -190,14 +181,16 @@ export default {
       console.log(row)
       switch (sty) {
       case 'view':
+        console.log(row, this.$route.query)
         this.$router.push({
           path: 'sonCategory',
           query: {
-            subCategoryId: row.subCategoryId,
-            subCategoryName: row.subCategoryName,
-            deviceSubCategoryId: row.subCategoryNumber,
-            categoryNumber: this.$route.query.deviceCategoryId,
-            brandId: row.brandId
+            subCategoryId: row.subCategoryId, // 子类ID
+            subCategoryName: row.subCategoryName,  // 子类名称
+            subCategoryNameE: row.subCategoryNameE,
+            subCategoryNumber: row.subCategoryNumber, //子类序列号
+            categoryId: this.$route.query.categoryId, // 父级id
+            categoryNumber: this.$route.query.deviceCategoryId // 父级序列号
           }
         })
         break
@@ -208,8 +201,7 @@ export default {
             subCategoryId: row.subCategoryId,
             subCategoryName: row.subCategoryName,
             deviceSubCategoryId: row.subCategoryNumber,
-            categoryNumber: this.$route.query.deviceCategoryId,
-            brandId: row.brandId
+            categoryNumber: this.$route.query.deviceCategoryId
           }
         })
         // this.addDialogVisible = true
@@ -225,7 +217,6 @@ export default {
           console.log(row)
           const params = {
             subCategoryId: row.subCategoryId,
-            brandId: row.brandId,
             deviceSubCategoryId: row.subCategoryNumber,
             deviceCategoryId: Number(this.$route.query.deviceCategoryId)
           }

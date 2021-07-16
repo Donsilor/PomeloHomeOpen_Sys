@@ -19,8 +19,8 @@
           label="子品类序列号" 
           prop="subCategoryNumber">
           <el-input 
-            v-model.number="form.subCategoryNumber" 
-            :disabled="propData.status===2" 
+            v-model.number="form.subCategoryNumber"
+            disabled 
             on-keypress="return (/[\d\.]/.test(String.fromCharCode(event.keyCode)))" 
             autocomplete="off" 
             type="number" 
@@ -46,7 +46,7 @@
           label="品牌"
           prop="brandId">
           <el-select 
-            :disabled="propData.status"
+            :disabled="propData.status !== 0"
             v-model="form.brandId" 
             style="width:100%" 
             placeholder="请选择品牌">
@@ -355,6 +355,11 @@ export default {
           }
         })
       })
+    }else{
+      console.log(2,  this.propData)
+      this.form.subCategoryNumber = this.propData.subCategoryNumber
+      this.form.subCategoryName = this.propData.subCategoryName
+      this.form.subCategoryNameE = this.propData.subCategoryNameE
     }
     this.getBrand()
   },

@@ -64,8 +64,12 @@ module.exports = {
       }, */
       '/api2/':{
         // target:'http://opencheck-uat.evergrande.cn',
-        target:'http://betaphoau.evergrande.me/',
+        // target:'http://betaphoau.evergrande.me/',
+        target:'http://172.26.252.196:7101',
         changeOrigin: true,
+        pathRewrite:{
+          '/api2/category-model-service/': '/'
+        }
       }
       // 192.168.1.12:8181      徐
       // 192.168.1.18:7101      钟

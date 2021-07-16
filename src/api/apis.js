@@ -102,9 +102,9 @@ export const CATEGORY_MANAGE_SERVICE_API = {
 
   // 二级品类
   GET_SEC_CATEGORY_LIST: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/list`,
-  ADD_SEC_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/category/save`,
-  EDIT_SEC_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/category/update`,
-  DEL_SEC_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/category/del`,
+  ADD_SEC_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/save`,
+  EDIT_SEC_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/update`,
+  DEL_SEC_CATEGORY: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/del`,
   SEC_CATEGORY_DETAIL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/detail`,
 
   //  大品类模板
@@ -125,9 +125,9 @@ export const CATEGORY_MANAGE_SERVICE_API = {
 
   // 二级品类模板
   SEC_UPLOAD: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/upload`, // 上传物模型,
-  SEC_GET_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/secCategory/getModel`, // 获取物模型,
+  SEC_GET_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/getModel`, // 获取物模型,
   SEC_ADD_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/addModel`, // 添加物模型,
   SEC_EDIT_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/editModel`, // 编辑物模型,
   SEC_DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/deleteModel`, // 删除子品类模板
-  SEC_GET_MODELS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/secCategory/lists` // 批量获取子品类（基本信息+图片）
+  SEC_GET_MODELS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/lists` // 批量获取子品类（基本信息+图片）
 }

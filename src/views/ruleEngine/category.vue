@@ -56,7 +56,7 @@
                 <el-button 
                   type="primary" 
                   size="mini" 
-                  @click="handlerClick('view',scope.row)"> 查看二级品类</el-button>
+                  @click="handlerClick('view',scope.row)"> 查看子品类</el-button>
                 <el-button 
                   type="primary" 
                   size="mini" 

@@ -2296,7 +2296,7 @@ export default {
             "deviceUuid": "",
             "subCategoryId": "",
             "propertyName": "switch",
-            "compareType": "1",
+            "compareType": "==",
             "compareValue": "1",
           }
 
@@ -2310,6 +2310,25 @@ export default {
           cond[i].conditionProps[0].subCategoryId = 0
         }
 
+        if(cond[i].conditionType === 1){
+          let type = ''
+          switch (cond[i].conditionProps[0].compareType) {
+            case 0:
+              type = '>'
+              break;
+            case 1:
+              type = '=='
+              break;
+            case 2:
+              type = '<'
+              break;
+            default:
+              break;
+          }
+
+          cond[i].conditionProps[0].compareType = type
+        }
+
         for(let n=0, child = this.modelCondition[i].facilityChild; n<child.length; n++){
           if(child[n].subCategoryId == cond[i].conditionProps[0].subCategoryId){
             cond[i].conditionProps[0].subCategoryId = child[n].subCategoryNumber
@@ -2320,6 +2339,25 @@ export default {
       for(var i=0, acti=params.params.action; i<acti.length; i++){
         if(acti[i].actionType === 1 && acti[i].actionProps[0].subCategoryId === '' && this.modelAction[i].facilityChild.length == 0){
           acti[i].actionProps[0].subCategoryId = 0
+        }
+
+        if(acti[i].actionType === 1){
+          let type = ''
+          switch (acti[i].actionProps[0].compareType) {
+            case 0:
+              type = '>'
+              break;
+            case 1:
+              type = '=='
+              break;
+            case 2:
+              type = '<'
+              break;
+            default:
+              break;
+          }
+
+          acti[i].actionProps[0].compareType = type
         }
 
         for(let n=0, child = this.modelAction[i].facilityChild; n<child.length; n++){

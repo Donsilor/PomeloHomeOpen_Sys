@@ -16,7 +16,7 @@
         </div>
       </el-col>
       <el-col>
-        <h2>品类： {{ this.$route.query.categoryName }} </h2>
+        <h2>品类： {{ this.$route.query.subCategoryName }} </h2>
       </el-col>
     </el-row>
     <!-- 品类 -->
@@ -96,7 +96,7 @@
       </div>
       <Paging 
         :total="total"
-        :pageQuery="listQuery"
+        :page-query="listQuery"
         @changePage="changePage"/>
       <!-- 新增品类dialog -->
       <AddSubDialog 
@@ -159,7 +159,7 @@ export default {
     },
     getList() {
       const params = {
-        categoryId: this.$route.query.categoryId,
+        categoryId: this.$route.query.subCategoryId,
         subCategoryName: this.subCategoryName,
         pageNumber: this.listQuery.page,
         pageSize: this.listQuery.limit
@@ -171,9 +171,13 @@ export default {
       })
     },
     addCategory() {
+      console.log(this.$route.query)
       this.propData.status = 0
-      this.propData.categoryId = this.$route.query.categoryId
-      this.propData.categoryNumber = this.$route.query.deviceCategoryId
+      this.propData.categoryId = this.$route.query.subCategoryId // 子品类序列号
+      this.propData.categoryNumber = this.$route.query.categoryNumber // 大品类序列号
+      this.propData.subCategoryNumber = this.$route.query.subCategoryNumber,
+      this.propData.subCategoryName = this.$route.query.subCategoryName
+      this.propData.subCategoryNameE = this.$route.query.subCategoryNameE
       this.addDialogVisible = true
     },
     closeAddDialog(val) {
@@ -192,7 +196,7 @@ export default {
             subCategoryId: row.subCategoryId,
             subCategoryName: row.subCategoryName,
             deviceSubCategoryId: row.subCategoryNumber,
-            categoryNumber: this.$route.query.deviceCategoryId,
+            categoryNumber: this.$route.query.categoryNumber,
             brandId: row.brandId
           }
         })
@@ -211,7 +215,7 @@ export default {
             subCategoryId: row.subCategoryId,
             brandId: row.brandId,
             deviceSubCategoryId: row.subCategoryNumber,
-            deviceCategoryId: Number(this.$route.query.deviceCategoryId)
+            deviceCategoryId: Number(this.$route.query.categoryNumber)
           }
           delSonCategory({ params }).then((res) => {
             if (res.data.code === 200 || res.data.code === 0) {

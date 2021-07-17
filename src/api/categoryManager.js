@@ -1,54 +1,6 @@
 // 品类管理
 import axios from '@/utils/fetch'
-import { CATEGORY_MANAGE_SERVICE_API, CATEGORY_MANAGE_SUB_API } from './apis'
-// 获取一级品类列表
-export function primaryCategory(params) {
-  return axios({
-    url: CATEGORY_MANAGE_SERVICE_API.GET_PRIMARY_CATEGORY_LIST,
-    method: 'post',
-    data: params
-  })
-}
-// 添加一级品类列表
-export function addPrimaryCategory(params) {
-  return axios({
-    url: CATEGORY_MANAGE_SERVICE_API.ADD_PRIMARY_CATEGORY,
-    method: 'post',
-    data: params
-  })
-}
-// 编辑品类列表
-export function editPrimaryCategory(params) {
-  return axios({
-    url: CATEGORY_MANAGE_SERVICE_API.EDIT_PRIMARY_CATEGORY,
-    method: 'post',
-    data: params
-  })
-}
-// 删除品类列表
-export function deletePrimaryCategory(params) {
-  return axios({
-    url: CATEGORY_MANAGE_SERVICE_API.DELETE_PRIMARY_CATEGORY,
-    method: 'post',
-    data: params
-  })
-}
-// 获取一级品类详情
-export function subCategoryDetail(params) {
-  return axios({
-    url: CATEGORY_MANAGE_SERVICE_API.GET_DETAIL_PRIMARY_CATEGORY,
-    method: 'post',
-    data: params
-  })
-}
-// 获取一级品类下拉列表
-export function selectSubCategory(params) {
-  return axios({
-    url: CATEGORY_MANAGE_SERVICE_API.GET_SELECT_PRIMARY_CATEGORY_LIST,
-    method: 'post',
-    data: params
-  })
-}
+import { CATEGORY_MANAGE_SERVICE_API } from './apis'
 /* --============================================================================== */
 // 获取品类列表(新)
 export function subAllCategory(params) {
@@ -94,6 +46,47 @@ export function editSubCategory(params) {
 export function delSubCategory(params) {
   return axios({
     url: CATEGORY_MANAGE_SERVICE_API.DELETE_CATEGORY,
+    method: 'post',
+    data: params
+  })
+}
+// =======================================二级品类================================
+// 获取二级品类列表
+export function secCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.GET_SEC_CATEGORY_LIST,
+    method: 'post',
+    data: params
+  })
+}
+// 新增二级品类
+export function addSecCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.ADD_SEC_CATEGORY,
+    method: 'post',
+    data: params
+  })
+}
+// 编辑二级品类
+export function editSecCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.EDIT_SEC_CATEGORY,
+    method: 'post',
+    data: params
+  })
+}
+// 删除二级品类列表
+export function delSecCategory(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.DEL_SEC_CATEGORY,
+    method: 'post',
+    data: params
+  })
+}
+// 获取二级品类详情
+export function secCategoryDetail(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_CATEGORY_DETAIL,
     method: 'post',
     data: params
   })
@@ -247,10 +240,51 @@ export function delSonModel(params) {
   })
 }
 
-// 获取二级物模型（子品类）
-export function getSecondModel(params) {
+/* ==================================================二级品类物模型============================================== */
+// 上传二级品类物模型模块接口
+export function secUpload(params) {
   return axios({
-    url: CATEGORY_MANAGE_SERVICE_API.GET_SECOND_MODEL,
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_UPLOAD,
+    method: 'post',
+    data: params
+  })
+}
+// 获取二级品类物模型模块接口
+export function getSecModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_GET_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+// 批量获取二级品类物模型（基本信息+图片）
+export function getSecModels(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_GET_MODELS,
+    method: 'post',
+    data: params
+  })
+}
+// 添加二级品类物模型模块接口
+export function addSecModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_ADD_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+// 编辑二级品类物模型模块接口
+export function editSecModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_EDIT_MODEL,
+    method: 'post',
+    data: params
+  })
+}
+// 删除子品类物模型模块接口
+export function delSecModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.SEC_DELETE_MODEL,
     method: 'post',
     data: params
   })

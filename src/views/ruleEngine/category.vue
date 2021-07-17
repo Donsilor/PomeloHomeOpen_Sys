@@ -72,7 +72,7 @@
       </div>
       <Paging 
         :total="total"
-        :pageQuery="listQuery"
+        :page-query="listQuery"
         @changePage="changePage"/>
       <!-- 新增品类dialog -->
       <AddSubDialog 
@@ -163,7 +163,7 @@ export default {
       case 'view':
         console.log(row)
         this.$router.push({
-          path: 'sonCategory',
+          path: 'secCategory',
           query: {
             categoryId: row.categoryId,
             categoryName: row.categoryName,

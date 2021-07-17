@@ -377,7 +377,7 @@
 <script>
 import { validaNum, validaTemplateName } from '@/utils/validate'
 import { getSenceSelectList, addSenceTemplate, editSenceTemplate, senceTemplateDetail } from '@/api/ruleEngine.js'
-import { subAllCategory, sonCategory, getModel, getModels, getSonModel, getSonModels, getSecondModel } from '@/api/categoryManager'
+import { subAllCategory, sonCategory, getModel, getModels, getSonModel, getSonModels, getSecModel } from '@/api/categoryManager'
 import { getByClasses } from '@/api/image'
 
 export default {
@@ -1058,7 +1058,6 @@ export default {
     getSubModelCondition(index, num, sunId) {
       let subNumber = 0
       this.modelCondition[index].facilityChild.forEach((o, i) => {
-        console.log(999, o)
         if(o.subCategoryId == sunId){
           this.form.condition[index].conditionProps[0].subCategoryName = o.subCategoryName
           subNumber = o.subCategoryNumber
@@ -1091,7 +1090,7 @@ export default {
           modeType: this.form.condition[index].conditionType
         }
 
-        getSonModel({ params }).then((res) => {
+        getSecModel({ params }).then((res) => {
           if(res.data.code == 200){
             // 拿到子品类物模型，赋值
             this.modelCondition[index].attribute = res.data.data.thingModel.properties
@@ -1183,7 +1182,7 @@ export default {
           modeType: this.form.action[index].actionType
         }
 
-        getSecondModel({ params }).then((res) => {
+        getSecModel({ params }).then((res) => {
           if(res.data.code == 200){
             // 拿到子品类物模型，赋值
             this.modelAction[index].attribute = res.data.data.thingModel.properties

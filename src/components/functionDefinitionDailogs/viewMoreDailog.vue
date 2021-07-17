@@ -448,7 +448,7 @@ import addDialog from '@/components/functionDefinitionDailogs/add1'
 import { mapGetters } from 'vuex'
 import { funcName, bool0, bool1, arrStructVf, identifierReg } from '@/assets/js/validator'
 import { editModel } from '@/api/productRegistration'
-import { editSubModel, editSonModel } from '@/api/categoryManager'
+import { editSubModel, editSonModel,editSecModel } from '@/api/categoryManager'
 import { actionOptions } from '@/assets/js/defition'
 export default {
   components: {
@@ -805,6 +805,29 @@ export default {
               params.params.deviceSubCategoryId = this.proParams.deviceSubCategoryId
               params.params.brandId = this.proParams.brandId           
               editSonModel(params).then((res) => {
+                console.log(res)
+                if (res.data.code === 200) {
+                  this.$message({
+                    type: 'success',
+                    message: '编辑成功'
+                  })
+                  this.handleClose()
+                  setTimeout(() => {
+                    this.$parent.getDraftModelData()
+                  }, 0)
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: res.data.message
+                  })
+                }
+              })
+            }else if(this.proParams.val === 'sec'){
+              delete params.params.categoryId
+              params.params.deviceCategoryId =  this.proParams.deviceCategoryId
+              params.params.subCategoryId = this.proParams.prokey
+              params.params.deviceSubCategoryId = this.proParams.deviceSubCategoryId
+              editSecModel(params).then((res) => {
                 console.log(res)
                 if (res.data.code === 200) {
                   this.$message({

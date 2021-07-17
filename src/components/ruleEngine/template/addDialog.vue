@@ -864,8 +864,8 @@ export default {
       var id = ''
       this.facility.forEach((o, i) => {
         if(o.categoryNumber == num){
-          this.form.condition[index].conditionProps[0].categoryName = this.facility[i].categoryName
-          id = this.facility[i].categoryId
+          this.form.condition[index].conditionProps[0].categoryName = o.categoryName
+          id = o.categoryId
         }
       })
 
@@ -893,6 +893,8 @@ export default {
       this.modelCondition[index].ifShowSpecs = false
       this.modelCondition[index].ifShowInput = false
 
+      // 选择大品类物模型
+      this.getModelData('condition', index, num)
 
       const params = {
         categoryId: id,
@@ -901,42 +903,11 @@ export default {
         pageSize: 9999
       }
 
+      // 获取二级子品类列表
       sonCategory({ params }).then((res) => {
         if(res.data.code == 200){
-          let arr = res.data.data.list
-
-          let brand = {
-            4: '豪恩',
-            0: '星络',
-            2: '海尔',
-            31: '万和',
-            38: '凯迪士',
-            28: '晾霸',
-            20: '三雄',
-            103: '鸿雁',
-            26: '雷士',
-            33: 'TCL',
-            44: '杜亚',
-            24: '万家乐'
-          }
-
-          // for(let k=0; k<arr.length; k++){
-          //   arr[k].subCategoryName = arr[k].subCategoryName + ' (' + brand[arr[k].brandId] + ')'
-          // }
-
-          this.modelCondition[index].facilityChild = arr
+          this.modelCondition[index].facilityChild = res.data.data.list
         }
-
-        // // 没有子品类直接调大品类物模型
-        // if(!this.modelCondition[index].facilityChild.length){
-        //   this.getModelData('condition', index, num)
-        //   // 只有一个子品类，直接调子品类物模型
-        // }else if(this.modelCondition[index].facilityChild.length == 1){
-        //   this.getSubModelCondition(index, this.form.condition[index].conditionProps[0].categoryId, this.modelCondition[index].facilityChild[0].getSubModelCondition)
-        // }
-
-        // 根据需求需要可以选择大品类
-        this.getModelData('condition', index, num)
       })
     },
 
@@ -945,8 +916,8 @@ export default {
       var id = ''
       this.facility.forEach((o, i) => {
         if(o.categoryNumber == num){
-          this.form.action[index].actionProps[0].categoryName = this.facility[i].categoryName
-          id = this.facility[i].categoryId
+          this.form.action[index].actionProps[0].categoryName = o.categoryName
+          id = o.categoryId
         }
       })
 
@@ -974,6 +945,9 @@ export default {
       this.modelAction[index].ifShowSpecs = false
       this.modelAction[index].ifShowInput = false
 
+      // 获取大品类物模型
+      this.getModelData('action', index, num)
+
       const params = {
         categoryId: id,
         subCategoryName: '',
@@ -981,41 +955,11 @@ export default {
         pageSize: 9999
       }
 
+      // 获取二级子品类列表
       sonCategory({ params }).then((res) => {
         if(res.data.code == 200){
-          let arr = res.data.data.list
-
-          let brand = {
-            4: '豪恩',
-            0: '星络',
-            2: '海尔',
-            31: '万和',
-            38: '凯迪士',
-            28: '晾霸',
-            20: '三雄',
-            103: '鸿雁',
-            26: '雷士',
-            33: 'TCL',
-            44: '杜亚',
-            24: '万家乐'
-          }
-
-          // for(let k=0; k<arr.length; k++){
-          //   arr[k].subCategoryName = arr[k].subCategoryName + ' (' + brand[arr[k].brandId] + ')'
-          // }
-
-          this.modelAction[index].facilityChild = arr
+          this.modelAction[index].facilityChild = res.data.data.list
         }
-
-        // // 没有子品类直接调大品类物模型
-        // if(!this.modelAction[index].facilityChild.length){
-        //   this.getModelData('action', index, num)
-        //   // 只有一个子品类，直接调子品类物模型
-        // }else if(this.modelAction[index].facilityChild.length == 1){
-        //   this.getSubModelAction(index, this.form.action[index].actionProps[0].categoryId, this.modelAction[index].facilityChild[0].subCategoryId)
-        // }
-
-        this.getModelData('action', index, num)
       })
     },
 
@@ -1622,7 +1566,7 @@ export default {
                 conditionType: item.conditionType,
                 resourceId: item.resourceId,
                 conditionProps: [{
-                  businessId: conditionProps[0].businessId,
+                  businessId: conditionProps[0].businessId ? Number(conditionProps[0].businessId) : '',
                   categoryId: Number(conditionProps[0].categoryId),
                   categoryName: conditionProps[0].categoryName,
                   subCategoryName: conditionProps[0].subCategoryName,
@@ -1676,9 +1620,39 @@ export default {
 
           this.form.condition.forEach((item, j) => {
             if(item.conditionType == 1){
+              // 转换ID，获取二级品类列表
+              var id = ''
+              this.facility.forEach((o, i) => {
+                if(o.categoryNumber == item.conditionProps[0].categoryId){
+                  id = o.categoryId
+                }
+              })
+              
+              const params = {
+                categoryId: id,
+                subCategoryName: '',
+                pageNumber: this.listQuery.page,
+                pageSize: 9999
+              }
+
+              sonCategory({ params }).then((res) => {
+                if(res.data.code == 200){
+                  this.modelCondition[j].facilityChild = res.data.data.list
+                }
+              })
+
+
+              // 判断是否有品牌，有品牌获取最终物模型，没有则判断是否有二级品类，获取物模型。
+              if(item.conditionProps[0].businessId){
+                
+              }else{
+
+              }
+
+              return
               // 设备获取物模型
               var sunNum = Number(item.conditionProps[0].subCategoryId)
-              const params = {
+              const params1 = {
                 deviceCategoryId: Number(item.conditionProps[0].categoryId),
                 deviceSubCategoryId: 0,
                 key: '',
@@ -1815,6 +1789,8 @@ export default {
               }
             }
           })
+
+          return
 
           // 执行动作回显
           this.form.action = []
@@ -2296,7 +2272,7 @@ export default {
             "deviceUuid": "",
             "subCategoryId": "",
             "propertyName": "switch",
-            "compareType": "==",
+            "compareType": "1",
             "compareValue": "1",
           }
 

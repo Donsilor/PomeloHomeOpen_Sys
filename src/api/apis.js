@@ -120,5 +120,8 @@ export const CATEGORY_MANAGE_SERVICE_API = {
   SUB_ADD_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/addModel`, // 添加物模型,
   SUB_EDIT_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/editModel`, // 编辑物模型,
   SUB_DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/deleteModel`, // 删除子品类模板
-  SUB_GET_MODELS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/lists` // 批量获取子品类（基本信息+图片）
+  SUB_GET_MODELS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/subCategory/lists`, // 批量获取子品类（基本信息+图片）
+
+  // 二级子品类
+  GET_SECOND_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/getModel` // 获取二级子品类物模型
 }

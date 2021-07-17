@@ -246,3 +246,12 @@ export function delSonModel(params) {
     data: params
   })
 }
+
+// 获取二级物模型（子品类）
+export function getSecondModel(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.GET_SECOND_MODEL,
+    method: 'post',
+    data: params
+  })
+}

@@ -893,7 +893,7 @@ export default {
       this.modelCondition[index].ifShowSpecs = false
       this.modelCondition[index].ifShowInput = false
 
-      // 选择大品类物模型
+      // 获取大品类物模型
       this.getModelData('condition', index, num)
 
       const params = {
@@ -965,38 +965,54 @@ export default {
 
     // 获取大品类物模型
     getModelData(type, index, num) {
-      const params = {
-        deviceCategoryId: Number(num),
-        deviceSubCategoryId: 0,
-        key: '',
-        modeType: this.form.condition[index].conditionType,
-        brandId: ''
-      }
+      if(type == 'condition'){
+        const params = {
+          deviceCategoryId: Number(num),
+          deviceSubCategoryId: 0,
+          key: '',
+          modeType: this.form.condition[index].conditionType,
+          brandId: ''
+        }
 
-      if(num){
-        getModel({ params }).then((res) => {
-          if(res.data.code == 200){
-            // 拿到大品类物模型，赋值
-            if(type == 'condition'){
+        if(num){
+          getModel({ params }).then((res) => {
+            if(res.data.code == 200){
+              // 拿到大品类物模型，赋值
               this.modelCondition[index].attribute = res.data.data.thingModel.properties
-            }else{
-              this.modelAction[index].attribute = res.data.data.thingModel.properties
+              this.hasAction(type, index)
             }
+          })
 
-            this.hasAction(type, index)
-          }
-        })
+          // getModels({ params: [Number(num)] }).then((res) => {
+          //   if(res.data.code == 200){
+          //     if(type == 'condition'){
+          //       this.modelCondition[index].facilityIcon = res.data.data[0].fileList
+          //     }else{
+          //       this.modelAction[index].facilityIcon = res.data.data[0].fileList
+          //     }
+          //   }
+          // })
+        }
+      }else{
+        const params = {
+          deviceCategoryId: Number(num),
+          deviceSubCategoryId: 0,
+          key: '',
+          modeType: this.form.action[index].actionType,
+          brandId: ''
+        }
 
-        // getModels({ params: [Number(num)] }).then((res) => {
-        //   if(res.data.code == 200){
-        //     if(type == 'condition'){
-        //       this.modelCondition[index].facilityIcon = res.data.data[0].fileList
-        //     }else{
-        //       this.modelAction[index].facilityIcon = res.data.data[0].fileList
-        //     }
-        //   }
-        // })
+        if(num){
+          getModel({ params }).then((res) => {
+            if(res.data.code == 200){
+              // 拿到大品类物模型，赋值
+              this.modelAction[index].attribute = res.data.data.thingModel.properties
+              this.hasAction(type, index)
+            }
+          })
+        }
       }
+      
     },
     // 切换子品类,获取子品类物模型并获取品牌（触发条件）
     getSubModelCondition(index, num, sunId) {
@@ -1184,7 +1200,23 @@ export default {
     },
     // 切换品牌，获取物模型（触发条件）
     getBrandModelCondition(index, num, sunId, brandId) {
-     let subNumber = 0
+      this.form.condition[index].conditionProps[0].propertyName = ''
+      this.form.condition[index].conditionProps[0].compareType = ''
+      this.form.condition[index].conditionProps[0].compareValue = ''
+      this.form.condition[index].resourceId = ''
+
+      this.modelCondition[index].attribute = []
+      this.modelCondition[index].facilityIcon = []
+      this.modelCondition[index].unFacilityIcon = []
+      this.modelCondition[index].specs = []
+      this.modelCondition[index].type = ''
+      this.modelCondition[index].max = ''
+      this.modelCondition[index].min = ''
+      this.modelCondition[index].hasSwitch = false
+      this.modelCondition[index].ifShowSpecs = false
+      this.modelCondition[index].ifShowInput = false
+
+      let subNumber = 0
       this.modelCondition[index].facilityChild.forEach((o, i) => {
         if(o.subCategoryId == sunId){
           this.form.condition[index].conditionProps[0].subCategoryName = o.subCategoryName
@@ -1210,6 +1242,22 @@ export default {
     },
     // 切换品牌，获取物模型（执行动作）
     getBrandModelAction(index, num, sunId, brandId) {
+      this.form.action[index].actionProps[0].propertyName = ''
+      this.form.action[index].actionProps[0].compareType = ''
+      this.form.action[index].actionProps[0].compareValue = ''
+      this.form.action[index].resourceId = ''
+
+      this.modelAction[index].attribute = []
+      this.modelAction[index].facilityIcon = []
+      this.modelAction[index].unFacilityIcon = []
+      this.modelAction[index].specs = []
+      this.modelAction[index].type = ''
+      this.modelAction[index].max = ''
+      this.modelAction[index].min = ''
+      this.modelAction[index].hasSwitch = false
+      this.modelAction[index].ifShowSpecs = false
+      this.modelAction[index].ifShowInput = false
+      
       let subNumber = 0
       this.modelAction[index].facilityChild.forEach((o, i) => {
         if(o.subCategoryId == sunId){
@@ -1231,6 +1279,52 @@ export default {
           // 拿到子品类物模型，赋值
           this.modelAction[index].attribute = res.data.data.thingModel.properties
           this.hasAction('action', index)
+        }
+      })
+    },
+    // 回显判断属性类型
+    attrType(type, attr, j) {
+      attr.forEach((item, m) => {
+        if(type == 'condition'){
+          if(item.identifier == this.form.condition[j].conditionProps[0].propertyName){
+            this.modelCondition[j].specs = item.dataType.specs
+            this.modelCondition[j].type = item.dataType.type
+
+            // 判断显示枚举还是输入框
+            if(JSON.stringify(this.modelCondition[j].specs) != '{}' &&
+              (item.dataType.type == 'enum' || item.dataType.type == 'bool')){
+              this.modelCondition[j].ifShowSpecs = true
+              this.modelCondition[j].ifShowInput = false
+            }else{
+              this.modelCondition[j].ifShowSpecs = false
+              this.modelCondition[j].ifShowInput = true
+            }
+
+            if(this.modelCondition[j].type == 'int'){
+              this.modelCondition[j].max = item.dataType.specs.max
+              this.modelCondition[j].min = item.dataType.specs.min
+            }
+          }
+        }else{
+          if(item.identifier == this.form.action[j].actionProps[0].propertyName){
+            this.modelAction[j].specs = item.dataType.specs
+            this.modelAction[j].type = item.dataType.type
+
+            // 判断显示枚举还是输入框
+            if(JSON.stringify(this.modelAction[j].specs) != '{}' &&
+              (item.dataType.type == 'enum' || item.dataType.type == 'bool')){
+              this.modelAction[j].ifShowSpecs = true
+              this.modelAction[j].ifShowInput = false
+            }else{
+              this.modelAction[j].ifShowSpecs = false
+              this.modelAction[j].ifShowInput = true
+            }
+
+            if(this.modelAction[j].type == 'int'){
+              this.modelAction[j].max = item.dataType.specs.max
+              this.modelAction[j].min = item.dataType.specs.min
+            }
+          }
         }
       })
     },
@@ -1552,6 +1646,23 @@ export default {
 
                 tem.conditionProps[1].compareValue = weeks
               }
+
+              // let compareType = 1
+              // switch (conditionProps[0].compareType) {
+              //   case '<':
+              //     compareType = 2
+              //     break;
+              //   case '=':
+              //     compareType = 1
+              //     break;
+              //   case '>':
+              //     compareType = 0
+              //     break;
+              //   default:
+              //     break;
+              // }
+
+              // tem.conditionProps[0].compareType = compareType
             }else if(item.conditionType == 1){
               // 触发设备
               classify = 'trigger_condition_device'
@@ -1571,12 +1682,30 @@ export default {
                   categoryName: conditionProps[0].categoryName,
                   subCategoryName: conditionProps[0].subCategoryName,
                   propertyName: conditionProps[0].propertyName,
-                  compareType: Number(conditionProps[0].compareType),
+                  compareType: '',
                   compareValue: conditionProps[0].compareValue,
                   deviceUuid: conditionProps[0].deviceUuid,
                   subCategoryId: conditionProps[0].subCategoryId ? Number(conditionProps[0].subCategoryId) : ''
                 }]
               }
+
+              let compareType = 1
+              switch (conditionProps[0].compareType) {
+                case '<':
+                  compareType = 2
+                  break;
+                case '=':
+                  compareType = 1
+                  break;
+                case '>':
+                  compareType = 0
+                  break;
+                default:
+                  break;
+              }
+
+              tem.conditionProps[0].compareType = compareType
+              
             }else if(item.conditionType == 2){
               // 安防
               classify = 'trigger_condition_safe'
@@ -1599,6 +1728,23 @@ export default {
                   model.autoExecute = item.dataType.specs
                 }
               })
+
+              // let compareType = 1
+              // switch (conditionProps[0].compareType) {
+              //   case '<':
+              //     compareType = 2
+              //     break;
+              //   case '=':
+              //     compareType = 1
+              //     break;
+              //   case '>':
+              //     compareType = 0
+              //     break;
+              //   default:
+              //     break;
+              // }
+
+              // tem.conditionProps[0].compareType = compareType
             }
 
             this.form.condition.push(tem)
@@ -1638,159 +1784,146 @@ export default {
               sonCategory({ params }).then((res) => {
                 if(res.data.code == 200){
                   this.modelCondition[j].facilityChild = res.data.data.list
-                }
-              })
 
+                  var subNumber = item.conditionProps[0].subCategoryId,
+                      subId = ''
 
-              // 判断是否有品牌，有品牌获取最终物模型，没有则判断是否有二级品类，获取物模型。
-              if(item.conditionProps[0].businessId){
-                
-              }else{
+                  this.modelCondition[j].facilityChild.forEach(item => {
+                    if(item.subCategoryNumber == subNumber){
+                      subId = item.subCategoryId
+                      this.form.condition[j].conditionProps[0].subCategoryId = subId
+                    }
+                  })
 
-              }
+                  // 判断是否有品牌ID，有品牌获取最终物模型，没有则判断是否有二级品类，获取物模型。
+                  if(item.conditionProps[0].businessId){
+                    // 获取品牌列表
+                    const paramsC = {
+                      categoryId: subId,
+                      subCategoryName: '',
+                      pageNumber: this.listQuery.page,
+                      pageSize: 9999
+                    }
+                    
+                    sonCategory({ params: paramsC }).then((res) => {
+                      if(res.data.code == 200){
+                        let arr = res.data.data.list
 
-              return
-              // 设备获取物模型
-              var sunNum = Number(item.conditionProps[0].subCategoryId)
-              const params1 = {
-                deviceCategoryId: Number(item.conditionProps[0].categoryId),
-                deviceSubCategoryId: 0,
-                key: '',
-                modeType: item.conditionType,
-                brandId: Number(item.conditionProps[0].businessId)
-              }
+                        let brand = {
+                          4: '豪恩',
+                          0: '星络',
+                          2: '海尔',
+                          31: '万和',
+                          38: '凯迪士',
+                          28: '晾霸',
+                          20: '三雄',
+                          103: '鸿雁',
+                          26: '雷士',
+                          33: 'TCL',
+                          44: '杜亚',
+                          24: '万家乐'
+                        }
 
-              var id = ''    //通过Number获取大品类id
-                this.facility.forEach((ite, idx) => {
-                  if(ite.categoryNumber == item.conditionProps[0].categoryId){
-                    id = ite.categoryId
-                  }
-                })
+                        for(let m=0; m<arr.length; m++){
+                          arr[m].subCategoryName = brand[arr[m].brandId]
+                        }
 
-                const obj = {
-                  categoryId: id,
-                  subCategoryName: '',
-                  pageNumber: this.listQuery.page,
-                  pageSize: 9999
-                }
+                        this.modelCondition[j].brand = arr
+                      }
+                    })
 
-                sonCategory({ params: obj }).then((res) => {
-                  if(res.data.code == 200){
-                    let arr = res.data.data.list
-
-                    let brand = {
-                      4: '豪恩',
-                      0: '星络',
-                      2: '海尔',
-                      31: '万和',
-                      38: '凯迪士',
-                      28: '晾霸',
-                      20: '三雄',
-                      103: '鸿雁',
-                      26: '雷士',
-                      33: 'TCL',
-                      44: '杜亚',
-                      24: '万家乐'
+                    // 获取最终物模型
+                    const params = {
+                      deviceCategoryId: Number(item.conditionProps[0].categoryId),
+                      deviceSubCategoryId: Number(subNumber),
+                      key: '',
+                      modeType: this.form.condition[j].conditionType,
+                      brandId: item.conditionProps[0].businessId
                     }
 
-                    // for(let k=0; k<arr.length; k++){
-                    //   arr[k].subCategoryName = arr[k].subCategoryName + ' (' + brand[arr[k].brandId] + ')'
-                    // }
+                    getSonModel({ params }).then((res) => {
+                      if(res.data.code == 200){
+                        // 拿到子品类物模型，赋值
+                        this.modelCondition[j].attribute = res.data.data.thingModel.properties
+                        this.attrType('condition', this.modelCondition[j].attribute, j)
+                        this.hasAction('condition', j)
+                      }
+                    })
+                  }else if(subNumber){
+                    // 没有品牌ID，获取品牌列表和二级物模型
+                    const paramsC = {
+                      categoryId: subId,
+                      subCategoryName: '',
+                      pageNumber: this.listQuery.page,
+                      pageSize: 9999
+                    }
+                    
+                    sonCategory({ params: paramsC }).then((res) => {
+                      if(res.data.code == 200){
+                        let arr = res.data.data.list
 
-                    this.modelCondition[j].facilityChild = arr
-
-                    let child = arr.filter(ite => ite.subCategoryNumber == item.conditionProps[0].subCategoryId && ite.brandId == item.conditionProps[0].businessId)
-                    this.form.condition[j].conditionProps[0].subCategoryId = child[0].subCategoryId
-                  }
-                })
-
-                params.deviceSubCategoryId = sunNum
-
-              if(sunNum){
-                //  如果有子品类，获取子品类设备和物模型
-                
-  
-                // getSonModels({ params: [sunNum] }).then((res) => {
-                //   if(res.data.code == 200){
-                //     this.modelCondition[j].facilityIcon = res.data.data[0].fileList
-                //     this.form.condition[j].conditionProps[0].businessId = Number(res.data.data[0].brandId)
-                //     params.brandId = Number(res.data.data[0].brandId)
-                //   }
-                // })
-
-                getSonModel({ params }).then((res) => { 
-                  if(res.data.code == 200){
-                    // 拿到子品类物模型，赋值
-                    this.modelCondition[j].attribute = res.data.data.thingModel.properties
-
-                    this.modelCondition[j].attribute.forEach((attr, k) => {
-                      if(attr.identifier == item.conditionProps[0].propertyName){
-                        this.modelCondition[j].specs = attr.dataType.specs
-                        this.modelCondition[j].type = attr.dataType.type
-
-                        // 判断显示枚举还是输入框
-                        if(JSON.stringify(this.modelCondition[j].specs) != '{}' &&
-                          (attr.dataType.type == 'enum' || attr.dataType.type == 'bool')){
-                          this.modelCondition[j].ifShowSpecs = true
-                          this.modelCondition[j].ifShowInput = false
-                        }else{
-                          this.modelCondition[j].ifShowSpecs = false
-                          this.modelCondition[j].ifShowInput = true
+                        let brand = {
+                          4: '豪恩',
+                          0: '星络',
+                          2: '海尔',
+                          31: '万和',
+                          38: '凯迪士',
+                          28: '晾霸',
+                          20: '三雄',
+                          103: '鸿雁',
+                          26: '雷士',
+                          33: 'TCL',
+                          44: '杜亚',
+                          24: '万家乐'
                         }
 
-                        if(this.modelCondition[j].type == 'int'){
-                          this.modelCondition[j].max = attr.dataType.specs.max
-                          this.modelCondition[j].min = attr.dataType.specs.min
+                        for(let m=0; m<arr.length; m++){
+                          arr[m].subCategoryName = brand[arr[m].brandId]
                         }
+
+                        this.modelCondition[j].brand = arr
                       }
                     })
 
-                    this.hasAction('condition', j)
-                  }
-                })
-              }else{
-                // 没有子品类获取大品类物模型
-                getModel({ params }).then((res) => {
-                  if(res.data.code == 200){
-                    // 拿到大品类物模型，赋值
-                    this.modelCondition[j].attribute = res.data.data.thingModel.properties
+                    // 获取二级品类物模型
+                    const params = {
+                      deviceCategoryId: Number(item.conditionProps[0].categoryId),
+                      deviceSubCategoryId: Number(subNumber),
+                      key: '',
+                      modeType: this.form.condition[j].conditionType
+                    }
 
-                    this.modelCondition[j].attribute.forEach((item, m) => {
-                      if(item.identifier == conditionProps[0].propertyName){
-                        this.modelCondition[j].specs = item.dataType.specs
-                        this.modelCondition[j].type = item.dataType.type
-
-                        // 判断显示枚举还是输入框
-                        if(JSON.stringify(this.modelCondition[j].specs) != '{}' &&
-                          (item.dataType.type == 'enum' || item.dataType.type == 'bool')){
-                          this.modelCondition[j].ifShowSpecs = true
-                          this.modelCondition[j].ifShowInput = false
-                        }else{
-                          this.modelCondition[j].ifShowSpecs = false
-                          this.modelCondition[j].ifShowInput = true
-                        }
-
-                        if(this.modelCondition[j].type == 'int'){
-                          this.modelCondition[j].max = item.dataType.specs.max
-                          this.modelCondition[j].min = item.dataType.specs.min
-                        }
+                    getSecModel({ params }).then((res) => {
+                      if(res.data.code == 200){
+                        // 拿到子品类物模型，赋值
+                        this.modelCondition[j].attribute = res.data.data.thingModel.properties
+                        this.attrType('condition', this.modelCondition[j].attribute, j)
+                        this.hasAction('condition', j)
                       }
                     })
+                  }else{
+                    // 没有二级子品类，获取大品类物模型
+                     const params = {
+                      deviceCategoryId: Number(item.conditionProps[0].categoryId),
+                      deviceSubCategoryId: 0,
+                      key: '',
+                      modeType: this.form.condition[j].conditionType,
+                      brandId: ''
+                    }
 
-                    this.hasAction('condition', j)
+                    getModel({ params }).then((res) => {
+                      if(res.data.code == 200){
+                        // 拿到大品类物模型，赋值
+                        this.modelCondition[j].attribute = res.data.data.thingModel.properties
+                        this.attrType('condition', this.modelCondition[j].attribute, j)
+                        this.hasAction('condition', j)
+                      }
+                    })
                   }
-                })
-
-                // getModels({ params: [conditionProps[0].categoryId] }).then((res) => {
-                //   if(res.data.code == 200){
-                //     this.modelCondition[j].facilityIcon = res.data.data[0].fileList
-                //   }
-                // })
-              }
+                }
+              })
             }
           })
-
-          return
 
           // 执行动作回显
           this.form.action = []
@@ -1857,7 +1990,7 @@ export default {
                 resourceId: Number(item.resourceId),
                 actionProps: [{
                   propertyName: actionProps[0].propertyName,
-                  compareType: Number(actionProps[0].compareType),
+                  compareType: actionProps[0].compareType,
                   compareValue: actionProps[0].compareValue
                 }]
               }
@@ -1869,6 +2002,23 @@ export default {
                   model.autoExecute = item.dataType.specs
                 }
               })
+
+              // let compareType = 1
+              // switch (actionProps[0].compareType) {
+              //   case '<':
+              //     compareType = 2
+              //     break;
+              //   case '=':
+              //     compareType = 1
+              //     break;
+              //   case '>':
+              //     compareType = 0
+              //     break;
+              //   default:
+              //     break;
+              // }
+
+              // tem.actionProps[0].compareType = compareType
             }else if(item.actionType == 1){
               // 执行动作设备
               classify = 'trigger_condition_device'
@@ -1889,12 +2039,29 @@ export default {
                   categoryName: actionProps[0].categoryName,
                   subCategoryName: actionProps[0].subCategoryName,
                   propertyName: actionProps[0].propertyName,
-                  compareType: Number(actionProps[0].compareType),
+                  compareType: '',
                   compareValue: actionProps[0].compareValue,
                   deviceUuid: actionProps[0].deviceUuid,
                   subCategoryId: actionProps[0].subCategoryId ? Number(actionProps[0].subCategoryId) : ''
                 }]
               }
+
+              let compareType = 1
+              switch (actionProps[0].compareType) {
+                case '<':
+                  compareType = 2
+                  break;
+                case '=':
+                  compareType = 1
+                  break;
+                case '>':
+                  compareType = 0
+                  break;
+                default:
+                  break;
+              }
+
+              tem.actionProps[0].compareType = compareType
             }
 
             this.form.action.push(tem)
@@ -1923,144 +2090,164 @@ export default {
             }
           })
 
-          this.form.action.forEach((item, j) => {
+          this.form.action.forEach((item, k) => {
             if(item.actionType == 1){
-              // 设备获取物模型
-              var sunNum = Number(item.actionProps[0].subCategoryId)
-
-              const params = {
-                deviceCategoryId: Number(item.actionProps[0].categoryId),
-                deviceSubCategoryId: 0,
-                key: '',
-                modeType: item.actionType,
-                brandId: Number(item.actionProps[0].businessId)
-              }
-
-              var id = ''    //通过Number获取大品类id
-              this.facility.forEach((ite, idx) => {
-                if(ite.categoryNumber == item.actionProps[0].categoryId){
-                  id = ite.categoryId
+              // 转换ID，获取二级品类列表
+              var id = ''
+              this.facility.forEach(o => {
+                if(o.categoryNumber == item.actionProps[0].categoryId){
+                  id = o.categoryId
                 }
               })
-
-              const obj = {
+              
+              const params = {
                 categoryId: id,
                 subCategoryName: '',
                 pageNumber: this.listQuery.page,
                 pageSize: 9999
               }
 
-              sonCategory({ params: obj }).then((res) => {
+              sonCategory({ params }).then((res) => {
                 if(res.data.code == 200){
-                  let arr = res.data.data.list
+                  this.modelAction[k].facilityChild = res.data.data.list
 
-                  let brand = {
-                    4: '豪恩',
-                    0: '星络',
-                    2: '海尔',
-                    31: '万和',
-                    38: '凯迪士',
-                    28: '晾霸',
-                    20: '三雄',
-                    103: '鸿雁',
-                    26: '雷士',
-                    33: 'TCL',
-                    44: '杜亚',
-                    24: '万家乐'
+                  var subNumber = item.actionProps[0].subCategoryId,
+                      subId = ''
+
+                  this.modelAction[k].facilityChild.forEach(item => {
+                    if(item.subCategoryNumber == subNumber){
+                      subId = item.subCategoryId
+                      this.form.action[k].actionProps[0].subCategoryId = subId
+                    }
+                  })
+
+                  // 判断是否有品牌ID，有品牌获取最终物模型，没有则判断是否有二级品类，获取物模型。
+                  if(item.actionProps[0].businessId){
+                    // 获取品牌列表
+                    const paramsC = {
+                      categoryId: subId,
+                      subCategoryName: '',
+                      pageNumber: this.listQuery.page,
+                      pageSize: 9999
+                    }
+                    
+                    sonCategory({ params: paramsC }).then((res) => {
+                      if(res.data.code == 200){
+                        let arr = res.data.data.list
+
+                        let brand = {
+                          4: '豪恩',
+                          0: '星络',
+                          2: '海尔',
+                          31: '万和',
+                          38: '凯迪士',
+                          28: '晾霸',
+                          20: '三雄',
+                          103: '鸿雁',
+                          26: '雷士',
+                          33: 'TCL',
+                          44: '杜亚',
+                          24: '万家乐'
+                        }
+
+                        for(let n=0; n<arr.length; n++){
+                          arr[n].subCategoryName = brand[arr[n].brandId]
+                        }
+
+                        this.modelAction[k].brand = arr
+                      }
+                    })
+
+                    // 获取最终物模型
+                    const params = {
+                      deviceCategoryId: Number(item.actionProps[0].categoryId),
+                      deviceSubCategoryId: Number(subNumber),
+                      key: '',
+                      modeType: this.form.action[k].actionType,
+                      brandId: item.actionProps[0].businessId
+                    }
+
+                    getSonModel({ params }).then((res) => {
+                      if(res.data.code == 200){
+                        // 拿到子品类物模型，赋值
+                        this.modelAction[k].attribute = res.data.data.thingModel.properties
+                        this.attrType('action', this.modelAction[k].attribute, k)
+                        this.hasAction('action', k)
+                      }
+                    })
+                  }else if(subNumber){
+                    // 没有品牌ID，获取品牌列表和二级物模型
+                    const paramsC = {
+                      categoryId: subId,
+                      subCategoryName: '',
+                      pageNumber: this.listQuery.page,
+                      pageSize: 9999
+                    }
+                    
+                    sonCategory({ params: paramsC }).then((res) => {
+                      if(res.data.code == 200){
+                        let arr = res.data.data.list
+
+                        let brand = {
+                          4: '豪恩',
+                          0: '星络',
+                          2: '海尔',
+                          31: '万和',
+                          38: '凯迪士',
+                          28: '晾霸',
+                          20: '三雄',
+                          103: '鸿雁',
+                          26: '雷士',
+                          33: 'TCL',
+                          44: '杜亚',
+                          24: '万家乐'
+                        }
+
+                        for(let n=0; n<arr.length; n++){
+                          arr[n].subCategoryName = brand[arr[n].brandId]
+                        }
+
+                        this.modelAction[k].brand = arr
+                      }
+                    })
+
+                    // 获取二级品类物模型
+                    const params = {
+                      deviceCategoryId: Number(item.actionProps[0].categoryId),
+                      deviceSubCategoryId: Number(subNumber),
+                      key: '',
+                      modeType: this.form.action[k].actionType
+                    }
+
+                    getSecModel({ params }).then((res) => {
+                      if(res.data.code == 200){
+                        // 拿到子品类物模型，赋值
+                        this.modelAction[k].attribute = res.data.data.thingModel.properties
+                        this.attrType('action', this.modelAction[k].attribute, k)
+                        this.hasAction('action', k)
+                      }
+                    })
+                  }else{
+                    // 没有二级子品类，获取大品类物模型
+                     const params = {
+                      deviceCategoryId: Number(item.actionProps[0].categoryId),
+                      deviceSubCategoryId: 0,
+                      key: '',
+                      modeType: this.form.action[k].actionType,
+                      brandId: ''
+                    }
+
+                    getModel({ params }).then((res) => {
+                      if(res.data.code == 200){
+                        // 拿到大品类物模型，赋值
+                        this.modelAction[k].attribute = res.data.data.thingModel.properties
+                        this.attrType('action', this.modelAction[k].attribute, k)
+                        this.hasAction('action', k)
+                      }
+                    })
                   }
-
-                  // for(let k=0; k<arr.length; k++){
-                  //   arr[k].subCategoryName = arr[k].subCategoryName + ' (' + brand[arr[k].brandId] + ')'
-                  // }
-
-                  this.modelAction[j].facilityChild = arr
-
-                  let child = arr.filter(ite => ite.subCategoryNumber == item.actionProps[0].subCategoryId && ite.brandId == item.actionProps[0].businessId)
-                  this.form.action[j].actionProps[0].subCategoryId = child[0].subCategoryId
                 }
               })
-
-              params.deviceSubCategoryId = sunNum
-
-              if(sunNum){
-                //  如果有子品类，获取子品类设备和物模型
-                
-                // getSonModels({ params: [sunNum] }).then((res) => {
-                //   if(res.data.code == 200){
-                //     this.modelAction[j].facilityIcon = res.data.data[0].fileList
-                //     this.form.action[j].actionProps[0].businessId = Number(res.data.data[0].brandId)
-                //   }
-                // })
-
-                getSonModel({ params }).then((res) => { 
-                  if(res.data.code == 200){
-                    // 拿到子品类物模型，赋值
-                    this.modelAction[j].attribute = res.data.data.thingModel.properties
-
-                    this.modelAction[j].attribute.forEach((attr, k) => {
-                      if(attr.identifier == item.actionProps[0].propertyName){
-                        this.modelAction[j].specs = attr.dataType.specs
-                        this.modelAction[j].type = attr.dataType.type
-
-                        // 判断显示枚举还是输入框
-                        if(JSON.stringify(this.modelAction[j].specs) != '{}' &&
-                          (attr.dataType.type == 'enum' || attr.dataType.type == 'bool')){
-                          this.modelAction[j].ifShowSpecs = true
-                          this.modelAction[j].ifShowInput = false
-                        }else{
-                          this.modelAction[j].ifShowSpecs = false
-                          this.modelAction[j].ifShowInput = true
-                        }
-
-                        if(this.modelAction[j].type == 'int'){
-                          this.modelAction[j].max = attr.dataType.specs.max
-                          this.modelAction[j].min = attr.dataType.specs.min
-                        }
-                      }
-                    })
-
-                    this.hasAction('action', j)
-                  }
-                })
-              }else{
-                // 没有子品类获取大品类物模型
-                getModel({ params }).then((res) => {
-                  if(res.data.code == 200){
-                    // 拿到大品类物模型，赋值
-                    this.modelAction[j].attribute = res.data.data.thingModel.properties
-
-                    this.modelAction[j].attribute.forEach((item, n) => {
-                      if(item.identifier == actionProps[0].propertyName){
-                        this.modelAction[j].specs = item.dataType.specs
-                        this.modelAction[j].type = item.dataType.type
-
-                        // 判断显示枚举还是输入框
-                        if(JSON.stringify(this.modelAction[j].specs) != '{}' &&
-                          (item.dataType.type == 'enum' || item.dataType.type == 'bool')){
-                          this.modelAction[j].ifShowSpecs = true
-                          this.modelAction[j].ifShowInput = false
-                        }else{
-                          this.modelAction[j].ifShowSpecs = false
-                          this.modelAction[j].ifShowInput = true
-                        }
-
-                        if(this.modelAction[j].type == 'int'){
-                          this.modelAction[j].max = item.dataType.specs.max
-                          this.modelAction[j].min = item.dataType.specs.min
-                        }
-                      }
-                    })
-
-                    this.hasAction('action', j)
-                  }
-                })
-
-                // getModels({ params: [conditionProps[0].categoryId] }).then((res) => {
-                //   if(res.data.code == 200){
-                //     this.modelCondition[j].facilityIcon = res.data.data[0].fileList
-                //   }
-                // })
-              }
             }
           })
 

@@ -59,8 +59,8 @@
           <div class="name">场景详情</div>
           <div class="content">
             <div v-if="form.sceneType == '1'" class="relation">
-              <el-radio v-model="condition" label="0">满足全部关系时</el-radio>
-              <el-radio v-model="condition" label="1">满足任意关系时</el-radio>
+              <el-radio v-model="condition" label="0">满足任意关系时</el-radio>
+              <el-radio v-model="condition" label="1">满足全部关系时</el-radio>
             </div>
 
             <div v-if="form.sceneType == '1'">
@@ -221,7 +221,7 @@
                   </el-col>
 
                   <el-col :span="4" :offset="1" style="height: 100%;display: flex;justify-content: center;align-items: center">
-                    <el-button type="success" icon="el-icon-plus" circle @click="addCondition()"></el-button>
+                    <el-button type="success" icon="el-icon-plus" circle @click="addCondition(index)"></el-button>
                     <el-button type="danger" icon="el-icon-delete" circle @click="delCondition(index)"></el-button>
                   </el-col>
                 </el-row>
@@ -346,7 +346,7 @@
                 </el-col>
 
                 <el-col :span="4" :offset="1" class="btn">
-                  <el-button type="success" icon="el-icon-plus" circle @click="addMotion()"></el-button>
+                  <el-button type="success" icon="el-icon-plus" circle @click="addMotion(index)"></el-button>
                   <el-button type="danger" icon="el-icon-delete" circle @click="delMotion(index)"></el-button>
                 </el-col>
               </el-row>
@@ -872,7 +872,7 @@ export default {
       // 切换时清空子品类
       this.form.condition[index].conditionProps[0].categoryId = num
       this.form.condition[index].conditionProps[0].subCategoryId = ''
-      this.form.condition[index].conditionProps[0].businessId = 0
+      this.form.condition[index].conditionProps[0].businessId = ''
       this.form.condition[index].conditionProps[0].deviceUuid = ''
       this.form.condition[index].conditionProps[0].subCategoryName = ''
       this.form.condition[index].conditionProps[0].length = 1
@@ -924,7 +924,7 @@ export default {
       // 切换时清空子品类
       this.form.action[index].actionProps[0].categoryId = num
       this.form.action[index].actionProps[0].subCategoryId = ''
-      this.form.action[index].actionProps[0].businessId = 0
+      this.form.action[index].actionProps[0].businessId = ''
       this.form.action[index].actionProps[0].deviceUuid = ''
       this.form.action[index].actionProps[0].subCategoryName = ''
       this.form.action[index].actionProps[0].length = 1
@@ -1439,38 +1439,47 @@ export default {
     },
 
     // 添加触发条件
-    addCondition() {
+    addCondition(i) {
       let tem = {
         conditionOpType: 1,
         conditionType: "",
         resourceId: "",
         conditionProps: [{
-            businessId: "",
-            categoryId: "",
-            propertyName: "",
-            categoryName: "",
-            compareType: "",
-            compareValue: "",
-            deviceUuid: "",
-            subCategoryId: "",
-            subCategoryName: ""
+          businessId: "",
+          categoryId: "",
+          propertyName: "",
+          categoryName: "",
+          compareType: "",
+          compareValue: "",
+          deviceUuid: "",
+          subCategoryId: "",
+          subCategoryName: ""
         }]
       }
 
-      this.form.condition.push(tem)
+      this.form.condition.splice(i+1, 0, tem)
 
-      let moudel = {
-          facilityIcon: [],
-          facilityChild: [],   // 设备子品类
-          attribute: [],       // 属性
-          comparison: ['大于', '等于', '小于'],
-          executeMode: ['只执行一次','指定日期','每周'],
-          weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
-          operation: [],
-          autoExecute: ['回家', '离家']
-        }
-      
-      this.modelCondition.push(moudel)
+      let model = {
+        facilityIcon: [],
+        unFacilityIcon: [],
+        facilityChild: [],
+        brand: [],
+        attribute: [],
+        specs: [],
+        type: '',
+        max: '',
+        min: '',
+        ifShowSpecs: false,
+        ifShowInput: false,
+        hasSwitch: false,
+        comparison: ['大于', '等于', '小于'],
+        executeMode: ['只执行一次','指定日期','每周'],
+        weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
+        operation: [],
+        autoExecute: []
+      }
+
+      this.modelCondition.splice(i+1, 0, model)
     },
     // 删除触发条件
     delCondition(i) {
@@ -1485,38 +1494,46 @@ export default {
       }
     },
     // 添加执行动作
-    addMotion() {
+    addMotion(i) {
       let tem = {
         actionOpType: 1,
         actionType: "",
         resourceId: "",
         sort: 0,
         actionProps: [{	
-            businessId: "",
-            categoryId: "",
-            categoryName: "",
-            propertyName: "",
-            compareType: "",
-            compareValue: "",
-            deviceUuid: "",
-            subCategoryId: "",
-            subCategoryName: ""
+          businessId: "",
+          categoryId: "",
+          categoryName: "",
+          propertyName: "",
+          compareType: "",
+          compareValue: "",
+          deviceUuid: "",
+          subCategoryId: "",
+          subCategoryName: ""
         }]
       }
 
-      this.form.action.push(tem)
+      this.form.action.splice(i+1, 0, tem)
 
-      let moudel = {
-          facilityIcon: [],    // 设备图片
-          unFacilityIcon: [],  // 非设备图片
-          facilityChild: [],   // 设备子品类
-          attribute: [],       // 属性
-          comparison: ['大于', '等于', '小于'],
-          operation: [],
-          autoExecute: ['回家', '离家']
-        }
-      
-      this.modelAction.push(moudel)
+      let model = {
+        facilityIcon: [],
+        unFacilityIcon: [],
+        facilityChild: [],
+        brand: [],
+        attribute: [],
+        specs: [],
+        type: '',
+        max: '',
+        min: '',
+        ifShowSpecs: false,
+        ifShowInput: false,
+        hasSwitch: false,
+        comparison: ['大于', '等于', '小于'],
+        operation: [],
+        autoExecute: []
+      }
+
+      this.modelAction.splice(i+1, 0, model)
     },
     // 删除执行动作
     delMotion(i) {
@@ -1677,7 +1694,7 @@ export default {
                 conditionType: item.conditionType,
                 resourceId: item.resourceId,
                 conditionProps: [{
-                  businessId: conditionProps[0].businessId ? Number(conditionProps[0].businessId) : '',
+                  businessId: conditionProps[0].businessId != -1 ? Number(conditionProps[0].businessId) : '',
                   categoryId: Number(conditionProps[0].categoryId),
                   categoryName: conditionProps[0].categoryName,
                   subCategoryName: conditionProps[0].subCategoryName,
@@ -2034,7 +2051,7 @@ export default {
                 resourceId: item.resourceId,
                 sort: 0,
                 actionProps: [{
-                  businessId: actionProps[0].businessId ? Number(actionProps[0].businessId) : '',
+                  businessId: actionProps[0].businessId != -1 ? Number(actionProps[0].businessId) : '',
                   categoryId: Number(actionProps[0].categoryId),
                   categoryName: actionProps[0].categoryName,
                   subCategoryName: actionProps[0].subCategoryName,
@@ -2176,8 +2193,6 @@ export default {
                       }
                     })
                   }else if(subNumber){
-                    console.log(222222222)
-
                     // 没有品牌ID，获取品牌列表和二级物模型
                     const paramsC = {
                       categoryId: subId,
@@ -2220,7 +2235,7 @@ export default {
                       key: '',
                       modeType: this.form.action[k].actionType
                     }
-console.log(123132123, item.actionProps[0])
+
                     getSecModel({ params }).then((res) => {
                       if(res.data.code == 200){
                         // 拿到子品类物模型，赋值
@@ -2230,8 +2245,6 @@ console.log(123132123, item.actionProps[0])
                       }
                     })
                   }else{
-                    console.log(3333333333333)
-
                     // 没有二级子品类，获取大品类物模型
                      const params = {
                       deviceCategoryId: Number(item.actionProps[0].categoryId),
@@ -2429,7 +2442,7 @@ console.log(123132123, item.actionProps[0])
           }else{
             this.affirmType = 3;
             this.dialogVisible = true;
-            this.dialogContent = '请选择触发条件关系，当前关系只能为\'或\'关系';
+            this.dialogContent = '触发条件不可以与';
           }
         }else if(this.condition == 1){
           // 已选择与关系
@@ -2442,7 +2455,7 @@ console.log(123132123, item.actionProps[0])
           }else{
             this.affirmType = 3;
             this.dialogVisible = true;
-            this.dialogContent = '请选择触发条件关系，当前关系只能为\'或\'关系';
+            this.dialogContent = '触发条件不可以与';
           }
         }else{
           // 已选择或关系
@@ -2456,7 +2469,7 @@ console.log(123132123, item.actionProps[0])
     addSwitch() {
       let params = {'params': JSON.parse(JSON.stringify(this.form))},
           attr = {
-            "businessId": "",
+            "businessId": -1,
             "categoryId": "",
             "categoryName": "",
             "subCategoryName": "",
@@ -2473,8 +2486,12 @@ console.log(123132123, item.actionProps[0])
           cond[i].conditionProps[1].compareValue = cond[i].conditionProps[1].compareValue.join()
         }
 
-        if(cond[i].conditionType === 1 && cond[i].conditionProps[0].subCategoryId === '' && this.modelCondition[i].facilityChild.length == 0){
+        if(cond[i].conditionType === 1 && cond[i].conditionProps[0].subCategoryId === ''){
           cond[i].conditionProps[0].subCategoryId = 0
+        }
+
+        if(cond[i].conditionType === 1 && cond[i].conditionProps[0].businessId === ''){
+          cond[i].conditionProps[0].businessId = -1
         }
 
         if(cond[i].conditionType === 1){
@@ -2504,8 +2521,12 @@ console.log(123132123, item.actionProps[0])
       }
 
       for(var i=0, acti=params.params.action; i<acti.length; i++){
-        if(acti[i].actionType === 1 && acti[i].actionProps[0].subCategoryId === '' && this.modelAction[i].facilityChild.length == 0){
+        if(acti[i].actionType === 1 && acti[i].actionProps[0].subCategoryId === ''){
           acti[i].actionProps[0].subCategoryId = 0
+        }
+
+        if(acti[i].actionType === 1 && acti[i].actionProps[0].businessId === ''){
+          acti[i].actionProps[0].businessId = -1
         }
 
         if(acti[i].actionType === 1){

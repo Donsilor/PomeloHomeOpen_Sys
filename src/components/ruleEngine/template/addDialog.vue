@@ -1652,7 +1652,7 @@ export default {
               //   case '<':
               //     compareType = 2
               //     break;
-              //   case '=':
+              //   case '==':
               //     compareType = 1
               //     break;
               //   case '>':
@@ -1694,7 +1694,7 @@ export default {
                 case '<':
                   compareType = 2
                   break;
-                case '=':
+                case '==':
                   compareType = 1
                   break;
                 case '>':
@@ -1734,7 +1734,7 @@ export default {
               //   case '<':
               //     compareType = 2
               //     break;
-              //   case '=':
+              //   case '==':
               //     compareType = 1
               //     break;
               //   case '>':
@@ -1796,7 +1796,7 @@ export default {
                   })
 
                   // 判断是否有品牌ID，有品牌获取最终物模型，没有则判断是否有二级品类，获取物模型。
-                  if(item.conditionProps[0].businessId){
+                  if(item.conditionProps[0].businessId !== ''){
                     // 获取品牌列表
                     const paramsC = {
                       categoryId: subId,
@@ -2008,7 +2008,7 @@ export default {
               //   case '<':
               //     compareType = 2
               //     break;
-              //   case '=':
+              //   case '==':
               //     compareType = 1
               //     break;
               //   case '>':
@@ -2034,7 +2034,7 @@ export default {
                 resourceId: item.resourceId,
                 sort: 0,
                 actionProps: [{
-                  businessId: actionProps[0].businessId,
+                  businessId: actionProps[0].businessId ? Number(actionProps[0].businessId) : '',
                   categoryId: Number(actionProps[0].categoryId),
                   categoryName: actionProps[0].categoryName,
                   subCategoryName: actionProps[0].subCategoryName,
@@ -2051,7 +2051,7 @@ export default {
                 case '<':
                   compareType = 2
                   break;
-                case '=':
+                case '==':
                   compareType = 1
                   break;
                 case '>':
@@ -2122,7 +2122,7 @@ export default {
                   })
 
                   // 判断是否有品牌ID，有品牌获取最终物模型，没有则判断是否有二级品类，获取物模型。
-                  if(item.actionProps[0].businessId){
+                  if(item.actionProps[0].businessId !== ''){
                     // 获取品牌列表
                     const paramsC = {
                       categoryId: subId,
@@ -2176,6 +2176,8 @@ export default {
                       }
                     })
                   }else if(subNumber){
+                    console.log(222222222)
+
                     // 没有品牌ID，获取品牌列表和二级物模型
                     const paramsC = {
                       categoryId: subId,
@@ -2218,7 +2220,7 @@ export default {
                       key: '',
                       modeType: this.form.action[k].actionType
                     }
-
+console.log(123132123, item.actionProps[0])
                     getSecModel({ params }).then((res) => {
                       if(res.data.code == 200){
                         // 拿到子品类物模型，赋值
@@ -2228,6 +2230,8 @@ export default {
                       }
                     })
                   }else{
+                    console.log(3333333333333)
+
                     // 没有二级子品类，获取大品类物模型
                      const params = {
                       deviceCategoryId: Number(item.actionProps[0].categoryId),
@@ -2459,7 +2463,7 @@ export default {
             "deviceUuid": "",
             "subCategoryId": "",
             "propertyName": "switch",
-            "compareType": "1",
+            "compareType": "==",
             "compareValue": "1",
           }
 

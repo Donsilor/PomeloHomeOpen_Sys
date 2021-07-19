@@ -1270,7 +1270,7 @@ export default {
         deviceCategoryId: Number(num),
         deviceSubCategoryId: Number(subNumber),
         key: '',
-        modeType: this.form.condition[index].conditionType,
+        modeType: this.form.action[index].actionType,
         brandId: brandId
       }
 
@@ -2051,7 +2051,7 @@ export default {
                 resourceId: item.resourceId,
                 sort: 0,
                 actionProps: [{
-                  businessId: actionProps[0].businessId != -1 ? Number(actionProps[0].businessId) : '',
+                  businessId: actionProps[0].businessId != -1 ? actionProps[0].businessId : '',
                   categoryId: Number(actionProps[0].categoryId),
                   categoryName: actionProps[0].categoryName,
                   subCategoryName: actionProps[0].subCategoryName,
@@ -2555,31 +2555,31 @@ export default {
         }
       }
 
-      this.modelCondition.forEach((item, i) => {
-        if(item.hasSwitch && params.params.condition[i].conditionProps[0].propertyName != 'switch'){
-          attr.businessId = params.params.condition[i].conditionProps[0].businessId
-          attr.categoryId = params.params.condition[i].conditionProps[0].categoryId
-          attr.categoryName = params.params.condition[i].conditionProps[0].categoryName
-          attr.subCategoryName = params.params.condition[i].conditionProps[0].subCategoryName
-          attr.deviceUuid = params.params.condition[i].conditionProps[0].deviceUuid
-          attr.subCategoryId = params.params.condition[i].conditionProps[0].subCategoryId
+      // this.modelCondition.forEach((item, i) => {
+      //   if(item.hasSwitch && params.params.condition[i].conditionProps[0].propertyName != 'switch'){
+      //     attr.businessId = params.params.condition[i].conditionProps[0].businessId
+      //     attr.categoryId = params.params.condition[i].conditionProps[0].categoryId
+      //     attr.categoryName = params.params.condition[i].conditionProps[0].categoryName
+      //     attr.subCategoryName = params.params.condition[i].conditionProps[0].subCategoryName
+      //     attr.deviceUuid = params.params.condition[i].conditionProps[0].deviceUuid
+      //     attr.subCategoryId = params.params.condition[i].conditionProps[0].subCategoryId
 
-          params.params.condition[i].conditionProps.unshift(attr)
-        }
-      })
-
-      // this.modelAction.forEach((item, i) => {
-      //   if(item.hasSwitch && params.params.action[i].actionProps[0].propertyName != 'switch'){
-      //     attr.businessId = params.params.action[i].actionProps[0].businessId
-      //     attr.categoryId = params.params.action[i].actionProps[0].categoryId
-      //     attr.categoryName = params.params.action[i].actionProps[0].categoryName
-      //     attr.subCategoryName = params.params.action[i].actionProps[0].subCategoryName
-      //     attr.deviceUuid = params.params.action[i].actionProps[0].deviceUuid
-      //     attr.subCategoryId = params.params.action[i].actionProps[0].subCategoryId
-
-      //     params.params.action[i].actionProps.unshift(attr)
+      //     params.params.condition[i].conditionProps.unshift(attr)
       //   }
       // })
+
+      this.modelAction.forEach((item, i) => {
+        if(item.hasSwitch && params.params.action[i].actionProps[0].propertyName != 'switch'){
+          attr.businessId = params.params.action[i].actionProps[0].businessId
+          attr.categoryId = params.params.action[i].actionProps[0].categoryId
+          attr.categoryName = params.params.action[i].actionProps[0].categoryName
+          attr.subCategoryName = params.params.action[i].actionProps[0].subCategoryName
+          attr.deviceUuid = params.params.action[i].actionProps[0].deviceUuid
+          attr.subCategoryId = params.params.action[i].actionProps[0].subCategoryId
+
+          params.params.action[i].actionProps.unshift(attr)
+        }
+      })
 
       console.log('7777----form----7777', params)
       // return

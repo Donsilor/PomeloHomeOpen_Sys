@@ -161,7 +161,7 @@
 
                       <!-- -------时间------- -->
 
-                      <el-select v-if="item.conditionType === 0" v-model="item.conditionProps[0].compareType" @change="changeTimeType(index, item.conditionProps[0].compareType)" placeholder="请选择执行方式">
+                      <el-select v-if="item.conditionType === 0" v-model="item.conditionProps[0].propertyName" @change="changeTimeType(index, item.conditionProps[0].propertyName)" placeholder="请选择执行方式">
                         <el-option
                           v-for="(exe, idx) in modelCondition[index].executeMode"
                           :key="idx"
@@ -184,7 +184,7 @@
                       </el-time-picker>
 
                       <el-date-picker
-                        v-if="item.conditionType === 0 && (item.conditionProps[0].compareType === 0 || item.conditionProps[0].compareType === 1)"
+                        v-if="item.conditionType === 0 && item.conditionProps[0].propertyName === 0"
                         v-model="item.conditionProps[1].compareValue"
                         type="date"
                         value-format="yyyy-MM-dd"
@@ -193,7 +193,7 @@
                       </el-date-picker>
 
                       <el-checkbox-group 
-                        v-if="item.conditionType === 0 && item.conditionProps[0].compareType === 2"
+                        v-if="item.conditionType === 0 && item.conditionProps[0].propertyName === 1"
                         v-model="item.conditionProps[1].compareValue">
                         <el-checkbox v-for="(week, idx) in modelCondition[index].weeks" :label="idx" :key="idx">{{ week }}</el-checkbox>
                       </el-checkbox-group>
@@ -536,7 +536,7 @@ export default {
           ifShowInput: false,
           hasSwitch: false,
           comparison: ['大于', '等于', '小于'],
-          executeMode: ['只执行一次','指定日期','每周'],
+          executeMode: ['指定日期', '每周'],
           weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
           operation: [],          // 安防物模型
           autoExecute: []
@@ -712,13 +712,13 @@ export default {
           conditionType: val,
           resourceId: "",
           conditionProps: [{
-            propertyName: "appoint_time",
-            compareType: 0,
+            propertyName: "",
+            compareType: 1,
             compareValue: "",
           },
           {
-            propertyName: "appoint_date",
-            compareType: 0,
+            propertyName: "",
+            compareType: 1,
             compareValue: "",
           }]
         }
@@ -734,7 +734,7 @@ export default {
           resourceId: "",
           conditionProps: [{
             propertyName: "",
-            compareType: "",
+            compareType: 1,
             compareValue: "",
           }]
         }
@@ -811,7 +811,7 @@ export default {
           resourceId: "",
           actionProps: [{
             propertyName: "",
-            compareType: "",
+            compareType: 1,
             compareValue: "",
           }]
         }
@@ -845,16 +845,16 @@ export default {
     },
     // 切换定时时执行方法
     changeTimeType(index, val){
-      if(val == 0 || val == 1){
-        this.form.condition[index].conditionProps[0].propertyName = 'appoint_time'
-        this.form.condition[index].conditionProps[0].compareType = val
+      if(val == 0){
+        this.form.condition[index].conditionProps[0].propertyName = 0
+        this.form.condition[index].conditionProps[0].compareType = 1
         this.form.condition[index].conditionProps[0].compareValue = ''
-        this.form.condition[index].conditionProps[1].propertyName = 'appoint_date'
-        this.form.condition[index].conditionProps[1].compareType = val
+        this.form.condition[index].conditionProps[1].propertyName = 0
+        this.form.condition[index].conditionProps[1].compareType = 1
         this.form.condition[index].conditionProps[1].compareValue = ''
-      }else if(val == 2){
-        this.form.condition[index].conditionProps[1].propertyName = 'weeks'
-        this.form.condition[index].conditionProps[1].compareType = val
+      }else{
+        this.form.condition[index].conditionProps[1].propertyName = 1
+        this.form.condition[index].conditionProps[1].compareType = 1
         this.form.condition[index].conditionProps[1].compareValue = []
       }
     },
@@ -1425,14 +1425,12 @@ export default {
         this.modelCondition[index].operation.forEach((item, i) => {
           if(item.identifier == name){
             this.modelCondition[index].autoExecute = item.dataType.specs
-            this.form.condition[index].conditionProps[0].compareType = i
           }
         })
       }else{
         this.modelAction[index].operation.forEach((item, i) => {
           if(item.identifier == name){
             this.modelAction[index].autoExecute = item.dataType.specs
-            this.form.action[index].actionProps[0].compareType = i
           }
         })
       }
@@ -1473,7 +1471,7 @@ export default {
         ifShowInput: false,
         hasSwitch: false,
         comparison: ['大于', '等于', '小于'],
-        executeMode: ['只执行一次','指定日期','每周'],
+        executeMode: ['指定日期','每周'],
         weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
         operation: [],
         autoExecute: []
@@ -1629,7 +1627,7 @@ export default {
               ifShowInput: false,
               hasSwitch: false,
               comparison: ['大于', '等于', '小于'],
-              executeMode: ['只执行一次','指定日期','每周'],
+              executeMode: ['指定日期', '每周'],
               weeks: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
               operation: [],
               autoExecute: []
@@ -1639,23 +1637,35 @@ export default {
               // 时间
               classify = 'trigger_condition_time'
 
+              let name = ''
+              switch (conditionProps[1].propertyName) {
+                case 'appoint_date':
+                  name = 0
+                  break;
+                case 'weeks':
+                  name = 1
+                  break;
+                default:
+                  break;
+              }
+
               tem = {
                 conditionOpType: item.conditionOpType,
                 conditionType: item.conditionType,
                 resourceId: Number(item.resourceId),
                 conditionProps: [{
-                  propertyName: conditionProps[0].propertyName,
-                  compareType: Number(conditionProps[0].compareType),
+                  propertyName: name,
+                  compareType: 1,
                   compareValue: conditionProps[0].compareValue
                 },
                 {
-                  propertyName: conditionProps[1].propertyName,
-                  compareType: Number(conditionProps[1].compareType),
+                  propertyName: name,
+                  compareType: 1,
                   compareValue: conditionProps[1].compareValue
                 }]
               }
 
-              if(conditionProps[1].compareType == 2){
+              if(conditionProps[1].propertyName == 'weeks'){
                 var weeks = conditionProps[1].compareValue.split(',')
                 weeks.forEach((item, i) => {
                   return weeks[i] = Number(item)
@@ -1663,23 +1673,6 @@ export default {
 
                 tem.conditionProps[1].compareValue = weeks
               }
-
-              // let compareType = 1
-              // switch (conditionProps[0].compareType) {
-              //   case '<':
-              //     compareType = 2
-              //     break;
-              //   case '==':
-              //     compareType = 1
-              //     break;
-              //   case '>':
-              //     compareType = 0
-              //     break;
-              //   default:
-              //     break;
-              // }
-
-              // tem.conditionProps[0].compareType = compareType
             }else if(item.conditionType == 1){
               // 触发设备
               classify = 'trigger_condition_device'
@@ -1733,7 +1726,7 @@ export default {
                 resourceId: item.resourceId,
                 conditionProps: [{
                   propertyName: conditionProps[0].propertyName,
-                  compareType: Number(conditionProps[0].compareType),
+                  compareType: 1,
                   compareValue: conditionProps[0].compareValue
                 }]
               }
@@ -1745,23 +1738,6 @@ export default {
                   model.autoExecute = item.dataType.specs
                 }
               })
-
-              // let compareType = 1
-              // switch (conditionProps[0].compareType) {
-              //   case '<':
-              //     compareType = 2
-              //     break;
-              //   case '==':
-              //     compareType = 1
-              //     break;
-              //   case '>':
-              //     compareType = 0
-              //     break;
-              //   default:
-              //     break;
-              // }
-
-              // tem.conditionProps[0].compareType = compareType
             }
 
             this.form.condition.push(tem)
@@ -2007,7 +1983,7 @@ export default {
                 resourceId: Number(item.resourceId),
                 actionProps: [{
                   propertyName: actionProps[0].propertyName,
-                  compareType: actionProps[0].compareType,
+                  compareType: 1,
                   compareValue: actionProps[0].compareValue
                 }]
               }
@@ -2019,23 +1995,6 @@ export default {
                   model.autoExecute = item.dataType.specs
                 }
               })
-
-              // let compareType = 1
-              // switch (actionProps[0].compareType) {
-              //   case '<':
-              //     compareType = 2
-              //     break;
-              //   case '==':
-              //     compareType = 1
-              //     break;
-              //   case '>':
-              //     compareType = 0
-              //     break;
-              //   default:
-              //     break;
-              // }
-
-              // tem.actionProps[0].compareType = compareType
             }else if(item.actionType == 1){
               // 执行动作设备
               classify = 'trigger_condition_device'
@@ -2356,7 +2315,13 @@ export default {
             return
           }
 
-          if(item.conditionType == 0 && item.conditionProps[1].compareValue === ''){
+          if(item.conditionType == 0 && item.conditionProps[1].propertyName != 'weeks' && item.conditionProps[1].compareValue === ''){
+            this.dialogVisible = true
+            this.dialogContent = '“触发条件' +(+1+i)+ '”的属性值二不能为空，请选择或填写！'
+            return
+          }
+
+          if(item.conditionType == 0 && item.conditionProps[1].propertyName == 'weeks' && !item.conditionProps[1].compareValue.length){
             this.dialogVisible = true
             this.dialogContent = '“触发条件' +(+1+i)+ '”的属性值二不能为空，请选择或填写！'
             return
@@ -2481,8 +2446,33 @@ export default {
           }
 
       for(var i=0, cond=params.params.condition; i<cond.length; i++){
-        // 转换星期数据类型
-        if(cond[i].conditionType === 0 && cond[i].conditionProps.length == 2 && cond[i].conditionProps[1].propertyName == 'weeks'){
+        let type = ''
+        switch (cond[i].conditionProps[0].compareType) {
+          case 0:
+            type = '>'
+            break;
+          case 1:
+            type = '=='
+            break;
+          case 2:
+            type = '<'
+            break;
+          default:
+            break;
+        }
+
+        cond[i].conditionProps[0].compareType = type
+
+        if(cond[i].conditionType === 0 && cond[i].conditionProps[1].propertyName == 0){
+          cond[i].conditionProps[1].compareType = '=='
+          cond[i].conditionProps[0].propertyName = 'appoint_time'
+          cond[i].conditionProps[1].propertyName = 'appoint_date'
+        }
+          
+        if(cond[i].conditionType === 0 && cond[i].conditionProps[1].propertyName == 1){
+          cond[i].conditionProps[1].compareType = '=='
+          cond[i].conditionProps[0].propertyName = 'appoint_time'
+          cond[i].conditionProps[1].propertyName = 'weeks'
           cond[i].conditionProps[1].compareValue = cond[i].conditionProps[1].compareValue.join()
         }
 
@@ -2494,25 +2484,6 @@ export default {
           cond[i].conditionProps[0].businessId = -1
         }
 
-        if(cond[i].conditionType === 1){
-          let type = ''
-          switch (cond[i].conditionProps[0].compareType) {
-            case 0:
-              type = '>'
-              break;
-            case 1:
-              type = '=='
-              break;
-            case 2:
-              type = '<'
-              break;
-            default:
-              break;
-          }
-
-          cond[i].conditionProps[0].compareType = type
-        }
-
         for(let n=0, child = this.modelCondition[i].facilityChild; n<child.length; n++){
           if(child[n].subCategoryId == cond[i].conditionProps[0].subCategoryId){
             cond[i].conditionProps[0].subCategoryId = child[n].subCategoryNumber
@@ -2521,31 +2492,29 @@ export default {
       }
 
       for(var i=0, acti=params.params.action; i<acti.length; i++){
+        let type = ''
+        switch (acti[i].actionProps[0].compareType) {
+          case 0:
+            type = '>'
+            break;
+          case 1:
+            type = '=='
+            break;
+          case 2:
+            type = '<'
+            break;
+          default:
+            break;
+        }
+
+        acti[i].actionProps[0].compareType = type
+
         if(acti[i].actionType === 1 && acti[i].actionProps[0].subCategoryId === ''){
           acti[i].actionProps[0].subCategoryId = 0
         }
 
         if(acti[i].actionType === 1 && acti[i].actionProps[0].businessId === ''){
           acti[i].actionProps[0].businessId = -1
-        }
-
-        if(acti[i].actionType === 1){
-          let type = ''
-          switch (acti[i].actionProps[0].compareType) {
-            case 0:
-              type = '>'
-              break;
-            case 1:
-              type = '=='
-              break;
-            case 2:
-              type = '<'
-              break;
-            default:
-              break;
-          }
-
-          acti[i].actionProps[0].compareType = type
         }
 
         for(let n=0, child = this.modelAction[i].facilityChild; n<child.length; n++){
@@ -2707,7 +2676,7 @@ export default {
       margin-right: 16px;
     }
 
-    /deep/ .el-select-dropdown__item:nth-child(n+9){
+    /deep/ .el-select-dropdown__item:nth-child(n+8){
       margin-top: 10px;
     }
 

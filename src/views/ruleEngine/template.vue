@@ -56,7 +56,8 @@
       <el-table-column align="center" label="操作" width="320">
         <template slot-scope="scope">
           <el-button @click="openDialog(type=2, scope.row.id)" size="small" type="primary">查看</el-button>
-          <el-button @click="openDialog(type=3, scope.row.id)" size="small" type="primary">编辑</el-button>
+          <el-button v-if="scope.row.ifShowBtn" @click="openDialog(type=3, scope.row.id)" size="small" type="primary">编辑</el-button>
+          <el-button v-else size="small" type="info" disabled>编辑</el-button>
           <el-button v-if="!scope.row.isEnable" @click="ifEnable(scope.row)" size="small" type="warning">禁用</el-button>
           <el-button v-else @click="ifEnable(scope.row)" size="small" type="primary">启用</el-button>
           <el-button @click="deleteFault(scope.row.id)" size="small" type="danger">删除</el-button>
@@ -151,7 +152,15 @@ export default {
       getSenceTemplate({ params }).then((res) => {
         const resData = res.data
         this.total = resData.total
-        this.tableData = resData.list
+        let tableData = JSON.parse(JSON.stringify(resData.list))
+        tableData.forEach((item, i) => {
+          if(item.sceneType == 2){
+            tableData[i].ifShowBtn = false
+          }else{
+            tableData[i].ifShowBtn = true
+          }
+        });
+        this.tableData = tableData
       })
     },
     // 创建模板

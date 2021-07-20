@@ -2571,7 +2571,7 @@ export default {
       })
 
       console.log('7777----form----7777', params)
-      return
+      // return
 
       if(this.dialogType == 1){
         this.addTemplate(params)

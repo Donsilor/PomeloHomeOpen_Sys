@@ -187,6 +187,7 @@
                         v-if="item.conditionType === 0 && item.conditionProps[0].propertyName === 0"
                         v-model="item.conditionProps[1].compareValue"
                         type="date"
+                        :picker-options="pickerOptions"
                         value-format="yyyy-MM-dd"
                         placeholder="请选择日期"
                         class="width200">
@@ -577,6 +578,11 @@ export default {
       dialogContent: '',          // 提示内容
       affirmType: 2,              // 提示确认后调用的方法, 2选择触发条件, 3确认触发条件
       delId: '',
+      pickerOptions: {
+        disabledDate: function(time){
+          return time < Date.now() - 8.64e7
+        }
+      },
       
       formRules: {
         sort: [{ required: true, validator: validateSort, trigger: 'blur' }],

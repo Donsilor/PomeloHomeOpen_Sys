@@ -571,6 +571,7 @@ export default {
       facility: [],               // 设备大品类
       operationCondition: [],     // 触发安防
       operationAction: [],        // 手动安防
+      defend: '',                 // 大品类安防
 
       condition: 9,               // 触发条件 0或 1与
       isToModify: false,
@@ -604,6 +605,7 @@ export default {
     
     // 获取大品类列表
     subAllCategory({ params: {} }).then((res) => {
+      this.defend = res.data.data.filter(item => item.categoryNumber == 10000)
       this.facility = res.data.data.filter(item => item.categoryNumber != 10000)
 
       if(this.dialogType == 2 || this.dialogType == 3){
@@ -739,9 +741,15 @@ export default {
           conditionType: val,
           resourceId: "",
           conditionProps: [{
+            businessId: -1,
+            categoryId: 10000,
+            categoryName: "security",
             propertyName: "",
             compareType: 1,
             compareValue: "",
+            deviceUuid: "",
+            subCategoryId: 0,
+            subCategoryName: ""
           }]
         }
 
@@ -816,9 +824,15 @@ export default {
           actionType: val,
           resourceId: "",
           actionProps: [{
+            businessId: -1,
+            categoryId: 10000,
+            categoryName: "security",
             propertyName: "",
             compareType: 1,
             compareValue: "",
+            deviceUuid: "",
+            subCategoryId: 0,
+            subCategoryName: ""
           }]
         }
 
@@ -2557,7 +2571,7 @@ export default {
       })
 
       console.log('7777----form----7777', params)
-      // return
+      return
 
       if(this.dialogType == 1){
         this.addTemplate(params)

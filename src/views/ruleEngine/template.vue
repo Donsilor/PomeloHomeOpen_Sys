@@ -60,7 +60,8 @@
           <el-button v-else size="small" type="info" disabled>编辑</el-button>
           <el-button v-if="!scope.row.isEnable" @click="ifEnable(scope.row)" size="small" type="warning">禁用</el-button>
           <el-button v-else @click="ifEnable(scope.row)" size="small" type="primary">启用</el-button>
-          <el-button @click="deleteFault(scope.row.id)" size="small" type="danger">删除</el-button>
+          <el-button v-if="scope.row.ifShowBtn" @click="deleteFault(scope.row.id)" size="small" type="danger">删除</el-button>
+          <el-button v-else size="small" type="info" disabled>删除</el-button>
         </template>
       </el-table-column>
     </el-table>

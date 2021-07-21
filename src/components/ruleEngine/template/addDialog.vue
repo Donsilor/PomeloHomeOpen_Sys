@@ -674,6 +674,7 @@ export default {
         }
       })
     },
+    // 获取所有品类
     getBrand() {
       brandList({ params: 1 }).then((res) => {
         if(res.data.code == 200){

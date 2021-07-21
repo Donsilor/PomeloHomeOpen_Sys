@@ -378,7 +378,7 @@
 <script>
 import { validaNum, validaTemplateName } from '@/utils/validate'
 import { getSenceSelectList, addSenceTemplate, editSenceTemplate, senceTemplateDetail } from '@/api/ruleEngine.js'
-import { subAllCategory, sonCategory, getModel, getModels, getSonModel, getSonModels, getSecModel } from '@/api/categoryManager'
+import { subAllCategory, sonCategory, getModel, getModels, getSonModel, getSonModels, getSecModel, brandList } from '@/api/categoryManager'
 import { getByClasses } from '@/api/image'
 
 export default {
@@ -572,6 +572,7 @@ export default {
       operationCondition: [],     // 触发安防
       operationAction: [],        // 手动安防
       defend: '',                 // 大品类安防
+      brandList: [],              // 所有品类集合
 
       condition: 9,               // 触发条件 0或 1与
       isToModify: false,
@@ -602,7 +603,8 @@ export default {
     this.getSenceSelect()
     this.getSceneImage()
     this.getSafety()
-    
+    this.getBrand()
+
     // 获取大品类列表
     subAllCategory({ params: {} }).then((res) => {
       this.defend = res.data.data.filter(item => item.categoryNumber == 10000)
@@ -636,7 +638,9 @@ export default {
     // 获取模板类型列表
     getSenceSelect() {
       getSenceSelectList({ params: {} }).then((res) => {
-        this.sceneList = res.data
+        if(res.code == 200){
+          this.sceneList = res.data
+        }
       })
     },
     // 获取大品类列表
@@ -648,7 +652,9 @@ export default {
       }
 
       subCategory({ params }).then((res) => {
-        this.facility = res.data.data.list
+        if(res.data.code == 200){
+          this.facility = res.data.data.list
+        }
       })
     },
     // 获取模板图片
@@ -658,12 +664,21 @@ export default {
       getByClasses({
         identityNames: ['scene_background', 'scene_icon', 'trigger_condition_icon', 'trigger_task_man_icon', 'trigger_task_auto_icon'] 
       }).then((res) => {
-        let data = res.data
-        this.sceneBackground = data.scene_background
-        this.sceneIcon = data.scene_icon
-        this.conditionImgs = data.trigger_condition_icon
-        this.actionAutoImgs = data.trigger_task_auto_icon
-        this.actionManualImgs = data.trigger_task_man_icon
+        if(res.code == 200){
+          let data = res.data
+          this.sceneBackground = data.scene_background
+          this.sceneIcon = data.scene_icon
+          this.conditionImgs = data.trigger_condition_icon
+          this.actionAutoImgs = data.trigger_task_auto_icon
+          this.actionManualImgs = data.trigger_task_man_icon
+        }
+      })
+    },
+    getBrand() {
+      brandList({ params: 1 }).then((res) => {
+        if(res.data.code == 200){
+          this.brandList = res.data.data
+        }
       })
     },
      // 选择触发条件
@@ -1102,23 +1117,12 @@ export default {
           if(res.data.code == 200){
             let arr = res.data.data.list
 
-            let brand = {
-              4: '豪恩',
-              0: '星络',
-              2: '海尔',
-              31: '万和',
-              38: '凯迪士',
-              28: '晾霸',
-              20: '三雄',
-              103: '鸿雁',
-              26: '雷士',
-              33: 'TCL',
-              44: '杜亚',
-              24: '万家乐'
-            }
-
             for(let k=0; k<arr.length; k++){
-              arr[k].subCategoryName = brand[arr[k].brandId]
+              for(let l=0; l<this.brandList.length; l++){
+                if(arr[k].brandId == this.brandList[l].brandId){
+                  arr[k].subCategoryName = this.brandList[l].brandName
+                }
+              }
             }
 
             this.modelCondition[index].brand = arr
@@ -1194,23 +1198,12 @@ export default {
           if(res.data.code == 200){
             let arr = res.data.data.list
 
-            let brand = {
-              4: '豪恩',
-              0: '星络',
-              2: '海尔',
-              31: '万和',
-              38: '凯迪士',
-              28: '晾霸',
-              20: '三雄',
-              103: '鸿雁',
-              26: '雷士',
-              33: 'TCL',
-              44: '杜亚',
-              24: '万家乐'
-            }
-
             for(let k=0; k<arr.length; k++){
-              arr[k].subCategoryName = brand[arr[k].brandId]
+              for(let l=0; l<this.brandList.length; l++){
+                if(arr[k].brandId == this.brandList[l].brandId){
+                  arr[k].subCategoryName = this.brandList[l].brandName
+                }
+              }
             }
 
             this.modelAction[index].brand = arr
@@ -1822,23 +1815,12 @@ export default {
                       if(res.data.code == 200){
                         let arr = res.data.data.list
 
-                        let brand = {
-                          4: '豪恩',
-                          0: '星络',
-                          2: '海尔',
-                          31: '万和',
-                          38: '凯迪士',
-                          28: '晾霸',
-                          20: '三雄',
-                          103: '鸿雁',
-                          26: '雷士',
-                          33: 'TCL',
-                          44: '杜亚',
-                          24: '万家乐'
-                        }
-
                         for(let m=0; m<arr.length; m++){
-                          arr[m].subCategoryName = brand[arr[m].brandId]
+                          for(let l=0; l<this.brandList.length; l++){
+                            if(arr[m].brandId == this.brandList[l].brandId){
+                              arr[m].subCategoryName = this.brandList[l].brandName
+                            }
+                          }
                         }
 
                         this.modelCondition[j].brand = arr
@@ -1875,23 +1857,12 @@ export default {
                       if(res.data.code == 200){
                         let arr = res.data.data.list
 
-                        let brand = {
-                          4: '豪恩',
-                          0: '星络',
-                          2: '海尔',
-                          31: '万和',
-                          38: '凯迪士',
-                          28: '晾霸',
-                          20: '三雄',
-                          103: '鸿雁',
-                          26: '雷士',
-                          33: 'TCL',
-                          44: '杜亚',
-                          24: '万家乐'
-                        }
-
                         for(let m=0; m<arr.length; m++){
-                          arr[m].subCategoryName = brand[arr[m].brandId]
+                          for(let l=0; l<this.brandList.length; l++){
+                            if(arr[m].brandId == this.brandList[l].brandId){
+                              arr[m].subCategoryName = this.brandList[l].brandName
+                            }
+                          }
                         }
 
                         this.modelCondition[j].brand = arr
@@ -2131,23 +2102,12 @@ export default {
                       if(res.data.code == 200){
                         let arr = res.data.data.list
 
-                        let brand = {
-                          4: '豪恩',
-                          0: '星络',
-                          2: '海尔',
-                          31: '万和',
-                          38: '凯迪士',
-                          28: '晾霸',
-                          20: '三雄',
-                          103: '鸿雁',
-                          26: '雷士',
-                          33: 'TCL',
-                          44: '杜亚',
-                          24: '万家乐'
-                        }
-
                         for(let n=0; n<arr.length; n++){
-                          arr[n].subCategoryName = brand[arr[n].brandId]
+                          for(let l=0; l<this.brandList.length; l++){
+                            if(arr[n].brandId == this.brandList[l].brandId){
+                              arr[n].subCategoryName = this.brandList[l].brandName
+                            }
+                          }
                         }
 
                         this.modelAction[k].brand = arr
@@ -2184,23 +2144,12 @@ export default {
                       if(res.data.code == 200){
                         let arr = res.data.data.list
 
-                        let brand = {
-                          4: '豪恩',
-                          0: '星络',
-                          2: '海尔',
-                          31: '万和',
-                          38: '凯迪士',
-                          28: '晾霸',
-                          20: '三雄',
-                          103: '鸿雁',
-                          26: '雷士',
-                          33: 'TCL',
-                          44: '杜亚',
-                          24: '万家乐'
-                        }
-
                         for(let n=0; n<arr.length; n++){
-                          arr[n].subCategoryName = brand[arr[n].brandId]
+                          for(let l=0; l<this.brandList.length; l++){
+                            if(arr[n].brandId == this.brandList[l].brandId){
+                              arr[n].subCategoryName = this.brandList[l].brandName
+                            }
+                          }
                         }
 
                         this.modelAction[k].brand = arr

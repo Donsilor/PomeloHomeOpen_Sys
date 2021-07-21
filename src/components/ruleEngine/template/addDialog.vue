@@ -1965,13 +1965,13 @@ export default {
               autoExecute: []
             }
 
-            if(item.actionType == 0){
+            if(item.actionType == 2){
               // 安防
               classify = 'trigger_condition_safe'
 
               tem = {
                 actionOpType: item.actionOpType,
-                actionType: item.actionType,
+                actionType: 0,
                 resourceId: Number(item.resourceId),
                 actionProps: [{
                   propertyName: actionProps[0].propertyName,
@@ -2491,6 +2491,10 @@ export default {
           if(child[n].subCategoryId == acti[i].actionProps[0].subCategoryId){
             acti[i].actionProps[0].subCategoryId = child[n].subCategoryNumber
           }
+        }
+
+        if(acti[i].actionType == 0){
+          acti[i].actionType = 2
         }
       }
 

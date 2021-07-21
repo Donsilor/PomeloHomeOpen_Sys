@@ -49,7 +49,7 @@
             label="修改时间 "/>
           <el-table-column
             label="操作"
-            width="340px"
+            width="320px"
           >
             <template slot-scope="scope">
               <div class="opreationBtn">

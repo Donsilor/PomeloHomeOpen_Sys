@@ -19,8 +19,19 @@
         </el-form-item>
 
         <el-form-item label="场景背景" prop="sceneBgIconId">
-          <el-select v-model="form.sceneBgIconId" :popper-append-to-body="false" placeholder="请选择背景" class="dialog_select width540">
+          <el-select v-model="form.sceneBgIconId" :popper-append-to-body="false" placeholder="请选择场景背景" class="dialog_select width540">
             <el-option v-for="(item, index) in sceneBackground" :label="item.displayName" :key="index" :value="item.id">
+              <el-image
+                style="width: 100px; height: 100px"
+                :src="item.fileUrl"
+                fit="fit"></el-image>
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="详情背景" prop="sceneDetailIconId">
+          <el-select v-model="form.sceneDetailIconId" :popper-append-to-body="false" placeholder="请选择详情背景" class="dialog_select width540">
+            <el-option v-for="(item, index) in sceneDetailBackground" :label="item.displayName" :key="index" :value="item.id">
               <el-image
                 style="width: 100px; height: 100px"
                 :src="item.fileUrl"
@@ -413,7 +424,14 @@ export default {
     }
     const validateBgIcon = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请选择场景背景'))
+        callback(new Error('请选择场景列表背景'))
+      } else {
+        callback()
+      }
+    }
+    const sceneDetailIcon = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请选择场景详情背景'))
       } else {
         callback()
       }
@@ -440,18 +458,20 @@ export default {
         page: 1,
         limit: 5
       },
-      sceneList: [],                        //模板类型
-      sceneIcon: [],                        //模板图标
-      sceneBackground: [],                  //模板背景图
-      conditionImgs: [],                    //触发条件图片集合（定时，设备，安防）
-      actionAutoImgs: [],                   //执行动作图片集合-自动 (家庭安防, 设备)
-      actionManualImgs: [],                 //执行动作图片集合-手动 (家庭安防, 设备)
+      sceneList: [],                        // 模板类型
+      sceneIcon: [],                        // 模板图标
+      sceneBackground: [],                  // 模板列表背景图
+      sceneDetailBackground: [],            // 模板详情背景图
+      conditionImgs: [],                    // 触发条件图片集合（定时，设备，安防）
+      actionAutoImgs: [],                   // 执行动作图片集合-自动 (家庭安防, 设备)
+      actionManualImgs: [],                 // 执行动作图片集合-手动 (家庭安防, 设备)
 
       form: {
         "sort": '',                         // Y 排序
         'sceneType': 1,                     // Y 模板场景类型（0手动 1自动 2安防）
         "sceneName": '',                    // Y 场景名称
         "sceneBgIconId": '',                // Y 场景背景图片资源ID
+        "sceneDetailIconId": '',            // y 场景详情图片资源ID
         "sceneIconId": '',                  // Y 场景icon的图片资源ID
         "typeId": '',                       // Y 模板类型ID
         "sceneDesc":'',                     // Y 模板描述
@@ -591,6 +611,7 @@ export default {
         sceneType: [{ required: true, trigger: 'change'}],
         sceneName: [{ required: true, validator: validateName, trigger: 'blur'}],
         sceneBgIconId: [{ required: true, validator: validateBgIcon, trigger: 'change'}],
+        sceneDetailIconId: [{ required: true, validator: sceneDetailIcon, trigger: 'change'}],
         sceneIconId: [{ required: true, validator: validateIcon, trigger: 'change'}],
         typeId: [{ required: true, validator: validateSceneType, trigger: 'change'}],
         // sceneDesc: [{ required: false, validator: '', trigger: 'blur'}],
@@ -662,7 +683,7 @@ export default {
       // let imgPath = "http://pho-uat.oss-cn-shenzhen.aliyuncs.com/";
 
       getByClasses({
-        identityNames: ['scene_background', 'scene_icon', 'trigger_condition_icon', 'trigger_task_man_icon', 'trigger_task_auto_icon'] 
+        identityNames: ['scene_background', 'scene_icon', 'trigger_condition_icon', 'trigger_task_man_icon', 'trigger_task_auto_icon', 'scene_detail_background'] 
       }).then((res) => {
         if(res.code == 200){
           let data = res.data
@@ -671,6 +692,7 @@ export default {
           this.conditionImgs = data.trigger_condition_icon
           this.actionAutoImgs = data.trigger_task_auto_icon
           this.actionManualImgs = data.trigger_task_man_icon
+          this.sceneDetailBackground = data.scene_detail_background
         }
       })
     },
@@ -1581,6 +1603,7 @@ export default {
           this.form.sceneName = data.sceneName
           this.form.sceneType = Number(data.sceneType)
           this.form.sceneBgIconId = Number(data.sceneBgIconId)
+          this.form.sceneDetailIconId = Number(data.sceneDetailIconId)
           this.form.sceneIconId = Number(data.sceneIconId)
           this.form.typeId = data.typeId
           this.form.sceneDesc = data.sceneDesc

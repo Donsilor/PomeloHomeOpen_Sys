@@ -1820,7 +1820,9 @@ export default {
 
               sonCategory({ params }).then((res) => {
                 if(res.data.code == 200){
-                  this.modelCondition[j].facilityChild = res.data.data.list
+                  if(res.data.data.list){
+                    this.modelCondition[j].facilityChild = res.data.data.list
+                  }
 
                   var subNumber = item.conditionProps[0].subCategoryId,
                       subId = ''
@@ -2108,7 +2110,9 @@ export default {
 
               sonCategory({ params }).then((res) => {
                 if(res.data.code == 200){
-                  this.modelAction[k].facilityChild = res.data.data.list
+                  if(res.data.data.list){
+                    this.modelAction[k].facilityChild = res.data.data.list
+                  }
 
                   var subNumber = item.actionProps[0].subCategoryId,
                       subId = ''

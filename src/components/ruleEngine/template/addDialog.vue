@@ -109,7 +109,7 @@
                         </el-option>
                       </el-select>
 
-                      <el-select v-if="item.conditionType === 1 && item.conditionProps[0].subCategoryId" v-model="item.conditionProps[0].businessId" @change="getBrandModelCondition(index, item.conditionProps[0].categoryId, item.conditionProps[0].subCategoryId, item.conditionProps[0].businessId)" placeholder="请选择品牌">
+                      <el-select v-if="item.conditionType === 1 && item.conditionProps[0].subCategoryId && modelCondition[index].brand.length" v-model="item.conditionProps[0].businessId" @change="getBrandModelCondition(index, item.conditionProps[0].categoryId, item.conditionProps[0].subCategoryId, item.conditionProps[0].businessId)" placeholder="请选择品牌">
                         <el-option
                           v-for="(br, idx) in modelCondition[index].brand"
                           :key="idx"
@@ -274,7 +274,7 @@
                       </el-option>
                     </el-select>
 
-                    <el-select v-if="item.actionType === 1 && item.actionProps[0].subCategoryId" v-model="item.actionProps[0].businessId" @change="getBrandModelAction(index, item.actionProps[0].categoryId, item.actionProps[0].subCategoryId, item.actionProps[0].businessId)" placeholder="请选择品牌">
+                    <el-select v-if="item.actionType === 1 && item.actionProps[0].subCategoryId && modelAction[index].brand.length" v-model="item.actionProps[0].businessId" @change="getBrandModelAction(index, item.actionProps[0].categoryId, item.actionProps[0].subCategoryId, item.actionProps[0].businessId)" placeholder="请选择品牌">
                       <el-option
                         v-for="(br, idx) in modelAction[index].brand"
                         :key="idx"
@@ -1638,6 +1638,7 @@ export default {
               facilityIcon: [],
               unFacilityIcon: [],
               facilityChild: [],
+              brand: [],
               attribute: [],
               specs: [],
               type: '',
@@ -1958,6 +1959,7 @@ export default {
               facilityIcon: [],
               unFacilityIcon: [],
               facilityChild: [],
+              brand: [],
               attribute: [],
               specs: [],
               type: '',
@@ -1995,6 +1997,7 @@ export default {
               })
             }else if(item.actionType == 1){
               // 执行动作设备
+              console.log(999, item)
               classify = 'trigger_condition_device'
 
               if(actionProps.length == 2){
@@ -2120,6 +2123,9 @@ export default {
                         this.modelAction[k].brand = arr
                       }
                     })
+
+                console.log(889, this.modelAction[k].brand)
+
 
                     // 获取最终物模型
                     const params = {

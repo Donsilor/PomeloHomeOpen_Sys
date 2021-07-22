@@ -1997,7 +1997,6 @@ export default {
               })
             }else if(item.actionType == 1){
               // 执行动作设备
-              console.log(999, item)
               classify = 'trigger_condition_device'
 
               if(actionProps.length == 2){
@@ -2124,9 +2123,6 @@ export default {
                       }
                     })
 
-                console.log(889, this.modelAction[k].brand)
-
-
                     // 获取最终物模型
                     const params = {
                       deviceCategoryId: Number(item.actionProps[0].categoryId),
@@ -2236,8 +2232,11 @@ export default {
     },
     // 详情校验
     dealWithForm() {
-      // 自动类型校验触发条件
-      if(this.form.sceneType == 1){
+      if(this.form.sceneType != 1){
+        // 非自动类型置空触发条件
+        this.form.condition = []
+      }else{
+        // 自动类型校验触发条件
         var cond = this.form.condition;
         for(var i=0; i<cond.length; i++){
           var item = cond[i]
@@ -2414,18 +2413,18 @@ export default {
     },
     // 有按钮属性的添加switch
     addSwitch() {
-      let params = {'params': JSON.parse(JSON.stringify(this.form))},
-          attr = {
-            "businessId": -1,
-            "categoryId": "",
-            "categoryName": "",
-            "subCategoryName": "",
-            "deviceUuid": "",
-            "subCategoryId": "",
-            "propertyName": "switch",
-            "compareType": "==",
-            "compareValue": "1",
-          }
+      let params = {'params': JSON.parse(JSON.stringify(this.form))}
+      let attr = {
+        "businessId": -1,
+        "categoryId": "",
+        "categoryName": "",
+        "subCategoryName": "",
+        "deviceUuid": "",
+        "subCategoryId": "",
+        "propertyName": "switch",
+        "compareType": "==",
+        "compareValue": "1",
+      }
 
       for(var i=0, cond=params.params.condition; i<cond.length; i++){
         let type = ''

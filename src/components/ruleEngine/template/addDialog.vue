@@ -682,6 +682,7 @@ export default {
         }
       })
     },
+    // 切换模板类型
     changeSceneType(val) {
       if(val == 1 && !this.form.condition.length){
         this.addCondition()

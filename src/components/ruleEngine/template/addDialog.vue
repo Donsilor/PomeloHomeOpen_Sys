@@ -9,7 +9,7 @@
         </el-form-item>
 
         <el-form-item label="场景类型" prop="sceneType">
-          <el-select v-model="form.sceneType" placeholder="请选择类型" class="width540">
+          <el-select v-model="form.sceneType" placeholder="请选择类型" @change="changeSceneType(form.sceneType)" class="width540">
             <el-option v-for="(item, index) in sceneType" :key="index" :label="item" :value="index"></el-option>
           </el-select>
         </el-form-item>
@@ -681,6 +681,11 @@ export default {
           this.brandList = res.data.data
         }
       })
+    },
+    changeSceneType(val) {
+      if(val == 1 && !this.form.condition.length){
+        this.addCondition()
+      }
     },
      // 选择触发条件
     seleceTouch(index, val){

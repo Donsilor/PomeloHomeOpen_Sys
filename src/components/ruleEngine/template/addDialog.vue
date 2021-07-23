@@ -2443,17 +2443,6 @@ export default {
     // 有按钮属性的添加switch
     addSwitch() {
       let params = {'params': JSON.parse(JSON.stringify(this.form))}
-      let attr = {
-        "businessId": -1,
-        "categoryId": "",
-        "categoryName": "",
-        "subCategoryName": "",
-        "deviceUuid": "",
-        "subCategoryId": "",
-        "propertyName": "switch",
-        "compareType": "==",
-        "compareValue": "1",
-      }
 
       for(var i=0, cond=params.params.condition; i<cond.length; i++){
         let type = ''
@@ -2538,6 +2527,8 @@ export default {
         }
       }
 
+      let attr = {}
+
       // this.modelCondition.forEach((item, i) => {
       //   if(item.hasSwitch && params.params.condition[i].conditionProps[0].propertyName != 'switch'){
       //     attr.businessId = params.params.condition[i].conditionProps[0].businessId
@@ -2552,6 +2543,18 @@ export default {
       // })
 
       this.modelAction.forEach((item, i) => {
+        attr = {
+          "businessId": -1,
+          "categoryId": "",
+          "categoryName": "",
+          "subCategoryName": "",
+          "deviceUuid": "",
+          "subCategoryId": "",
+          "propertyName": "switch",
+          "compareType": "==",
+          "compareValue": "1",
+        }
+
         if(item.hasSwitch && params.params.action[i].actionProps[0].propertyName != 'switch'){
           attr.businessId = params.params.action[i].actionProps[0].businessId
           attr.categoryId = params.params.action[i].actionProps[0].categoryId

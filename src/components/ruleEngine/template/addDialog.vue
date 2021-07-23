@@ -314,7 +314,7 @@
                       </el-option>
                     </el-select>
 
-                    <el-select v-if="item.actionType === 1" v-model="item.actionProps[0].compareType" placeholder="请选择比较值">
+                    <el-select v-if="item.actionType === 1" v-model="item.actionProps[0].compareType" placeholder="请选择比较值" disabled>
                       <el-option
                         v-for="(com, idx) in modelAction[index].comparison"
                         :key="idx"
@@ -1460,6 +1460,8 @@ export default {
           }
         }
       })
+
+      this.form.action[index].actionProps[0].compareType = 1
     },
     // 选择安防
     changeOperation(index, type, name){

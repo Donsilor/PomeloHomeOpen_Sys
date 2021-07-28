@@ -27,16 +27,15 @@
           <el-input 
             :maxlength="50" 
             v-model="ruleForm.nodeId"
+            disabled
             placeholder="请输入标识符" />
         </el-form-item>
         <!-- 属性独有 -->
         <el-form-item
-          :required="true" 
           label="数据类型" 
           prop="type">
           <el-select 
             v-model="type"
-            :required="true"
             disabled
             placeholder="请输入数据类型" 
             style="width:100%">
@@ -52,7 +51,7 @@
         <!--enum -->
         <el-form-item 
           label="枚举项" 
-          prop="ruleForm.commandArrays">
+          prop="commandArrays">
           <el-row>
             <el-col :span="12">参数值</el-col>
             <el-col :span="12">参数描述</el-col>
@@ -64,7 +63,7 @@
             <el-col :span="rowsdata.status==='view'? 11 : 10">
               <el-form-item >
                 <el-input 
-                  v-model="item.commandKey" 
+                  v-model="item.key" 
                   placeholder="编号如0"/>
               </el-form-item>
             </el-col>
@@ -74,12 +73,12 @@
             <el-col :span="rowsdata.status==='view'? 11 : 10">
               <el-form-item >
                 <el-input 
-                  v-model="item.commandValue" 
+                  v-model="item.value" 
                   placeholder="对该枚举项的描述"/>
               </el-form-item>
             </el-col>
             <el-col 
-              v-if="rowsdata.status!=='view' && enumList.length>1" 
+              v-if="rowsdata.status!=='view' && ruleForm.commandArrays.length>1" 
               :span="2" 
               class="delete" 
               @click.native="deleteItem(item,index)" >删除</el-col>
@@ -116,9 +115,7 @@
   </div>
 </template>
 <script>
-import { funcName, identifierReg } from '@/assets/js/validator'
-import { editModel } from '@/api/productRegistration'
-import { editSubModel, editSonModel, editSecModel, queryCommands, insertCommands} from '@/api/categoryManager'
+import { queryCommands, insertCommands} from '@/api/categoryManager'
 export default {
   props: {
     infosDialogVisible: {
@@ -135,7 +132,7 @@ export default {
       type: Number,
       default:0
     },
-    proParams: {
+    instructParams: {
       type: Object,
       default: function(){
         return {}
@@ -144,26 +141,26 @@ export default {
     }
   },
   mounted() {
-    console.log(123, this.infosDialogVisible)
-    console.log(456, this.rowsdata)
-    console.log(789, this.date)
-    console.log(66, this.proParams)
-
     this.queryCommands()
   },
   data() {
     const enumVf = (rule, value, callback) => {
-      // const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+[\u4e00-\u9fa5a-zA-Z0-9\-_]*$/
-      const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+[\u4e00-\u9fa5a-zA-Z0-9\\_]*$/
-      const flag = this.enumList.every((item, index) => { // enum内容验证
+      const reg = /^[a-zA-Z]*$/
+
+      const flag = this.ruleForm.commandArrays.every((item, index) => { // enum内容验证
         return item.key !== '' && item.value !== ''
       })
-      const valFlag = this.enumList.every((item, index) => { //  value验证
+
+      const flagKey = this.ruleForm.commandArrays.every((item, index) => { // enum内容验证
+        return item.key >= 0 && item.key < 2147483647
+      })
+
+      const flagVal = this.ruleForm.commandArrays.every((item, index) => { //  value验证
         return reg.test(item.value) !== false
       })
       // 判断key相同值
       const arr = []
-      this.enumList.forEach((ele, index) => {
+      this.ruleForm.commandArrays.forEach((ele, index) => {
         if (arr.indexOf(ele.key) > -1) {
           this.keyFlag = true
         } else {
@@ -172,25 +169,20 @@ export default {
         }
       })
       console.log(arr)
-      if (flag) {
-        this.enumList.forEach((item) => {
-          if (item.key < 0 || item.key > 2147483647) {
-            callback(new Error('参数值取值范围：0 ~ 2147483647'))
-          } else if (!valFlag) {
-            callback(new Error('支持中文、英文大小写、数字、下划线和短划线，必须以中文、英文或数字开头，不超过20个字符'))
-          } else if (this.keyFlag) {
-            callback(new Error('参数值不能重复'))
-          } else {
-            callback()
-          }
-        })
-      } else {
+      if(!flag){
         callback(new Error('参数值跟描述值不能为空'))
+      }else if(!flagKey){
+        callback(new Error('参数值取值范围：0 ~ 2147483647'))
+      }else if(!flagVal){
+        callback(new Error('参数描述仅支持英文'))
+      }else if(this.keyFlag){
+        callback(new Error('参数值不能重复'))
+      }else{
+        callback()
       }
     }
     return {
       type: 'enum',
-
       keyFlag: false,
       dataTypeList: [
         {
@@ -238,77 +230,72 @@ export default {
         modeType: 1,
         commandArrays: [
           {
-            key: "0",
+            key: "",
             value: ""
           }
         ]
       },
       
       rules: {
-        name: [
-          { required: true, message: '参数名称不能为空', trigger: 'blur' },
-          { validator: funcName, trigger: 'change' }
-        ],
-        identifier: [
-          { required: true, validator: identifierReg, trigger: 'blur' }
-        ],
-        callType: [
-          { required: true, message: '请选择调用方法', trigger: 'change' }
-        ],
-        type: [
-          { required: true, message: '请选择事件类型', trigger: 'blur' }
-        ],
-        accessMode: [
-          { required: true, message: '请选择读写类型', trigger: 'blur' }
-        ],
-        action: [
-          { required: true, message: '请选择执行动作', trigger: 'blur' }
-        ],
-        'dataType.specs.enum': [
+        commandArrays: [
           { required: true, validator: enumVf, trigger: 'blur' }
         ]
-      },
-      datemsg: 'String类型的UTC时间戳（毫秒）',
-      funType: '', // 功能类型判断
-
-      enumList: [],
+      }
     }
   },
   methods: {
+    // 获取指令
     queryCommands() {
+      this.ruleForm.deviceCategoryId = this.instructParams.deviceCategoryId
+      this.ruleForm.deviceSubCategoryId = this.instructParams.deviceSubCategoryId
+      this.ruleForm.brandId = this.instructParams.brandId
+      this.ruleForm.nodeId = this.instructParams.nodeId
+      this.ruleForm.modeType = this.instructParams.modeType
+
       var params = {
         params: {
-          "deviceCategoryId": this.proParams.deviceCategoryId,
-          "deviceSubCategoryId": this.proParams.deviceSubCategoryId,
-          "nodeId": "switch",
-          "brandId": -1
+          "deviceCategoryId": this.instructParams.deviceCategoryId,
+          "deviceSubCategoryId": this.instructParams.deviceSubCategoryId,
+          "nodeId": this.instructParams.nodeId,
+          "brandId": this.instructParams.brandId
         }
       }
 
       queryCommands(params).then((res) => {
-        console.log(res)
         if (res.data.code === 200) {
-          // this.$message({
-          //   type: 'success',
-          //   message: '编辑成功'
-          // })
-
           if(res.data.data.length){
-            this.ruleForm.nodeId = res.data.data[0].nodeId
             this.ruleForm.commandArrays = []
-            let obj = {
-              key: '',
-              value: ''
-            }
+            let obj = {}
 
             res.data.data.forEach((item, i) => {
+              obj = {key: '', value: ''}
               this.ruleForm.commandArrays.push(obj)
               this.ruleForm.commandArrays[i].key = item.commandKey
               this.ruleForm.commandArrays[i].value = item.commandValue
             })
           }
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.data.message
+          })
+        }
+      })
+    },
+    // 编辑指令
+    insertCommands() {
+      var params = {
+        params: this.ruleForm
+      }
 
-          console.log(12313, this.ruleForm)
+      insertCommands(params).then((res) => {
+        if (res.data.code === 200) {
+          this.handleClose()
+
+          this.$message({
+            type: 'success',
+            message: '编辑成功'
+          })
         } else {
           this.$message({
             type: 'error',
@@ -320,143 +307,7 @@ export default {
     confirm() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          console.log(888, this.ruleForm)
-          return
-
-          const editData = Object.assign({}, this.ruleForm)
-          if (this.ruleForm.dataType && this.ruleForm.dataType.type === 'enum') {
-            const obj = {}
-            this.enumList.forEach((item) => {
-              obj[item.key] = item.value
-            })
-            this.ruleForm.dataType.specs = {}
-            this.ruleForm.dataType.specs = obj
-          }
-          let params = {}
-          if (this.proParams.type && this.proParams.type === 'category') {
-            params = {
-              params: {
-                deviceCategoryId: this.proParams.deviceCategoryId,
-                categoryId: this.proParams.prokey,
-                identifier: this.rowsdata.identifier
-              }
-            }
-            console.log('0', params)
-          } else {
-            params = {
-              params: {
-                productKey: this.proParams.prokey,
-                modelVersion: this.proParams.modelVersion,
-                identifier: this.rowsdata.identifier,
-              }
-            }
-          }
-          // 删除多余的属性
-          Reflect.deleteProperty(editData, 'index')
-          Reflect.deleteProperty(editData, 'types')
-          Reflect.deleteProperty(editData, 'parentId')
-          Reflect.deleteProperty(editData, 'status')
-          /* console.log('this_ruleForm', this.ruleForm)
-          console.log('editData', editData)
-          console.log('this_ruleForm', this.ruleForm) */
-          if (this.ruleForm.parentId === '属性') {
-            params.params.abilityType = 1
-            params.params.properties = editData
-          } else if (this.ruleForm.parentId === '服务') {
-            params.params.abilityType = 2
-            params.params.services = editData
-          } else {
-            params.params.abilityType = 3
-            params.params.events = editData
-          }
-          console.log('params', params)
-          if(this.proParams.type === 'category'){
-            if(this.proParams.val === 'son'){
-              delete params.params.categoryId
-              params.params.deviceCategoryId =  this.proParams.deviceCategoryId
-              params.params.subCategoryId = this.proParams.prokey
-              params.params.deviceSubCategoryId = this.proParams.deviceSubCategoryId
-              params.params.brandId = this.proParams.brandId           
-              editSonModel(params).then((res) => {
-                console.log(res)
-                if (res.data.code === 200) {
-                  this.$message({
-                    type: 'success',
-                    message: '编辑成功'
-                  })
-                  this.handleClose()
-                  setTimeout(() => {
-                    this.$parent.getDraftModelData()
-                  }, 0)
-                } else {
-                  this.$message({
-                    type: 'error',
-                    message: res.data.message
-                  })
-                }
-              })
-            }else if(this.proParams.val === 'sec'){
-              delete params.params.categoryId
-              params.params.deviceCategoryId =  this.proParams.deviceCategoryId
-              params.params.subCategoryId = this.proParams.prokey
-              params.params.deviceSubCategoryId = this.proParams.deviceSubCategoryId
-              editSecModel(params).then((res) => {
-                console.log(res)
-                if (res.data.code === 200) {
-                  this.$message({
-                    type: 'success',
-                    message: '编辑成功'
-                  })
-                  this.handleClose()
-                  setTimeout(() => {
-                    this.$parent.getDraftModelData()
-                  }, 0)
-                } else {
-                  this.$message({
-                    type: 'error',
-                    message: res.data.message
-                  })
-                }
-              })
-            }else{
-              editSubModel(params).then((res) => {
-                console.log(res)
-                if (res.data.code === 200) {
-                  this.$message({
-                    type: 'success',
-                    message: '编辑成功'
-                  })
-                  this.handleClose()
-                  setTimeout(() => {
-                    this.$parent.getDraftModelData()
-                  }, 0)
-                } else {
-                  this.$message({
-                    type: 'error',
-                    message: res.data.message
-                  })
-                }
-              })
-            }
-          }else{
-            editModel(params).then((res) => {
-              if (res.data.code === 200) {
-                this.$message({
-                  type: 'success',
-                  message: '编辑成功'
-                })
-                this.handleClose()
-                setTimeout(() => {
-                  this.$parent.getDraftModelData()
-                }, 0)
-              } else {
-                this.$message({
-                  type: 'error',
-                  message: res.data.message
-                })
-              }
-            })
-          } 
+          this.insertCommands()
         } else {
           return false
         }
@@ -466,13 +317,13 @@ export default {
       this.$emit('open-view-dialog')
     },
     addItem() {
-      this.enumList.push({
+      this.ruleForm.commandArrays.push({
         key: '',
         value: ''
       })
     },
     deleteItem(item, index) {
-      this.enumList.splice(index, 1)
+      this.ruleForm.commandArrays.splice(index, 1)
     }
   }
 }

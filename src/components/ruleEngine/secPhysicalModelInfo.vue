@@ -87,8 +87,7 @@
     <!-- 指令 -->
     <instruct
       v-if="showInstruct" 
-      :pro-params="proParams"
-      :params="params"
+      :instruct-params="instructParams"
       :rowsdata="rowsData"
       :infos-dialog-visible="showInstruct" 
       @open-view-dialog="showInstruct=false"/>
@@ -104,6 +103,7 @@ import physicalModelDailog from '@/components/functionDefinitionDailogs/Physical
 import viewMoreDailog from '@/components/functionDefinitionDailogs/viewMoreDailog' // TODO:
 import addCustomDailog from '@/components/functionDefinitionDailogs/addCustomDailog' // TODO:
 import instruct from '@/components/ruleEngine/instruct'
+
 export default {
   components: {
     emptyView,
@@ -145,17 +145,15 @@ export default {
       infosDialogVisible: false, // infosDialog开管
       addCustomDialogVisible: false, // addcustomdialog开关
       proParams: {},
-      params: {},
+      instructParams: {
+        modeType: 0
+      },
       showInstruct: false
     }
   },
   created() {
-    // this.sRow = JSON.parse(this.$route.query.sRow)
-    console.log(this.subCategoryId)
     this.getDraftModelData()
     this.getUnitsName()
-  },
-  mounted() {
   },
   methods: {
     getImportPhyData(val) {
@@ -173,8 +171,8 @@ export default {
         }
       }
       getSecModel(params).then(res => {
-        console.log(res.data.data)
         this.resData = res.data.data.thingModel // 模型数据展示时需要profile'
+        this.instructParams.modeType = res.data.data.modeType
         const physicalModelData = Object.assign({}, res.data.data.thingModel)
         delete physicalModelData.profile
         // console.log(Object.values(physicalModelData).reverse())
@@ -294,13 +292,11 @@ export default {
       })
     },
     handlerInstruct(index, row) {
-      this.proParams.type = 'category'
-      this.proParams.val = 'sec'
-      this.proParams.prokey = this.subCategoryId
-      this.proParams.deviceSubCategoryId = this.deviceSubCategoryId
-      this.proParams.deviceCategoryId = this.deviceCategoryId //父级标识
+      this.instructParams.deviceCategoryId = this.deviceCategoryId
+      this.instructParams.deviceSubCategoryId = this.deviceSubCategoryId
+      this.instructParams.brandId = -1
+      this.instructParams.nodeId = row.identifier
       this.showInstruct = true
-      row.status = 'edit'
       row.index = index
       this.rowsData = row
     }

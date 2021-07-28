@@ -26,23 +26,20 @@
           </el-row>
           <el-input 
             :maxlength="50" 
-            v-model="ruleForm.identifier"
-            disabled
+            v-model="ruleForm.nodeId"
             placeholder="请输入标识符" />
         </el-form-item>
         <!-- 属性独有 -->
-        <el-form-item 
-          v-if="ruleForm.dataType" 
+        <el-form-item
           :required="true" 
           label="数据类型" 
-          prop="dataType">
+          prop="type">
           <el-select 
-            v-model="ruleForm.dataType.type" 
+            v-model="type"
             :required="true"
             disabled
             placeholder="请输入数据类型" 
-            style="width:100%"
-            @change="change">
+            style="width:100%">
             <el-option
               v-for="(item,index) in dataTypeList"
               :key="index"
@@ -54,21 +51,20 @@
 
         <!--enum -->
         <el-form-item 
-          v-if="ruleForm.dataType && ruleForm.dataType.type==='enum'" 
           label="枚举项" 
-          prop="dataType.specs.enum">
+          prop="ruleForm.commandArrays">
           <el-row>
             <el-col :span="12">参数值</el-col>
             <el-col :span="12">参数描述</el-col>
           </el-row>
           <el-row 
-            v-for="(item,index) in enumList" 
+            v-for="(item,index) in ruleForm.commandArrays" 
             :key="index" 
             class="row">
             <el-col :span="rowsdata.status==='view'? 11 : 10">
               <el-form-item >
                 <el-input 
-                  v-model="item.key" 
+                  v-model="item.commandKey" 
                   placeholder="编号如0"/>
               </el-form-item>
             </el-col>
@@ -78,7 +74,7 @@
             <el-col :span="rowsdata.status==='view'? 11 : 10">
               <el-form-item >
                 <el-input 
-                  v-model="item.value" 
+                  v-model="item.commandValue" 
                   placeholder="对该枚举项的描述"/>
               </el-form-item>
             </el-col>
@@ -99,13 +95,13 @@
           </el-tooltip>
         </el-form-item>
 
-        <el-form-item 
+        <!-- <el-form-item 
           label="描述" 
           prop="desc">
           <el-input 
             v-model="ruleForm.desc" 
             placeholder="请输入描述信息"/>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <span 
         slot="footer" 
@@ -120,10 +116,9 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import { funcName, bool0, bool1, arrStructVf, identifierReg } from '@/assets/js/validator'
+import { funcName, identifierReg } from '@/assets/js/validator'
 import { editModel } from '@/api/productRegistration'
-import { editSubModel, editSonModel,editSecModel } from '@/api/categoryManager'
+import { editSubModel, editSonModel, editSecModel, queryCommands, insertCommands} from '@/api/categoryManager'
 export default {
   props: {
     infosDialogVisible: {
@@ -148,23 +143,15 @@ export default {
       
     }
   },
+  mounted() {
+    console.log(123, this.infosDialogVisible)
+    console.log(456, this.rowsdata)
+    console.log(789, this.date)
+    console.log(66, this.proParams)
+
+    this.queryCommands()
+  },
   data() {
-    const step = (rule, value, callback) => {
-      if (value < 0) {
-        callback(new Error('步长不能小于0'))
-      } else if (value > (this.ruleForm.dataType.specs.max - this.ruleForm.dataType.specs.min)) {
-        callback(new Error('步长不能大于取值范围的差值'))
-      } else {
-        callback()
-      }
-    }
-    const structVf = (rule, value, callback) => {
-      if (this.ruleForm.dataType.type === 'struct' && this.ruleForm.dataType.specs.length === 0) {
-        callback(new Error('struct不能为空'))
-      } else {
-        callback()
-      }
-    }
     const enumVf = (rule, value, callback) => {
       // const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+[\u4e00-\u9fa5a-zA-Z0-9\-_]*$/
       const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+[\u4e00-\u9fa5a-zA-Z0-9\\_]*$/
@@ -187,8 +174,8 @@ export default {
       console.log(arr)
       if (flag) {
         this.enumList.forEach((item) => {
-          if (item.key < -2147483648 || item.key > 2147483647) {
-            callback(new Error('参数值取值范围：-2147483648 ~ 2147483647'))
+          if (item.key < 0 || item.key > 2147483647) {
+            callback(new Error('参数值取值范围：0 ~ 2147483647'))
           } else if (!valFlag) {
             callback(new Error('支持中文、英文大小写、数字、下划线和短划线，必须以中文、英文或数字开头，不超过20个字符'))
           } else if (this.keyFlag) {
@@ -202,6 +189,8 @@ export default {
       }
     }
     return {
+      type: 'enum',
+
       keyFlag: false,
       dataTypeList: [
         {
@@ -242,19 +231,19 @@ export default {
         }
       ],
       ruleForm: {
-        callType: 'sync', // 调用方式
-        type: 'info', // 事件类型 info---信息 ，alert---告警，error---故障
-        name: '',
-        identifier: '',
-        action: '',
-        accessMode: '只读',
-        dataType: {
-          type: 'struct',
-          specs: {}
-        },
-        inputData: [],
-        outputData: []
+        deviceCategoryId: '',
+        deviceSubCategoryId: '',
+        nodeId: '',
+        brandId: -1,
+        modeType: 1,
+        commandArrays: [
+          {
+            key: "0",
+            value: ""
+          }
+        ]
       },
+      
       rules: {
         name: [
           { required: true, message: '参数名称不能为空', trigger: 'blur' },
@@ -275,138 +264,65 @@ export default {
         action: [
           { required: true, message: '请选择执行动作', trigger: 'blur' }
         ],
-        'dataType.specs.min': [
-          { required: true, message: '最小值不能为空', trigger: 'blur' }
-        ],
-        'dataType.specs.max': [
-          { required: true, message: '最大值不能为空', trigger: 'blur' }
-        ],
-        'dataType.specs.step': [
-          { required: true, message: '步长不能为空', trigger: 'blur' },
-          { validator: step, trigger: 'change' }
-        ],
-        'dataType.specs[0]': [
-          { required: true, validator: bool0, trigger: 'blur' }
-        ],
-        'dataType.specs[1]': [
-          { required: true, validator: bool1, trigger: 'blur' }
-        ],
-        'dataType.specs.length': [
-          { required: true, message: '数据长度不能为空,整型', trigger: ['blur', 'change'] }
-        ],
         'dataType.specs.enum': [
-          { required: true, validator: enumVf, trigger: 'change' }
-        ],
-        'dataType.specs.specs': [
-          { required: true, validator: structVf, trigger: 'change' }
-        ],
-        'dataType.specs.size': [
-          { required: true, message: '元素个数应为1-512', trigger: 'blur' }
-        ],
-        'dataType.specs.item.specs': [
-          { required: true, validator: arrStructVf, trigger: ['blur', 'change'] }
-        ],
-        'dataType.specs.item.type': [
-          { required: true, message: '请选择元素类型', trigger: ['change'] }
+          { required: true, validator: enumVf, trigger: 'blur' }
         ]
       },
       datemsg: 'String类型的UTC时间戳（毫秒）',
-      enumList: [],
       funType: '', // 功能类型判断
-    }
-  },
-  computed: {
-    ...mapGetters(['getSelList'])
-  },
-  mounted() {
-    console.log(999, this.rowsdata)
-  },
-  watch: {
-    'ruleForm.dataType.specs.item.type': {
-      handler(val) {
-        if (val === 'struct') {
-          this.ruleForm.dataType.specs.item = {
-            type: val,
-            specs: []
-          }
-        } else if (Object.prototype.toString.call(val) === '[object Undefined]') {
-          this.funType = ''
-        } else {
-          this.ruleForm.dataType.specs.item = {
-            type: val
-          }
-        }
-      }
-    },
-    rowsdata: {
-      immediate: true,
-      handler(val) {
-        this.enumList = [] // 先将其重置
-        this.ruleForm = Object.assign({}, val)
-        if (val.dataType && val.dataType.type === 'enum') {
-          Object.keys(val.dataType.specs).forEach(item => {
-            const obj = {
-              key: item,
-              value: val.dataType.specs[item]
-            }
-            this.enumList.push(obj)
-          })
-        }
-      }
+
+      enumList: [],
     }
   },
   methods: {
-    change(val) {
-      if (val === 'int' || val === 'float' || val === 'double') {
-        this.ruleForm.dataType.specs = {
-          max: '',
-          min: '',
-          step: '',
-          unit: '',
-          unitName: ''
+    queryCommands() {
+      var params = {
+        params: {
+          "deviceCategoryId": this.proParams.deviceCategoryId,
+          "deviceSubCategoryId": this.proParams.deviceSubCategoryId,
+          "nodeId": "switch",
+          "brandId": -1
         }
-      } else if (val === 'text') {
-        this.ruleForm.dataType.specs = {
-          length: '10240'
-        }
-      } else if (val === 'date') {
-        this.ruleForm.dataType.specs = {
-          datemsg: 'String类型的UTC时间戳（毫秒）'
-        }
-      } else if (val === 'bool') {
-        this.ruleForm.dataType.specs = {
-          0: '',
-          1: ''
-        }
-      } else if (val === 'enum') {
-        this.ruleForm.dataType.specs = {}
-        this.enumList = [
-          { key: '', value: '' }
-        ]
-      } else if (val === 'struct') {
-        this.ruleForm.dataType.specs = []
-      } else {
-        this.ruleForm.dataType.specs = {
-          size: '10',
-          item: {
-            type: 'int',
-            specs: []
+      }
+
+      queryCommands(params).then((res) => {
+        console.log(res)
+        if (res.data.code === 200) {
+          // this.$message({
+          //   type: 'success',
+          //   message: '编辑成功'
+          // })
+
+          if(res.data.data.length){
+            this.ruleForm.nodeId = res.data.data[0].nodeId
+            this.ruleForm.commandArrays = []
+            let obj = {
+              key: '',
+              value: ''
+            }
+
+            res.data.data.forEach((item, i) => {
+              this.ruleForm.commandArrays.push(obj)
+              this.ruleForm.commandArrays[i].key = item.commandKey
+              this.ruleForm.commandArrays[i].value = item.commandValue
+            })
           }
+
+          console.log(12313, this.ruleForm)
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.data.message
+          })
         }
-      }
-      if (val !== 'enum') {
-        this.$refs.ruleForm.clearValidate('dataType.specs.enum')
-      }
-      if (val !== 'struct') {
-        this.$refs.ruleForm.clearValidate('dataType.specs.specs')
-      }
-      if (val !== 'array') {
-        this.$refs.ruleForm.clearValidate('dataType.specs.item.specs')
-      }
+      })
     },
     confirm() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          console.log(888, this.ruleForm)
+          return
+
           const editData = Object.assign({}, this.ruleForm)
           if (this.ruleForm.dataType && this.ruleForm.dataType.type === 'enum') {
             const obj = {}

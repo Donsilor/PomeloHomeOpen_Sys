@@ -129,5 +129,9 @@ export const CATEGORY_MANAGE_SERVICE_API = {
   SEC_ADD_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/addModel`, // 添加物模型,
   SEC_EDIT_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/editModel`, // 编辑物模型,
   SEC_DELETE_MODEL: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/deleteModel`, // 删除子品类模板
-  SEC_GET_MODELS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/lists` // 批量获取子品类（基本信息+图片）
+  SEC_GET_MODELS: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryParent/subCategory/lists`, // 批量获取子品类（基本信息+图片）
+
+  // 指令
+  queryCommands: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/controlSwitch/queryCommands`, // 查询指令,
+  insertCommands: `${BASE_URL}${PROXY_NAME.PRODUCT_SERVICE}/categoryManage/controlSwitch/insertCommands` // 新增指令,
 }

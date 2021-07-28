@@ -53,6 +53,7 @@
             <el-button
               size="mini"
               type="primary"
+              :disabled="scope.row.dataType.type !== 'enum'"
               @click="handlerInstruct(scope.$index, scope.row)">指令</el-button>
           </template>
         </el-table-column>
@@ -86,8 +87,9 @@
     <!-- 指令 -->
     <instruct
       v-if="showInstruct" 
-      :pro-params="proParams" 
-      :rowsdata="rowsData" 
+      :pro-params="proParams"
+      :params="params"
+      :rowsdata="rowsData"
       :infos-dialog-visible="showInstruct" 
       @open-view-dialog="showInstruct=false"/>
   </div>
@@ -143,6 +145,7 @@ export default {
       infosDialogVisible: false, // infosDialog开管
       addCustomDialogVisible: false, // addcustomdialog开关
       proParams: {},
+      params: {},
       showInstruct: false
     }
   },
@@ -300,7 +303,6 @@ export default {
       row.status = 'edit'
       row.index = index
       this.rowsData = row
-      console.log(index, row)
     }
   }
 }

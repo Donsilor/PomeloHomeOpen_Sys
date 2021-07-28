@@ -39,6 +39,7 @@
         <el-table-column
           label="操作"
           align="center"
+          width="300px"
         >
           <template slot-scope="scope">
             <el-button
@@ -49,6 +50,11 @@
               size="mini"
               type="danger"
               @click="handlerDel(scope.row)">删除</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              :disabled="scope.row.dataType.type !== 'enum'"
+              @click="handlerInstruct(scope.$index, scope.row)">指令</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -78,6 +84,13 @@
       :pro-params="proParams" 
       :add-custom-dialog-visible="addCustomDialogVisible" 
       @open-addcustom-dialog="addCustomDialogVisible=false"/>
+    <!-- 指令 -->
+    <instruct
+      v-if="showInstruct" 
+      :instruct-params="instructParams"
+      :rowsdata="rowsData"
+      :infos-dialog-visible="showInstruct" 
+      @open-view-dialog="showInstruct=false"/>
   </div>
 </template>
 <script>
@@ -89,13 +102,16 @@ import modelDialog from '@/components/functionDefinitionDailogs/importModelDialo
 import physicalModelDailog from '@/components/functionDefinitionDailogs/PhysicalModelDailog'
 import viewMoreDailog from '@/components/functionDefinitionDailogs/viewMoreDailog' // TODO:
 import addCustomDailog from '@/components/functionDefinitionDailogs/addCustomDailog' // TODO:
+import instruct from '@/components/ruleEngine/instruct'
+
 export default {
   components: {
     emptyView,
     modelDialog,
     physicalModelDailog, 
     viewMoreDailog,
-    addCustomDailog
+    addCustomDailog,
+    instruct
   },
   props: {
     subCategoryId: {
@@ -128,16 +144,16 @@ export default {
       },
       infosDialogVisible: false, // infosDialog开管
       addCustomDialogVisible: false, // addcustomdialog开关
-      proParams: {}
+      proParams: {},
+      instructParams: {
+        modeType: 0
+      },
+      showInstruct: false
     }
   },
   created() {
-    // this.sRow = JSON.parse(this.$route.query.sRow)
-    console.log(this.subCategoryId)
     this.getDraftModelData()
     this.getUnitsName()
-  },
-  mounted() {
   },
   methods: {
     getImportPhyData(val) {
@@ -155,8 +171,8 @@ export default {
         }
       }
       getSecModel(params).then(res => {
-        console.log(res.data.data)
         this.resData = res.data.data.thingModel // 模型数据展示时需要profile'
+        this.instructParams.modeType = res.data.data.modeType
         const physicalModelData = Object.assign({}, res.data.data.thingModel)
         delete physicalModelData.profile
         // console.log(Object.values(physicalModelData).reverse())
@@ -274,6 +290,15 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    handlerInstruct(index, row) {
+      this.instructParams.deviceCategoryId = this.deviceCategoryId
+      this.instructParams.deviceSubCategoryId = this.deviceSubCategoryId
+      this.instructParams.brandId = -1
+      this.instructParams.nodeId = row.identifier
+      this.showInstruct = true
+      row.index = index
+      this.rowsData = row
     }
   }
 }

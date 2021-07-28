@@ -1714,7 +1714,7 @@ export default {
               if(conditionProps[1].propertyName == 'weeks'){
                 var weeks = conditionProps[1].compareValue.split(',')
                 weeks.forEach((item, i) => {
-                  return weeks[i] = Number(item)
+                  return weeks[i] = item-1
                 })
 
                 tem.conditionProps[1].compareValue = weeks
@@ -2472,6 +2472,7 @@ export default {
           cond[i].conditionProps[1].compareType = '=='
           cond[i].conditionProps[0].propertyName = 'appoint_time'
           cond[i].conditionProps[1].propertyName = 'weeks'
+          cond[i].conditionProps[1].compareValue.forEach((item, j) => cond[i].conditionProps[1].compareValue[j] = +item+1)
           cond[i].conditionProps[1].compareValue = cond[i].conditionProps[1].compareValue.join()
         }
 

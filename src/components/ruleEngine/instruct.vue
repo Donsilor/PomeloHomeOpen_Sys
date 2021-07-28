@@ -11,12 +11,11 @@
         ref="ruleForm"
         :rules="rules"
         :model="ruleForm"
-        :disabled="rowsdata.status==='view'?true:false"
         label-position="top">
         <el-form-item prop="identifier">
           <el-row slot="label">
             <span 
-              style="margin-right:2px" 
+              style="margin-right:2px"
               class="name">标识符</span>
             <el-tooltip 
               content="支持大小写字母、数字和下划线、不超过 50 个字符。" 
@@ -27,7 +26,8 @@
           </el-row>
           <el-input 
             :maxlength="50" 
-            v-model="ruleForm.identifier" 
+            v-model="ruleForm.identifier"
+            disabled
             placeholder="请输入标识符" />
         </el-form-item>
         <!-- 属性独有 -->
@@ -38,7 +38,8 @@
           prop="dataType">
           <el-select 
             v-model="ruleForm.dataType.type" 
-            :required="true" 
+            :required="true"
+            disabled
             placeholder="请输入数据类型" 
             style="width:100%"
             @change="change">
@@ -116,37 +117,14 @@
         <el-button @click="handleClose">取消</el-button>
       </span>
     </el-dialog>
-    <!-- 编辑参数dialog -->
-    <viewOrEditParamsDialog 
-      v-if="voDialogShow" 
-      :view-or-edit-params-dialog-visible="viewOrEditParamsDialogVisible" 
-      :data-stauts="dataStauts" 
-      :data-row="dataRow" 
-      @closeOv="closeOv" 
-      @editParams="editParams"/>
-    <!-- 添加参数dialog -->
-    <addDialog 
-      v-if="addParamsDialogVisible" 
-      :add-params-dialog-visible="addParamsDialogVisible" 
-      :fun-type="funType" 
-      :params-status="paramsStatus" 
-      @open="addParamsDialogVisible = false" 
-      @getParams="getParams"/>
   </div>
 </template>
 <script>
-import viewOrEditParamsDialog from '@/components/functionDefinitionDailogs/viewOrEditParamsDialog'
-import addDialog from '@/components/functionDefinitionDailogs/add1'
 import { mapGetters } from 'vuex'
 import { funcName, bool0, bool1, arrStructVf, identifierReg } from '@/assets/js/validator'
 import { editModel } from '@/api/productRegistration'
 import { editSubModel, editSonModel,editSecModel } from '@/api/categoryManager'
-import { actionOptions } from '@/assets/js/defition'
 export default {
-  components: {
-    viewOrEditParamsDialog,
-    addDialog
-  },
   props: {
     infosDialogVisible: {
       type: Boolean,
@@ -224,7 +202,6 @@ export default {
       }
     }
     return {
-      actionOptions: Object.assign([], actionOptions), // 执行动作
       keyFlag: false,
       dataTypeList: [
         {
@@ -271,7 +248,6 @@ export default {
         identifier: '',
         action: '',
         accessMode: '只读',
-        structVerify: [],
         dataType: {
           type: 'struct',
           specs: {}
@@ -336,25 +312,16 @@ export default {
       },
       datemsg: 'String类型的UTC时间戳（毫秒）',
       enumList: [],
-      viewOrEditParamsDialogVisible: false,
-      dataStauts: '', // view edit
       funType: '', // 功能类型判断
-      paramsStatus: '', // 服务 input outinput
-      dataRow: {},
-      addParamsDialogVisible: false,
-      // addDialogFlag: false
-      voDialogShow: false
     }
   },
   computed: {
     ...mapGetters(['getSelList'])
   },
+  mounted() {
+    console.log(999, this.rowsdata)
+  },
   watch: {
-    date: {
-      handler(val) {
-        this.dataStauts = this.rowsdata.status
-      }
-    },
     'ruleForm.dataType.specs.item.type': {
       handler(val) {
         if (val === 'struct') {
@@ -387,9 +354,7 @@ export default {
         }
       }
     }
-
   },
-  created() {},
   methods: {
     change(val) {
       if (val === 'int' || val === 'float' || val === 'double') {
@@ -592,102 +557,6 @@ export default {
     },
     deleteItem(item, index) {
       this.enumList.splice(index, 1)
-    },
-    delItem(item, index, val) {
-      if (val === 'struct') {
-        this.ruleForm.dataType.specs.splice(index, 1)
-      } else {
-        this.ruleForm.dataType.specs.item.specs.splice(index, 1)
-      }
-    },
-    // 服务 事件删除
-    serviceDelItem(item, index, val) {
-      if (val === 'in') {
-        this.ruleForm.inputData.splice(index, 1)
-      } else if (val === 'out') {
-        this.ruleForm.outputData.splice(index, 1)
-      } else {
-        this.ruleForm.outputData.splice(index, 1)
-      }
-    },
-    // 打开新增参数dialog
-    openAddParamsDialog(val) {
-      // console.log(this.rowsdata)
-      if (this.ruleForm.parentId === '属性') {
-        this.funType = 'add1'
-      } else {
-        this.funType = ''
-      }
-      this.paramsStatus = val
-      this.addParamsDialogVisible = true
-    },
-    // 打开编辑或者查看dialog
-    look(item, index, val) {
-      item.index = index
-      this.dataRow = item
-      this.dataRow.funcStatus = val
-      this.dataRow.parentId = this.rowsdata.parentId
-      this.voDialogShow = true
-      this.viewOrEditParamsDialogVisible = true
-    },
-    closeOv() {
-      this.voDialogShow = false
-      this.viewOrEditParamsDialogVisible = false
-    },
-    unitChange(val) {
-      const unitName = this.getSelList.find((item) => {
-        return item.unit === val
-      })
-      if (this.ruleForm.dataType.type === 'int' || this.ruleForm.dataType.type === 'float' || this.ruleForm.dataType.type === 'double') {
-        this.ruleForm.dataType.specs.unitName = unitName.unitName
-      }
-    },
-    getParams(val) {
-      const obj = {
-        identifier: val.identifier,
-        name: val.name,
-        dataType: {
-          type: val.dataType,
-          specs: val.specs
-        }
-      }
-      if (this.rowsdata.parentId === '属性') {
-        if (this.ruleForm.dataType.type === 'struct') {
-          this.ruleForm.dataType.specs.push(obj)
-        } else {
-          this.ruleForm.dataType.specs.item.specs.push(obj)
-        }
-      } else if (this.rowsdata.parentId === '服务') {
-        if (val.paramsStatus === 'in') this.ruleForm.inputData.push(obj)
-        if (val.paramsStatus === 'out') this.ruleForm.outputData.push(obj)
-      } else {
-        this.ruleForm.outputData.push(obj)
-      }
-      this.addParamsDialogVisible = false
-    },
-    editParams(val) {
-      console.log('view', val)
-      const getData = Object.assign({}, val.paramsRuleForm)
-      delete getData.funcStatus
-      delete getData.index
-      delete getData.parentId
-      delete getData.dialogType
-      console.log(getData)
-      if (this.rowsdata.parentId === '属性') { // 或者判断传回来的val.parentId
-        console.log(111)
-        if (this.ruleForm.dataType.type === 'struct') {
-          this.$set(this.ruleForm.dataType.specs, val.paramsRuleForm.index, getData)
-        } else {
-          this.$set(this.ruleForm.dataType.specs.item.specs, val.paramsRuleForm.index, getData)
-        }
-      } else if (this.rowsdata.parentId === '服务') {
-        console.log(222)
-        if (val.status === 'in') this.$set(this.ruleForm.inputData, val.paramsRuleForm.index, getData)
-        if (val.status === 'out') this.$set(this.ruleForm.outputData, val.paramsRuleForm.index, getData)
-      } else {
-        this.$set(this.ruleForm.outputData, val.paramsRuleForm.index, getData)
-      }
-      this.viewOrEditParamsDialogVisible = false
     }
   }
 }

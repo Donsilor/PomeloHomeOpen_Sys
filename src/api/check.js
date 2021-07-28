@@ -1,4 +1,5 @@
 import fetch from '@/utils/fetch'
+import newFetch from '@/utils/newFetch'
 
 // 获取审核申请列表
 export function getReviewList(params) {
@@ -69,7 +70,7 @@ export function productUnshelve(params) {
 
 // 获取某一个产品的分组标签
 export function getProductTags(params) {
-  return fetch({
+  return newFetch({
     // url: '/api/ext/gtags/product',//old
     url: '/api/ext/devcard/product',//new
     method: 'get',
@@ -79,7 +80,7 @@ export function getProductTags(params) {
 
 // 修改某一个产品的分组标签
 export function changeProductTags(params) {
-  return fetch({
+  return newFetch({
     //url: '/api/ext/gtags/product',//old
     url: '/api/ext/devcard/product',//new
     method: 'post',
@@ -89,7 +90,7 @@ export function changeProductTags(params) {
 
 // 获取全局分组标签列表
 export function getGlobalTags() {
-  return fetch({
+  return newFetch({
     url: '/api/ext/gtags/global',
     method: 'get'
   })
@@ -98,7 +99,7 @@ export function getGlobalTags() {
 
 // 添加全局分组标签
 export function addGlobalTags(params) {
-  return fetch({
+  return newFetch({
     url: '/api/ext/gtags/global',
     method: 'post',
     data: params
@@ -107,7 +108,7 @@ export function addGlobalTags(params) {
 
 // 添加全局分组标签
 export function devCard(params) {
-  return fetch({
+  return newFetch({
     url: '/api/ext/devcard/product',
     method: 'get'
   })
@@ -115,7 +116,7 @@ export function devCard(params) {
 
 // 添加全局分组标签
 export function devPostCard(params) {
-  return fetch({
+  return newFetch({
     url: '/api/ext/devcard/product',
     method: 'post',
     data: params

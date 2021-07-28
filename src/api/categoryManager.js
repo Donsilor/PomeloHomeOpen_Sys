@@ -1,5 +1,5 @@
 // 品类管理
-import axios from '@/utils/fetch'
+import axios from '@/utils/newFetch'
 import { CATEGORY_MANAGE_SERVICE_API } from './apis'
 /* --============================================================================== */
 // 获取品类列表(新)

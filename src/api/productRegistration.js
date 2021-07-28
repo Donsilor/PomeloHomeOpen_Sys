@@ -1,4 +1,4 @@
-import axios from '@/utils/fetch'
+import axios from '@/utils/newFetch'
 import { MODEL_MANAGE_SERVICE_API, PRODUCE_MANAGE_SERVICE_API, TOPIC_MANAGE_SERVICE_API, ANALYSIS_DATA_SERVICE_API } from './apis'
 // 产品选择列表
 export function productOptionsList(params) {

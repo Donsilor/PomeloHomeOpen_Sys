@@ -1,3 +1,4 @@
+//用于旧版的php接口
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
@@ -20,28 +21,13 @@ service.interceptors.request.use(
       timestamp: Date.parse(new Date()),
       version: '1.0'
     }
-    /* if(config['url'].indexOf('/java_api/') !== 1){
-      config['url'] = config['url'].replace(/\/java_api/g,'')
-    }else if (config['url'].indexOf('/v1') !== -1) {
-      console.log(11)
-    }else{
-      //老接口，需要添加前缀
-      config['url'] = '/api/index.php'+config['url']
-    } */
-    if(!(config.data instanceof FormData) && config['url'].indexOf('/icon') === -1 &&  config['url'].indexOf('/product_agreement/versionadd')  === -1){
+    if(!(config.data instanceof FormData)){
       config.data = Object.assign(defaultParams, config.data)
     }
     
-    if(config['url'].indexOf('/v1') !== -1 || config['url'].indexOf('/scene_web_type_mgt') !== -1 || config['url'].indexOf('scene_web_template_mgt') !== -1|| config['url'].indexOf('/icon') !== -1){ 
-      console.log('执行新接口')
-    }else{
-      if(config['url'].indexOf('/java_api/') === -1){
-        //老接口，需要添加前缀
-        config['url'] = '/api/index.php'+config['url']
-      }else{
-        config['url'] = config['url'].replace(/\/java_api/g,'')
-      }
-    }
+    //PHP老接口，需要添加前缀
+    config['url'] = '/api/index.php'+config['url']
+
     if (!config.data) {
       config.data = {}
     }
@@ -51,9 +37,6 @@ service.interceptors.request.use(
     if (config['method'] == 'get') {
       config['url'] = config['url'] + '?' + helper.serialize(config.data)
     }
-    if (config.url.indexOf('/api/ext') > -1){
-      config.url = config.url.replace(/\/api\/index.php/,'')
-    } 
     console.log('ajax请求数据：',JSON.stringify(config.data))
     return config
   },

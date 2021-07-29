@@ -175,6 +175,7 @@ export default {
         if((this.ruleForm.commandArrays[0].key == '' && this.ruleForm.commandArrays[0].value != '') || (this.ruleForm.commandArrays[0].key != '' && this.ruleForm.commandArrays[0].value == '')){
           callback(new Error('参数值跟描述值不能为空'))
         }else if(this.ruleForm.commandArrays[0].key == '' && this.ruleForm.commandArrays[0].value == ''){
+          delete this.ruleForm.commandArrays
           callback()
         }else{
           if(!flagKey){

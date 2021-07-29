@@ -1,4 +1,4 @@
-import fetch from '@/utils/fetch'
+import fetch from '@/utils/newFetch'
 
 export function rectCard(params){
   return fetch({

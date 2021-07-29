@@ -1,4 +1,4 @@
-import fetch from '@/utils/fetch'
+import fetch from '@/utils/newFetch'
 // 获取列表
 export function panelList(params){
   return fetch({

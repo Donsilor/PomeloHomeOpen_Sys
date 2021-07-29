@@ -1,4 +1,4 @@
-import fetch from '@/utils/fetch'
+import fetch from '@/utils/newFetch'
 //分类添加
 export function imageTypegoryAdd(params){
   return fetch({

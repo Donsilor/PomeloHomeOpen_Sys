@@ -1,4 +1,4 @@
-import fetch from '@/utils/fetch'
+import fetch from '@/utils/newFetch'
 
 // 获取模版列表
 export function getScreenList(params) {

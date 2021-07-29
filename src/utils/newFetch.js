@@ -34,6 +34,8 @@ service.interceptors.request.use(
       !(config.data instanceof FormData) 
       && config['url'].indexOf('/icon') === -1 
       &&  config['url'].indexOf('/product_agreement/versionadd')  === -1
+      &&  config['url'].indexOf('/copywritingManage/')  === -1
+      
     ){
       config.data = Object.assign(defaultParams, config.data)
     }

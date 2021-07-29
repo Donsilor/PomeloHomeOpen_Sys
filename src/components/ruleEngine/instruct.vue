@@ -78,7 +78,6 @@
               </el-form-item>
             </el-col>
             <el-col 
-              v-if="rowsdata.status!=='view' && ruleForm.commandArrays.length>1" 
               :span="2" 
               class="delete" 
               @click.native="deleteItem(item,index)" >删除</el-col>
@@ -169,35 +168,16 @@ export default {
         }
       })
 
-      var len = this.ruleForm.commandArrays.length;
-
-      if(len == 1){
-        if((this.ruleForm.commandArrays[0].key == '' && this.ruleForm.commandArrays[0].value != '') || (this.ruleForm.commandArrays[0].key != '' && this.ruleForm.commandArrays[0].value == '')){
-          callback(new Error('参数值跟描述值不能为空'))
-        }else if(this.ruleForm.commandArrays[0].key == '' && this.ruleForm.commandArrays[0].value == ''){
-          delete this.ruleForm.commandArrays
-          callback()
-        }else{
-          if(!flagKey){
-            callback(new Error('参数值取值范围：0 ~ 2147483647'))
-          }else if(!flagVal){
-            callback(new Error('参数描述仅支持英文'))
-          }else{
-            callback()
-          }
-        }
+      if(!flag){
+        callback(new Error('参数值跟描述值不能为空'))
+      }else if(!flagKey){
+        callback(new Error('参数值取值范围：0 ~ 2147483647'))
+      }else if(!flagVal){
+        callback(new Error('参数描述仅支持英文'))
+      }else if(this.keyFlag){
+        callback(new Error('参数值不能重复'))
       }else{
-        if(!flag){
-          callback(new Error('参数值跟描述值不能为空'))
-        }else if(!flagKey){
-          callback(new Error('参数值取值范围：0 ~ 2147483647'))
-        }else if(!flagVal){
-          callback(new Error('参数描述仅支持英文'))
-        }else if(this.keyFlag){
-          callback(new Error('参数值不能重复'))
-        }else{
-          callback()
-        }
+        callback()
       }
     }
     return {
@@ -254,7 +234,6 @@ export default {
           }
         ]
       },
-      
       rules: {
         commandArrays: [
           { required: true, validator: enumVf, trigger: 'blur' }

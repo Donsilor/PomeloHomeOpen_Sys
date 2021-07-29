@@ -59,11 +59,13 @@
           <el-row 
             v-for="(item,index) in ruleForm.commandArrays" 
             :key="index" 
-            class="row">
+            class="row"
+            :class="{err: errText && errIndex == index}">
             <el-col :span="rowsdata.status==='view'? 11 : 10">
               <el-form-item >
                 <el-input 
-                  v-model="item.key" 
+                  v-model="item.key"
+                  :class="{border: errType == 'key'}"
                   placeholder="编号如0"/>
               </el-form-item>
             </el-col>
@@ -73,7 +75,8 @@
             <el-col :span="rowsdata.status==='view'? 11 : 10">
               <el-form-item >
                 <el-input 
-                  v-model="item.value" 
+                  v-model="item.value"
+                  :class="{border: errType == 'value'}"
                   placeholder="对该枚举项的描述"/>
               </el-form-item>
             </el-col>
@@ -91,6 +94,7 @@
               class="tooltip" 
               @click="addItem">+添加枚举项</span>
           </el-tooltip>
+          <div v-if="errText" style="height: 20px;line-height: 20px;color: rgb(245, 108, 108);font-size: 12px">{{ errText }}</div>
         </el-form-item>
 
         <!-- <el-form-item 
@@ -144,41 +148,13 @@ export default {
   },
   data() {
     const enumVf = (rule, value, callback) => {
-      const reg = /^[a-zA-Z]*$/
+      
 
-      const flag = this.ruleForm.commandArrays.every((item, index) => { // enum内容验证
-        return item.key !== '' && item.value !== ''
-      })
+      callback()
 
-      const flagKey = this.ruleForm.commandArrays.every((item, index) => { // enum内容验证
-        return item.key >= 0 && item.key < 2147483647
-      })
+      this.err = false
+      this.errIndex = -1
 
-      const flagVal = this.ruleForm.commandArrays.every((item, index) => { //  value验证
-        return reg.test(item.value) !== false
-      })
-      // 判断key相同值
-      const arr = []
-      this.ruleForm.commandArrays.forEach((ele, index) => {
-        if (arr.indexOf(ele.key) > -1) {
-          this.keyFlag = true
-        } else {
-          this.keyFlag = false
-          arr.push(ele.key)
-        }
-      })
-
-      if(!flag){
-        callback(new Error('参数值跟描述值不能为空'))
-      }else if(!flagKey){
-        callback(new Error('参数值取值范围：0 ~ 2147483647'))
-      }else if(!flagVal){
-        callback(new Error('参数描述仅支持英文'))
-      }else if(this.keyFlag){
-        callback(new Error('参数值不能重复'))
-      }else{
-        callback()
-      }
     }
     return {
       type: 'enum',
@@ -238,7 +214,10 @@ export default {
         commandArrays: [
           { required: true, validator: enumVf, trigger: 'blur' }
         ]
-      }
+      },
+      errText: '',
+      errType: '',
+      errIndex: ''
     }
   },
   methods: {
@@ -303,13 +282,57 @@ export default {
       })
     },
     confirm() {
-      this.$refs.ruleForm.validate((valid) => {
-        if (valid) {
-          this.insertCommands()
+      const reg = /^[a-zA-Z]*$/
+      const regN = /^(\-?)\d*$/
+      let command = this.ruleForm.commandArrays
+
+      // 判断key相同值
+      const arr = []
+      this.ruleForm.commandArrays.forEach((ele, index) => {
+        if (arr.indexOf(ele.key) > -1) {
+          this.keyFlag = true
         } else {
-          return false
+          this.keyFlag = false
+          arr.push(ele.key)
         }
       })
+
+      this.errIndex = -1
+      this.err = false
+
+      for(let i=0; i<command.length; i++){
+        if(command[i].key === '' || command[i].value === ''){
+          if(command[i].key === ''){
+            this.errType = 'key'
+          }else{
+            this.errType = 'value'
+          }
+          this.errIndex = i
+          this.errText = '参数值跟描述值不能为空'
+          return
+        }else if(!regN.test(command[i].key)){
+          this.errIndex = i
+          this.errType = 'key'
+          this.errText = '参数值只支持数字'
+          return
+        }else if(command[i].key < 0 || command[i].key > 2147483647){
+          this.errIndex = i
+          this.errType = 'key'
+          this.errText = '参数值取值范围：0 ~ 2147483647'
+          return
+        }else if(!reg.test(command[i].value)){
+          this.errIndex = i
+          this.errType = 'value'
+          this.errText = '参数描述仅支持英文'
+          return
+        }else if(this.keyFlag){
+          this.errType = 'key'
+          this.errText = '参数值不能重复'
+          return
+        }
+      }
+
+      this.insertCommands()
     },
     handleClose() {
       this.$emit('open-view-dialog')
@@ -384,5 +407,12 @@ export default {
 }
 .json-params:last-child{
   margin-bottom: 0;
+}
+.err{
+  .border{
+    /deep/ .el-input__inner{
+      border-color: red;
+    }
+  }
 }
 </style>

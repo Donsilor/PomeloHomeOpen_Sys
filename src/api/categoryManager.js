@@ -289,3 +289,22 @@ export function delSecModel(params) {
     data: params
   })
 }
+
+
+// 获取指令接口
+export function queryCommands(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.queryCommands,
+    method: 'post',
+    data: params
+  })
+}
+
+// 新增指令接口
+export function insertCommands(params) {
+  return axios({
+    url: CATEGORY_MANAGE_SERVICE_API.insertCommands,
+    method: 'post',
+    data: params
+  })
+}

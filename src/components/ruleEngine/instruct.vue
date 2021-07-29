@@ -168,17 +168,35 @@ export default {
           arr.push(ele.key)
         }
       })
-      console.log(arr)
-      if(!flag){
-        callback(new Error('参数值跟描述值不能为空'))
-      }else if(!flagKey){
-        callback(new Error('参数值取值范围：0 ~ 2147483647'))
-      }else if(!flagVal){
-        callback(new Error('参数描述仅支持英文'))
-      }else if(this.keyFlag){
-        callback(new Error('参数值不能重复'))
+
+      var len = this.ruleForm.commandArrays.length;
+
+      if(len == 1){
+        if((this.ruleForm.commandArrays[0].key == '' && this.ruleForm.commandArrays[0].value != '') || (this.ruleForm.commandArrays[0].key != '' && this.ruleForm.commandArrays[0].value == '')){
+          callback(new Error('参数值跟描述值不能为空'))
+        }else if(this.ruleForm.commandArrays[0].key == '' && this.ruleForm.commandArrays[0].value == ''){
+          callback()
+        }else{
+          if(!flagKey){
+            callback(new Error('参数值取值范围：0 ~ 2147483647'))
+          }else if(!flagVal){
+            callback(new Error('参数描述仅支持英文'))
+          }else{
+            callback()
+          }
+        }
       }else{
-        callback()
+        if(!flag){
+          callback(new Error('参数值跟描述值不能为空'))
+        }else if(!flagKey){
+          callback(new Error('参数值取值范围：0 ~ 2147483647'))
+        }else if(!flagVal){
+          callback(new Error('参数描述仅支持英文'))
+        }else if(this.keyFlag){
+          callback(new Error('参数值不能重复'))
+        }else{
+          callback()
+        }
       }
     }
     return {

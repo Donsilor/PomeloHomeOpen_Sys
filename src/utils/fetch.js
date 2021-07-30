@@ -21,7 +21,12 @@ service.interceptors.request.use(
       timestamp: Date.parse(new Date()),
       version: '1.0'
     }
-    if(!(config.data instanceof FormData)){
+    if(
+      !(config.data instanceof FormData) 
+      && config['url'].indexOf('/icon') === -1 
+      &&  config['url'].indexOf('/product_agreement/versionadd')  === -1
+      &&  config['url'].indexOf('/copywritingManage/')  === -1
+    ){
       config.data = Object.assign(defaultParams, config.data)
     }
     

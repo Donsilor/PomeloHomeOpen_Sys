@@ -52,7 +52,7 @@
             <el-button
               size="mini"
               type="primary"
-              :disabled="scope.row.dataType.type !== 'enum'"
+              :disabled="(scope.row.parentId === '属性' && scope.row.types !== 'enum') || scope.row.parentId === '服务' || scope.row.parentId === '事件'"
               @click="handlerInstruct(scope.$index, scope.row)">指令</el-button>
           </template>
         </el-table-column>

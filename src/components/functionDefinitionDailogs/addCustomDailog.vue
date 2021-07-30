@@ -847,9 +847,9 @@ export default {
     },
     // fu组件
     closeAddDialog() {
-      console.log(11)
-      this.$refs.paramsRuleForm.resetFields()
       this.$emit('open-addcustom-dialog')
+      this.$parent.getDraftModelData()
+      this.$refs.paramsRuleForm.resetFields()
     },
     // zi组件
     getParams(val) {

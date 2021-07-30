@@ -60,12 +60,12 @@
             v-for="(item,index) in ruleForm.commandArrays" 
             :key="index" 
             class="row"
-            :class="{err: errText && errIndex == index}">
+            :class="{err: errs[index] !== ''}">
             <el-col :span="rowsdata.status==='view'? 11 : 10">
               <el-form-item >
                 <el-input 
                   v-model="item.key"
-                  :class="{border: errType == 'key'}"
+                  :class="{border: errs[index] == 'key' || errs[index] == 'all'}"
                   placeholder="编号如0"/>
               </el-form-item>
             </el-col>
@@ -76,7 +76,7 @@
               <el-form-item >
                 <el-input 
                   v-model="item.value"
-                  :class="{border: errType == 'value'}"
+                  :class="{border: errs[index] == 'value' || errs[index] == 'all'}"
                   placeholder="对该枚举项的描述"/>
               </el-form-item>
             </el-col>
@@ -217,7 +217,8 @@ export default {
       },
       errText: '',
       errType: '',
-      errIndex: ''
+      errIndex: '',
+      errs: []
     }
   },
   methods: {
@@ -297,8 +298,31 @@ export default {
         }
       })
 
-      this.errIndex = -1
       this.err = false
+
+      var flag = '';
+      this.errs = []
+      
+      for(let i=0; i<command.length; i++){
+        flag = ''
+
+        if(command[i].key === '' ||
+          !regN.test(command[i].key) ||
+          command[i].key < 0 || command[i].key > 2147483647)
+        {
+          flag = 'key'
+        }
+
+        if(command[i].value === '' || !reg.test(command[i].value)){
+          if(flag === 'key'){
+            flag = 'all'
+          }else{
+            flag = 'value'
+          }
+        }
+
+        this.errs.push(flag)
+      }
 
       for(let i=0; i<command.length; i++){
         if(command[i].key === '' || command[i].value === ''){
